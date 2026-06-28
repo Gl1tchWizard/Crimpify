@@ -1749,9 +1749,23 @@ function enableWheelScroll(sel){
 enableWheelScroll('#timeTrack');
 enableWheelScroll('#recentRow');
 
-// ── PWA: register external service worker (offline-ready) ──
+// ── PWA: register external service worker (auto-updating) ──
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(()=>{ /* offline cache optioneel */ });
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    // check meteen en periodiek op een nieuwe versie
+    reg.update();
+    setInterval(() => reg.update(), 60 * 60 * 1000);
+    reg.addEventListener('updatefound', () => {
+      const sw = reg.installing;
+      if (!sw) return;
+      sw.addEventListener('statechange', () => {
+        // nieuwe versie geïnstalleerd terwijl er al een actief was → ververs
+        if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+          location.reload();
+        }
+      });
+    });
+  }).catch(()=>{ /* offline cache optioneel */ });
 }
 </script>
 </body>
