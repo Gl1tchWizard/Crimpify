@@ -1,44 +1,45 @@
-// Odyssey service worker — auto-updating
-// Strategie: network-first voor de app zelf (zodat updates direct binnenkomen),
-// cache-first voor de rest (fonts e.d.). Geen handmatige versie-bump meer nodig.
-
-const CACHE = 'odyssey';
-const CORE = ['./', 'index.html', 'manifest.json', 'icon.svg'];
+// Odyssey service worker v3 — self-updating, network-first voor app-bestanden
+const VERSION = 'odyssey-v3';
 
 self.addEventListener('install', e => {
+  // niet wachten: nieuwe SW meteen actief maken
   self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).catch(()=>{}));
 });
 
 self.addEventListener('activate', e => {
-  e.waitUntil(self.clients.claim());
+  e.waitUntil((async () => {
+    // gooi ALLE oude caches weg (ook van vorige versies)
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    // neem direct controle over alle open tabs/PWA-vensters
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  const isAppFile = url.origin === self.location.origin;
+  const sameOrigin = url.origin === self.location.origin;
 
-  if (isAppFile) {
-    // network-first: probeer verse versie, val terug op cache bij offline
+  if (sameOrigin) {
+    // NETWORK-FIRST: altijd eerst verse versie van GitHub proberen.
+    // Alleen bij offline terugvallen op cache.
     e.respondWith(
       fetch(e.request).then(resp => {
-        if (resp && resp.status === 200) {
-          const copy = resp.clone();
-          caches.open(CACHE).then(c => c.put(e.request, copy));
-        }
+        const copy = resp.clone();
+        caches.open(VERSION).then(c => c.put(e.request, copy)).catch(()=>{});
         return resp;
-      }).catch(() => caches.match(e.request).then(hit => hit || caches.match('index.html')))
+      }).catch(() =>
+        caches.match(e.request).then(hit => hit || caches.match('index.html'))
+      )
     );
   } else {
     // externe assets (fonts): cache-first
     e.respondWith(
       caches.match(e.request).then(hit =>
         hit || fetch(e.request).then(resp => {
-          if (resp && resp.status === 200) {
-            const copy = resp.clone();
-            caches.open(CACHE).then(c => c.put(e.request, copy));
-          }
+          const copy = resp.clone();
+          caches.open(VERSION).then(c => c.put(e.request, copy)).catch(()=>{});
           return resp;
         }).catch(()=>hit)
       )
