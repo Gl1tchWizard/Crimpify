@@ -192,6 +192,15 @@ body {
 /* tiles row */
 .tiles-row { display:flex; gap:8px; overflow-x:auto; overflow-y:visible; padding:8px 20px 10px; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
 .tiles-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:0 20px 4px; }
+.path-cards { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:6px 20px 10px; }
+.path-card { border:1px solid var(--border2); border-radius:10px; padding:16px 14px; cursor:pointer; background:var(--s1); transition:filter .15s; }
+.path-card:active { filter:brightness(1.25); }
+.path-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; text-transform:uppercase; letter-spacing:.03em; color:var(--acid); }
+.path-sub { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.08em; text-transform:uppercase; color:var(--sub); margin-top:4px; }
+.edit-mini { width:34px; height:34px; border-radius:8px; border:1px solid #3A3A38; background:rgba(10,10,10,.7); color:#C8C8C4; font-size:13px; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+.edit-mini:active { transform:scale(.92); }
+.slab-drag-handle { width:34px; height:34px; display:flex; align-items:center; justify-content:center; color:#8A8A86; font-size:17px; cursor:grab; touch-action:none; flex-shrink:0; user-select:none; }
+.drag-lift { transform:scale(1.02); box-shadow:0 8px 24px rgba(0,0,0,.6); z-index:20; position:relative; filter:brightness(1.3); transition:none; }
 .tiles-grid .tile { width:auto; }
 .tiles-row::-webkit-scrollbar { display:none; }
 
@@ -351,7 +360,7 @@ body {
 <div id="splash">
   <div id="splashInner">
     <div id="splashTitle">Odyssey</div>
-    <div id="splashBy">by Govert</div>
+    <div id="splashBy">by Glitch Labs</div>
   </div>
   <div id="splashFlash"></div>
 </div>
@@ -386,9 +395,70 @@ body {
             <div class="time-item" data-t="150"><div class="t-num">150</div><div class="t-unit">min</div></div>
           </div>
         </div>
-        <div class="section-head" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">Recent <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">alles →</div></div>
+        <div class="section-head" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">Mijn sessies <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
         <div class="tiles-row" id="recentRow"></div>
-        <div id="categorySections"></div>
+
+        <!-- coach-voorstel -->
+        <div id="coachCard" style="display:none;margin:2px 20px 4px;padding:14px 16px;border:1px solid rgba(232,255,71,.22);border-radius:12px;background:rgba(232,255,71,.04);">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#A3A300;">coach · vandaag</div>
+            <div id="coachBadge" style="width:8px;height:8px;border-radius:50%;background:#4ADE80;"></div>
+          </div>
+          <div id="coachName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;margin-top:6px;">–</div>
+          <div id="coachReason" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#B8B8B4;margin-top:4px;">–</div>
+          <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid rgba(232,255,71,.35);background:none;color:var(--acid);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Gebruik voorstel →</button>
+        </div>
+
+        <!-- twee paden -->
+        <div class="path-cards">
+          <div class="path-card" onclick="toggleGenerate()">
+            <div class="path-name">Genereer <span id="genChev" style="font-size:12px;opacity:.5;">▾</span></div>
+            <div class="path-sub">kies een energiesysteem</div>
+          </div>
+          <div class="path-card" onclick="startBuildPath()">
+            <div class="path-name">Bouw</div>
+            <div class="path-sub">stel zelf samen</div>
+          </div>
+        </div>
+
+        <div id="signalCalWrap" style="display:none;">
+          <div class="section-head" onclick="toggleLoadPanel()" style="cursor:pointer;"><div class="section-title">Laatste 4 weken <span id="loadChev" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="signalCalSummary"></div></div>
+          <div id="signalCal" style="display:grid;grid-template-columns:repeat(14,1fr);gap:4px;padding:0 20px 10px;"></div>
+          <div id="loadPanel" style="display:none;margin:2px 20px 12px;padding:14px;border:1px solid #2A2A28;border-radius:10px;background:#0E0E0C;">
+            <div style="display:flex;gap:14px;">
+              <div style="flex:1;text-align:center;">
+                <div id="acwrAcute" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#F5F5F2;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">acuut · 7d</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div id="acwrChronic" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#8A8A86;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">chronisch · weekgem.</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div id="acwrRatio" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">ratio</div>
+              </div>
+            </div>
+            <div id="acwrZoneBar" style="position:relative;height:8px;border-radius:4px;margin-top:12px;background:linear-gradient(90deg,#5A7A9A 0%,#5A7A9A 26%,#4ADE80 26%,#4ADE80 56%,#FB923C 56%,#FB923C 66%,#F87171 66%,#F87171 100%);">
+              <div id="acwrMarker" style="position:absolute;top:-3px;width:3px;height:14px;background:#F5F5F2;border-radius:2px;left:0%;"></div>
+            </div>
+            <div id="acwrAdvice" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#C8C8C4;margin-top:10px;">–</div>
+            <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr-model (gabbett) · load = duur × intensiteitsfactor (srpe, foster)</div>
+          </div>
+        </div>
+
+        <div onclick="selectSession('minidose');goToSession();" style="margin:2px 20px 8px;padding:13px 16px;border:1px solid #F59E0B33;border-radius:12px;background:rgba(245,158,11,.05);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;">
+          <div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:#FBBF24;">Minimal Dose · ±20 min</div>
+            <div class="path-sub">maximaal effect bij weinig tijd</div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:14px;color:#F59E0B;">›</div>
+        </div>
+
+        <div id="generateSection" style="display:none;">
+          <div id="categorySections"></div>
+          <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed #2E2E2C;border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">drill-bibliotheek openen →</div>
+        </div>
         <div class="active-preview" id="activePreview"></div>
         <div class="movement"><div class="mvmt-dot"></div><div class="mvmt-text">movement skill <b>altijd inbegrepen</b></div></div>
         <div style="height:12px;"></div>
@@ -414,13 +484,27 @@ body {
       <div class="slab-meta" id="slabMeta">–</div>
       <div class="slab-intent" id="slabIntent" style="font-family:'Barlow',sans-serif;font-size:13px;color:#D8E89A;letter-spacing:.01em;line-height:1.55;margin-top:10px;padding:11px 13px;background:rgba(232,255,71,.05);border:1px solid rgba(232,255,71,.12);border-radius:6px;">–</div>
       <div style="height:12px;"></div>
+      <div id="tapeTip" style="display:none;margin:0 0 8px;padding:9px 12px;border-radius:8px;background:#111;border:1px solid #2A2A28;align-items:center;gap:10px;">
+        <span id="tapeTipDot" style="width:10px;height:10px;border-radius:50%;background:#888;flex-shrink:0;"></span>
+        <span id="tapeTipName" style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;flex:1;">–</span>
+        <span id="tapeTipMeta" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.08em;color:#8A8A86;">–</span>
+      </div>
       <div class="slab-tape" id="slabTape"></div>
     </div>
     <div class="slab-progress"><div class="slab-progress-fill" id="slabProgressFill" style="width:0%"></div></div>
     <div class="slab-blocks" id="slabBlocks"></div>
     <div class="footer">
       <div class="footer-meta" id="slabFooterMeta">–</div>
-      <button class="start-btn" onclick="startSession()">Start →</button>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button id="editBtn" onclick="unlockEdit()" title="bewerken" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">✎</button>
+        <button id="dupBtn" onclick="duplicateSession()" title="eigen kopie maken" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">⧉</button>
+        <button id="favStarBtn" onclick="toggleFavorite()" title="favoriet" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:17px;cursor:pointer;">☆</button>
+        <button id="shareBtn" onclick="shareSession()" title="deel sessie" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;cursor:pointer;align-items:center;justify-content:center;padding:0;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+        </button>
+        <button id="saveBigBtn" class="start-btn" onclick="openSaveFav()" style="display:none;">Vastleggen →</button>
+        <button id="startBtn" class="start-btn" onclick="startSession()">Start →</button>
+      </div>
     </div>
   </div>
 
@@ -493,6 +577,7 @@ body {
       </div>
       <div class="detail-name" id="drillTitle" style="font-size:24px;color:#A78BFA;">Movement drills</div>
       <div class="detail-cat" id="drillSub" style="color:#A78BFA;">tik een drill open voor de uitleg</div>
+      <input id="drillSearch" type="search" placeholder="zoek… (bijv. finger, voet, deadpoint)" oninput="dpFilter = this.value; renderDrillPlayer();" style="margin-top:10px;width:100%;padding:11px 13px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
     </div>
     <div class="scroll-body" id="drillStack" style="padding:10px 16px;"></div>
     <div class="footer">
@@ -603,12 +688,88 @@ body {
         <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:.04em;line-height:1.15;color:#E8FF47;text-align:center;" id="summaryQuote">–</div>
         <div style="display:none;" id="summaryQuoteAuthor">–</div>
       </div>
-      <button onclick="closeSummary()" style="margin-top:20px;width:100%;padding:15px;border-radius:12px;border:none;background:#E8FF47;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Klaar</button>
+      <div id="signalAsk" style="margin-top:20px;">
+        <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A9A96;">hoe voelde deze sessie?</div>
+        <div style="display:flex;gap:10px;margin-top:12px;">
+          <button onclick="signalTap('green')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #4ADE8055;background:rgba(74,222,128,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <span style="width:20px;height:20px;border-radius:50%;background:#4ADE80;box-shadow:0 0 12px rgba(74,222,128,.5);"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ADE80;">sterk</span>
+          </button>
+          <button onclick="signalTap('orange')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #FB923C55;background:rgba(251,146,60,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <span style="width:20px;height:20px;border-radius:50%;background:#FB923C;box-shadow:0 0 12px rgba(251,146,60,.5);"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#FB923C;">op de rand</span>
+          </button>
+          <button onclick="signalTap('red')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #F8717155;background:rgba(248,113,113,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
+            <span style="width:20px;height:20px;border-radius:50%;background:#F87171;box-shadow:0 0 12px rgba(248,113,113,.5);"></span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#F87171;">te veel</span>
+          </button>
+        </div>
+        <div onclick="signalSkip()" style="margin-top:12px;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A56;cursor:pointer;">sla over</div>
+      </div>
+      <div id="signalAdvice" style="display:none;margin-top:20px;padding:16px;border:1px solid #3A3A38;border-radius:12px;background:#0E0E0C;">
+        <div id="signalAdviceTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.04em;">–</div>
+        <div id="signalAdviceTxt" style="font-family:'Barlow',sans-serif;font-size:13px;line-height:1.55;color:#C8C8C4;margin-top:6px;">–</div>
+        <button onclick="closeSummary()" style="margin-top:14px;width:100%;padding:13px;border-radius:10px;border:none;background:#E8FF47;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Klaar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ BLOK-PICKER ══ -->
+  <div id="blockPicker" style="display:none;position:absolute;inset:0;z-index:55;background:rgba(5,5,5,.94);backdrop-filter:blur(4px);flex-direction:column;padding:24px 20px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Blok toevoegen</div>
+      <button onclick="closeBlockPicker()" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9A9A96;background:none;border:1px solid #2A2A28;border-radius:6px;padding:7px 12px;cursor:pointer;">sluit</button>
+    </div>
+    <input id="blockSearch" type="search" placeholder="zoek… (bijv. hangs, volume, stretch)" oninput="renderBlockPicker(this.value)" style="width:100%;padding:12px 14px;margin-bottom:10px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+    <div id="blockPickerList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:20px;"></div>
+  </div>
+
+  <!-- ══ FAVORIET BEWAREN ══ -->
+  <div id="saveFavDialog" style="display:none;position:absolute;inset:0;z-index:56;background:rgba(5,5,5,.88);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
+    <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;width:100%;max-width:300px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Sessie vastleggen</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Vastleggen zet de structuur op slot. Daarna kun je starten en delen; ontvangers kunnen niets wijzigen.</div><div id="favDialogHint" style="display:none;"></div>
+      <input id="favNameInput" type="text" placeholder="Naam van de sessie" style="margin-top:14px;width:100%;padding:12px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button onclick="closeSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Annuleer</button>
+        <button onclick="confirmSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E8FF47;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Vastleggen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ NIEUWE OEFENING ══ -->
+  <div id="newExerciseDialog" style="display:none;position:absolute;inset:0;z-index:58;background:rgba(5,5,5,.92);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;">
+    <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:90%;overflow-y:auto;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Nieuwe oefening</div>
+      <input id="neName" type="text" placeholder="Naam (bijv. Heup-shift ladder)" style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <input id="neMin" type="number" min="3" placeholder="min" style="flex:1;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+        <input id="neRpe" type="text" placeholder="rpe (bijv. 7-8)" style="flex:1;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      </div>
+      <textarea id="neWhy" rows="3" placeholder="Uitleg: wat doe je en waarom" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:13px;outline:none;resize:vertical;"></textarea>
+      <input id="neLink" type="url" placeholder="Link (Instagram / YouTube / Kilter)" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#9A9A96;font-family:'DM Mono',monospace;font-size:11px;outline:none;">
+      <div style="display:flex;gap:10px;margin-top:16px;">
+        <button onclick="closeNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Annuleer</button>
+        <button onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#A3E635;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Toevoegen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DEEL-DIALOOG ══ -->
+  <div id="shareDialog" style="display:none;position:absolute;inset:0;z-index:57;background:rgba(5,5,5,.88);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
+    <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;width:100%;max-width:320px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Deel deze sessie</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Iedereen met de link krijgt exact deze sessie, kan aanpassen en starten.</div>
+      <input id="shareLinkInput" type="text" readonly style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#9A9A96;font-family:'DM Mono',monospace;font-size:10px;outline:none;">
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button onclick="closeShareDialog()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Sluit</button>
+        <button id="copyLinkBtn" onclick="copyShareLink()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E8FF47;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Kopieer link</button>
+      </div>
     </div>
   </div>
 
   <!-- ══ EXIT CONFIRM DIALOG ══ -->
-  <div id="confirmExit" style="display:none;position:absolute;inset:0;z-index:50;background:rgba(5,5,5,.85);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
+  <div id="confirmExit" style="display:none;position:absolute;inset:0;z-index:70;background:rgba(5,5,5,.85);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
     <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;max-width:300px;text-align:center;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;" id="confirmTitle">Sessie verlaten?</div>
       <div style="font-family:'Barlow',sans-serif;font-size:14px;color:#9A9A96;line-height:1.5;margin-top:8px;" id="confirmMsg">Je timer loopt nog. Weet je het zeker?</div>
@@ -652,6 +813,10 @@ const DRILLS = [
     setup:'Warm-up ladder, elke boulder twee keer met een andere heupstand.',
     do:'Eerste keer: klim met open heup — knieën naar buiten, binnenrand van de schoen, lang en gebalanceerd boven de voet. Tweede keer: zelfde boulder met dropknees en inwaartse rotatie — knie en heup naar de wand, buitenrand of teen, heupen plat. Let op het verschil in hoe de kracht loopt.',
     goal:'Voel hoe heuporiëntatie je reikwijdte, balans en krachtoverdracht verandert.' },
+  { n:'Heup-shift bij opstaan', tag:'heup-timing', cat:'heup', dur:'10-15m', src:'technique',
+    setup:'Verticaal tot licht overhangend terrein, passen waarbij je vanuit een hoge voet moet opstaan.',
+    do:'Val je van de wand zodra je probeert op te staan? Vaak begin je dan met je heupen al te dicht tegen de wand: als je je been strekt duwt dat samen met de zwaartekracht je heupen juist naar buiten. Doe het omgekeerd. Begin de pas met je heupen iets van de wand af. Breng ze tijdens het opstaan actief naar de wand toe, zodat je op het hoogste punt van de beweging het dichtst bij de wand zit. Daar pak je de volgende greep — stabieler en met meer reikwijdte.',
+    goal:'Timing van je heupbeweging: het dichtst bij de wand precies op het moment dat je reikt.' },
   { n:'Hoge voet & doorstap', tag:'voetdruk & balans', cat:'voet', dur:'10-15m', src:'technique',
     setup:'Warm-up ladder, alle grepen mogen als voet. Elke boulder twee keer.',
     do:'Eerste keer: zet bij elke pas een voet zo hoog mogelijk en draai de heup uit, lijf plat tegen de wand. Actieve enkel zodat je er gewicht op kwijt kunt. Tweede keer: kruis je voet over de middellijn en flag de andere voet dezelfde kant op voor tegenspanning. Werkt vooral lekker op side-pulls.',
@@ -680,6 +845,10 @@ const DRILLS = [
     setup:'Warm-up ladder met tegenkracht als enige focus.',
     do:'Pauzeer bij elke greep en voel welke kant hij op wijst. Verplaats je gewicht bewust de tegengestelde kant op — rechts-wijzende sidepull betekent massa naar links. Lock jezelf in die gespannen positie voor je verder reikt, en houd de spanning vast terwijl je naar de volgende greep gaat. Pas daarna je voeten aan. Werkt het sterkst op slopers en pinches, maar pas het ook toe op goede grepen — daar lekt anders energie weg.',
     goal:'Bewuste lichaamspositie en tegenkracht, ook waar je het niet nodig dénkt te hebben.' },
+  { n:'Active finger curls', tag:'vingerkracht · power pulls · isometrisch', cat:'spanning', dur:'8-12m', src:'technique',
+    setup:'Fingerboard, portable edge of een goede lijst. Kies een randje waarop je comfortabel op halve crimp of open hand kunt hangen. Zorg dat je opgewarmd bent.',
+    do:'Geen dood hangen: zet actief kracht met je vingers alsof je de rand naar je toe wilt krullen. Trek je vingertoppen bewust in de rand en houd de spanning constant hoog. Werk in isometrische holds van 7 tot 10 seconden op een intensiteit rond 80 tot 90 procent van je max — zwaar, maar 1 tot 2 tellen voor falen stoppen. Rust 2 tot 3 minuten volledig tussen de sets. 4 tot 6 sets. Voel dat je onderarm en vingers de hele hold actief aan het werk zijn, niet passief aan het pezen hangen.',
+    goal:'Maximale vingerkracht via korte, hoge isometrische spanning. Actief krullen in plaats van passief hangen rekruteert meer, met minder totale belasting op je pezen.' },
   { n:'Eén drill, volle focus', tag:'meta / aanpak', cat:'meta', dur:'1-3m extra', src:'technique',
     setup:'Slechts één drill per sessie. Een ladder is een reeks boulders oplopend in moeilijkheid, met meer rust naarmate het zwaarder wordt.',
     do:'De drill voegt één techniekpijler toe aan een warm-up die anders op de automatische piloot gaat. Neem een minuut of twee om je boulders te lezen en climbs te kiezen die bij de beweging van vandaag passen. Gebruik gerust grepen van naastliggende routes als die beter uitkomen. Lukt niet alles? Een handvol goede herhalingen is al winst.',
@@ -867,6 +1036,19 @@ const BLOCKLIB = {
     why:'Korte, lichte spray-sessie. Bewust laag in RPE houden (4-5) zodat je vingers fris blijven voor HoG erna. 6-10 boulders ruim onder je max, focus op soepel bewegen en de drill van vandaag. Geen limit work — dit is geen power-sessie.' },
   nohangs: { n:'No hangs + stretch', t:8, c:'#2A2A28', rpe:'-', sets:2, rest:1,
     why:'No hangs 2×30 sec half crimp. Daarna kort stretchen: schouders en onderarmen.' },
+  // ── minimal dose micro-blokken (minimum effective dose; López/Lattice-onderzoek naar korte frequente vingertraining) ──
+  activeCurls: { n:'Active finger curls', t:12, c:'#F59E0B', rpe:'8-9', sets:'4-6', rest:2, fixed:true,
+    why:'Power pulls op een rand of fingerboard: geen dood hangen maar actief kracht zetten alsof je de rand naar je toe krult. Isometrische holds van 7-10 sec op 80-90% van je max, 1-2 tellen voor falen stoppen, 2-3 min volledige rust, 4-6 sets. Actief krullen rekruteert meer met minder totale peesbelasting.' },
+  mdFinger: { n:'Vinger-prep', t:5, c:'#3A3A38', rpe:'3-5', fixed:true,
+    why:'Progressief opladen op de rand: 3-4 korte, steeds zwaardere hangs met volledige rust. Pezen op spanning brengen voor het maximale werk — nooit koud max hangen.' },
+  mdMaxHangs: { n:'Micro max hangs', t:12, c:'#F59E0B', rpe:'8-9', sets:5, rest:2, fixed:true,
+    why:'5 hangs van 7-10 sec op 85-90% van je max (half crimp), 2 min volledige rust tussen elke hang. Kort en zwaar geeft het grootste deel van de kracht-adaptatie in een fractie van de tijd. Stop 1-2 tellen voor falen.' },
+  mdNoHangs: { n:'Micro no-hangs', t:10, c:'#F59E0B', rpe:'8', sets:4, rest:2, fixed:true,
+    why:'Lifting edge of blok van de grond: 4 lifts per hand van 8-10 sec op hoge intensiteit, 2 min rust. Schoudervriendelijk alternatief met dezelfde vingerprikkel, makkelijk exact te doseren.' },
+  mdPull: { n:'Micro pull', t:6, c:'#E8FF47', rpe:'7-8', sets:3, rest:2, fixed:true,
+    why:'3×3 zware pull-ups (weighted als 3 makkelijk is), volledige rust. Trekkracht onderhouden in zes minuten.' },
+  mdCore: { n:'Micro core', t:5, c:'#E8FF47', rpe:'6-7', sets:3, fixed:true,
+    why:'3 rondes: 20 sec hollow hold plus 8 hanging knee raises. Spanning onderhouden zonder tijd te vreten.' },
   stretch: { n:'Stretch', t:10, c:'#2A2A28', rpe:'-',
     why:'Pancake-progressie (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine en lats. 2 min per positie. Adem uit.' },
   stretchLong: { n:'Stretch uitgebreid', t:25, c:'#2A2A28', rpe:'-',
@@ -880,45 +1062,40 @@ const BLOCKLIB = {
 // ══ SESSIONS = energiesysteem-containers ══
 // slots: vaste blokken (string) of keuzeslots (array = generator kiest er één, roteert per dag)
 const sessions = [
-  { id:'today', cat:'Vandaag', name:'Vandaag', desc:'Warm-up + drills\n+ volume checklist', color:'green', rpe:'6', tags:['vandaag','capacity','volume','drills','checklist'],
-    intent:'Warm-up, twee movement drills, en 25-35 zesde-graads boulders afvinken. Aerobe basis met techniekfocus.',
-    slots:[ 'dynamic', 'drillsOnly', 'volume' ] },
-  { id:'capacity', cat:'Capacity', name:'Capacity', desc:'Aerobe basis\nvolume en herhaling', color:'green', rpe:'6-7', tags:['capacity','volume','aeroob','basis'],
-    intent:'Aerobe capaciteit bouwen. Veel herhalingen met goede techniek — lichte vermoeidheid is oké, falen niet.',
-    slots:[ 'dynamic', 'warmup', ['volume','linked','boardVolume'], ['mini1','mini2'], 'nohangs' ] },
-  { id:'pe', cat:'Power Endurance', name:'Power Endurance', desc:'Anaerobe capaciteit\npump-tolerantie', color:'lime', rpe:'7-8', tags:['power endurance','hehe','4x4','pump'],
+  { id:'strength', cat:'Strength', name:'Strength', desc:'Maximale kracht\nvingers en lichaam', color:'amber', rpe:'8-9', tags:['strength','max','vingers','limit','hangs'],
+    intent:'Maximale kracht. Zware, korte inspanningen met volledig herstel — vingers eerst (fris), dan limietboulders. Kwaliteit boven volume; kracht zakt = sessie voorbij.',
+    slots:[ 'dynamic', 'warmupFinger', ['maxHangs','nohangs'], ['limitBlocks','board1'], ['slab','skillLight'], 'stretch' ] },
+  { id:'power', cat:'Power', name:'Power', desc:'Explosiviteit\nsnelheid van kracht', color:'red', rpe:'8-9', tags:['power','explosief','campus','dynos','contact'],
+    intent:'Explosieve kracht: snelheid waarmee je kracht zet. Volledig fris, vol commitment, lange rust. Stop zodra je snelheid verliest — vermoeid powertrainen traint traagheid.',
+    slots:[ 'dynamic', 'warmupFinger', 'tensionAct', ['campus','dynos'], ['boardApply','board1'], 'stretch' ] },
+  { id:'pe', cat:'Power Endurance', name:'Power Endurance', desc:'Anaerobe capaciteit\npump-tolerantie', color:'lime', rpe:'7-8', tags:['power endurance','hehe','4x4','pump','anaeroob'],
     intent:'Anaerobe capaciteit. Doorklimmen op vermoeide onderarmen zonder technisch in te storten — fatigue is hier het doel.',
     slots:[ 'dynamic', 'warmup', ['hehe','fourByFour','peFlow'], ['mini1','mini2'], 'stretch' ] },
-  { id:'power', cat:'Power', name:'Power', desc:'Maximale kracht\nlimiet en explosiviteit', color:'amber', rpe:'8-9', tags:['power','limit','campus','max','board'],
-    intent:'Maximale kracht. Weinig moves, vol commitment, lange rust. Power zakt = sessie voorbij.',
-    slots:[ 'dynamic', 'warmupFinger', ['board1','limitBlocks','maxHangs'], ['campus','dynos','tensionAct','mini3'], ['slab','skillLight'], 'stretch' ] },
+  { id:'capacity', cat:'Capacity', name:'Capacity', desc:'Aerobe basis\nvolume en herhaling', color:'green', rpe:'6-7', tags:['capacity','volume','aeroob','endurance','basis'],
+    intent:'Aerobe capaciteit bouwen. Veel herhalingen met goede techniek — lichte vermoeidheid is oké, falen niet.',
+    slots:[ 'dynamic', 'warmup', ['volume','linked','boardVolume'], ['mini1','mini2'], 'nohangs' ] },
+  { id:'gym', cat:'Conditioning', name:'Conditioning', desc:'Kracht & conditie\nweg van de vingers', color:'amber', rpe:'7-8', tags:['conditioning','gym','kracht','antagonist','core'],
+    intent:'Krachttraining buiten het klimmen: trek, druk, core en benen. Antagonist-balans en algemene kracht zonder vingerbelasting.',
+    slots:[ 'gymWarmup', 'pullStrength', 'pushStrength', 'coreLegs', ['mini1','mini2','mini3'], 'stretch' ] },
+  { id:'skill', cat:'Skill', name:'Skill', desc:'Techniek isolatie\nbewust klimmen', color:'purple', rpe:'5-6', tags:['skill','techniek','drills','movement'],
+    intent:'Techniek als hoofdgerecht. Drie drills grondig in plaats van twee terloops — videofeedback aangeraden.',
+    slots:[ 'dynamic', 'warmup', 'drillBlocks', 'boardApply', 'stretch' ] },
   { id:'perf', cat:'Performance', name:'Performance', desc:'Presteren\nprojecten en formats', color:'red', rpe:'8-10', tags:['performance','project','comp','pyramide'],
     intent:'Presteren wanneer het telt. Volledig herstel tussen pogingen, elke poging met intentie. Noteer wat werkte.',
     slots:[ 'dynamic', 'warmup', ['project','compStyle','pyramide'], ['skillLight','slab'], 'stretch' ] },
   { id:'recovery', cat:'Recovery', name:'Recovery', desc:'Actief herstel\nHoG en mobiliteit', color:'blue', rpe:'2-4', tags:['recovery','herstel','hog','mobiliteit','grippers'],
     intent:'Herstellen door te bewegen. Bloedsomloop, mobiliteit en vingeronderhoud — zonder klimbelasting van betekenis.',
     slots:[ 'dynamic', ['hog','easyClimb'], ['skillLight','lockoffs'], 'stretchLong' ] },
-  { id:'skill', cat:'Movement Skill', name:'Movement Skill', desc:'Techniek isolatie\nbewust klimmen', color:'purple', rpe:'5-6', tags:['skill','techniek','drills','movement'],
-    intent:'Techniek als hoofdgerecht. Drie drills grondig in plaats van twee terloops — videofeedback aangeraden.',
-    slots:[ 'dynamic', 'warmup', 'drillBlocks', 'boardApply', 'stretch' ] },
-  { id:'mixed', cat:'Mixed', name:'Mixed / Onderhoud', desc:'Drills + spray + HoG\nlichte combinatie', color:'blue', rpe:'4-5', tags:['mixed','onderhoud','hog','drills','spray'],
-    intent:'Onderhoudssessie: techniek, licht klimmen en grip-werk in één. Houd het spray-deel bewust laag in RPE zodat HoG nog kwaliteit heeft.',
-    slots:[ 'dynamic', 'drillsOnly', 'sprayLight', 'hog' ] },
-  { id:'drills', cat:'Drills', name:'Drills', desc:'Volledige bibliotheek\nkies zelf', color:'purple', rpe:'4-5', tags:['drills','techniek','movement','skill','bibliotheek'],
-    intent:'De volledige drill-bibliotheek. Kies zelf welke drills je doet — alle drills van Charlie en je eigen, met uitleg.',
+  { id:'minidose', cat:'Minimal Dose', name:'Minimal Dose', desc:'Hoog rendement\n±20 minuten', color:'amber', rpe:'8', tags:['minimal dose','kort','vingers','efficient'],
+    intent:'Minimum effective dose: het kleinste volume dat nog adaptatie oplevert. Vingers eerst, fris en zwaar, korte totaaltijd. Twee tot vier keer per week houdbaar naast een druk leven.',
+    slots:[ 'mdFinger', ['mdMaxHangs','mdNoHangs'], ['mdPull','mdCore'] ] },
+  { id:'drills', cat:'Drills', name:'Drill-bibliotheek', desc:'Volledige bibliotheek\nkies zelf', color:'purple', rpe:'4-5', tags:['drills','techniek','movement','skill','bibliotheek'],
+    intent:'De volledige drill-bibliotheek. Kies zelf welke drills je doet, met uitleg.',
     slots:[ 'drillLibrary' ] },
-  { id:'gym', cat:'Gym', name:'Gym', desc:'Kracht & conditie\nweg van de vingers', color:'amber', rpe:'7-8', tags:['gym','kracht','conditioning','antagonist'],
-    intent:'Krachttraining buiten het klimmen: trek, druk, core en benen. Antagonist-balans en algemene kracht zonder vingerbelasting.',
-    slots:[ 'gymWarmup', 'pullStrength', 'pushStrength', 'coreLegs', ['mini1','mini2','mini3'], 'stretch' ] },
 ];
 
 // startlijst (tot je eigen sessies binnenkomen)
-const recentSeed = [
-  { id:'today', ago:'start',  time:60, variant:'Warm-up + drills + volume' },
-  { id:'mixed', ago:'start',  time:60, variant:'Drills + spray + HoG' },
-  { id:'gym',   ago:'start',  time:60, variant:'Kracht & conditie' },
-];
-let recent = recentSeed.slice();
+let recent = [];  // gevuld vanuit historie; favorieten komen apart uit odyssey_favs
 
 // ── SESSIE-HISTORIE (recency + frequency) ──
 // opgeslagen in localStorage: [{id, variant, time, ts}], nieuwste eerst
@@ -929,11 +1106,35 @@ function loadHistory() {
 function saveHistory(h) {
   try { localStorage.setItem('odyssey_history', JSON.stringify(h.slice(0,50))); } catch {}
 }
-function logSessionDone(id, variant, time) {
+// ── LOAD-MODEL (sessie-RPE benadering, naar Foster et al. 2001) ──
+// load = duur (min) × intensiteitsfactor van het energiesysteem.
+// De factoren benaderen de typische sessie-RPE per systeem, geschaald 0-1 (≈ RPE/10).
+// LET OP: dit zijn startwaarden, bedoeld om met een sportwetenschapper te tunen.
+// Elke gelogde sessie bewaart id, duur, load en stoplicht-signaal — de ruwe data
+// blijft dus beschikbaar om het model later te herijken.
+const INTENSITY_FACTORS = {
+  minidose: 0.90,   // minimal dose: maximale intensiteit per minuut, kort totaal
+  strength: 0.85,   // max kracht: zwaar maar korte werkblokken, lange rust
+  power:    0.85,   // explosief: hoge neurale belasting per minuut
+  perf:     0.90,   // performance: maximale pogingen
+  pe:       0.75,   // power endurance: hoge metabole belasting
+  gym:      0.75,   // conditioning: klassiek krachtwerk
+  capacity: 0.65,   // aeroob volume: submaximaal, veel herhaling
+  custom:   0.65,   // eigen sessies: neutraal middenpunt
+  skill:    0.55,   // techniek: lage fysieke, hoge motorische belasting
+  drills:   0.45,   // drill-bibliotheek los
+  recovery: 0.30,   // actief herstel
+};
+function sessionLoad(id, minutes) {
+  return Math.round((minutes||0) * (INTENSITY_FACTORS[id] != null ? INTENSITY_FACTORS[id] : 0.65));
+}
+function logSessionDone(id, variant, time, sig) {
   const h = loadHistory();
-  h.unshift({ id, variant: variant||'', time: time||0, ts: Date.now() });
+  h.unshift({ id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) });
   saveHistory(h);
   rebuildRecent();
+  renderSignalCal();
+  if (typeof renderCoach === 'function') renderCoach();
 }
 function agoLabel(ts) {
   const d = Math.floor((Date.now() - ts) / 86400000);
@@ -945,7 +1146,7 @@ function agoLabel(ts) {
 }
 function rebuildRecent() {
   const h = loadHistory();
-  if (h.length === 0) { recent = recentSeed.slice(); if (typeof buildRecent==='function') buildRecent(); return; }
+  if (h.length === 0) { recent = []; if (typeof buildRecent==='function') buildRecent(); return; }
   // score per sessie-id: recency (laatste keer) + frequency (aantal keer)
   const now = Date.now();
   const byId = {};
@@ -963,7 +1164,7 @@ function rebuildRecent() {
   recent = scored.slice(0, 8).map(s => ({ id:s.id, ago:agoLabel(s.last), time:s.time||60, variant:s.variant }));
   if (typeof buildRecent==='function') buildRecent();
 }
-const categories = ['Vandaag','Capacity','Power Endurance','Power','Performance','Recovery','Movement Skill','Mixed','Drills','Gym'];
+const categories = ['Strength','Power','Power Endurance','Capacity','Conditioning','Skill','Performance','Recovery'];
 
 // variatie-offset: reroll bump per sessie
 const variantOffset = {};
@@ -972,7 +1173,7 @@ const durationOverride = {};
 
 const timeValues = [30,45,60,75,90,105,120,150];
 let activeTimeIdx = 2;
-let activeSessionId = 'today';
+let activeSessionId = 'capacity';
 let currentBlocks = [];
 let currentBlockIdx = 0;
 
@@ -991,7 +1192,38 @@ function blockClockElapsed() { return blockClockStart ? Math.round((Date.now() -
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
 
+// ── DRAFT (eigen/aangepaste sessie) ──
+let customSession = null;   // {id:'custom', cat, name, desc, color, rpe, intent, slots:[]}
+let customKeys = null;      // array van blok-keys van de draft
+
+function saveDraft() {
+  try {
+    if (customKeys && customSession) localStorage.setItem('odyssey_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned }));
+  } catch {}
+}
+function loadDraft() {
+  try { return JSON.parse(localStorage.getItem('odyssey_draft') || 'null'); } catch { return null; }
+}
+function composeFromKeys(keys) {
+  const base = keys.filter(k=>BLOCKLIB[k]).map((key, i) => ({...BLOCKLIB[key], _key:key, _slot:i, _alts:1}));
+  const isFixed = (b) => b.fixed === true || b._key === 'dynamic' || (durationOverride['custom'] && durationOverride['custom'][b._slot] != null);
+  const fixedTotal = base.filter(isFixed).reduce((sum,b)=>{
+    const ov = durationOverride['custom'] && durationOverride['custom'][b._slot];
+    return sum + (ov != null ? ov : b.t);
+  }, 0);
+  const flexBase = base.filter(b=>!isFixed(b)).reduce((sum,b)=>sum+b.t,0);
+  const flexBudget = Math.max(0, getT() - fixedTotal);
+  const ratio = flexBase > 0 ? flexBudget / flexBase : 1;
+  return base.map(b=>{
+    const ov = durationOverride['custom'] && durationOverride['custom'][b._slot];
+    if (ov != null) return {...b, t: ov};
+    if (b.fixed === true || b._key === 'dynamic') return {...b};
+    return {...b, t: Math.max(3, Math.round(b.t * ratio))};
+  });
+}
+
 function getBlocks(id) {
+  if (id === 'custom') return customKeys ? composeFromKeys(customKeys) : [];
   const s = sessions.find(x=>x.id===id);
   if (!s) return [];
   // compose: per slot, vast blok of keuze (roteert per dag + reroll-offset)
@@ -1026,6 +1258,7 @@ function getBlocks(id) {
 function rerollSession(id) {
   variantOffset[id] = (variantOffset[id] || 0) + 1;
   durationOverride[id] = {}; // reset handmatige aanpassingen bij nieuwe rol
+  sessionLocked = false;
   buildSlab();
   renderPreview();
   buildCategories();
@@ -1039,7 +1272,7 @@ function adjustBlock(id, slotIdx, currentT, delta) {
   renderPreview();
 }
 
-function getSession(id) { return sessions.find(x=>x.id===id); }
+function getSession(id) { if (id === 'custom') return customSession; return sessions.find(x=>x.id===id); }
 
 // ── NAVIGATION ──
 function goTo(viewId) {
@@ -1115,9 +1348,10 @@ function restoreConfirmDialog() {
 }
 
 function goToSession() {
+  if (activeSessionId !== 'custom') sessionLocked = false;
   // library-only sessie: direct naar de bibliotheek
   const s = getSession(activeSessionId);
-  if (s && s.slots.length === 1 && BLOCKLIB[s.slots[0]] && BLOCKLIB[s.slots[0]].library) {
+  if (s && s.slots && s.slots.length === 1 && BLOCKLIB[s.slots[0]] && BLOCKLIB[s.slots[0]].library) {
     currentBlocks = getBlocks(s.id);
     currentBlockIdx = 0;
     startDrillLibrary(0);
@@ -1215,15 +1449,43 @@ function showSessionSummary() {
   document.getElementById('summaryQuoteAuthor').style.display = 'none';
   document.getElementById('sessionSummary').style.display = 'flex';
 
-  // log naar historie (recency + frequency tracking)
+  // logging gebeurt pas bij de stoplicht-tik (of overslaan)
   const s = getSession(activeSessionId);
   const totalMin = spentMin || (s ? getT() : 60);
   const coreBlock = blocks.filter((b,i)=>i>0).sort((a,b)=>b.spent-a.spent)[0];
   const variant = coreBlock ? coreBlock.name : (s ? s.name : '');
-  if (s) logSessionDone(s.id, variant, totalMin);
+  _pendingLog = s ? { id: s.id, variant, time: totalMin } : null;
+  // stoplicht-UI terugzetten naar beginstand
+  document.getElementById('signalAsk').style.display = '';
+  document.getElementById('signalAdvice').style.display = 'none';
+}
+
+// ── STOPLICHT (sessie-autoregulatie, één tik) ──
+let _pendingLog = null;
+const SIGNAL_ADVICE = {
+  green:  { col:'#4ADE80', title:'Groen', txt:'Sterk gedaan en fris gebleven. Volgende sessie mag er iets bij: één set, één graad, of vijf minuten.' },
+  orange: { col:'#FB923C', title:'Oranje', txt:'Net op of over de rand. Houd het volume de komende sessie gelijk of neem iets terug, en pak een extra rustdag als die zich aandient.' },
+  red:    { col:'#F87171', title:'Rood — herstel nu', txt:'Stop-signaal. Plan 1 à 2 dagen rust; de eerstvolgende sessie licht (Recovery of Skill). Pijn die niet wegtrekt? Laat het checken.' },
+};
+function signalTap(sig) {
+  if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, sig); _pendingLog = null; }
+  const a = SIGNAL_ADVICE[sig];
+  document.getElementById('signalAsk').style.display = 'none';
+  const box = document.getElementById('signalAdvice');
+  box.style.display = '';
+  box.style.borderColor = a.col + '55';
+  document.getElementById('signalAdviceTitle').textContent = a.title;
+  document.getElementById('signalAdviceTitle').style.color = a.col;
+  document.getElementById('signalAdviceTxt').textContent = a.txt;
+}
+function signalSkip() {
+  if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, null); _pendingLog = null; }
+  closeSummary();
 }
 
 function closeSummary() {
+  // vangnet: als er nog een ongelogde sessie hangt, log zonder signaal
+  if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, null); _pendingLog = null; }
   document.getElementById('sessionSummary').style.display = 'none';
   sessionLog = {};
   recentFolded = false; applyRecentFold();
@@ -1329,20 +1591,12 @@ function guidedRun() {
   gInterval = setInterval(()=>{
     gRemain--;
     const tEl = document.getElementById('gi-t-'+gIdx);
-    const card = document.getElementById('gi-'+gIdx);
     if (gRemain > 0) {
       if (tEl) tEl.textContent = formatSec(gRemain);
     } else {
-      // overtijd: 10 sec doorlopen, geel kleuren, dan pas door
-      const over = -gRemain; // 0..10
-      if (tEl) { tEl.textContent = '+' + over + 's'; tEl.style.color = '#E8FF47'; }
-      if (card && !card.classList.contains('rest')) card.style.background = 'rgba(232,255,71,.06)';
-      if (over >= 10) {
-        if (tEl) tEl.style.color = '';
-        if (card) card.style.background = '';
-        clearInterval(gInterval);
-        guidedAdvance();
-      }
+      // tijd op → direct door naar volgende oefening
+      clearInterval(gInterval);
+      guidedAdvance();
     }
   }, 1000);
 }
@@ -1422,6 +1676,9 @@ function startDrillPlayer(blockIdx) {
 }
 
 function startDrillLibrary(blockIdx) {
+  dpFilter = '';
+  const dsi = document.getElementById('drillSearch');
+  if (dsi) dsi.value = '';
   drillMode = 'library';
   // volledige bibliotheek, zonder meta-drill; jij kiest zelf
   dpDrills = DRILLS.filter(d=>d.cat !== 'meta');
@@ -1629,10 +1886,18 @@ function showCheckSuccess() {
   setTimeout(()=>{ if(ov.style.opacity==='0') ov.style.display='none'; }, 2200);
 }
 
+let dpFilter = '';
+function dpMatch(d, q) {
+  if (!q) return true;
+  return (d.n + ' ' + (d.tag||'') + ' ' + (d.setup||'') + ' ' + (d.do||'') + ' ' + (d.goal||'')).toLowerCase().includes(q);
+}
 function renderDrillPlayer() {
   const stack = document.getElementById('drillStack');
-  document.getElementById('drillProg').textContent = `${dpDrills.length} drills`;
+  const q = (dpFilter||'').toLowerCase().trim();
+  const shown = dpDrills.filter(d=>dpMatch(d,q)).length;
+  document.getElementById('drillProg').textContent = q ? `${shown} / ${dpDrills.length} drills` : `${dpDrills.length} drills`;
   stack.innerHTML = dpDrills.map((d,i)=>{
+    if (!dpMatch(d,q)) return '';
     const running = dpIntervals[i] != null;
     return `<div class="dp-card" id="dp-${i}">
       <div class="dp-head" onclick="dpToggleOpen(${i})">
@@ -1709,13 +1974,47 @@ function dpMarkDone(i) {
 
 
 // ── VIEW 1: BROWSE ──
+function loadFavs() { try { return JSON.parse(localStorage.getItem('odyssey_favs') || '[]'); } catch { return []; } }
+function saveFavs(f) { try { localStorage.setItem('odyssey_favs', JSON.stringify(f.slice(0,12))); } catch {} }
+
 function buildRecent() {
   const row = document.getElementById('recentRow');
-  row.innerHTML = recent.map(r=>{
+  let html = '';
+
+  // 1. concept-draft (verder waar je was)
+  const draft = loadDraft();
+  if (draft && draft.keys && draft.keys.length) {
+    html += `<div class="recent-card" style="background:rgba(232,255,71,.05);border-color:rgba(232,255,71,.3);" onclick="openDraft()">
+      <div class="rc-top" style="background:var(--acid);"></div>
+      <div class="rc-body">
+        <div class="rc-name" style="color:var(--acid);">▶ ${draft.name || 'Concept'}</div>
+        <div class="rc-meta" style="color:#A3A300;">verder gaan</div>
+        <div class="rc-date">${draft.keys.length} blokken</div>
+      </div>
+    </div>`;
+  }
+
+  // 2. favorieten
+  const favs = loadFavs();
+  favs.forEach((f, i) => {
+    const col = C[f.color] || C.lime;
+    html += `<div class="recent-card" style="background:${col.bg};border-color:${col.border};" onclick="openFav(${i})" ontouchstart="favPressStart(${i})" ontouchend="favPressEnd()" ontouchmove="favPressEnd()" onmousedown="favPressStart(${i})" onmouseup="favPressEnd()">
+      <div class="rc-top" style="background:${col.color};"></div>
+      <div class="rc-body">
+        <div class="rc-name" style="color:${col.text};">★ ${f.name}</div>
+        <div class="rc-meta" style="color:${col.color};">favoriet</div>
+        <div class="rc-date">${f.keys.length} blokken · ${f.time}'</div>
+      </div>
+    </div>`;
+  });
+
+  // 3. slimme recents (uit historie)
+  recent.forEach(r => {
     const s = getSession(r.id);
+    if (!s) return;
     const col = C[s.color];
     const isActive = s.id === activeSessionId;
-    return `<div class="recent-card${isActive?' active':''}" style="background:${col.bg};border-color:${isActive?col.color:col.border};${isActive?'--rc-color:'+col.color+';':''}" onclick="selectSession('${s.id}')">
+    html += `<div class="recent-card${isActive?' active':''}" style="background:${col.bg};border-color:${isActive?col.color:col.border};${isActive?'--rc-color:'+col.color+';':''}" onclick="selectSession('${s.id}')">
       <div class="rc-top" style="background:${col.color};"></div>
       <div class="rc-body">
         <div class="rc-name" style="color:${col.text};">${s.name}</div>
@@ -1723,7 +2022,495 @@ function buildRecent() {
         <div class="rc-date">${r.ago} · ${r.time}'</div>
       </div>
     </div>`;
+  });
+
+  if (!html) {
+    html = `<div style="padding:14px 4px;font-family:'Barlow',sans-serif;font-size:12px;color:#6A6A66;">Nog leeg — genereer of bouw je eerste sessie, en bewaar favorieten met ☆.</div>`;
+  }
+  row.innerHTML = html;
+}
+
+let _favPressTimer = null, _favLongPressed = false;
+function favPressStart(i) {
+  clearTimeout(_favPressTimer);
+  _favPressTimer = setTimeout(()=>{ _favLongPressed = true; if (navigator.vibrate) navigator.vibrate(25); removeFav(i); }, 600);
+}
+function favPressEnd() { clearTimeout(_favPressTimer); setTimeout(()=>{ _favLongPressed = false; }, 300); }
+
+// ── STOPLICHT-KALENDER (laatste 28 dagen, afgeleid uit historie) ──
+function renderSignalCal() {
+  const wrap = document.getElementById('signalCalWrap');
+  const cal = document.getElementById('signalCal');
+  if (!wrap || !cal) return;
+  const h = loadHistory();
+  if (!h.length) { wrap.style.display = 'none'; return; }
+  wrap.style.display = '';
+  const SIG_COL = { green:'#4ADE80', orange:'#FB923C', red:'#F87171' };
+  const SIG_RANK = { red:3, orange:2, green:1 };
+  // per dag: zwaarste signaal wint; sessie zonder signaal = neutraal gevuld
+  const days = [];
+  const now = new Date(); now.setHours(0,0,0,0);
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(now.getTime() - i*86400000);
+    const entries = h.filter(e => { const t = new Date(e.ts); t.setHours(0,0,0,0); return t.getTime() === d.getTime(); });
+    let col = null, load = 0;
+    entries.forEach(e => {
+      load += e.load || 0;
+      if (e.sig && (!col || SIG_RANK[e.sig] > SIG_RANK[col])) col = e.sig;
+    });
+    days.push({ trained: entries.length > 0, col, load });
+  }
+  cal.innerHTML = days.map(d => {
+    const bg = d.trained ? (d.col ? SIG_COL[d.col] : '#4A4A46') : '#161614';
+    const glow = d.col === 'red' ? 'box-shadow:0 0 8px rgba(248,113,113,.4);' : '';
+    return `<div title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:3px;background:${bg};${glow}"></div>`;
   }).join('');
+  // mini-samenvatting: sessies + rood-teller
+  const trained = days.filter(d=>d.trained).length;
+  const reds = days.filter(d=>d.col==='red').length;
+  document.getElementById('signalCalSummary').textContent = `${trained} sessies` + (reds ? ` · ${reds}× rood` : '');
+}
+
+// ── ACWR: acute vs chronische belasting (Gabbett) ──
+// acute = som load laatste 7 dagen; chronisch = weekgemiddelde laatste 28 dagen.
+// zones: <0.8 onderbelast · 0.8-1.3 sweet spot · 1.3-1.5 verhoogd · >1.5 hoog risico
+function computeACWR() {
+  const h = loadHistory();
+  const now = Date.now();
+  const acute = h.filter(e => now - e.ts <= 7*86400000).reduce((s,e)=>s+(e.load||0),0);
+  const last28 = h.filter(e => now - e.ts <= 28*86400000).reduce((s,e)=>s+(e.load||0),0);
+  const chronic = last28 / 4;
+  const ratio = chronic > 0 ? acute / chronic : null;
+  return { acute, chronic: Math.round(chronic), ratio };
+}
+function acwrZone(r) {
+  if (r == null) return { name:'te weinig data', col:'#8A8A86', txt:'Nog te weinig historie voor een betrouwbare ratio. Train 2 à 3 weken door, dan wordt dit beeld betekenisvol.' };
+  if (r < 0.8) return { name:'onderbelast', col:'#5A7A9A', txt:'Je traint deze week duidelijk minder dan je gewend bent. Prima als herstelweek; duurt dit langer, bouw dan geleidelijk weer op.' };
+  if (r <= 1.3) return { name:'sweet spot', col:'#4ADE80', txt:'Je belasting groeit in een gezond tempo ten opzichte van wat je lichaam gewend is. Hier wil je zitten.' };
+  if (r <= 1.5) return { name:'verhoogd', col:'#FB923C', txt:'Je acute belasting loopt op ten opzichte van je basis. Nog geen alarm, maar voeg deze week geen extra volume of intensiteit toe.' };
+  return { name:'hoog risico', col:'#F87171', txt:'Je traint fors meer dan je lichaam gewend is; dit is de zone met verhoogd blessurerisico. Neem rust of schakel terug naar Recovery en Skill.' };
+}
+function renderLoadPanel() {
+  const { acute, chronic, ratio } = computeACWR();
+  document.getElementById('acwrAcute').textContent = acute;
+  document.getElementById('acwrChronic').textContent = chronic;
+  const rEl = document.getElementById('acwrRatio');
+  const z = acwrZone(ratio);
+  rEl.textContent = ratio == null ? '–' : ratio.toFixed(2);
+  rEl.style.color = z.col;
+  document.getElementById('acwrAdvice').textContent = z.txt;
+  // marker op de zonebalk: schaal 0 → 2.5 over 0% → 100%
+  const pos = ratio == null ? 0 : Math.min(100, Math.max(0, ratio / 2.5 * 100));
+  document.getElementById('acwrMarker').style.left = pos + '%';
+}
+function toggleLoadPanel() {
+  const p = document.getElementById('loadPanel');
+  const chev = document.getElementById('loadChev');
+  const open = p.style.display !== 'none';
+  p.style.display = open ? 'none' : '';
+  if (chev) chev.textContent = open ? '▾' : '▴';
+  if (!open) renderLoadPanel();
+}
+
+// ── ADAPTIEVE COACH ──
+// Autoregulatie in vier lagen, in volgorde van voorrang:
+// 1. rood signaal of ACWR > 1.5  → herstel afdwingen
+// 2. twee keer oranje op rij of ACWR 1.3-1.5 → volume vasthouden, licht systeem
+// 3. gisteren zwaar (strength/power/perf) → vandaag laag-intensief alterneren
+// 4. anders → progressie, roteer energiesystemen
+let _coachPick = null;
+function coachSuggest() {
+  const h = loadHistory();
+  const { ratio } = computeACWR();
+  const now = Date.now();
+  const last = h[0] || null;
+  const daysSince = last ? Math.floor((now - last.ts) / 86400000) : null;
+  const sig1 = last ? last.sig : null;
+  const sig2 = h[1] ? h[1].sig : null;
+  const HEAVY = ['strength','power','perf','pe'];
+
+  if (!h.length) return { id:'capacity', time:60, badge:'#4ADE80',
+    reason:'Nog geen historie. Begin met een aerobe basis: volume met goede techniek, daar bouwt al het andere op.' };
+  if (sig1 === 'red') return { id:'recovery', time:45, badge:'#F87171',
+    reason:'Je laatste sessie was rood. Vandaag actief herstel: bloedsomloop en mobiliteit, geen belasting van betekenis.' };
+  if (ratio != null && ratio > 1.5) return { id:'recovery', time:45, badge:'#F87171',
+    reason:'Je acute belasting is fors hoger dan je gewend bent (ratio ' + ratio.toFixed(2) + '). Herstel nu voorkomt blessures straks.' };
+  if (sig1 === 'orange' && sig2 === 'orange') return { id:'skill', time:60, badge:'#FB923C',
+    reason:'Twee keer oranje op rij. Techniekwerk houdt je in beweging zonder de belasting verder op te stapelen.' };
+  if (ratio != null && ratio > 1.3) return { id:'capacity', time:45, badge:'#FB923C',
+    reason:'Je belasting loopt op (ratio ' + ratio.toFixed(2) + '). Licht aeroob volume, geen intensiteit toevoegen deze week.' };
+  if (last && HEAVY.includes(last.id) && daysSince <= 1) {
+    return { id:'skill', time:60, badge:'#4ADE80',
+      reason:'Gisteren zwaar getraind (' + (getSession(last.id) ? getSession(last.id).name : last.id) + '). Alterneren: vandaag techniek of licht volume, morgen weer intensief.' };
+  }
+  // progressie: roteer weg van het laatst getrainde systeem
+  const rotation = ['strength','pe','capacity','power'];
+  const lastIdx = rotation.indexOf(last ? last.id : '');
+  const nextId = rotation[(lastIdx + 1 + rotation.length) % rotation.length] || 'capacity';
+  const extra = sig1 === 'green' ? ' Je vorige sessie was groen, dus er mag iets bij: een set, een graad of vijf minuten.' : '';
+  return { id: nextId, time:60, badge:'#4ADE80',
+    reason:'Fris genoeg voor kwaliteit. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is aan de beurt in je rotatie.' + extra };
+}
+function renderCoach() {
+  const card = document.getElementById('coachCard');
+  if (!card) return;
+  const pick = coachSuggest();
+  _coachPick = pick;
+  const s = getSession(pick.id);
+  if (!s) { card.style.display = 'none'; return; }
+  card.style.display = '';
+  const col = C[s.color] || C.lime;
+  document.getElementById('coachName').textContent = s.name + ' · ' + pick.time + ' min';
+  document.getElementById('coachName').style.color = col.text;
+  document.getElementById('coachReason').textContent = pick.reason;
+  document.getElementById('coachBadge').style.background = pick.badge;
+}
+function applyCoach() {
+  if (!_coachPick) return;
+  const ti = timeValues.indexOf(_coachPick.time);
+  if (ti >= 0) setTimeIdx(ti);
+  selectSession(_coachPick.id);
+  goToSession();
+}
+
+// ── TWEE PADEN ──
+function toggleGenerate() {
+  const s = document.getElementById('generateSection');
+  const chev = document.getElementById('genChev');
+  const open = s.style.display !== 'none';
+  s.style.display = open ? 'none' : '';
+  if (chev) chev.textContent = open ? '▾' : '▴';
+}
+
+function startBuildPath() {
+  customSession = { id:'custom', cat:'eigen', name:'Eigen sessie', desc:'', color:'lime', rpe:'–',
+    intent:'Zelf samengesteld. Voeg blokken toe, pas duur aan in het blok zelf.' };
+  customKeys = [];
+  sessionLocked = false;
+  sessionOwned = true;
+  activeSessionId = 'custom';
+  durationOverride['custom'] = {};
+  buildSlab();
+  goTo('v-session');
+}
+
+function openDraft() {
+  const d = loadDraft();
+  if (!d) return;
+  customSession = { id:'custom', cat:'eigen', name:d.name || 'Eigen sessie', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Zelf samengesteld.' };
+  customKeys = d.keys.slice();
+  activeSessionId = 'custom';
+  sessionLocked = !!d.locked;
+  sessionOwned = d.owned !== false;
+  buildSlab();
+  goTo('v-session');
+}
+
+function openFav(i) {
+  if (_favLongPressed) return;
+  const f = loadFavs()[i];
+  if (!f) return;
+  customSession = { id:'custom', cat:'eigen', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favoriete sessie.' };
+  customKeys = f.keys.slice();
+  activeSessionId = 'custom';
+  sessionLocked = true;   // favorieten zijn eerder vastgelegd
+  sessionOwned = true;
+  buildSlab();
+  goTo('v-session');
+}
+
+// generatieve sessie omzetten naar bewerkbare draft
+function ensureDraftMode() {
+  if (activeSessionId === 'custom') return;
+  const s = getSession(activeSessionId);
+  customKeys = currentBlocks.map(b => b._key);
+  customSession = { id:'custom', cat:'eigen', name: s ? s.name : 'Eigen sessie', desc:'', color: s ? s.color : 'lime', rpe: s ? s.rpe : '–', intent: s ? s.intent : '' };
+  durationOverride['custom'] = {};
+  activeSessionId = 'custom';
+  sessionLocked = false;
+}
+
+// ── BLOK-PICKER (gegroepeerd + zoeken) ──
+// Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
+// warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
+const BLOCK_GROUPS = [
+  { name:'Warm-up & activatie',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct'] },
+  { name:'Techniek & drills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
+  { name:'Capaciteit · aeroob volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
+  { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
+  { name:'Max kracht & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
+  { name:'Vingerkracht',               keys:['maxHangs','nohangs','activeCurls','hog'] },
+  { name:'Antagonist, core & gym',     keys:['pullStrength','pushStrength','coreLegs','mini1','mini2','mini3','lockoffs'] },
+  { name:'Herstel & mobiliteit',       keys:['stretch','stretchLong'] },
+];
+// verborgen blokken (gebruiker kan de bibliotheek opschonen)
+function loadHidden() { try { return JSON.parse(localStorage.getItem('odyssey_hidden_blocks') || '[]'); } catch { return []; } }
+function saveHidden(a) { try { localStorage.setItem('odyssey_hidden_blocks', JSON.stringify(a)); } catch {} }
+function hideBlock(key) {
+  const b = BLOCKLIB[key];
+  askConfirm('Blok verbergen?', `"${b ? b.n : key}" verdwijnt uit de bibliotheek. Onderin kun je hem altijd terugzetten.`, 'Verberg', ()=>{
+    const h = loadHidden();
+    if (!h.includes(key)) h.push(key);
+    saveHidden(h);
+    renderBlockPicker(document.getElementById('blockSearch').value);
+  });
+}
+function restoreBlock(key) {
+  saveHidden(loadHidden().filter(k=>k!==key));
+  renderBlockPicker(document.getElementById('blockSearch').value);
+}
+function openBlockPicker() {
+  document.getElementById('blockSearch').value = '';
+  renderBlockPicker('');
+  document.getElementById('blockPicker').style.display = 'flex';
+}
+function renderBlockPicker(query) {
+  const q = (query||'').toLowerCase().trim();
+  const hidden = loadHidden();
+  const grouped = new Set();
+  BLOCK_GROUPS.forEach(g=>g.keys.forEach(k=>grouped.add(k)));
+  const own = Object.keys(BLOCKLIB).filter(k=>k.startsWith('ux_'));
+  const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_'));
+  const allGroups = [
+    ...(own.length ? [{name:'Eigen', keys:own}] : []),
+    ...BLOCK_GROUPS,
+    ...(rest.length ? [{name:'Overig', keys:rest}] : [])
+  ];
+
+  const html = allGroups.map(g=>{
+    const items = g.keys
+      .filter(k=>BLOCKLIB[k] && !hidden.includes(k))
+      .filter(k=>{
+        if (!q) return true;
+        const b = BLOCKLIB[k];
+        return (b.n + ' ' + (b.why||'')).toLowerCase().includes(q);
+      })
+      .map(k=>{
+        const b = BLOCKLIB[k];
+        const bm = b.bm ? `<span style="font-size:7px;letter-spacing:.1em;color:#E8FF47;border:1px solid rgba(232,255,71,.3);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;">BENCHMARK</span>` : '';
+        const del = k.startsWith('ux_')
+          ? `<div onclick="event.stopPropagation();deleteCustomBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:#F87171;padding:6px 10px;margin-right:2px;">×</div>`
+          : `<div onclick="event.stopPropagation();hideBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:#5A5A56;padding:6px 10px;margin-right:2px;">×</div>`;
+        return `<div onclick="pickBlock('${k}')" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:#111;border-radius:8px;border-left:3px solid ${b.c};cursor:pointer;">
+          <div style="flex:1;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:#6A6A66;margin-top:2px;">rpe ${b.rpe || '–'} · basis ${b.t}'</div>
+          </div>
+          ${del}
+          <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
+        </div>`;
+      }).join('');
+    if (!items) return '';
+    return `<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5A5A56;margin:10px 0 2px;">${g.name}</div>` + items;
+  }).join('');
+  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed #3A3A38;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#A3E635;">+ nieuwe oefening</div>`;
+  // terugzet-sectie voor verborgen blokken
+  const hiddenList = hidden.filter(k=>BLOCKLIB[k]);
+  const hiddenHTML = (!q && hiddenList.length)
+    ? `<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#3E3E3C;margin:14px 0 2px;">verborgen · tik om terug te zetten</div>` +
+      hiddenList.map(k=>`<div onclick="restoreBlock('${k}')" style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:none;border:1px dashed #242422;border-radius:8px;cursor:pointer;">
+        <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:#5A5A56;">${BLOCKLIB[k].n}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5A5A56;">↩</div>
+      </div>`).join('')
+    : '';
+  document.getElementById('blockPickerList').innerHTML = newBtn + (html || `<div style="padding:20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Niets gevonden voor "${query}".</div>`) + hiddenHTML;
+}
+function closeBlockPicker() { document.getElementById('blockPicker').style.display = 'none'; }
+function pickBlock(key) {
+  if (sessionLocked) return;
+  ensureDraftMode();
+  customKeys.push(key);
+  sessionLocked = false;
+  closeBlockPicker();
+  buildSlab();
+}
+
+// ── EIGEN OEFENINGEN ──
+function loadCustomBlocks() { try { return JSON.parse(localStorage.getItem('odyssey_custom_blocks') || '{}'); } catch { return {}; } }
+function saveCustomBlocks(o) { try { localStorage.setItem('odyssey_custom_blocks', JSON.stringify(o)); } catch {} }
+function registerCustomBlocks() {
+  const o = loadCustomBlocks();
+  Object.keys(o).forEach(k => { BLOCKLIB[k] = o[k]; });
+}
+function linkLabel(url) {
+  try {
+    const h = new URL(url).hostname.replace('www.','');
+    if (h.includes('instagram')) return 'Bekijk op Instagram';
+    if (h.includes('youtube') || h.includes('youtu.be')) return 'Bekijk op YouTube';
+    if (h.includes('kilterboard')) return 'Open in Kilter Board';
+    if (h.includes('tiktok')) return 'Bekijk op TikTok';
+    return 'Bekijk bron';
+  } catch { return 'Bekijk bron'; }
+}
+function openNewExercise() {
+  ['neName','neMin','neRpe','neWhy','neLink'].forEach(id => { document.getElementById(id).value = ''; });
+  document.getElementById('neMin').value = '10';
+  document.getElementById('newExerciseDialog').style.display = 'flex';
+}
+function closeNewExercise() { document.getElementById('newExerciseDialog').style.display = 'none'; }
+function confirmNewExercise() {
+  const name = (document.getElementById('neName').value || '').trim();
+  if (!name) { document.getElementById('neName').focus(); return; }
+  const t = Math.max(3, parseInt(document.getElementById('neMin').value) || 10);
+  const rpe = (document.getElementById('neRpe').value || '').trim() || '–';
+  const why = (document.getElementById('neWhy').value || '').trim() || 'Eigen oefening.';
+  const url = (document.getElementById('neLink').value || '').trim();
+  const key = 'ux_' + Date.now().toString(36);
+  const block = { n: name, t, c: '#A3E635', rpe, why, fixed: false };
+  if (url) block.links = [{ label: linkLabel(url), url }];
+  const store = loadCustomBlocks();
+  store[key] = block;
+  saveCustomBlocks(store);
+  BLOCKLIB[key] = block;
+  closeNewExercise();
+  // direct toevoegen aan de huidige sessie
+  pickBlock(key);
+}
+
+// ── DELEN VIA LINK (eerst opslaan, dan delen) ──
+let sessionLocked = false;   // vastgelegd: structuur op slot, delen en starten mogelijk
+let sessionOwned = true;     // false = ontvangen via deel-link (alleen kopie kan bewerkt)
+let _pendingShare = false;   // delen gevraagd terwijl nog niet opgeslagen
+function isCurrentFav() {
+  const s = getSession(activeSessionId);
+  const name = s ? s.name : '';
+  return loadFavs().some(f => f.name === name);
+}
+function updateFavStar() {
+  const locked = sessionLocked;
+  const el = id => document.getElementById(id);
+  // bewerken alleen op eigen sessies; kopie alleen op ontvangen sessies
+  if (el('editBtn')) el('editBtn').style.display = (locked && sessionOwned) ? 'flex' : 'none';
+  if (el('dupBtn')) el('dupBtn').style.display = (locked && !sessionOwned) ? 'flex' : 'none';
+  if (el('favStarBtn')) {
+    el('favStarBtn').style.display = locked ? 'flex' : 'none';
+    const fav = isCurrentFav();
+    el('favStarBtn').textContent = fav ? '★' : '☆';
+    el('favStarBtn').style.color = fav ? 'var(--acid)' : '#C8C8C4';
+  }
+  if (el('shareBtn')) el('shareBtn').style.display = locked ? 'flex' : 'none';
+  if (el('saveBigBtn')) el('saveBigBtn').style.display = locked ? 'none' : '';
+  if (el('startBtn')) el('startBtn').style.display = locked ? '' : 'none';
+}
+function unlockEdit() {
+  sessionLocked = false;
+  buildSlab();
+}
+function duplicateSession() {
+  if (customSession) customSession.name = customSession.name + ' · mijn variant';
+  sessionOwned = true;
+  sessionLocked = false;
+  if (customSession) customSession.intent = 'Eigen variant van een gedeelde sessie. Pas aan en leg vast.';
+  buildSlab();
+}
+function toggleFavorite() {
+  const s = getSession(activeSessionId);
+  if (!s) return;
+  let favs = loadFavs();
+  if (favs.some(f => f.name === s.name)) {
+    favs = favs.filter(f => f.name !== s.name);
+  } else {
+    favs.unshift({ name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getT() });
+  }
+  saveFavs(favs);
+  buildRecent();
+  updateFavStar();
+}
+function encodeSession() {
+  const s = getSession(activeSessionId);
+  const keys = currentBlocks.map(b=>b._key);
+  const payload = { n: s ? s.name : 'Sessie', k: keys, t: getT(), c: s ? s.color : 'lime' };
+  // eigen oefeningen reizen mee in de link
+  const own = keys.filter(k=>k.startsWith('ux_') && BLOCKLIB[k]);
+  if (own.length) {
+    payload.x = {};
+    own.forEach(k=>{ const b = BLOCKLIB[k]; payload.x[k] = { n:b.n, t:b.t, rpe:b.rpe, why:b.why, links:b.links }; });
+  }
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function decodeSession(hash) {
+  try {
+    const b64 = hash.replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(decodeURIComponent(escape(atob(b64))));
+  } catch { return null; }
+}
+function shareSession() {
+  if (!currentBlocks.length) return;
+  if (!sessionLocked) { openSaveFav(); return; }
+  doShare();
+}
+function doShare() {
+  const url = location.origin + location.pathname + '#s=' + encodeSession();
+  const s = getSession(activeSessionId);
+  const title = 'Odyssey: ' + (s ? s.name : 'sessie');
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(()=>{ openShareDialog(url); });
+  } else {
+    openShareDialog(url);
+  }
+}
+function openShareDialog(url) {
+  document.getElementById('shareLinkInput').value = url;
+  document.getElementById('shareDialog').style.display = 'flex';
+}
+function closeShareDialog() { document.getElementById('shareDialog').style.display = 'none'; }
+function copyShareLink() {
+  const inp = document.getElementById('shareLinkInput');
+  inp.select();
+  try { navigator.clipboard.writeText(inp.value); } catch { document.execCommand('copy'); }
+  const btn = document.getElementById('copyLinkBtn');
+  btn.textContent = 'Gekopieerd ✓';
+  setTimeout(()=>{ btn.textContent = 'Kopieer link'; }, 1800);
+}
+function importFromHash() {
+  const m = location.hash.match(/#s=(.+)/);
+  if (!m) return false;
+  const p = decodeSession(m[1]);
+  history.replaceState(null, '', location.pathname);
+  if (!p || !Array.isArray(p.k) || !p.k.length) return false;
+  // meegereisde eigen oefeningen registreren en lokaal bewaren
+  if (p.x) {
+    const store = loadCustomBlocks();
+    Object.keys(p.x).forEach(k=>{
+      const d = p.x[k];
+      const block = { n:d.n||'Oefening', t:d.t||10, c:'#A3E635', rpe:d.rpe||'–', why:d.why||'', fixed:false };
+      if (d.links) block.links = d.links;
+      BLOCKLIB[k] = block;
+      store[k] = block;
+    });
+    saveCustomBlocks(store);
+  }
+  const validKeys = p.k.filter(k=>BLOCKLIB[k]);
+  if (!validKeys.length) return false;
+  customSession = { id:'custom', cat:'gedeeld', name: (p.n||'Gedeelde sessie'), desc:'', color: p.c||'lime', rpe:'–', intent:'Gedeelde sessie · vastgelegd door de maker. Wil je iets anders? Maak een eigen kopie (⧉).' };
+  customKeys = validKeys;
+  activeSessionId = 'custom';
+  sessionLocked = true;
+  sessionOwned = false;
+  const ti = timeValues.indexOf(p.t);
+  if (ti >= 0) { activeTimeIdx = ti; }
+  buildSlab();
+  goTo('v-session');
+  return true;
+}
+
+// ── FAVORIET BEWAREN ──
+function openSaveFav() {
+  if (!currentBlocks.length) return;
+  const s = getSession(activeSessionId);
+  document.getElementById('favNameInput').value = s && s.name !== 'Eigen sessie' ? s.name : '';
+  document.getElementById('saveFavDialog').style.display = 'flex';
+}
+function closeSaveFav() { document.getElementById('saveFavDialog').style.display = 'none'; _pendingShare = false; document.getElementById('favDialogHint').style.display = 'none'; }
+function confirmSaveFav() {
+  // vastleggen: naam + slot. Favoriet is een aparte, latere keuze (☆).
+  const name = (document.getElementById('favNameInput').value || '').trim() || 'Mijn sessie';
+  if (customSession && activeSessionId === 'custom') { customSession.name = name; }
+  sessionLocked = true;
+  closeSaveFav();
+  buildSlab();
+  updateFavStar();
+  if (_pendingShare) { _pendingShare = false; doShare(); }
 }
 
 function buildCategories() {
@@ -1770,6 +2557,8 @@ function renderPreview() {
 let recentFolded = false;
 function selectSession(id) {
   activeSessionId = id;
+  sessionLocked = false;
+  sessionOwned = true;
   // recent-rij inklappen zodra een systeem gekozen is
   if (!recentFolded) { recentFolded = true; applyRecentFold(); }
   buildRecent();
@@ -1791,8 +2580,28 @@ function applyRecentFold() {
   } else {
     row.style.display = '';
     if (chev) chev.textContent = '▾';
-    if (more) more.textContent = 'alles →';
+    if (more) more.textContent = '';
   }
+}
+
+// tape-tooltip: welk blok en welke trainingscategorie zit achter deze kleur
+function blockGroupName(key) {
+  if (key && key.startsWith('ux_')) return 'Eigen';
+  for (const g of BLOCK_GROUPS) { if (g.keys.includes(key)) return g.name; }
+  return 'Overig';
+}
+function tapeInfo(i) {
+  const b = currentBlocks[i];
+  if (!b) return;
+  const tip = document.getElementById('tapeTip');
+  document.getElementById('tapeTipDot').style.background = b.c;
+  document.getElementById('tapeTipName').textContent = b.n;
+  document.getElementById('tapeTipMeta').textContent = `${b.t}' · ${blockGroupName(b._key).toLowerCase()}`;
+  tip.style.display = 'flex';
+}
+function tapeInfoHide() {
+  const tip = document.getElementById('tapeTip');
+  if (tip) tip.style.display = 'none';
 }
 
 // ── VIEW 2: SLAB ──
@@ -1805,39 +2614,195 @@ function nameColor(c) {
 
 function buildSlab() {
   const s = getSession(activeSessionId);
-  const col = C[s.color];
+  const col = C[s.color] || C.lime;
   currentBlocks = getBlocks(s.id);
   const total = currentBlocks.reduce((sum,b)=>sum+b.t,0);
+  const isCustom = s.id === 'custom';
 
   document.getElementById('slabTitle').textContent = s.name;
   document.getElementById('slabTitle').style.color = col.text;
   document.getElementById('slabMeta').textContent = `do · rpe ${s.rpe} · ${total} min`;
   document.getElementById('slabMeta').style.color = col.color;
   document.getElementById('slabMeta').style.opacity = '.5';
-  document.getElementById('slabFooterMeta').innerHTML = `${s.cat.toLowerCase()}<br><b>${total} min</b>`;
+  document.getElementById('slabFooterMeta').innerHTML = `${(s.cat||'eigen').toLowerCase()}<br><b>${total} min</b>`;
   document.getElementById('slabIntent').textContent = s.intent || '';
 
-  // tape
-  document.getElementById('slabTape').innerHTML = currentBlocks.map(b=>
-    `<div class="slab-seg" style="width:${(b.t/total*100).toFixed(1)}%;background:${b.c};opacity:.75;"></div>`).join('');
+  // varieer alleen voor gegenereerde, niet-vastgelegde sessies
+  const rerollBtn = document.querySelector('button[onclick="rerollSession(activeSessionId)"]');
+  if (rerollBtn) rerollBtn.style.display = (isCustom || sessionLocked) ? 'none' : '';
+  if (sessionLocked) slabEditMode = false;
 
-  // blocks
-  document.getElementById('slabBlocks').innerHTML = currentBlocks.map((b,i)=>`
-    <div class="slab-block" style="background:${b.c}18;" onclick="openBlock(${i})">
+  // tape
+  document.getElementById('slabTape').innerHTML = total > 0 ? currentBlocks.map((b,i)=>
+    `<div class="slab-seg" style="width:${(b.t/total*100).toFixed(1)}%;background:${b.c};opacity:.75;"
+      ontouchstart="tapeInfo(${i})" ontouchend="tapeInfoHide()" ontouchcancel="tapeInfoHide()"
+      onmouseenter="tapeInfo(${i})" onmouseleave="tapeInfoHide()"></div>`).join('') : '';
+
+  // blocks + acties
+  const blocksHTML = currentBlocks.map((b,i)=>{
+    if (slabEditMode) {
+      return `<div class="slab-block slab-real" data-idx="${i}" style="background:${b.c}18;">
+        <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
+        <div class="slab-drag-handle" ontouchstart="handleDragStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="handleDragStart(event,this)" style="z-index:3;">≡</div>
+        <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}</div>
+        <button onclick="removeBlock(${i})" class="edit-mini" style="color:#F87171;border-color:#F8717144;z-index:3;flex-shrink:0;">×</button>
+      </div>`;
+    }
+    const dragAttrs = sessionLocked ? '' : `ontouchstart="slabPressStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="slabPressStart(event,this)"`;
+    return `<div class="slab-block slab-real" data-idx="${i}" style="background:${b.c}18;" onclick="slabBlockTap(${i})" ${dragAttrs}>
       <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
       <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}</div>
       <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
+  const emptyHint = currentBlocks.length === 0
+    ? `<div style="padding:26px 20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Nog leeg. Voeg je eerste blok toe.</div>` : '';
+  const addRow = `
+    <div class="slab-block" style="background:none;border:1px dashed #2E2E2C;min-height:54px;justify-content:center;" onclick="openBlockPicker()">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">+ blok toevoegen</div>
+    </div>
+    <div class="slab-block" style="background:none;min-height:44px;justify-content:center;" onclick="toggleSlabEdit()">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid)':'#6A6A66'};">${slabEditMode?'✓ klaar met bewerken':'✎ volgorde bewerken'}</div>
+    </div>`;
+  const lockedRow = sessionLocked ? `
+    <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#4A4A46;">${sessionOwned ? 'vastgelegd · ✎ om te bewerken' : 'gedeelde sessie · ⧉ voor een eigen kopie'}</div>
+    </div>` : '';
+  document.getElementById('slabBlocks').innerHTML = blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
 
   updateSlabProgress(0);
+  if (typeof updateFavStar === 'function') updateFavStar();
+  if (isCustom) saveDraft();
+}
+
+// ── EDIT & DRAG (Spotify-stijl herordenen) ──
+let slabEditMode = false;
+let _pressTimer = null;
+let _dragging = false, _dragEl = null, _pressY = 0, _justDragged = false;
+
+function slabBlockTap(i) {
+  if (_justDragged) { _justDragged = false; return; }
+  openBlock(i);
+}
+function slabPressStart(ev, el) {
+  clearTimeout(_pressTimer);
+  const t = ev.touches ? ev.touches[0] : ev;
+  _pressY = t.clientY;
+  _pressTimer = setTimeout(()=>{ beginDrag(el); }, 420);
+}
+function handleDragStart(ev, handle) {
+  // drag-handle in bewerkmodus: direct slepen, geen long-press
+  ev.preventDefault();
+  const t = ev.touches ? ev.touches[0] : ev;
+  _pressY = t.clientY;
+  beginDrag(handle.closest('.slab-real'));
+}
+function beginDrag(el) {
+  if (!el || sessionLocked) return;
+  ensureDraftMode();
+  _dragging = true; _dragEl = el;
+  el.classList.add('drag-lift');
+  if (navigator.vibrate) navigator.vibrate(25);
+}
+function slabPressMove(ev) {
+  const t = ev.touches ? ev.touches[0] : ev;
+  if (!_dragging) {
+    // beweging voor de long-press afgaat = scrollen → annuleer
+    if (Math.abs(t.clientY - _pressY) > 10) clearTimeout(_pressTimer);
+    return;
+  }
+  ev.preventDefault();
+  const y = t.clientY;
+  const container = document.getElementById('slabBlocks');
+  const sibs = [...container.querySelectorAll('.slab-real')].filter(b => b !== _dragEl);
+  for (const b of sibs) {
+    const r = b.getBoundingClientRect();
+    if (y > r.top && y < r.bottom) {
+      const before = y < r.top + r.height / 2;
+      const target = before ? b : b.nextSibling;
+      if (target !== _dragEl && target !== _dragEl.nextSibling) {
+        container.insertBefore(_dragEl, target);
+      }
+      break;
+    }
+  }
+}
+function slabPressEnd() {
+  clearTimeout(_pressTimer);
+  if (_dragging) endDrag();
+}
+function endDrag() {
+  _dragging = false;
+  _justDragged = true;
+  setTimeout(()=>{ _justDragged = false; }, 350);
+  if (_dragEl) _dragEl.classList.remove('drag-lift');
+  // nieuwe volgorde uit de DOM lezen en terugschrijven
+  const order = [...document.querySelectorAll('#slabBlocks .slab-real')].map(el => parseInt(el.dataset.idx));
+  const newKeys = order.map(i => customKeys[i]);
+  const ov = durationOverride['custom'] || {};
+  const nov = {};
+  order.forEach((oldI, newI) => { if (ov[oldI] != null) nov[newI] = ov[oldI]; });
+  customKeys = newKeys;
+  durationOverride['custom'] = nov;
+  _dragEl = null;
+  sessionLocked = false; updateFavStar();
+  buildSlab();
+}
+// muis-ondersteuning voor desktop preview
+window.addEventListener('mousemove', (e)=>{ if (_pressTimer || _dragging) slabPressMove(e); });
+window.addEventListener('mouseup', ()=>{ slabPressEnd(); });
+
+function toggleSlabEdit() { if (sessionLocked) return; slabEditMode = !slabEditMode; buildSlab(); }
+
+// generieke bevestiging (hergebruikt de exit-dialoog)
+function askConfirm(title, msg, btnLabel, fn) {
+  _pendingExit = fn;
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMsg').textContent = msg;
+  const dlg = document.getElementById('confirmExit');
+  const leaveBtn = dlg.querySelector('button[onclick="confirmLeave()"]');
+  if (leaveBtn) leaveBtn.textContent = btnLabel;
+  dlg.style.display = 'flex';
+}
+function removeFav(i) {
+  const favs = loadFavs();
+  const f = favs[i];
+  if (!f) return;
+  askConfirm('Favoriet verwijderen?', `"${f.name}" wordt uit je lijst gehaald.`, 'Verwijder', ()=>{
+    favs.splice(i,1); saveFavs(favs); buildRecent();
+  });
+}
+function deleteCustomBlock(key) {
+  const b = BLOCKLIB[key];
+  askConfirm('Oefening verwijderen?', `"${b ? b.n : 'Oefening'}" verdwijnt uit je bibliotheek.`, 'Verwijder', ()=>{
+    delete BLOCKLIB[key];
+    const store = loadCustomBlocks();
+    delete store[key];
+    saveCustomBlocks(store);
+    renderBlockPicker(document.getElementById('blockSearch').value);
+  });
+}
+function removeBlock(i) {
+  ensureDraftMode();
+  customKeys.splice(i, 1);
+  const ov = durationOverride['custom'] || {};
+  const next = {};
+  Object.keys(ov).forEach(k=>{
+    const idx = parseInt(k);
+    if (idx === i) return;
+    next[idx > i ? idx-1 : idx] = ov[k];
+  });
+  durationOverride['custom'] = next;
+  sessionLocked = false; updateFavStar();
+  buildSlab();
 }
 
 function updateSlabProgress(idx) {
   const pct = currentBlocks.length ? (idx / currentBlocks.length * 100) : 0;
   document.getElementById('slabProgressFill').style.width = pct + '%';
-  // dim completed blocks
-  document.querySelectorAll('.slab-block').forEach((el,i)=>{
-    el.style.opacity = i < idx ? '.3' : '1';
+  // dim completed blocks (alleen echte blokken, niet de actie-rijen)
+  document.querySelectorAll('#slabBlocks .slab-block').forEach((el,i)=>{
+    el.style.opacity = (i < idx && i < currentBlocks.length) ? '.3' : '1';
   });
 }
 
@@ -2147,7 +3112,10 @@ document.addEventListener('click',e=>{
 });
 
 // ── INIT ──
-rebuildRecent(); buildRecent(); buildCategories(); renderPreview();
+['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });
+registerCustomBlocks();
+rebuildRecent(); renderSignalCal(); renderCoach(); buildRecent(); buildCategories(); renderPreview();
+importFromHash();  // gedeelde sessie via #s=… direct openen
 setTimeout(()=>setTimeIdx(activeTimeIdx),60);
 
 // desktop: verticaal scrollwiel → horizontaal op de rijen
