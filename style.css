@@ -139,11 +139,12 @@ body {
 .time-track-wrap::after { right:0; background:linear-gradient(-90deg,var(--bg),transparent); }
 .time-track { display:flex; gap:7px; padding:3px 80px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; cursor:grab; }
 .time-track::-webkit-scrollbar { display:none; }
-.time-item { scroll-snap-align:center; flex-shrink:0; width:58px; padding:11px 0; border-radius:6px; border:1px solid var(--border); background:var(--s1); text-align:center; cursor:pointer; transition:all .18s; user-select:none; }
+/* MOCK Choose-prototype: chips gedemoveerd — tijd is een parameter, niet het hoofdevent */
+.time-item { scroll-snap-align:center; flex-shrink:0; width:46px; padding:8px 0; border-radius:6px; border:1px solid var(--border); background:var(--s1); text-align:center; cursor:pointer; transition:all .18s; user-select:none; }
 .time-item.active { border-color:var(--acid); background:rgba(230,245,87,.05); box-shadow:0 0 12px var(--acid-g); }
-.t-num { font-size:23px; font-weight:900; color:var(--sub); transition:color .18s; line-height:1; }
+.t-num { font-size:16px; font-weight:900; color:var(--sub); transition:color .18s; line-height:1; }
 .time-item.active .t-num { color:var(--acid); }
-.t-unit { font-family:'DM Mono',monospace; font-size:8px; color:var(--muted); margin-top:1px; }
+.t-unit { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:1px; }
 .time-item.active .t-unit { color:var(--acid-d); }
 
 /* search */

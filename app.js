@@ -2593,3 +2593,78 @@ if ('serviceWorker' in navigator) {
     });
   }).catch(()=>{ /* offline cache optioneel */ });
 }
+
+// ══════════════════════════════════════════════════════════════
+// MOCK — Choose-prototype (throwaway). Alles hieronder is nep:
+// verzonnen sessies, verzonnen coaches, verzonnen like-tellers.
+// Geen backend, geen opslag. Verwijderen na de test.
+// ══════════════════════════════════════════════════════════════
+const MOCK_CHOOSE = [
+  // cat: 'featured' | 'new' | 'popular' | 'coach'
+  { cat:'featured', name:'Crimp Factory',  coach:'Mila Berg',     mins:75, color:'amber',  rpe:'8-9', likes:214, keys:['dynamic','maxHangs','board1','stretch'],            intent:'Max finger strength on small edges. Long rests, full effort.' },
+  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', likes:187, keys:['dynamic','limitBlocks','dynos','stretch'],          intent:'Hard moves, big holds, full commitment.' },
+  { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   likes:156, keys:['warmup','volume','boardApply','stretchLong'],       intent:'Volume day. Stay smooth, stop before form breaks.' },
+  { cat:'new',      name:'Board Blitz',    coach:'Teo Marchetti', mins:60, color:'amber',  rpe:'8',   likes:12,  keys:['dynamic','campus','board1','stretch'],              intent:'Short and sharp board work.' },
+  { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', mins:75, color:'purple', rpe:'5-6', likes:8,   keys:['warmup','drillBlocks','sprayLight','stretch'],      intent:'Movement quality over difficulty. Quiet feet, straight arms.' },
+  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', likes:19,  keys:['dynamic','drillsOnly','skillLight','stretch'],      intent:'Technique session. Every foot placement counts.' },
+  { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', likes:342, keys:['warmup','hehe','fourByFour','stretchLong'],         intent:'Power endurance. Pace yourself, the last set decides.' },
+  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',likes:298, keys:['warmupFinger','project','stretch'],                 intent:'Project attempts at full freshness. Rest long, try hard.' },
+  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', likes:251, keys:['mobilityOpen','easyClimb','hog','stretch'],         intent:'Recovery climbing. Leave the gym feeling better.' },
+  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', likes:96,  keys:['warmupFinger','maxHangs','activeCurls','stretch'],  intent:'Structured finger loading, from prep to max.' },
+  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', likes:74,  keys:['dynamic','compStyle','pyramide','stretchLong'],     intent:'Four-minute walls of effort, comp format.' },
+  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', likes:63,  keys:['mobilityOpen','hog','nohangs','stretchLong'],       intent:'Tendon care and easy movement on a rest week.' }
+];
+
+function renderChooseRows() {
+  const rowIds = { featured:'chooseRowFeatured', new:'chooseRowNew', popular:'chooseRowPopular', coach:'chooseRowCoach' };
+  Object.keys(rowIds).forEach(cat => {
+    const el = document.getElementById(rowIds[cat]);
+    if (!el) return;
+    el.innerHTML = MOCK_CHOOSE
+      .map((s, i) => ({ s, i }))
+      .filter(x => x.s.cat === cat)
+      .map(({ s, i }) => {
+        const col = C[s.color] || C.lime;
+        return `<div class="recent-card" style="width:150px;background:${col.bg};border-color:${col.border};" onclick="openMockSession(${i})">
+          <div class="rc-top" style="background:${col.color};"></div>
+          <div class="rc-body">
+            <div class="rc-name" style="color:${col.text};">${s.name}</div>
+            <div class="rc-meta" style="color:${col.color};font-size:10px;">${s.coach}</div>
+            <div class="rc-date" style="font-size:10px;">${s.mins}' · rpe ${s.rpe} · ♥ ${s.likes}</div>
+          </div>
+        </div>`;
+      }).join('');
+  });
+}
+
+let _chooseRendered = false;
+function openChoose() {
+  if (!_chooseRendered) {
+    renderChooseRows();
+    enableWheelScroll('#chooseRowFeatured'); enableWheelScroll('#chooseRowNew');
+    enableWheelScroll('#chooseRowPopular'); enableWheelScroll('#chooseRowCoach');
+    _chooseRendered = true;
+  }
+  goTo('v-choose');
+}
+
+function openMockSession(i) {
+  const s = MOCK_CHOOSE[i];
+  if (!s) return;
+  customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach + ' (mock)' };
+  customKeys = s.keys.slice();
+  activeSessionId = 'custom';
+  sessionLocked = true;
+  sessionOwned = false;
+  // tijdselectie op de dichtstbijzijnde chip zetten (zelfde idee als importFromHash)
+  let best = 0, bd = Infinity;
+  timeValues.forEach((t, ti) => { const d = Math.abs(t - s.mins); if (d < bd) { bd = d; best = ti; } });
+  activeTimeIdx = best;
+  buildSlab();
+  goTo('v-session');
+}
+
+function openGenerate() {
+  goTo('v-generate');
+  setTimeIdx(activeTimeIdx);  // chip-status en samenvatting syncen nu de view zichtbaar is
+}

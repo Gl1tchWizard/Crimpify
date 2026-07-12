@@ -50,7 +50,7 @@
   <div class="view active" id="v-browse">
     <div class="topbar"><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div><div class="streak" id="streakEl"></div></div>
     <div id="greetEl" style="padding:8px 20px 0;"></div>
-    <div class="phase-line" id="phaseLine"></div>
+    <div class="phase-line" id="phaseLine" style="display:none;"></div>
     <div class="search-wrap" style="display:none;">
       <div class="search-box">
         <div class="search-icon">⌕</div>
@@ -60,6 +60,93 @@
     <div class="search-results" id="searchResults"></div>
     <div class="scroll-body">
       <div class="main-content" id="mainContent">
+        <!-- MOCK Choose-prototype: gestripte landing — alleen paden, Mijn sessies, laatste 4 weken -->
+        <div class="path-cards">
+          <div class="path-card" onclick="openChoose()">
+            <div class="path-name">Choose</div>
+            <div class="path-sub">browse ready-made sessions</div>
+          </div>
+          <div class="path-card" onclick="goTo('v-build')">
+            <div class="path-name">Build</div>
+            <div class="path-sub">generate or design</div>
+          </div>
+        </div>
+        <div class="section-head" id="recentHead" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">My sessions <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
+        <div class="tiles-row" id="recentRow"></div>
+        <div id="signalCalWrap" style="display:none;">
+          <div class="section-head" onclick="toggleLoadPanel()" style="cursor:pointer;"><div class="section-title">Last 4 weeks <span id="loadChev" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="signalCalSummary"></div></div>
+          <div id="signalCal" style="display:grid;grid-template-columns:repeat(14,1fr);gap:4px;padding:0 20px 10px;"></div>
+          <div id="loadPanel" style="display:none;margin:2px 20px 12px;padding:14px;border:1px solid #2A2A28;border-radius:10px;background:#0E0E0C;">
+            <div style="display:flex;gap:14px;">
+              <div style="flex:1;text-align:center;">
+                <div id="acwrAcute" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#F5F5F2;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">acute · 7d</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div id="acwrChronic" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#8A8A86;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">chronic · weekly avg</div>
+              </div>
+              <div style="flex:1;text-align:center;">
+                <div id="acwrRatio" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;">–</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">ratio</div>
+              </div>
+            </div>
+            <div id="acwrZoneBar" style="position:relative;height:8px;border-radius:4px;margin-top:12px;background:linear-gradient(90deg,#5A7A9A 0%,#5A7A9A 26%,#4ADE80 26%,#4ADE80 56%,#FB923C 56%,#FB923C 66%,#F87171 66%,#F87171 100%);">
+              <div id="acwrMarker" style="position:absolute;top:-3px;width:3px;height:14px;background:#F5F5F2;border-radius:2px;left:0%;"></div>
+            </div>
+            <div id="acwrAdvice" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#C8C8C4;margin-top:10px;">–</div>
+            <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr model (gabbett) · load = duration × intensity factor (srpe, foster)</div>
+          </div>
+        </div>
+        <div style="height:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MOCK VIEW: CHOOSE (throwaway prototype) ══ -->
+  <div class="view" id="v-choose">
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button></div>
+    <div class="scroll-body">
+      <div class="main-content">
+        <div class="slabel">choose a session</div>
+        <div class="section-head"><div class="section-title">Featured</div></div>
+        <div class="tiles-row" id="chooseRowFeatured"></div>
+        <div class="section-head"><div class="section-title">New</div></div>
+        <div class="tiles-row" id="chooseRowNew"></div>
+        <div class="section-head"><div class="section-title">Popular</div></div>
+        <div class="tiles-row" id="chooseRowPopular"></div>
+        <div class="section-head"><div class="section-title">By coach</div></div>
+        <div class="tiles-row" id="chooseRowCoach"></div>
+        <div style="height:12px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MOCK VIEW: BUILD MENU (throwaway prototype) ══ -->
+  <div class="view" id="v-build">
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button></div>
+    <div class="scroll-body">
+      <div class="main-content">
+        <div class="slabel">build a session</div>
+        <div class="path-cards" style="grid-template-columns:1fr;">
+          <div class="path-card" onclick="openGenerate()">
+            <div class="path-name">Generate</div>
+            <div class="path-sub">pick an energy system, we compose it</div>
+          </div>
+          <div class="path-card" style="cursor:default;opacity:.45;">
+            <div class="path-name" style="color:var(--sub);">Design</div>
+            <div class="path-sub">coming soon</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ MOCK VIEW: GENERATE (bestaande generator, verplaatst van de landing) ══ -->
+  <div class="view" id="v-generate">
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-build')">← back</button></div>
+    <div class="scroll-body">
+      <div class="main-content">
         <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
           <span>time available</span>
           <span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span>
@@ -90,48 +177,10 @@
           <div id="coachReason" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#B8B8B4;margin-top:4px;">–</div>
           <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid rgba(230,245,87,.35);background:none;color:var(--acid);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Use suggestion →</button>
         </div>
-        <!-- twee paden -->
-        <div class="path-cards">
-          <div class="path-card" onclick="toggleGenerate()">
-            <div class="path-name">Generate <span id="genChev" style="font-size:12px;opacity:.5;">▾</span></div>
-            <div class="path-sub">pick an energy system</div>
-          </div>
-          <div class="path-card" onclick="startBuildPath()">
-            <div class="path-name">Build</div>
-            <div class="path-sub">assemble your own</div>
-          </div>
-        </div>
-        <div id="generateSection" style="display:none;">
+        <div id="generateSection">
           <div id="categorySections"></div>
           <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed #2E2E2C;border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">open the drill library →</div>
         </div>
-        <div id="signalCalWrap" style="display:none;">
-          <div class="section-head" onclick="toggleLoadPanel()" style="cursor:pointer;"><div class="section-title">Last 4 weeks <span id="loadChev" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="signalCalSummary"></div></div>
-          <div id="signalCal" style="display:grid;grid-template-columns:repeat(14,1fr);gap:4px;padding:0 20px 10px;"></div>
-          <div id="loadPanel" style="display:none;margin:2px 20px 12px;padding:14px;border:1px solid #2A2A28;border-radius:10px;background:#0E0E0C;">
-            <div style="display:flex;gap:14px;">
-              <div style="flex:1;text-align:center;">
-                <div id="acwrAcute" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#F5F5F2;">–</div>
-                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">acute · 7d</div>
-              </div>
-              <div style="flex:1;text-align:center;">
-                <div id="acwrChronic" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#8A8A86;">–</div>
-                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">chronic · weekly avg</div>
-              </div>
-              <div style="flex:1;text-align:center;">
-                <div id="acwrRatio" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;">–</div>
-                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">ratio</div>
-              </div>
-            </div>
-            <div id="acwrZoneBar" style="position:relative;height:8px;border-radius:4px;margin-top:12px;background:linear-gradient(90deg,#5A7A9A 0%,#5A7A9A 26%,#4ADE80 26%,#4ADE80 56%,#FB923C 56%,#FB923C 66%,#F87171 66%,#F87171 100%);">
-              <div id="acwrMarker" style="position:absolute;top:-3px;width:3px;height:14px;background:#F5F5F2;border-radius:2px;left:0%;"></div>
-            </div>
-            <div id="acwrAdvice" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#C8C8C4;margin-top:10px;">–</div>
-            <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr model (gabbett) · load = duration × intensity factor (srpe, foster)</div>
-          </div>
-        </div>
-        <div class="section-head" id="recentHead" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">My sessions <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
-        <div class="tiles-row" id="recentRow"></div>
         <div class="active-preview" id="activePreview"></div>
         <div class="movement"><div class="mvmt-dot"></div><div class="mvmt-text">movement skill <b>always included</b></div></div>
         <div style="height:12px;"></div>
