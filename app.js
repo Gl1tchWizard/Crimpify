@@ -400,7 +400,7 @@ const variantOffset = {};
 // handmatige duur per blok: { sessionId: { slotIndex: minutes } }
 const durationOverride = {};
 
-const timeValues = [30,45,60,75,90,105,120,150];
+const timeValues = [30,45,60,75,90,105,120,150,Infinity];  // Infinity = geen tijdslimiet (MOCK-prototype)
 let activeTimeIdx = 2;
 let activeSessionId = 'capacity';
 let currentBlocks = [];
@@ -420,6 +420,8 @@ function blockClockElapsed() { return blockClockStart ? Math.round((Date.now() -
 
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
+// eindige tijd voor opslag/encoding: bij ∞ de som van de huidige blokduren
+function getTFinite() { return isFinite(getT()) ? getT() : currentBlocks.reduce((s,b)=>s+b.t,0); }
 
 // ── DRAFT (eigen/aangepaste sessie) ──
 let customSession = null;   // {id:'custom', cat, name, desc, color, rpe, intent, slots:[]}
@@ -442,7 +444,7 @@ function composeFromKeys(keys) {
   }, 0);
   const flexBase = base.filter(b=>!isFixed(b)).reduce((sum,b)=>sum+b.t,0);
   const flexBudget = Math.max(0, getT() - fixedTotal);
-  const ratio = flexBase > 0 ? flexBudget / flexBase : 1;
+  const ratio = flexBase > 0 && isFinite(flexBudget) ? flexBudget / flexBase : 1;  // ∞ = natuurlijke lengte
   return base.map(b=>{
     const ov = durationOverride['custom'] && durationOverride['custom'][b._slot];
     if (ov != null) return {...b, t: ov};
@@ -475,7 +477,7 @@ function getBlocks(id) {
   }, 0);
   const flexBase = base.filter(b=>!isFixed(b)).reduce((sum,b)=>sum+b.t,0);
   const flexBudget = Math.max(0, getT() - fixedTotal);
-  const ratio = flexBase > 0 ? flexBudget / flexBase : 1;
+  const ratio = flexBase > 0 && isFinite(flexBudget) ? flexBudget / flexBase : 1;  // ∞ = natuurlijke lengte
   return base.map(b=>{
     const ov = durationOverride[id] && durationOverride[id][b._slot];
     if (ov != null) return {...b, t: ov};
@@ -680,7 +682,7 @@ function showSessionSummary() {
 
   // logging gebeurt pas bij de stoplicht-tik (of overslaan)
   const s = getSession(activeSessionId);
-  const totalMin = spentMin || (s ? getT() : 60);
+  const totalMin = spentMin || (s ? getTFinite() : 60);
   const coreBlock = blocks.filter((b,i)=>i>0).sort((a,b)=>b.spent-a.spent)[0];
   const variant = coreBlock ? coreBlock.name : (s ? s.name : '');
   _pendingLog = s ? { id: s.id, variant, time: totalMin, snap: {
@@ -1230,8 +1232,8 @@ function buildRecent() {
       <div class="rc-top" style="background:var(--acid);"></div>
       <div class="rc-body">
         <div class="rc-name" style="color:var(--acid);">▶ ${draft.name || 'Concept'}</div>
-        <div class="rc-meta" style="color:#A3A300;">verder gaan</div>
-        <div class="rc-date">${draft.keys.length} blokken</div>
+        <div class="rc-meta" style="color:#A3A300;">continue</div>
+        <div class="rc-date">${draft.keys.length} blocks</div>
       </div>
     </div>`;
   }
@@ -1244,8 +1246,8 @@ function buildRecent() {
       <div class="rc-top" style="background:${col.color};"></div>
       <div class="rc-body">
         <div class="rc-name" style="color:${col.text};">★ ${f.name}</div>
-        <div class="rc-meta" style="color:${col.color};">favoriet</div>
-        <div class="rc-date">${f.keys.length} blokken · ${f.time}'</div>
+        <div class="rc-meta" style="color:${col.color};">favourite</div>
+        <div class="rc-date">${f.keys.length} blocks · ${f.time}'</div>
       </div>
     </div>`;
   });
@@ -1766,7 +1768,7 @@ function toggleFavorite() {
   if (favs.some(f => f.name === s.name)) {
     favs = favs.filter(f => f.name !== s.name);
   } else {
-    favs.unshift({ name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getT() });
+    favs.unshift({ name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite() });
   }
   saveFavs(favs);
   buildRecent();
@@ -1774,7 +1776,7 @@ function toggleFavorite() {
 }
 function encodeSession() {
   const s = getSession(activeSessionId);
-  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getT(), s ? s.color : 'lime');
+  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime');
 }
 function encodePayload(name, keys, time, color) {
   const payload = { n: name || 'Session', k: keys, t: time, c: color || 'lime' };
@@ -1801,7 +1803,7 @@ function shareText(sessName, time) {
   let who = '';
   try { who = localStorage.getItem('crimpify_name') || ''; } catch {}
   const label = who ? who + "\u2019s \u201C" + sessName + "\u201D" : "\u201C" + sessName + "\u201D";
-  return label + ' \u00B7 ' + (time || getT()) + ' min boulder session \u2192 tap the link to train it';
+  return label + ' \u00B7 ' + (time || getTFinite()) + ' min boulder session \u2192 tap the link to train it';
 }
 function doShare() {
   const url = location.origin + location.pathname + '#s=' + encodeSession();
@@ -2434,10 +2436,12 @@ function setTimeIdx(idx){
   activeTimeIdx=idx;
   [...track.querySelectorAll('.time-item')].forEach((item,i)=>item.classList.toggle('active',i===idx));
   const item=track.querySelectorAll('.time-item')[idx];
-  track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2,behavior:'smooth'});
+  if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2,behavior:'smooth'});
   const sum=document.getElementById('timeSummary');
-  if(sum) sum.textContent = timeValues[idx] + ' min';
+  const v=timeValues[idx];
+  if(sum) sum.textContent = isFinite(v) ? v + ' min' : 'no limit';
   buildCategories(); renderPreview();
+  if (typeof renderTimeBar === 'function') renderTimeBar();  // MOCK: tijdbalk op de landing meesyncen
 }
 function toggleTimePicker(){
   const w=document.getElementById('timeTrackWrap');
@@ -2668,3 +2672,34 @@ function openGenerate() {
   goTo('v-generate');
   setTimeIdx(activeTimeIdx);  // chip-status en samenvatting syncen nu de view zichtbaar is
 }
+
+// ── MOCK: prominente tijdbalk op de landing (stuurt getT(), dus ook Choose) ──
+function renderTimeBar() {
+  const bar = document.getElementById('timeBar');
+  if (!bar) return;
+  bar.innerHTML = timeValues.map((v, i) => `
+    <div class="tb-seg${i <= activeTimeIdx ? ' on' : ''}${i === activeTimeIdx ? ' head' : ''}" onclick="pickTime(${i})">
+      <div class="tb-block"></div>
+      <div class="tb-lab">${isFinite(v) ? v : '∞'}</div>
+    </div>`).join('');
+  const ro = document.getElementById('timeBarReadout');
+  const v = timeValues[activeTimeIdx];
+  if (ro) ro.innerHTML = isFinite(v) ? `${v}<span>min</span>` : `∞<span>no limit</span>`;
+}
+function pickTime(i) { setTimeIdx(i); }
+
+// ── MOCK: deuren met lading + lege-staat-zin ──
+function renderDoors() {
+  const el = document.getElementById('doorChooseSub');
+  if (!el) return;
+  const names = MOCK_CHOOSE.slice(0, 3).map(s => s.name).join(' · ');
+  el.textContent = `${MOCK_CHOOSE.length} sessions · ${names}`;
+}
+function renderEmptyHint() {
+  const el = document.getElementById('emptyHint');
+  if (!el) return;
+  let h = [];
+  try { h = JSON.parse(localStorage.getItem('crimpify_history') || '[]'); } catch {}
+  el.style.display = (Array.isArray(h) && h.length) ? 'none' : '';
+}
+renderTimeBar(); renderDoors(); renderEmptyHint();

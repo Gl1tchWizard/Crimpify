@@ -60,17 +60,28 @@
     <div class="search-results" id="searchResults"></div>
     <div class="scroll-body">
       <div class="main-content" id="mainContent">
-        <!-- MOCK Choose-prototype: gestripte landing — alleen paden, Mijn sessies, laatste 4 weken -->
-        <div class="path-cards">
-          <div class="path-card" onclick="openChoose()">
-            <div class="path-name">Choose</div>
-            <div class="path-sub">browse ready-made sessions</div>
+        <!-- MOCK Choose-prototype: tijdbalk (stuurt het schema, ook voor Choose) -->
+        <div class="timebar-wrap">
+          <div class="timebar-head">
+            <div class="slabel" style="padding:0;font-size:10px;">session time</div>
+            <div class="timebar-readout" id="timeBarReadout">60<span>min</span></div>
           </div>
-          <div class="path-card" onclick="goTo('v-build')">
-            <div class="path-name">Build</div>
-            <div class="path-sub">generate or design</div>
+          <div class="timebar" id="timeBar"></div>
+        </div>
+        <!-- MOCK: de twee deuren -->
+        <div class="doors">
+          <div class="door" onclick="openChoose()">
+            <svg class="door-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <div class="door-name">Choose</div>
+            <div class="door-sub" id="doorChooseSub">ready-made sessions</div>
+          </div>
+          <div class="door" onclick="goTo('v-build')">
+            <svg class="door-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 8h8M18 8h2M4 16h4M14 16h6"/><circle cx="15" cy="8" r="2.2"/><circle cx="10" cy="16" r="2.2"/></svg>
+            <div class="door-name">Build</div>
+            <div class="door-sub">your time, your session, in seconds</div>
           </div>
         </div>
+        <div class="empty-hint" id="emptyHint" style="display:none;">Generate a boulder session that fits your time, train it with timers, and share it with a link.</div>
         <div class="section-head" id="recentHead" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">My sessions <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
         <div class="tiles-row" id="recentRow"></div>
         <div id="signalCalWrap" style="display:none;">
@@ -97,6 +108,16 @@
             <div id="acwrAdvice" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#C8C8C4;margin-top:10px;">–</div>
             <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr model (gabbett) · load = duration × intensity factor (srpe, foster)</div>
           </div>
+        </div>
+        <!-- coach-voorstel (verplaatst naar landing-onderkant, compact en neutraal — acid is voor tijdbalk + deuren) -->
+        <div id="coachCard" style="display:none;margin:10px 20px 4px;padding:11px 13px;border:1px solid var(--border2);border-radius:10px;background:var(--s1);">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#8A8A86;">coach · today</div>
+            <div id="coachBadge" style="width:8px;height:8px;border-radius:50%;background:#4ADE80;"></div>
+          </div>
+          <div id="coachName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;margin-top:4px;">–</div>
+          <div id="coachReason" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#9A9A96;margin-top:2px;">–</div>
+          <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:8px;width:100%;padding:9px;border-radius:8px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Use suggestion →</button>
         </div>
         <div style="height:12px;"></div>
       </div>
@@ -147,35 +168,29 @@
     <div class="topbar"><button class="back-btn" onclick="goTo('v-build')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
-        <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>time available</span>
-          <span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span>
-        </div>
-        <div class="time-track-wrap" id="timeTrackWrap">
-          <div class="time-track" id="timeTrack">
-            <div class="time-item" data-t="30"><div class="t-num">30</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="45"><div class="t-num">45</div><div class="t-unit">min</div></div>
-            <div class="time-item active" data-t="60"><div class="t-num">60</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="75"><div class="t-num">75</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="90"><div class="t-num">90</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="105"><div class="t-num">105</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="120"><div class="t-num">120</div><div class="t-unit">min</div></div>
-            <div class="time-item" data-t="150"><div class="t-num">150</div><div class="t-unit">min</div></div>
+        <!-- MOCK: legacy tijd-chips, verborgen — de tijdbalk op de landing stuurt; init-code (app.js) bindt hieraan -->
+        <div style="display:none;">
+          <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
+            <span>time available</span>
+            <span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span>
+          </div>
+          <div class="time-track-wrap" id="timeTrackWrap">
+            <div class="time-track" id="timeTrack">
+              <div class="time-item" data-t="30"><div class="t-num">30</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="45"><div class="t-num">45</div><div class="t-unit">min</div></div>
+              <div class="time-item active" data-t="60"><div class="t-num">60</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="75"><div class="t-num">75</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="90"><div class="t-num">90</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="105"><div class="t-num">105</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="120"><div class="t-num">120</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="150"><div class="t-num">150</div><div class="t-unit">min</div></div>
+              <div class="time-item" data-t="inf"><div class="t-num">∞</div><div class="t-unit">max</div></div>
+            </div>
           </div>
         </div>
         <div onclick="selectSession('minidose');goToSession();" style="margin:4px 20px 10px;padding:10px 14px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;">
           <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A8A86;">short on time? <b style="color:#C8C8C4;font-weight:500;">minimal dose · ~20 min</b></div>
           <div style="font-family:'DM Mono',monospace;font-size:13px;color:#8A8A86;">›</div>
-        </div>
-        <!-- coach-voorstel -->
-        <div id="coachCard" style="display:none;margin:2px 20px 4px;padding:14px 16px;border:1px solid rgba(230,245,87,.22);border-radius:12px;background:rgba(230,245,87,.04);">
-          <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#A3A300;">coach · today</div>
-            <div id="coachBadge" style="width:8px;height:8px;border-radius:50%;background:#4ADE80;"></div>
-          </div>
-          <div id="coachName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;margin-top:6px;">–</div>
-          <div id="coachReason" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#B8B8B4;margin-top:4px;">–</div>
-          <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid rgba(230,245,87,.35);background:none;color:var(--acid);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Use suggestion →</button>
         </div>
         <div id="generateSection">
           <div id="categorySections"></div>
