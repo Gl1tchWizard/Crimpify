@@ -15,14 +15,14 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 3. **Autoregulatie boven gamificatie.** Het stoplicht (groen/oranje/rood) is het
    kwaliteitssignaal, nooit voltooiingspercentages. Op tijd stoppen kan een goede
    sessie zijn. Geen scores die afmaken belonen.
-4. **Open source.** AGPL-3.0. LICENSE moet in de repo staan vóór publieke promotie.
+4. **Open source.** AGPL-3.0; LICENSE staat in de repo.
 
 ## Techniek
 
 - Eén zelfstandige `index.html` (vanilla JS, inline styles, ~250 KB) plus
   `manifest.json`, `sw.js`, iconen en `og.png`. Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v1`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v2`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v2`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v3`, enz.), anders zien bezoekers de oude versie.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
@@ -111,3 +111,15 @@ begroeting, tijd en Genereer.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.
+
+## Werkregels voor Claude Code
+
+- Nooit rechtstreeks op `main` committen. GitHub Pages deployt vanaf main,
+  dus main is live op crimpify.com. Eén branch per taak.
+- Begin niet-triviale taken in plan mode: eerst een plan, geen bestandswijzigingen.
+- Houd wijzigingen klein en reviewbaar. Geen ongevraagde refactors.
+- Verwijder nooit bestaande functionaliteit om een implementatie te versimpelen.
+- Bump de sw-cachenaam bij elke deploy die bestanden wijzigt.
+- Draai na elke wijziging de testronde uit "Werkafspraken" voor je klaar meldt.
+- Rapporteer bij afronding: gewijzigde bestanden, uitgevoerde tests, resterende
+  risico's, beslissingen die menselijke goedkeuring nodig hebben.
