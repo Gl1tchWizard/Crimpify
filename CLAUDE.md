@@ -19,10 +19,12 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 
 ## Techniek
 
-- Eén zelfstandige `index.html` (vanilla JS, inline styles, ~250 KB) plus
-  `manifest.json`, `sw.js`, iconen en `og.png`. Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v2`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v3`, enz.), anders zien bezoekers de oude versie.
+- Drie bronbestanden: `index.html` (markup en inline SVG-symbols), `app.js`
+  (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
+  link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
+  Geen build-stap, geen dependencies.
+- **Service worker:** cachenaam is `crimpify-v4`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v5`, enz.), anders zien bezoekers de oude versie.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
@@ -89,16 +91,20 @@ begroeting, tijd en Genereer.
    sessienaam, blokken, tijd, stoplicht, mark, en altijd de sessie-link (de
    identiteitsloop moet terugvoeren naar de rekruteringsloop). Web Share API met
    afbeelding, fallback download.
-2. **Export/backup.** Historie + favorieten serialiseren naar bestand of link,
+2. **Klikbare historie.** Sessies bij "Mijn sessies" zijn aanklikbaar en openen
+   de recap-overlay. Staat hier omdat het punt 1 versterkt: de recap (met
+   eindkaart en sessie-link) wordt zo ook achteraf bereikbaar, dus delen is niet
+   langer beperkt tot het moment direct na de sessie.
+3. **Export/backup.** Historie + favorieten serialiseren naar bestand of link,
    met import. Zelfde codeertruc als de deel-links. Dit is de derde
    verdedigingslinie voor dataverlies (naast `storage.persist()` en PWA-installatie,
    die er al zijn).
-3. **Token-refactor.** Inline kleuren naar CSS-variabelen. Pas daarná light mode
+4. **Token-refactor.** Inline kleuren naar CSS-variabelen. Pas daarná light mode
    als alternatieve variabelenset achter `prefers-color-scheme`.
-4. **Lege-staat-verfijning en microtypografie-opschoning** (10px-ondergrens,
+5. **Lege-staat-verfijning en microtypografie-opschoning** (10px-ondergrens,
    contrastfloor: geen #4A4A46-tekst op #0A0A0A voor kleine labels).
-5. **Zoek als icoon** in de topbar, bibliotheek als eigen weergave.
-6. Later, uit de concept-mocks over te nemen skelet-ideeën: vaste bottom-nav,
+6. **Zoek als icoon** in de topbar, bibliotheek als eigen weergave.
+7. Later, uit de concept-mocks over te nemen skelet-ideeën: vaste bottom-nav,
    shortcuts-rij (horizontaal scrollend, acht energiesystemen, geen "Mobility"
    als categorie). Afgewezen uit die mocks: avatar, notificatiebel,
    voltooiingspercentages, derde bouw-ingang, Engels/Nederlands-mix.
