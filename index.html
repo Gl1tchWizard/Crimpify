@@ -48,7 +48,7 @@
 
   <!-- ══ VIEW 1: BROWSE ══ -->
   <div class="view active" id="v-browse">
-    <div class="topbar"><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div><div class="streak" id="streakEl"></div></div>
+    <div class="topbar"><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div><div class="streak" id="streakEl"></div></div>
     <div id="greetEl" style="padding:8px 20px 0;"></div>
     <div class="phase-line" id="phaseLine" style="display:none;"></div>
     <div class="search-wrap" style="display:none;">
@@ -105,7 +105,7 @@
 
   <!-- ══ MOCK VIEW: CHOOSE (throwaway prototype) ══ -->
   <div class="view" id="v-choose">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button></div>
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
         <div class="slabel">choose a session</div>
@@ -124,7 +124,7 @@
 
   <!-- ══ MOCK VIEW: BUILD MENU (throwaway prototype) ══ -->
   <div class="view" id="v-build">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button></div>
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
         <div class="slabel">build a session</div>
@@ -144,7 +144,7 @@
 
   <!-- ══ MOCK VIEW: GENERATE (bestaande generator, verplaatst van de landing) ══ -->
   <div class="view" id="v-generate">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-build')">← back</button></div>
+    <div class="topbar"><button class="back-btn" onclick="goTo('v-build')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
         <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
