@@ -1,7 +1,7 @@
 {
   "name": "Crimpify",
   "short_name": "Crimpify",
-  "description": "Bouldersessies op maat — genereer, train, deel",
+  "description": "Boulder sessions built for you — generate, train, share",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",

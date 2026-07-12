@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Crimpify — bouldersessies op maat</title>
-<meta name="description" content="Genereer een bouldersessie op maat in seconden. Train met timers, log hoe het voelde en deel de sessie met je klimmaten. Gratis, zonder account, werkt offline.">
+<title>Crimpify — boulder sessions, built for you</title>
+<meta name="description" content="Generate a tailored boulder training session in seconds. Train with timers, log how it felt and share the session with your climbing partners. Free, no account, works offline.">
 <link rel="canonical" href="https://crimpify.com/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Crimpify">
-<meta property="og:title" content="Crimpify — bouldersessies op maat">
-<meta property="og:description" content="Genereer een bouldersessie op maat in seconden. Train, log en deel met je klimmaten. Gratis, zonder account.">
+<meta property="og:title" content="Crimpify — boulder sessions, built for you">
+<meta property="og:description" content="Generate a tailored boulder session in seconds. Train, log and share with your climbing partners. Free, no account.">
 <meta property="og:url" content="https://crimpify.com/">
 <meta property="og:image" content="https://crimpify.com/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Crimpify — bouldersessies op maat">
-<meta name="twitter:description" content="Genereer een bouldersessie op maat in seconden. Train, log en deel met je klimmaten.">
+<meta name="twitter:title" content="Crimpify — boulder sessions, built for you">
+<meta name="twitter:description" content="Generate a tailored boulder session in seconds. Train, log and share with your climbing partners.">
 <meta name="twitter:image" content="https://crimpify.com/og.png">
 <meta name="theme-color" content="#0A0A0A">
 <meta name="mobile-web-app-capable" content="yes">
@@ -385,7 +385,7 @@ body {
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs</div>
+    <div id="splashBy">by Glitch Labs · v0.11</div>
   </div>
   <div id="splashFlash"></div>
 </div>
@@ -399,14 +399,14 @@ body {
     <div class="search-wrap" style="display:none;">
       <div class="search-box">
         <div class="search-icon">⌕</div>
-        <input class="search-input" id="searchInput" placeholder="zoek — power, capacity, herstel…" autocomplete="off">
+        <input class="search-input" id="searchInput" placeholder="search — power, capacity, recovery…" autocomplete="off">
       </div>
     </div>
     <div class="search-results" id="searchResults"></div>
     <div class="scroll-body">
       <div class="main-content" id="mainContent">
         <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
-          <span>tijd beschikbaar</span>
+          <span>time available</span>
           <span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span>
         </div>
         <div class="time-track-wrap" id="timeTrackWrap">
@@ -422,46 +422,46 @@ body {
           </div>
         </div>
         <div onclick="selectSession('minidose');goToSession();" style="margin:4px 20px 10px;padding:10px 14px;border:1px solid var(--border2);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;">
-          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A8A86;">weinig tijd? <b style="color:#C8C8C4;font-weight:500;">minimal dose · ±20 min</b></div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A8A86;">short on time? <b style="color:#C8C8C4;font-weight:500;">minimal dose · ~20 min</b></div>
           <div style="font-family:'DM Mono',monospace;font-size:13px;color:#8A8A86;">›</div>
         </div>
         <!-- coach-voorstel -->
         <div id="coachCard" style="display:none;margin:2px 20px 4px;padding:14px 16px;border:1px solid rgba(230,245,87,.22);border-radius:12px;background:rgba(230,245,87,.04);">
           <div style="display:flex;align-items:center;justify-content:space-between;">
-            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#A3A300;">coach · vandaag</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:#A3A300;">coach · today</div>
             <div id="coachBadge" style="width:8px;height:8px;border-radius:50%;background:#4ADE80;"></div>
           </div>
           <div id="coachName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;margin-top:6px;">–</div>
           <div id="coachReason" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#B8B8B4;margin-top:4px;">–</div>
-          <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid rgba(230,245,87,.35);background:none;color:var(--acid);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Gebruik voorstel →</button>
+          <button id="coachApplyBtn" onclick="applyCoach()" style="margin-top:12px;width:100%;padding:12px;border-radius:10px;border:1px solid rgba(230,245,87,.35);background:none;color:var(--acid);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Use suggestion →</button>
         </div>
         <!-- twee paden -->
         <div class="path-cards">
           <div class="path-card" onclick="toggleGenerate()">
-            <div class="path-name">Genereer <span id="genChev" style="font-size:12px;opacity:.5;">▾</span></div>
-            <div class="path-sub">kies een energiesysteem</div>
+            <div class="path-name">Generate <span id="genChev" style="font-size:12px;opacity:.5;">▾</span></div>
+            <div class="path-sub">pick an energy system</div>
           </div>
           <div class="path-card" onclick="startBuildPath()">
-            <div class="path-name">Bouw</div>
-            <div class="path-sub">stel zelf samen</div>
+            <div class="path-name">Build</div>
+            <div class="path-sub">assemble your own</div>
           </div>
         </div>
         <div id="generateSection" style="display:none;">
           <div id="categorySections"></div>
-          <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed #2E2E2C;border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">drill-bibliotheek openen →</div>
+          <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed #2E2E2C;border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">open the drill library →</div>
         </div>
         <div id="signalCalWrap" style="display:none;">
-          <div class="section-head" onclick="toggleLoadPanel()" style="cursor:pointer;"><div class="section-title">Laatste 4 weken <span id="loadChev" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="signalCalSummary"></div></div>
+          <div class="section-head" onclick="toggleLoadPanel()" style="cursor:pointer;"><div class="section-title">Last 4 weeks <span id="loadChev" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="signalCalSummary"></div></div>
           <div id="signalCal" style="display:grid;grid-template-columns:repeat(14,1fr);gap:4px;padding:0 20px 10px;"></div>
           <div id="loadPanel" style="display:none;margin:2px 20px 12px;padding:14px;border:1px solid #2A2A28;border-radius:10px;background:#0E0E0C;">
             <div style="display:flex;gap:14px;">
               <div style="flex:1;text-align:center;">
                 <div id="acwrAcute" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#F5F5F2;">–</div>
-                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">acuut · 7d</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">acute · 7d</div>
               </div>
               <div style="flex:1;text-align:center;">
                 <div id="acwrChronic" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;color:#8A8A86;">–</div>
-                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">chronisch · weekgem.</div>
+                <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.12em;text-transform:uppercase;color:#6A6A66;margin-top:2px;">chronic · weekly avg</div>
               </div>
               <div style="flex:1;text-align:center;">
                 <div id="acwrRatio" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:26px;">–</div>
@@ -472,19 +472,19 @@ body {
               <div id="acwrMarker" style="position:absolute;top:-3px;width:3px;height:14px;background:#F5F5F2;border-radius:2px;left:0%;"></div>
             </div>
             <div id="acwrAdvice" style="font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#C8C8C4;margin-top:10px;">–</div>
-            <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr-model (gabbett) · load = duur × intensiteitsfactor (srpe, foster)</div>
+            <div style="font-family:'DM Mono',monospace;font-size:7px;letter-spacing:.08em;color:#4A4A46;margin-top:8px;">acwr model (gabbett) · load = duration × intensity factor (srpe, foster)</div>
           </div>
         </div>
-        <div class="section-head" id="recentHead" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">Mijn sessies <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
+        <div class="section-head" id="recentHead" onclick="toggleRecent()" style="cursor:pointer;"><div class="section-title">My sessions <span id="recentChevron" style="font-size:11px;opacity:.5;">▾</span></div><div class="section-more" id="recentMore">&nbsp;</div></div>
         <div class="tiles-row" id="recentRow"></div>
         <div class="active-preview" id="activePreview"></div>
-        <div class="movement"><div class="mvmt-dot"></div><div class="mvmt-text">movement skill <b>altijd inbegrepen</b></div></div>
+        <div class="movement"><div class="mvmt-dot"></div><div class="mvmt-text">movement skill <b>always included</b></div></div>
         <div style="height:12px;"></div>
       </div>
     </div>
     <div class="footer">
       <div class="footer-meta"><span id="footerDate">–</span><br><b id="footerSub">–</b></div>
-      <button class="start-btn" onclick="goToSession()">Genereer →</button>
+      <button class="start-btn" onclick="goToSession()">Generate →</button>
     </div>
   </div>
 
@@ -492,9 +492,9 @@ body {
   <div class="view" id="v-session">
     <div class="slab-header">
       <div class="slab-topbar">
-        <button class="back-btn" onclick="goTo('v-browse')">← terug</button>
+        <button class="back-btn" onclick="goTo('v-browse')">← back</button>
         <div style="display:flex;align-items:center;gap:12px;">
-          <button onclick="rerollSession(activeSessionId)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid-d);background:none;border:1px solid rgba(230,245,87,.2);border-radius:4px;padding:5px 10px;cursor:pointer;">⟳ varieer</button>
+          <button onclick="rerollSession(activeSessionId)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid-d);background:none;border:1px solid rgba(230,245,87,.2);border-radius:4px;padding:5px 10px;cursor:pointer;">⟳ vary</button>
           <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--sub);" id="slabWeek">–</div>
         </div>
       </div>
@@ -514,13 +514,13 @@ body {
     <div class="footer">
       <div class="footer-meta" id="slabFooterMeta">–</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <button id="editBtn" onclick="unlockEdit()" title="bewerken" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">✎</button>
-        <button id="dupBtn" onclick="duplicateSession()" title="eigen kopie maken" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">⧉</button>
-        <button id="favStarBtn" onclick="toggleFavorite()" title="favoriet" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:17px;cursor:pointer;">☆</button>
-        <button id="shareBtn" onclick="shareSession()" title="deel sessie" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;cursor:pointer;align-items:center;justify-content:center;padding:0;">
+        <button id="editBtn" onclick="unlockEdit()" title="edit" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">✎</button>
+        <button id="dupBtn" onclick="duplicateSession()" title="make your own copy" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:15px;cursor:pointer;">⧉</button>
+        <button id="favStarBtn" onclick="toggleFavorite()" title="favourite" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-size:17px;cursor:pointer;">☆</button>
+        <button id="shareBtn" onclick="shareSession()" title="share session" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;cursor:pointer;align-items:center;justify-content:center;padding:0;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
         </button>
-        <button id="saveBigBtn" class="start-btn" onclick="openSaveFav()" style="display:none;">Vastleggen →</button>
+        <button id="saveBigBtn" class="start-btn" onclick="openSaveFav()" style="display:none;">Lock in →</button>
         <button id="startBtn" class="start-btn" onclick="startSession()">Start →</button>
       </div>
     </div>
@@ -530,7 +530,7 @@ body {
   <div class="view" id="v-detail">
     <div class="detail-header">
       <div class="detail-topbar">
-        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← sessie</button>
+        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← session</button>
         <div class="detail-block-num" id="detailBlockNum">–</div>
       </div>
       <div class="detail-name" id="detailName">–</div>
@@ -545,7 +545,7 @@ body {
           </svg>
           <div class="timer-display">
             <div class="timer-time" id="timerDisplay">–</div>
-            <div class="timer-label" id="timerLabel">klaar</div>
+            <div class="timer-label" id="timerLabel">ready</div>
           </div>
         </div>
         <div class="timer-controls">
@@ -565,23 +565,23 @@ body {
   <div class="view" id="v-guided">
     <div class="detail-header">
       <div class="detail-topbar">
-        <button class="back-btn" onclick="guardedExit(exitGuided)">← sessie</button>
+        <button class="back-btn" onclick="guardedExit(exitGuided)">← session</button>
         <div class="detail-block-num" id="guidedProg">–</div>
       </div>
-      <div class="detail-name" id="guidedTitle" style="font-size:24px;">Dynamic warm-up</div>
+      <div class="detail-name" id="guidedTitle" style="font-size:24px;">Charlie warm-up</div>
     </div>
     <div style="position:relative;flex:1;display:flex;flex-direction:column;overflow:hidden;">
       <div class="guided-stack" id="guidedStack"></div>
       <div id="guidedStartOverlay" style="display:none;position:absolute;inset:0;background:rgba(5,5,5,.82);backdrop-filter:blur(2px);flex-direction:column;align-items:center;justify-content:center;z-index:10;">
-        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-bottom:14px;">klaar om te beginnen?</div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-bottom:14px;">ready to begin?</div>
         <button onclick="guidedBegin()" style="width:200px;padding:16px;border-radius:12px;border:none;background:#60A5FA;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:18px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 24px rgba(96,165,250,.35);">Start ▸</button>
       </div>
     </div>
     <div class="footer">
       <div class="footer-meta" id="guidedFooter">–</div>
       <div style="display:flex;gap:8px;">
-        <button class="timer-btn secondary" id="guidedPauseBtn" onclick="guidedToggle()" style="padding:10px 16px;">Pauze</button>
-        <button class="start-btn" onclick="guidedNext()">Volgende →</button>
+        <button class="timer-btn secondary" id="guidedPauseBtn" onclick="guidedToggle()" style="padding:10px 16px;">Pause</button>
+        <button class="start-btn" onclick="guidedNext()">Next →</button>
       </div>
     </div>
   </div>
@@ -590,17 +590,17 @@ body {
   <div class="view" id="v-drills">
     <div class="detail-header">
       <div class="detail-topbar">
-        <button class="back-btn" onclick="guardedExit(drillBack)">← terug</button>
+        <button class="back-btn" onclick="guardedExit(drillBack)">← back</button>
         <div class="detail-block-num" id="drillProg">–</div>
       </div>
       <div class="detail-name" id="drillTitle" style="font-size:24px;color:#A78BFA;">Movement drills</div>
-      <div class="detail-cat" id="drillSub" style="color:#A78BFA;">tik een drill open voor de uitleg</div>
-      <input id="drillSearch" type="search" placeholder="zoek… (bijv. finger, voet, deadpoint)" oninput="dpFilter = this.value; renderDrillPlayer();" style="margin-top:10px;width:100%;padding:11px 13px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div class="detail-cat" id="drillSub" style="color:#A78BFA;">tap a drill open for the instructions</div>
+      <input id="drillSearch" type="search" placeholder="search… (e.g. finger, feet, deadpoint)" oninput="dpFilter = this.value; renderDrillPlayer();" style="margin-top:10px;width:100%;padding:11px 13px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
     </div>
     <div class="scroll-body" id="drillStack" style="padding:10px 16px;"></div>
     <div class="footer">
       <div class="footer-meta" id="drillFooter">–</div>
-      <button class="start-btn" onclick="drillDone()">Klaar →</button>
+      <button class="start-btn" onclick="drillDone()">Done →</button>
     </div>
   </div>
 
@@ -608,35 +608,35 @@ body {
   <div class="view" id="v-check">
     <div id="checkSuccess" style="display:none;position:absolute;inset:0;z-index:20;background:rgba(5,12,5,.9);backdrop-filter:blur(3px);flex-direction:column;align-items:center;justify-content:center;transition:opacity .4s;">
       <div style="font-size:54px;margin-bottom:10px;">✓</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:#86EFAC;text-transform:uppercase;letter-spacing:.04em;">Doel gehaald!</div>
-      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#4ADE80;letter-spacing:.06em;margin-top:6px;">25+ boulders — alles erna is bonus</div>
-      <button onclick="document.getElementById('checkSuccess').style.display='none'" style="margin-top:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#86EFAC;background:none;border:1px solid #4ADE8044;border-radius:6px;padding:8px 16px;cursor:pointer;">doorgaan</button>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;color:#86EFAC;text-transform:uppercase;letter-spacing:.04em;">Goal reached!</div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:#4ADE80;letter-spacing:.06em;margin-top:6px;">25+ boulders — everything after is bonus</div>
+      <button onclick="document.getElementById('checkSuccess').style.display='none'" style="margin-top:20px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#86EFAC;background:none;border:1px solid #4ADE8044;border-radius:6px;padding:8px 16px;cursor:pointer;">continue</button>
     </div>
     <div class="detail-header">
       <div class="detail-topbar">
-        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← sessie</button>
+        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← session</button>
         <div class="detail-block-num" id="checkProg">–</div>
       </div>
       <div class="detail-name" id="checkTitle" style="font-size:24px;color:#86EFAC;">Volume boulders</div>
-      <div class="detail-cat" id="checkSub" style="color:#4ADE80;">25-35 boulders · 6e graad</div>
+      <div class="detail-cat" id="checkSub" style="color:#4ADE80;">25-35 boulders · 6th grade</div>
     </div>
     <div style="text-align:center;padding:18px 20px 8px;flex-shrink:0;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:72px;line-height:1;color:#86EFAC;" id="checkCount">0</div>
-      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4A6A4A;text-transform:uppercase;margin-top:2px;" id="checkRange">doel 25-35</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4A6A4A;text-transform:uppercase;margin-top:2px;" id="checkRange">goal 25-35</div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
         <button onclick="checkAdjust(-1)" style="width:56px;height:56px;border-radius:14px;border:1px solid #4ADE8044;background:rgba(74,222,128,.08);color:#86EFAC;font-size:26px;font-weight:700;cursor:pointer;">−</button>
         <button onclick="checkAdjust(1)" style="width:120px;height:56px;border-radius:14px;border:none;background:#4ADE80;color:#0A0A0A;font-size:18px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;cursor:pointer;box-shadow:0 0 16px rgba(74,222,128,.25);">+ boulder</button>
       </div>
     </div>
     <div class="scroll-body" style="padding:8px 20px 0;">
-      <div class="dp-lbl" style="color:#4A6A4A;">vakjes</div>
+      <div class="dp-lbl" style="color:#4A6A4A;">boxes</div>
       <div id="checkGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:14px;"></div>
-      <div class="detail-section-lbl">waarom dit blok</div>
+      <div class="detail-section-lbl">why this block</div>
       <div class="detail-card"><p id="checkWhy"></p></div>
     </div>
     <div class="footer">
       <div class="footer-meta" id="checkFooter">–</div>
-      <button class="start-btn" onclick="nextBlock()">Klaar →</button>
+      <button class="start-btn" onclick="nextBlock()">Done →</button>
     </div>
   </div>
 
@@ -644,9 +644,9 @@ body {
   <div class="view" id="v-drillfocus">
     <div class="detail-header">
       <div class="detail-topbar">
-        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← sessie</button>
+        <button class="back-btn" onclick="guardedExit(()=>goTo('v-session'))">← session</button>
         <div style="display:flex;align-items:center;gap:10px;">
-          <button onclick="dfSwitch()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A78BFA;background:none;border:1px solid #A78BFA44;border-radius:5px;padding:5px 10px;cursor:pointer;">⇄ wissel</button>
+          <button onclick="dfSwitch()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A78BFA;background:none;border:1px solid #A78BFA44;border-radius:5px;padding:5px 10px;cursor:pointer;">⇄ switch</button>
           <div class="detail-block-num" id="dfProg">–</div>
         </div>
       </div>
@@ -659,27 +659,27 @@ body {
         <div id="dfTimer" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:96px;line-height:1;color:#F5F5F2;letter-spacing:-.02em;min-width:200px;text-align:center;">5:00</div>
         <button onclick="dfAdjust(60)" style="width:34px;height:34px;border-radius:50%;border:1px solid #2A2A28;background:none;color:#6A6A66;font-size:20px;line-height:1;cursor:pointer;flex-shrink:0;">+</button>
       </div>
-      <div id="dfState" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:6px;">richttijd</div>
+      <div id="dfState" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:6px;">target time</div>
       <button onclick="dfToggle()" id="dfPlayBtn" style="margin-top:24px;width:200px;padding:14px;border-radius:10px;border:none;background:#A78BFA;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:16px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;box-shadow:0 0 16px rgba(167,139,250,.25);">Start</button>
-      <button onclick="dfOpenInfo()" id="dfInfoBtn" style="margin-top:10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A78BFA;background:none;border:1px solid #A78BFA44;border-radius:6px;padding:7px 14px;cursor:pointer;">uitleg ▾</button>
+      <button onclick="dfOpenInfo()" id="dfInfoBtn" style="margin-top:10px;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A78BFA;background:none;border:1px solid #A78BFA44;border-radius:6px;padding:7px 14px;cursor:pointer;">instructions ▾</button>
       <div id="dfInfo" style="display:none;max-width:340px;margin-top:14px;text-align:left;">
         <div class="dp-lbl">setup</div><p style="font-family:'Barlow',sans-serif;font-size:13px;color:#C8C8C4;line-height:1.55;" id="dfSetup"></p>
-        <div class="dp-lbl">uitvoering</div><p style="font-family:'Barlow',sans-serif;font-size:13px;color:#C8C8C4;line-height:1.55;" id="dfDo"></p>
-        <div class="dp-lbl" style="color:#A78BFA;">doel</div><p style="font-family:'Barlow',sans-serif;font-size:13px;color:#C4B5FD;line-height:1.55;" id="dfGoal"></p>
+        <div class="dp-lbl">execution</div><p style="font-family:'Barlow',sans-serif;font-size:13px;color:#C8C8C4;line-height:1.55;" id="dfDo"></p>
+        <div class="dp-lbl" style="color:#A78BFA;">goal</div><p style="font-family:'Barlow',sans-serif;font-size:13px;color:#C4B5FD;line-height:1.55;" id="dfGoal"></p>
       </div>
     </div>
     <div class="footer">
-      <button class="timer-btn secondary" onclick="dfBack()" style="padding:11px 18px;">← Vorige</button>
-      <button class="start-btn" onclick="dfNext()">Volgende →</button>
+      <button class="timer-btn secondary" onclick="dfBack()" style="padding:11px 18px;">← Previous</button>
+      <button class="start-btn" onclick="dfNext()">Next →</button>
     </div>
   </div>
 
-  <!-- ══ SESSIE-OVERZICHT POPUP ══ -->
+  <!-- ══ SESSION SUMMARY POPUP ══ -->
   <div id="sessionSummary" style="display:none;position:absolute;inset:0;z-index:60;background:rgba(5,5,5,.94);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;overflow-y:auto;">
     <div style="width:100%;max-width:330px;">
       <div style="text-align:center;">
         <div style="font-size:40px;color:#4ADE80;margin-bottom:6px;">✓</div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;letter-spacing:.04em;color:#F5F5F2;">Sessie klaar</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:30px;text-transform:uppercase;letter-spacing:.04em;color:#F5F5F2;">Session done</div>
         <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;color:#7A7A76;margin-top:4px;" id="summaryTotal">–</div>
       </div>
 
@@ -687,18 +687,18 @@ body {
       <div style="margin-top:20px;display:flex;align-items:flex-end;justify-content:center;gap:18px;">
         <div style="text-align:center;">
           <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;line-height:1;color:#F5F5F2;" id="summarySpentBig">0</div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:3px;">min besteed</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:3px;">min spent</div>
         </div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:24px;color:#3A3A38;padding-bottom:10px;">/</div>
         <div style="text-align:center;">
           <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:44px;line-height:1;color:#6A6A66;" id="summaryPlannedBig">0</div>
-          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:3px;">min gepland</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#7A7A76;margin-top:3px;">min planned</div>
         </div>
       </div>
       <div style="margin-top:6px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;" id="summaryDiff">–</div>
 
       <!-- verdeling: gestapelde balk per blok -->
-      <div class="dp-lbl" style="color:#5A5A56;margin-top:18px;">verdeling</div>
+      <div class="dp-lbl" style="color:#5A5A56;margin-top:18px;">breakdown</div>
       <div id="summaryBar" style="display:flex;height:14px;border-radius:7px;overflow:hidden;background:#1A1A18;"></div>
 
       <div id="summaryBlocks" style="margin-top:16px;display:flex;flex-direction:column;gap:8px;"></div>
@@ -707,87 +707,93 @@ body {
         <div style="display:none;" id="summaryQuoteAuthor">–</div>
       </div>
       <div id="signalAsk" style="margin-top:20px;">
-        <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A9A96;">hoe voelde deze sessie?</div>
+        <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A9A96;">how did this session feel?</div>
         <div style="display:flex;gap:10px;margin-top:12px;">
           <button onclick="signalTap('green')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #4ADE8055;background:rgba(74,222,128,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
             <span style="width:20px;height:20px;border-radius:50%;background:#4ADE80;box-shadow:0 0 12px rgba(74,222,128,.5);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ADE80;">sterk</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#4ADE80;">strong</span>
           </button>
           <button onclick="signalTap('orange')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #FB923C55;background:rgba(251,146,60,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
             <span style="width:20px;height:20px;border-radius:50%;background:#FB923C;box-shadow:0 0 12px rgba(251,146,60,.5);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#FB923C;">op de rand</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#FB923C;">on the edge</span>
           </button>
           <button onclick="signalTap('red')" style="flex:1;padding:14px;border-radius:12px;border:1px solid #F8717155;background:rgba(248,113,113,.12);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
             <span style="width:20px;height:20px;border-radius:50%;background:#F87171;box-shadow:0 0 12px rgba(248,113,113,.5);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#F87171;">te veel</span>
+            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:#F87171;">too much</span>
           </button>
         </div>
-        <div onclick="signalSkip()" style="margin-top:12px;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A56;cursor:pointer;">sla over</div>
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px;">
+          <div onclick="signalSkip()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#5A5A56;cursor:pointer;">skip</div>
+          <div onclick="shareSummary()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--acid-d);cursor:pointer;">share session</div>
+        </div>
       </div>
       <div id="signalAdvice" style="display:none;margin-top:20px;padding:16px;border:1px solid #3A3A38;border-radius:12px;background:#0E0E0C;">
         <div id="signalAdviceTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.04em;">–</div>
         <div id="signalAdviceTxt" style="font-family:'Barlow',sans-serif;font-size:13px;line-height:1.55;color:#C8C8C4;margin-top:6px;">–</div>
-        <button onclick="closeSummary()" style="margin-top:14px;width:100%;padding:13px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Klaar</button>
+        <div style="display:flex;gap:8px;margin-top:14px;">
+          <button onclick="shareSummary()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;">Share session</button>
+          <button onclick="closeSummary()" style="flex:1;padding:13px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Done</button>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- ══ BLOK-PICKER ══ -->
+  <!-- ══ BLOCK PICKER ══ -->
   <div id="blockPicker" style="display:none;position:absolute;inset:0;z-index:55;background:rgba(5,5,5,.94);backdrop-filter:blur(4px);flex-direction:column;padding:24px 20px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Blok toevoegen</div>
-      <button onclick="closeBlockPicker()" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9A9A96;background:none;border:1px solid #2A2A28;border-radius:6px;padding:7px 12px;cursor:pointer;">sluit</button>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:24px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Add a block</div>
+      <button onclick="closeBlockPicker()" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9A9A96;background:none;border:1px solid #2A2A28;border-radius:6px;padding:7px 12px;cursor:pointer;">close</button>
     </div>
-    <input id="blockSearch" type="search" placeholder="zoek… (bijv. hangs, volume, stretch)" oninput="renderBlockPicker(this.value)" style="width:100%;padding:12px 14px;margin-bottom:10px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+    <input id="blockSearch" type="search" placeholder="search… (e.g. hangs, volume, stretch)" oninput="renderBlockPicker(this.value)" style="width:100%;padding:12px 14px;margin-bottom:10px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
     <div id="blockPickerList" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:20px;"></div>
   </div>
 
-  <!-- ══ FAVORIET BEWAREN ══ -->
+  <!-- ══ LOCK-IN DIALOG ══ -->
   <div id="saveFavDialog" style="display:none;position:absolute;inset:0;z-index:56;background:rgba(5,5,5,.88);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
     <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;width:100%;max-width:300px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Sessie vastleggen</div>
-      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Vastleggen zet de structuur op slot. Daarna kun je starten en delen; ontvangers kunnen niets wijzigen.</div><div id="favDialogHint" style="display:none;"></div>
-      <input id="favNameInput" type="text" placeholder="Naam van de sessie" style="margin-top:14px;width:100%;padding:12px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Lock it in</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Locking freezes the structure so you can start and share it. People you share with cannot change your version.</div><div id="favDialogHint" style="display:none;"></div>
+      <input id="favNameInput" type="text" placeholder="Name it (optional)" style="margin-top:14px;width:100%;padding:12px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
       <div style="display:flex;gap:10px;margin-top:16px;">
-        <button onclick="closeSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Annuleer</button>
-        <button onclick="confirmSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Vastleggen</button>
+        <button onclick="closeSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Cancel</button>
+        <button onclick="confirmSaveFav()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Lock in</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ NIEUWE OEFENING ══ -->
+  <!-- ══ NEW EXERCISE ══ -->
   <div id="newExerciseDialog" style="display:none;position:absolute;inset:0;z-index:58;background:rgba(5,5,5,.92);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;">
     <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:90%;overflow-y:auto;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Nieuwe oefening</div>
-      <input id="neName" type="text" placeholder="Naam (bijv. Heup-shift ladder)" style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">New exercise</div>
+      <input id="neName" type="text" placeholder="Name (e.g. Hip-shift ladder)" style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
       <div style="display:flex;gap:8px;margin-top:8px;">
         <input id="neMin" type="number" min="3" placeholder="min" style="flex:1;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
-        <input id="neRpe" type="text" placeholder="rpe (bijv. 7-8)" style="flex:1;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+        <input id="neRpe" type="text" placeholder="rpe (e.g. 7-8)" style="flex:1;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
       </div>
-      <textarea id="neWhy" rows="3" placeholder="Uitleg: wat doe je en waarom" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:13px;outline:none;resize:vertical;"></textarea>
+      <textarea id="neWhy" rows="3" placeholder="Instructions: what you do and why" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:13px;outline:none;resize:vertical;"></textarea>
       <input id="neLink" type="url" placeholder="Link (Instagram / YouTube / Kilter)" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#9A9A96;font-family:'DM Mono',monospace;font-size:11px;outline:none;">
       <div style="display:flex;gap:10px;margin-top:16px;">
-        <button onclick="closeNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Annuleer</button>
-        <button onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#A3E635;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Toevoegen</button>
+        <button onclick="closeNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Cancel</button>
+        <button onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#A3E635;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Add</button>
       </div>
     </div>
   </div>
 
-  <!-- ══ DEEL-DIALOOG ══ -->
+  <!-- ══ SHARE DIALOG ══ -->
   <div id="shareDialog" style="display:none;position:absolute;inset:0;z-index:57;background:rgba(5,5,5,.88);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
     <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;width:100%;max-width:320px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Deel deze sessie</div>
-      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Iedereen met de link krijgt exact deze sessie, kan aanpassen en starten.</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;">Share this session</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:12px;color:#9A9A96;margin-top:6px;line-height:1.5;">Anyone with the link gets exactly this session, and can adapt and start it.</div>
       <input id="shareLinkInput" type="text" readonly style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid #2E2E2C;background:#0A0A0A;color:#9A9A96;font-family:'DM Mono',monospace;font-size:10px;outline:none;">
       <div style="display:flex;gap:10px;margin-top:14px;">
-        <button onclick="closeShareDialog()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Sluit</button>
-        <button id="copyLinkBtn" onclick="copyShareLink()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Kopieer link</button>
+        <button onclick="closeShareDialog()" style="flex:1;padding:12px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Close</button>
+        <button id="copyLinkBtn" onclick="copyShareLink()" style="flex:1;padding:12px;border-radius:10px;border:none;background:#E6F557;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Copy link</button>
       </div>
     </div>
   </div>
 
 
-  <!-- ══ TERUGBLIK OP EEN AFGERONDE SESSIE ══ -->
+  <!-- ══ RECAP OF A FINISHED SESSION ══ -->
   <div id="recapView" style="display:none;position:absolute;inset:0;z-index:62;background:rgba(5,5,5,.95);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;overflow-y:auto;">
     <div style="width:100%;max-width:330px;">
       <div style="text-align:center;">
@@ -799,20 +805,20 @@ body {
       <div id="recapBlocks" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
       <div id="recapNote" style="display:none;font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:#8A8A86;margin-top:14px;"></div>
       <div style="display:flex;gap:8px;margin-top:20px;">
-        <button onclick="closeRecap()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Sluit</button>
-        <button id="recapAgainBtn" onclick="recapAgain()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Nog eens</button>
-        <button id="recapShareBtn" onclick="recapShare()" style="flex:1;padding:13px;border-radius:10px;border:none;background:var(--acid);color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Deel</button>
+        <button onclick="closeRecap()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Close</button>
+        <button id="recapAgainBtn" onclick="recapAgain()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Again</button>
+        <button id="recapShareBtn" onclick="recapShare()" style="flex:1;padding:13px;border-radius:10px;border:none;background:var(--acid);color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Share</button>
       </div>
     </div>
   </div>
   <!-- ══ EXIT CONFIRM DIALOG ══ -->
   <div id="confirmExit" style="display:none;position:absolute;inset:0;z-index:70;background:rgba(5,5,5,.85);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
     <div style="background:#111;border:1px solid #2A2A28;border-radius:16px;padding:24px 22px;max-width:300px;text-align:center;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;" id="confirmTitle">Sessie verlaten?</div>
-      <div style="font-family:'Barlow',sans-serif;font-size:14px;color:#9A9A96;line-height:1.5;margin-top:8px;" id="confirmMsg">Je timer loopt nog. Weet je het zeker?</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.03em;color:#F5F5F2;" id="confirmTitle">Leave session?</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:14px;color:#9A9A96;line-height:1.5;margin-top:8px;" id="confirmMsg">Your timer is still running. Are you sure?</div>
       <div style="display:flex;gap:10px;margin-top:20px;">
-        <button onclick="confirmStay()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Blijven</button>
-        <button onclick="confirmLeave()" style="flex:1;padding:13px;border-radius:10px;border:none;background:#F87171;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Verlaten</button>
+        <button onclick="confirmStay()" style="flex:1;padding:13px;border-radius:10px;border:1px solid #3A3A38;background:none;color:#C8C8C4;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Stay</button>
+        <button onclick="confirmLeave()" style="flex:1;padding:13px;border-radius:10px;border:none;background:#F87171;color:#0A0A0A;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Leave</button>
       </div>
     </div>
   </div>
@@ -831,218 +837,217 @@ const C = {
 };
 
 const PRINCIPLES = [
-  'Walk away fresh. Als kracht achteruit gaat is je sessie voorbij — tenzij fatigue het doel is (power endurance).',
-  'Quality over volume. Het is oké om te stoppen als de kwaliteit achteruit gaat.',
-  'Rust 3 minuten tussen boulders vanaf 6a. Gebruik de timer.',
-  'Eén primaire adaptatie per sessie. No training soup.',
-  'Check vóór de sessie het doel, zodat je niet impulsgedreven klimt.',
-  'Tijd beperkt? Halveer het volume maar warm altijd goed op. 45 min warm-up + 15 min board is nog steeds winst.',
-  'Pijn aan vingers? Klimmen zonder pijn is oké. Pijn = sessie aanpassen of stoppen.',
-  'Verhoog weekvolume max 10-15% per week.',
-  'Vermijd stapeling van grip-stress: geen max hangs na een zware boardsessie.',
+  'Walk away fresh. When power drops, your session is over — unless fatigue is the goal (power endurance).',
+  'Quality over volume. It is fine to stop when quality drops.',
+  'Rest 3 minutes between boulders from 6a up. Use the timer.',
+  'One primary adaptation per session. No training soup.',
+  'Check the goal before the session, so you do not climb on impulse.',
+  'Short on time? Halve the volume but always warm up well. 45 min warm-up + 15 min board still counts.',
+  'Finger pain? Climbing without pain is fine. Pain = adjust the session or stop.',
+  'Increase weekly volume by 10-15% max.',
+  'Avoid stacking grip stress: no max hangs after a heavy board session.',
   'Bouldering is a skill. Be smart, focus on learning.',
 ];
 
-// ── DRILLS: warm-up techniekdrills (1 per sessie, alterneer) ──
-// Structuur per drill: titel, focus-tag, setup, uitvoering, doel.
+// ── DRILLS: warm-up technique drills (1 per session, alternate) ──
+// Structure per drill: title, focus tag, setup, execution, goal.
 const DRILLS = [
-  { n:'Heup openen & sluiten', tag:'heup-oriëntatie', cat:'heup', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder, elke boulder twee keer met een andere heupstand.',
-    do:'Eerste keer: klim met open heup — knieën naar buiten, binnenrand van de schoen, lang en gebalanceerd boven de voet. Tweede keer: zelfde boulder met dropknees en inwaartse rotatie — knie en heup naar de wand, buitenrand of teen, heupen plat. Let op het verschil in hoe de kracht loopt.',
-    goal:'Voel hoe heuporiëntatie je reikwijdte, balans en krachtoverdracht verandert.' },
-  { n:'Heup-shift bij opstaan', tag:'heup-timing', cat:'heup', dur:'10-15m', src:'technique',
-    setup:'Verticaal tot licht overhangend terrein, passen waarbij je vanuit een hoge voet moet opstaan.',
-    do:'Val je van de wand zodra je probeert op te staan? Vaak begin je dan met je heupen al te dicht tegen de wand: als je je been strekt duwt dat samen met de zwaartekracht je heupen juist naar buiten. Doe het omgekeerd. Begin de pas met je heupen iets van de wand af. Breng ze tijdens het opstaan actief naar de wand toe, zodat je op het hoogste punt van de beweging het dichtst bij de wand zit. Daar pak je de volgende greep — stabieler en met meer reikwijdte.',
-    goal:'Timing van je heupbeweging: het dichtst bij de wand precies op het moment dat je reikt.' },
-  { n:'Hoge voet & doorstap', tag:'voetdruk & balans', cat:'voet', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder, alle grepen mogen als voet. Elke boulder twee keer.',
-    do:'Eerste keer: zet bij elke pas een voet zo hoog mogelijk en draai de heup uit, lijf plat tegen de wand. Actieve enkel zodat je er gewicht op kwijt kunt. Tweede keer: kruis je voet over de middellijn en flag de andere voet dezelfde kant op voor tegenspanning. Werkt vooral lekker op side-pulls.',
-    goal:'Leer met je benen werken in plaats van trekken met je armen.' },
-  { n:'Voetwissels', tag:'voetprecisie', cat:'voet', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder. Wissel minimaal twee keer van voet op elke tree voor je verder reikt.',
-    do:'Match je voeten op dezelfde greep, of wissel snel door je tenen om te ruilen op kleine trees. Werk met de tip van je grote teen en zorg dat de juiste voet op staat voor de spanning richting de volgende pas. Dit is jarenlang fijnslijpen — wees geduldig.',
-    goal:'Trefzekerheid en wisselsnelheid op je voeten.' },
-  { n:'Hak- & teenhaken', tag:'haken & klauwen', cat:'voet', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder met vrije voeten. Elke boulder twee keer.',
-    do:'Eerste keer: gebruik minstens drie keer een heel hook — hiel op de greep, teen omlaag met strakke enkel, trek actief naar je lijf via je hamstring. Echt haken, niet rusten. Tweede keer: dezelfde beweging met je grote teen (toe hook) voor grepen die te ver of te klein zijn voor een hiel. Voel de keten van voet naar kuit, hamstring, bil en core.',
-    goal:'Functioneel haken met spanning door de hele keten, niet passief leunen.' },
-  { n:'Teenplaatsing', tag:'voetprecisie', cat:'voet', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder, blijf op dezelfde boulders en maak het voetwerk bewust moeilijker.',
-    do:'Kies bewust slechtere voeten — kleinere randjes, vagere smears. Herhaal tot de beweging schoon is. Richt je aandacht volledig op hoe je teen de greep raakt: op kleine trees de tip van je grote teen, actief zoekend en grijpend. Op slopers de hiel laten zakken en smeren. Merk hoe drukken door je voet je heup verplaatst.',
-    goal:'Elke voet is een kans om kracht te maken. De voet stuurt de heup, niet andersom.' },
-  { n:'Flaggen & back flags', tag:'balans & flagging', cat:'balans', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder, elke boulder twee keer met één werkende voet.',
-    do:'Eerste keer alleen je rechtervoet op trees tijdens het reiken, tweede keer alleen links. De andere voet mag smeren tegen de wand, geen grepen. Druk dat vrije been actief in de wand om te stabiliseren — dat houdt je heup op zijn plek en voorkomt barndooring. Speel met back flags en through flags om beweging te besparen.',
-    goal:'Bewuste balans en tegenkracht, minder onnodig gewiebel.' },
-  { n:'Deadpoint', tag:'dynamiek & timing', cat:'dynamiek', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder, elke pas als bewuste deadpoint.',
-    do:'Laat je lijf eerst van de wand af zakken in gebogen benen — voel de veer in je onderlichaam. Keer dan om: drijf door je benen, trek je heupen terug naar de wand en pak de greep op het hoogste, gewichtloze punt van de beweging. De kracht komt uit je benen, je hand volgt. Denk: laden, ontladen, vangen. Sluit af met een paar makkelijke boulders waarbij je beide handen tegelijk laat reiken.',
-    goal:'Timing en precisie in dynamische passen, aangedreven vanuit het lijf.' },
-  { n:'Richtingsoppositie', tag:'tegenkracht & spanning', cat:'spanning', dur:'10-15m', src:'technique',
-    setup:'Warm-up ladder met tegenkracht als enige focus.',
-    do:'Pauzeer bij elke greep en voel welke kant hij op wijst. Verplaats je gewicht bewust de tegengestelde kant op — rechts-wijzende sidepull betekent massa naar links. Lock jezelf in die gespannen positie voor je verder reikt, en houd de spanning vast terwijl je naar de volgende greep gaat. Pas daarna je voeten aan. Werkt het sterkst op slopers en pinches, maar pas het ook toe op goede grepen — daar lekt anders energie weg.',
-    goal:'Bewuste lichaamspositie en tegenkracht, ook waar je het niet nodig dénkt te hebben.' },
-  { n:'Active finger curls', tag:'vingerkracht · power pulls · isometrisch', cat:'spanning', dur:'8-12m', src:'technique',
-    setup:'Fingerboard, portable edge of een goede lijst. Kies een randje waarop je comfortabel op halve crimp of open hand kunt hangen. Zorg dat je opgewarmd bent.',
-    do:'Geen dood hangen: zet actief kracht met je vingers alsof je de rand naar je toe wilt krullen. Trek je vingertoppen bewust in de rand en houd de spanning constant hoog. Werk in isometrische holds van 7 tot 10 seconden op een intensiteit rond 80 tot 90 procent van je max — zwaar, maar 1 tot 2 tellen voor falen stoppen. Rust 2 tot 3 minuten volledig tussen de sets. 4 tot 6 sets. Voel dat je onderarm en vingers de hele hold actief aan het werk zijn, niet passief aan het pezen hangen.',
-    goal:'Maximale vingerkracht via korte, hoge isometrische spanning. Actief krullen in plaats van passief hangen rekruteert meer, met minder totale belasting op je pezen.' },
-  { n:'Eén drill, volle focus', tag:'meta / aanpak', cat:'meta', dur:'1-3m extra', src:'technique',
-    setup:'Slechts één drill per sessie. Een ladder is een reeks boulders oplopend in moeilijkheid, met meer rust naarmate het zwaarder wordt.',
-    do:'De drill voegt één techniekpijler toe aan een warm-up die anders op de automatische piloot gaat. Neem een minuut of twee om je boulders te lezen en climbs te kiezen die bij de beweging van vandaag passen. Gebruik gerust grepen van naastliggende routes als die beter uitkomen. Lukt niet alles? Een handvol goede herhalingen is al winst.',
-    goal:'Geen stress. Eén pijler per sessie, bewust toegevoegd. Consistentie boven perfectie.' },
+  { n:'Hip open & close', tag:'hip orientation', cat:'hips', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder, climb every boulder twice with a different hip position.',
+    do:'First pass: climb with open hips — knees out, inside edge of the shoe, tall and balanced over the foot. Second pass: same boulder with dropknees and inward rotation — knee and hip toward the wall, outside edge or toe, hips flat. Notice the difference in how the force travels.',
+    goal:'Feel how hip orientation changes your reach, balance and power transfer.' },
+  { n:'Hip shift on stand-ups', tag:'hip timing', cat:'hips', dur:'10-15m', src:'technique',
+    setup:'Vertical to slightly overhanging terrain, moves where you have to stand up from a high foot.',
+    do:'Falling off the wall the moment you try to stand up? You probably start with your hips already too close to the wall: extending your leg then pushes your hips outward, gravity helping. Do the opposite. Start the move with your hips slightly away from the wall. Drive them actively toward the wall while standing up, so you are closest to the wall at the highest point of the move. Grab the next hold there — more stable and with more reach.',
+    goal:'Timing of your hip movement: closest to the wall exactly when you reach.' },
+  { n:'High foot & step-through', tag:'foot pressure & balance', cat:'feet', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder, all holds allowed as feet. Every boulder twice.',
+    do:'First pass: place a foot as high as possible on every move and turn the hip out, body flat against the wall. Active ankle so you can load it. Second pass: cross your foot over the midline and flag the other foot the same way for counter-tension. Works especially well on side-pulls.',
+    goal:'Learn to work with your legs instead of pulling with your arms.' },
+  { n:'Foot swaps', tag:'foot precision', cat:'feet', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder. Swap feet at least twice on every foothold before reaching on.',
+    do:'Match your feet on the same hold, or switch quickly through your toes to trade on small footholds. Work with the tip of your big toe and make sure the right foot is on for the tension toward the next move. This takes years to refine — be patient.',
+    goal:'Accuracy and swap speed on your feet.' },
+  { n:'Heel & toe hooks', tag:'hooking & clawing', cat:'feet', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder with open feet. Every boulder twice.',
+    do:'First pass: use a heel hook at least three times — heel on the hold, toe down with a tight ankle, pull actively toward your body through the hamstring. Really hook, do not rest. Second pass: the same move with your big toe (toe hook) for holds too far or too small for a heel. Feel the chain from foot to calf, hamstring, glute and core.',
+    goal:'Functional hooking with tension through the whole chain, not passive leaning.' },
+  { n:'Toe placement', tag:'foot precision', cat:'feet', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder, stay on the same boulders and consciously make the footwork harder.',
+    do:'Deliberately pick worse feet — smaller edges, vaguer smears. Repeat until the movement is clean. Put your full attention on how your toe meets the hold: on small footholds the tip of your big toe, actively searching and gripping. On slopers, drop the heel and smear. Notice how pressing through your foot moves your hip.',
+    goal:'Every foothold is a chance to generate force. The foot steers the hip, not the other way around.' },
+  { n:'Flags & back flags', tag:'balance & flagging', cat:'balance', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder, every boulder twice with one working foot.',
+    do:'First pass only your right foot on footholds while reaching, second pass only the left. The other foot may smear against the wall, no holds. Press that free leg actively into the wall to stabilise — it keeps your hip in place and prevents barndooring. Play with back flags and through flags to save movement.',
+    goal:'Deliberate balance and counter-pressure, less unnecessary wobble.' },
+  { n:'Deadpoint', tag:'dynamics & timing', cat:'dynamics', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder, every move as a deliberate deadpoint.',
+    do:'First let your body sink away from the wall into bent legs — feel the spring in your lower body. Then reverse: drive through your legs, pull your hips back toward the wall and catch the hold at the highest, weightless point of the move. The power comes from your legs; your hand follows. Think: load, release, catch. Finish with a few easy boulders reaching with both hands at once.',
+    goal:'Timing and precision in dynamic moves, driven from the body.' },
+  { n:'Directional opposition', tag:'counter-force & tension', cat:'tension', dur:'10-15m', src:'technique',
+    setup:'Warm-up ladder with counter-pressure as the only focus.',
+    do:'Pause at every hold and feel which way it points. Deliberately shift your weight the opposite way — a right-facing sidepull means mass to the left. Lock yourself into that tensioned position before reaching on, and hold the tension while moving to the next hold. Only then adjust your feet. Strongest on slopers and pinches, but apply it on good holds too — that is where energy quietly leaks away.',
+    goal:'Deliberate body position and counter-force, even where you think you do not need it.' },
+  { n:'Active finger curls', tag:'finger strength · power pulls · isometric', cat:'tension', dur:'8-12m', src:'technique',
+    setup:'Fingerboard, portable edge or a good rail. Pick an edge you can comfortably hold in half crimp or open hand. Make sure you are warmed up.',
+    do:'No dead hanging: actively drive force with your fingers as if you want to curl the edge toward you. Pull your fingertips deliberately into the edge and keep the tension constantly high. Work in isometric holds of 7 to 10 seconds at around 80 to 90 percent of your max — heavy, but stop 1 to 2 counts before failure. Rest 2 to 3 minutes fully between sets. 4 to 6 sets. Feel your forearm and fingers actively working the whole hold, not passively hanging off the tendons.',
+    goal:'Maximum finger strength through short, high isometric tension. Active curling instead of passive hanging recruits more, with less total load on your tendons.' },
+  { n:'One drill, full focus', tag:'meta / approach', cat:'meta', dur:'1-3m extra', src:'technique',
+    setup:'Just one drill per session. A ladder is a series of boulders increasing in difficulty, with more rest as it gets harder.',
+    do:'The drill adds one technique pillar to a warm-up that would otherwise run on autopilot. Take a minute or two to read your boulders and pick climbs that suit the movement of the day. Feel free to borrow holds from neighbouring routes if they fit better. Not everything works out? A handful of good repetitions is already a win.',
+    goal:'No stress. One pillar per session, added deliberately. Consistency over perfection.' },
 
-  // ── Jouw eigen drills, zelfde structuur ──
-  { n:'One Handed Bouldering', tag:'lichaamsspanning', cat:'spanning', dur:'10-15m', src:'eigen',
-    setup:'Alleen op makkelijke boulders. Elke boulder meerdere keren.',
-    do:'Klim de boulder eerst normaal. Dan opnieuw met alleen de linkerhand (rechterhand achter je rug of langs je lijf). Dan alleen met de rechterhand. Voel waar je core en voeten het werk moeten overnemen. Kan het nog soepeler? Nog een keer.',
-    goal:'Maximale lichaamsspanning en voetvertrouwen. Ontdek hoeveel je met één hand kunt sturen via voeten en core.' },
-  { n:'Hovering', tag:'lock-off & stabiliteit', cat:'balans', dur:'10-15m', src:'eigen',
-    setup:'Boulder ladder op comfortabel niveau.',
-    do:'Wacht bewust 1 seconde in een stabiele, gecontroleerde positie voordat je elke volgende greep pakt. Geen momentum, geen haast. Voel of je echt stilstaat of dat je nog wiebelt — als je wiebelt, klopt je voetwerk of heuppositie niet.',
-    goal:'Niet alleen lock-off-kracht maar ook stabiele posities en functionele core. Legt onstabiele standen genadeloos bloot.' },
-  { n:'No Adjustments', tag:'precisie', cat:'precisie', dur:'10-15m', src:'eigen',
-    setup:'Boulder ladder, climbs die je goed kent.',
-    do:'Elke greep mag je maar één keer pakken — niet herpakken, niet schuiven, niet corrigeren. Eerste contact is definitief. Dwingt je om vóór de pas te beslissen waar en hoe je pakt.',
-    goal:'Precisie en commitment. Stopt het onbewuste "frommelen" op grepen dat energie kost.' },
-  { n:'Efficiency Climbing', tag:'bewegingseconomie', cat:'precisie', dur:'10-15m', src:'eigen',
-    setup:'Makkelijke tot middelmatige boulders.',
-    do:'Klim zo efficiënt mogelijk: het minste aantal passen, de minste spanning, de rustigste ademhaling. Tel je passen op een boulder, probeer het de tweede keer met minder. Zoek rustposities, schud uit, beweeg alleen wat nodig is.',
-    goal:'Bewegingseconomie en pump-management. Direct toepasbaar in capacity- en power endurance-sessies.' },
-  { n:'Silent / Quiet Feet', tag:'voetprecisie & controle', cat:'voet', dur:'10-15m', src:'extern',
-    setup:'Kies boulders 1-2 grades onder je onsight-niveau.',
-    do:'Klim zonder dat je voeten enig geluid maken. Plaats elke voet zacht, bewust en precies — geen stampen, geen slepen. Maakt een voet wel geluid? Terug naar de vorige tree en opnieuw. Houd oogcontact met je voet tot hij geplaatst is. Klim ook naar beneden met stille voeten.',
-    goal:'Precisie, controle en vertrouwen in je voeten. Een van de meest genoemde footwork-drills omdat het je dwingt volledig op je voeten te focussen.' },
-  { n:'Sticky Feet', tag:'voetprecisie', cat:'voet', dur:'10-15m', src:'extern',
-    setup:'Boulders 1-2 grades onder onsight.',
-    do:'Zodra je voet een tree raakt zit hij vast — alsof er superlijm onder je grote teen zit. Geen correcties meer. Dit dwingt je om vooraf te bepalen waar én in welke oriëntatie je voet moet, want de stand bepaalt je volgende pas.',
-    goal:'Accuratesse plus beter vooruitdenken in sequenties. Bouwt voort op Quiet Feet.' },
-  { n:'Downclimbing', tag:'voetbewustzijn', cat:'voet', dur:'10-15m', src:'extern',
-    setup:'Boulders 1-2 grades onder onsight, eerst omhoog klimmen.',
-    do:'Klim de boulder terug naar beneden tot beide handen weer op de startgrepen zijn. Downclimben is voeten-eerst, dus je móet je voetplaatsing bewust voelen en zoeken. Probeer met je voeten de mat te raken zonder eraf te springen.',
-    goal:'Brengt bewust voetbewustzijn en controle. Onderschatte drill omdat de meeste klimmers alleen omhoog oefenen.' },
-  { n:'Foothold Stab (precisie)', tag:'precisie & balans', cat:'precisie', dur:'10m', src:'extern',
-    setup:'Staand voor de wand, klimschoenen aan, ±60 cm van de wand.',
-    do:'Balanceer op één been en "prik" met je opgeheven voet naar vooraf gekozen trees — grote teen rustig en exact op de tree, alsof je ernaar pikt. 20× per voet, blijf de hele tijd in balans. Moeilijker: kies trees die een hoge step of precaire balans vragen. Neem je oog niet van de tree tot je voet perfect staat.',
-    goal:'Trefzekerheid en bullseye-precisie: voet in één keer op de juiste plek, zonder stallen of corrigeren.' },
-  { n:'Smearing', tag:'smeren & vertrouwen', cat:'voet', dur:'10-15m', src:'extern',
-    setup:'Slab-wand met grote grepen.',
-    do:'Plaats je voet op de wand waar géén tree zit en gebruik hem alsof het er wel een is. Druk je voet in de wand en trek jezelf omhoog aan de grepen — de spanning tussen trekkende armen en duwende voeten draagt je. Klim omhoog en weer naar beneden tot smeren vertrouwd voelt.',
-    goal:'Leer de frictie van je rubber vertrouwen, ook zonder positieve trees. Essentieel op slab en sloper-voeten.' },
-  { n:'Extra Steps', tag:'voet initieert, straight arms', cat:'spanning', dur:'10-15m', src:'extern',
-    setup:'Makkelijke boulders, armen bewust gestrekt (straight-arm hang).',
-    do:'Maak minimaal 2-3 voetbewegingen per handpas. Combineer foot swaps, step-throughs en flags. De benen initiëren elke pas; je armen blijven gestrekt. Zoek balans met outside of back flags waar mogelijk. Buig je armen niet.',
-    goal:'Bewegingseconomie en lichaamsspanning: leer met je onderlichaam te bewegen en minder aan je armen te trekken.' },
-  { n:'Hover Hands', tag:'statische balans', cat:'balans', dur:'10m', src:'extern',
-    setup:'Makkelijke boulders, vertrouwde climbs.',
-    do:'Beweeg in een gebalanceerde (geflagde) positie en hover je reikende hand drie tellen boven de volgende greep voordat je pakt. Dwingt echte statische balans af. Combineer met een actieve flag: kick je vrije voet in de wand voor de tegenkracht.',
-    goal:'Statische controle, lock-off en functionele core. Ontmaskert posities waar je stiekem op momentum leunt.' },
-  { n:'Dead-Point to Pause', tag:'dynamiek & controle', cat:'dynamiek', dur:'10-15m', src:'extern',
-    setup:'Een kleine deadpoint-pas op verticaal of licht overhangend terrein.',
-    do:'Lanceer vanuit een gecontroleerde start naar de volgende greep en pauzeer daar — beweeg niet verder. Lock af en span je core om elke swing te stoppen. Houd 3 seconden vast, klim dan verder. Het doelpunt is precies op het hoogste, gewichtloze moment van de beweging vangen.',
-    goal:'Dynamische precisie plus de lichaamsspanning om een dynamische pas dood te leggen op het contactmoment.' },
-  { n:'Cow Stance (tension hold)', tag:'lichaamsspanning', cat:'spanning', dur:'10m', src:'extern',
-    setup:'Licht overhangende wand, goede hand- en voetgrepen.',
-    do:'Rechtervoet hoog, linkervoet laag en ontspannen. Rond je rug als een kat (denk: strandbal op je buik). Trek je in de wand tot je linkerschouder de linkergreep raakt of erbij hovert. Rechterheup omhoog en dicht bij de wand, rechterknie wijst naar rechts. Houd 10 sec, ontspan — één herhaling. Wissel kanten.',
-    goal:'Leert overdreven je core, heupen, rug en tenen te engageren tussen grepen — de basis van body tension op steil terrein.' },
-  { n:'Blindfold Climbing', tag:'proprioceptie', cat:'balans', dur:'10m', src:'extern',
-    setup:'Heel makkelijke, vertrouwde boulders. Spotter aanwezig.',
-    do:'Klim met je ogen dicht of geblinddoekt. Zonder zicht moet je volledig op gevoel je grepen en trees vinden en je gewicht verdelen. Beweeg langzaam en voel elke plaatsing. Alleen op veilig, laag terrein.',
-    goal:'Scherpt proprioceptie en sensorische feedback voor voet- en handplaatsing enorm aan.' },
+  // ── Your own drills, same structure ──
+  { n:'One Handed Bouldering', tag:'body tension', cat:'tension', dur:'10-15m', src:'own',
+    setup:'Easy boulders only. Every boulder several times.',
+    do:'Climb the boulder normally first. Then again with only the left hand (right hand behind your back or along your body). Then only the right hand. Feel where your core and feet have to take over the work. Can it go smoother? One more time.',
+    goal:'Maximum body tension and foot confidence. Discover how much you can steer with one hand through feet and core.' },
+  { n:'Hovering', tag:'lock-off & stability', cat:'balance', dur:'10-15m', src:'own',
+    setup:'Boulder ladder at a comfortable level.',
+    do:'Deliberately wait 1 second in a stable, controlled position before grabbing each next hold. No momentum, no rush. Feel whether you are truly still or still wobbling — if you wobble, your footwork or hip position is off.',
+    goal:'Not just lock-off strength but stable positions and a functional core. Mercilessly exposes unstable stances.' },
+  { n:'No Adjustments', tag:'precision', cat:'precision', dur:'10-15m', src:'own',
+    setup:'Boulder ladder, climbs you know well.',
+    do:'You may grab every hold only once — no regrabbing, no shuffling, no correcting. First contact is final. Forces you to decide where and how to grab before the move.',
+    goal:'Precision and commitment. Stops the unconscious fiddling on holds that costs energy.' },
+  { n:'Efficiency Climbing', tag:'movement economy', cat:'precision', dur:'10-15m', src:'own',
+    setup:'Easy to moderate boulders.',
+    do:'Climb as efficiently as possible: the fewest moves, the least tension, the calmest breathing. Count your moves on a boulder, try the second lap with fewer. Find rest positions, shake out, move only what is needed.',
+    goal:'Movement economy and pump management. Directly transfers to capacity and power endurance sessions.' },
+  { n:'Silent / Quiet Feet', tag:'foot precision & control', cat:'feet', dur:'10-15m', src:'external',
+    setup:'Pick boulders 1-2 grades below your onsight level.',
+    do:'Climb without your feet making any sound. Place every foot softly, deliberately and precisely — no stomping, no dragging. Did a foot make noise? Back to the previous foothold and again. Keep eye contact with your foot until it is placed. Climb back down with silent feet too.',
+    goal:'Precision, control and trust in your feet. One of the most cited footwork drills because it forces total focus on your feet.' },
+  { n:'Sticky Feet', tag:'foot precision', cat:'feet', dur:'10-15m', src:'external',
+    setup:'Boulders 1-2 grades below onsight.',
+    do:'The moment your foot touches a foothold it is glued — as if there is superglue under your big toe. No more corrections. This forces you to decide in advance where and in which orientation your foot needs to be, because the stance determines your next move.',
+    goal:'Accuracy plus better sequence planning. Builds on Quiet Feet.' },
+  { n:'Downclimbing', tag:'foot awareness', cat:'feet', dur:'10-15m', src:'external',
+    setup:'Boulders 1-2 grades below onsight, climb up first.',
+    do:'Climb the boulder back down until both hands are on the start holds again. Downclimbing is feet-first, so you must consciously feel and search your foot placements. Try to touch the mat with your feet instead of jumping off.',
+    goal:'Builds deliberate foot awareness and control. Underrated drill because most climbers only practise going up.' },
+  { n:'Foothold Stab (precision)', tag:'precision & balance', cat:'precision', dur:'10m', src:'external',
+    setup:'Standing in front of the wall, climbing shoes on, about 60 cm from the wall.',
+    do:'Balance on one leg and "stab" your raised foot at pre-chosen footholds — big toe calmly and exactly on the hold, as if pecking at it. 20x per foot, stay in balance the whole time. Harder: pick footholds that demand a high step or precarious balance. Do not take your eye off the hold until your foot sits perfectly.',
+    goal:'Accuracy and bullseye precision: foot on the right spot in one go, without stalling or correcting.' },
+  { n:'Smearing', tag:'smearing & trust', cat:'feet', dur:'10-15m', src:'external',
+    setup:'Slab wall with big holds.',
+    do:'Place your foot on the wall where there is no foothold and use it as if there were one. Press your foot into the wall and pull yourself up on the holds — the tension between pulling arms and pushing feet carries you. Climb up and back down until smearing feels familiar.',
+    goal:'Learn to trust the friction of your rubber, even without positive footholds. Essential on slab and sloper feet.' },
+  { n:'Extra Steps', tag:'feet initiate, straight arms', cat:'tension', dur:'10-15m', src:'external',
+    setup:'Easy boulders, arms deliberately straight (straight-arm hang).',
+    do:'Make at least 2-3 foot movements per hand move. Combine foot swaps, step-throughs and flags. The legs initiate every move; your arms stay straight. Find balance with outside or back flags where possible. Do not bend your arms.',
+    goal:'Movement economy and body tension: learn to move from your lower body and pull less with your arms.' },
+  { n:'Hover Hands', tag:'static balance', cat:'balance', dur:'10m', src:'external',
+    setup:'Easy boulders, familiar climbs.',
+    do:'Move into a balanced (flagged) position and hover your reaching hand three counts above the next hold before grabbing. Forces true static balance. Combine with an active flag: kick your free foot into the wall for the counter-pressure.',
+    goal:'Static control, lock-off and a functional core. Unmasks positions where you secretly lean on momentum.' },
+  { n:'Dead-Point to Pause', tag:'dynamics & control', cat:'dynamics', dur:'10-15m', src:'external',
+    setup:'A small deadpoint move on vertical or slightly overhanging terrain.',
+    do:'Launch from a controlled start to the next hold and pause there — do not move on. Lock off and brace your core to kill any swing. Hold for 3 seconds, then climb on. The target is catching exactly at the highest, weightless moment of the move.',
+    goal:'Dynamic precision plus the body tension to deaden a dynamic move at the moment of contact.' },
+  { n:'Cow Stance (tension hold)', tag:'body tension', cat:'tension', dur:'10m', src:'external',
+    setup:'Slightly overhanging wall, good hand and foot holds.',
+    do:'Right foot high, left foot low and relaxed. Round your back like a cat (think: beach ball on your belly). Pull yourself into the wall until your left shoulder touches or hovers at the left hold. Right hip up and close to the wall, right knee pointing right. Hold 10 sec, relax — one rep. Switch sides.',
+    goal:'Teaches you to over-engage core, hips, back and toes between holds — the basis of body tension on steep terrain.' },
+  { n:'Blindfold Climbing', tag:'proprioception', cat:'balance', dur:'10m', src:'external',
+    setup:'Very easy, familiar boulders. Spotter present.',
+    do:'Climb with your eyes closed or blindfolded. Without sight you must find your holds and footholds and distribute your weight entirely by feel. Move slowly and feel every placement. Only on safe, low terrain.',
+    goal:'Sharpens proprioception and sensory feedback for foot and hand placement enormously.' },
 ];
 
-// 1 drill per dag, roteert
+// 1 drill per day, rotates
 function drillOfDay() {
   const seed = new Date().getDate() + new Date().getMonth()*31;
   return DRILLS[seed % DRILLS.length];
 }
 
 // ══ BLOCK LIBRARY ══
-// Elke key is een herbruikbaar trainingsblok. t = basistijd bij 90 min sessie.
+// Every key is a reusable training block. t = base time at a 90 min session.
 const BLOCKLIB = {
   // ── openers ──
-  // ── openers ──
-  dynamic: { n:'Dynamic warm-up', t:10, c:'#60A5FA', rpe:'1-2', guided:true,
+  dynamic: { n:'Charlie warm-up', t:10, c:'#60A5FA', rpe:'1-2', guided:true,
     links:[{label:'Follow-along video', url:'https://m.youtube.com/watch?v=58fr4fxk5MA'}],
-    why:'Vaste 10 min opener. Eerst quick cardio, dan dynamic stretches met grote ademhaling bij het eindbereik. Loopt automatisch door — pauzeer of skip wanneer je wilt.',
+    why:'Fixed 10 min opener. Quick cardio first, then dynamic stretches with big breaths at end range. Runs automatically — pause or skip whenever you want.',
     items:[
-      { n:'Jumping jacks', note:'met shoulder rotations', sec:25 },
-      { n:'Seals', note:'20 stuks', sec:20 },
-      { n:'Split jumps', note:'20 stuks', sec:20 },
-      { n:'Pauze', note:'even uitademen', sec:10, rest:true },
-      { n:'Trunk twists', note:'20 — hoofd en heupen blijven naar voren', sec:20 },
-      { n:'Side bends', note:'20 — arm over hoofd, andere naar voet', sec:20 },
-      { n:'Trunk circles', note:'5 per richting', sec:15 },
-      { n:'Hip circles', note:'8 per richting', sec:15 },
-      { n:'Hands-on-knee circles', note:'8 per richting', sec:15 },
-      { n:'Arm circles', note:'10 per richting', sec:15 },
-      { n:'Elbow circles', note:'10 per richting', sec:12 },
-      { n:'Neck circles', note:'10 — rustig', sec:12 },
-      { n:'Shoulder shrugs', note:'10 stuks', sec:10 },
-      { n:'Shoulder rotations', note:'20 — pink en duim omhoog', sec:18 },
-      { n:'Standing knee circles', note:'5 per been, beide richtingen', sec:18 },
-      { n:'Hip hinges', note:'10 stuks', sec:15 },
-      { n:'Table turnovers', note:'3 per richting', sec:18 },
-      { n:'Full-plank to inch-worms', note:'2 stuks', sec:20 },
-      { n:'Leg swings zijwaarts L', note:'10 — linkerbeen', sec:12 },
-      { n:'Leg swings zijwaarts R', note:'10 — rechterbeen', sec:12 },
-      { n:'Leg swings voor/achter L', note:'10 — linkerbeen', sec:12 },
-      { n:'Leg swings voor/achter R', note:'10 — rechterbeen', sec:12 },
+      { n:'Jumping jacks', note:'with shoulder rotations', sec:25 },
+      { n:'Seals', note:'20 reps', sec:20 },
+      { n:'Split jumps', note:'20 reps', sec:20 },
+      { n:'Break', note:'breathe out', sec:10, rest:true },
+      { n:'Trunk twists', note:'20 — head and hips stay forward', sec:20 },
+      { n:'Side bends', note:'20 — arm over head, other to the foot', sec:20 },
+      { n:'Trunk circles', note:'5 per direction', sec:15 },
+      { n:'Hip circles', note:'8 per direction', sec:15 },
+      { n:'Hands-on-knee circles', note:'8 per direction', sec:15 },
+      { n:'Arm circles', note:'10 per direction', sec:15 },
+      { n:'Elbow circles', note:'10 per direction', sec:12 },
+      { n:'Neck circles', note:'10 — gently', sec:12 },
+      { n:'Shoulder shrugs', note:'10 reps', sec:10 },
+      { n:'Shoulder rotations', note:'20 — pinky and thumb up', sec:18 },
+      { n:'Standing knee circles', note:'5 per leg, both directions', sec:18 },
+      { n:'Hip hinges', note:'10 reps', sec:15 },
+      { n:'Table turnovers', note:'3 per direction', sec:18 },
+      { n:'Full-plank to inch-worms', note:'2 reps', sec:20 },
+      { n:'Leg swings sideways L', note:'10 — left leg', sec:12 },
+      { n:'Leg swings sideways R', note:'10 — right leg', sec:12 },
+      { n:'Leg swings front/back L', note:'10 — left leg', sec:12 },
+      { n:'Leg swings front/back R', note:'10 — right leg', sec:12 },
     ] },
   warmup: { n:'Progressive warm-up + drills', t:30, c:'#3A3A38', rpe:'2-5', drills:true,
-    why:'Boulder ladder die steeds moeilijker wordt: 4, 4, 5a, 5b, 5c, 6a, 6a, 6b t/m 6c. Vanaf 6a 3 min rust. Doel is niet boulders halen maar goed warm worden. Varieer wandtype en stijl. Mik op 10-20 boulders, 1-2 per grade. Voeg de drill van vandaag toe (hieronder) — één pijler per sessie.' },
-  warmupFinger: { n:'Warm-up + vingers', t:35, c:'#3A3A38', rpe:'2-5', drills:true,
-    why:'Progressive warm-up (boulder ladder 4 → 6c) plus specifieke vingeropwarming: easy hangs, lifting pin opbouwend, minimaal 15 min peesvoorbereiding. Voor zwaar vingerwerk is dit niet onderhandelbaar.' },
+    why:'Boulder ladder that gets progressively harder: 4, 4, 5a, 5b, 5c, 6a, 6a, 6b up to 6c. From 6a rest 3 min. The goal is not sending boulders but getting properly warm. Vary wall angle and style. Aim for 10-20 boulders, 1-2 per grade. Add the drill of the day (below) — one pillar per session.' },
+  warmupFinger: { n:'Warm-up + fingers', t:35, c:'#3A3A38', rpe:'2-5', drills:true,
+    why:'Progressive warm-up (boulder ladder 4 → 6c) plus specific finger prep: easy hangs, lifting pin building up, at least 15 min of tendon preparation. For heavy finger work this is non-negotiable.' },
   mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, c:'#60A5FA', rpe:'-',
-    why:'Jumping jacks 30, seals 20, split jumps 20, trunk twists 20, leg swings 20+20, arm/elbow/shoulder circles. Tendon glides erbij.' },
+    why:'Jumping jacks 30, seals 20, split jumps 20, trunk twists 20, leg swings 20+20, arm/elbow/shoulder circles. Tendon glides on top.' },
 
   // ── capacity cores ──
   volume: { n:'Volume boulders', t:40, c:'#4ADE80', rpe:'6', sets:30, rest:3, checklist:true, target:30, range:'25-35',
-    why:'25-35 boulders rond 6a/6b. 3 min rust vanaf 6a, timer aan. Zak in grade als kwaliteit wegvalt (eerst 5c, dan 5b). Stop bij technisch falen, niet bij spierfalen.' },
+    why:'25-35 boulders around 6a/6b. 3 min rest from 6a, timer on. Drop a grade when quality fades (first 5c, then 5b). Stop at technical failure, not muscular failure.' },
   linked: { n:'Linked boulders', t:40, c:'#4ADE80', rpe:'6-7', sets:8, rest:4,
-    why:'Link twee boulders aaneen (omlaag klimmen of direct doorstappen). Grades rond 5c-6a per boulder zodat de link haalbaar blijft. 3-4 min rust tussen links. 6-10 links totaal.' },
+    why:'Link two boulders together (climb down or step straight through). Grades around 5c-6a per boulder so the link stays doable. 3-4 min rest between links. 6-10 links total.' },
   boardVolume: { n:'Kilterboard volume', t:40, c:'#4ADE80', rpe:'6-7', sets:18, rest:3,
-    why:'15-20 boulders onder je board-max (6a-6b op het board). 3 min rust, timer aan. Let op huid — bij flappers stoppen of naar de gym-wand. Herhaal boulders die soepeler kunnen.' },
+    why:'15-20 boulders below your board max (6a-6b on the board). 3 min rest, timer on. Watch your skin — stop at flappers or move to the gym wall. Repeat boulders that could flow better.' },
 
   // ── power endurance cores ──
   hehe: { n:'HEHE sets', t:42, c:'#A3E635', rpe:'7-8', sets:4, rest:8,
-    why:'Set = moeilijke boulder (kunnen maar niet geflashed, ±6b/6c) → direct hele makkelijke → direct weer moeilijke → afsluiten makkelijk. 3-6 sets, 5-10 min rust tussen sets. Eerste 2-3 sets net zonder failure. Progressie: eerst meer sets, dán pas moeilijker.' },
+    why:'Set = hard boulder (doable but not flashable, ~6b/6c) → straight into a very easy one → straight into a hard one again → finish easy. 3-6 sets, 5-10 min rest between sets. First 2-3 sets just short of failure. Progression: more sets first, only then harder.' },
   fourByFour: { n:'4×4 circuits', t:42, c:'#A3E635', rpe:'7-8', sets:4, rest:4,
-    why:'Kies 4 boulders 2-3 grades onder max (±5c-6a), verschillende stijlen, licht overhangend, geen rustposities. Klim alle 4 achter elkaar zonder rust, dan 4 min rust. 4 rondes. Te makkelijk als je nergens bijna valt; te zwaar als je in ronde 2 al faalt.' },
+    why:'Pick 4 boulders 2-3 grades below max (~5c-6a), different styles, slightly overhanging, no rest positions. Climb all 4 back to back without rest, then rest 4 min. 4 rounds. Too easy if you never come close to falling; too hard if you already fail in round 2.' },
   peFlow: { n:'PE Flow', t:42, c:'#A3E635', rpe:'6-8',
-    why:'Power endurance op gevoel. Klim blokken van 2-4 boulders aaneen met korte rust. Wissel zwaar en licht af. 30-45 min vrijwel continu bewegen met oplopende pump. Stop als techniek wegvalt.' },
+    why:'Power endurance by feel. Climb blocks of 2-4 boulders back to back with short rests. Alternate hard and easy. 30-45 min of near-continuous movement with building pump. Stop when technique falls apart.' },
 
   // ── power cores ──
   board1: { n:'Board Session 1', t:42, c:'#F59E0B', rpe:'8', sets:6, rest:4,
-    why:'4-8 boulders bij je limiet. Verschillende stijlen, grips en wandhoeken. Kies boulders die je in 4 pogingen kunt klimmen: first try = te makkelijk, na 4 pogingen kansloos = te moeilijk. Weekprogressie: wk1 4, wk2 5, wk3 6, wk4 7 boulders. 3+ min rust.' },
+    why:'4-8 boulders at your limit. Different styles, grips and wall angles. Pick boulders you can climb within 4 tries: first try = too easy, hopeless after 4 tries = too hard. Weekly progression: wk1 4, wk2 5, wk3 6, wk4 7 boulders. 3+ min rest.' },
   limitBlocks: { n:'Limit boulder blocks', t:42, c:'#F59E0B', rpe:'9', sets:3, rest:8,
-    why:'2-3 limit blocks van 2-4 moves. Rust 2 min per move (4-move block = 8 min rust). Max effort, snelle beweging, vorm onder spanning. Niet moves herhalen om beta te slijpen — dit is testen van je limiet. Power zakt = stoppen.' },
+    why:'2-3 limit blocks of 2-4 moves. Rest 2 min per move (4-move block = 8 min rest). Max effort, fast movement, form under tension. Do not repeat moves to polish beta — this is testing your limit. Power drops = stop.' },
   campus: { n:'Campus boarding', t:22, c:'#F59E0B', rpe:'8', sets:5, rest:3,
-    why:'±20 totale impacts. Ladders 1-2-3 of 1-3-5. Gebruik randen die je makkelijk controleert en snel raakt. Focus op snelheid en precisie, niet afstand. Vermijd falen en trage herhalingen.' },
+    why:'~20 total impacts. Ladders 1-2-3 or 1-3-5. Use rungs you control easily and hit fast. Focus on speed and precision, not distance. Avoid failure and slow grinding reps.' },
   dynos: { n:'Dynos', t:20, c:'#F59E0B', rpe:'8', sets:4, rest:2,
-    why:'3-4 dynos op vlakke wanden, geen overhang. 3 reps per dyno. Varieer richting en voetposities. Drive vanuit de voeten, accuracy eerst. 2+ min rust per volledige poging.' },
+    why:'3-4 dynos on flat walls, no overhang. 3 reps per dyno. Vary direction and foot positions. Drive from the feet, accuracy first. 2+ min rest per full attempt.' },
   maxHangs: { n:'Max hangs', t:28, c:'#F59E0B', rpe:'8-9', sets:4, rest:4,
-    why:'3-5 sets van 3-5 sec @ 90-95% van max hang load. Half crimp tenzij dat pijn doet. Edge 10-30mm. Pull into the edge, schouder aangespannen. 3-5 min rust tussen reps. Vingers niet perfect? Skippen — geen uitzonderingen.' },
+    why:'3-5 sets of 3-5 sec @ 90-95% of max hang load. Half crimp unless it hurts. Edge 10-30mm. Pull into the edge, shoulder engaged. 3-5 min rest between reps. Fingers not perfect? Skip — no exceptions.' },
 
   // ── performance cores ──
   compStyle: { n:'Comp blocks', t:50, c:'#F87171', rpe:'8-9', sets:6, rest:5,
-    why:'Kies 6 fysiek uitdagende boulders (die je normaal nét klimt). Per boulder: 3× klimmen binnen 5 min, dan 5 min rust, dan de volgende. Ideaal lukt het drie keer, op je tandvlees. Drie keer makkelijk = volgende keer moeilijker. Failure op de derde is oké, zolang het niet bij alle boulders gebeurt.' },
-  pyramide: { n:'Pyramide', t:50, c:'#F87171', rpe:'7-9', sets:8, rest:3,
-    why:'8 progressief moeilijke boulders, zwaktes meenemen (bv. dynamisch als dat je zwakte is): 6a, 6a, 6b, 6a dyn, 6c, 6c dyn, 7a, 7a+. Drie pogingen per boulder, ±3 min rust tussen pogingen. Failure alleen in de hoogste grades — anders moeilijkheid bijstellen.' },
-  project: { n:'Project pogingen', t:48, c:'#F87171', rpe:'9-10', sets:8, rest:6,
-    why:'Max 8-10 pogingen. Volledig herstel tussen pogingen (5-8 min — voelt lang, is nodig). Tussen pogingen: beta evalueren, filmen helpt. Power zakt = klaar voor vandaag.' },
+    why:'Pick 6 physically demanding boulders (ones you normally just barely send). Per boulder: climb it 3x within 5 min, then rest 5 min, then the next. Ideally you make it three times, on your last legs. Three easy sends = go harder next time. Failing on the third is fine, as long as it does not happen on every boulder.' },
+  pyramide: { n:'Pyramid', t:50, c:'#F87171', rpe:'7-9', sets:8, rest:3,
+    why:'8 progressively harder boulders, weaknesses included (e.g. dynamic if that is your weakness): 6a, 6a, 6b, 6a dyn, 6c, 6c dyn, 7a, 7a+. Three tries per boulder, ~3 min rest between tries. Failure only in the top grades — otherwise adjust the difficulty.' },
+  project: { n:'Project attempts', t:48, c:'#F87171', rpe:'9-10', sets:8, rest:6,
+    why:'Max 8-10 attempts. Full recovery between tries (5-8 min — feels long, is needed). Between attempts: evaluate beta, filming helps. Power drops = done for today.' },
 
   // ── recovery cores ──
-  easyClimb: { n:'Easy klimmen', t:40, c:'#60A5FA', rpe:'3-4',
-    why:'Minstens 2 grades onder max (4-5b). Focus op rust in de beweging en footwork. Geen projectjes, geen verleiding.' },
-  hog: { n:'HoG sessie', t:10, c:'#60A5FA', rpe:'2-3', sets:3, rest:2, fixed:true,
+  easyClimb: { n:'Easy climbing', t:40, c:'#60A5FA', rpe:'3-4',
+    why:'At least 2 grades below max (4-5b). Focus on calm movement and footwork. No mini-projects, no temptation.' },
+  hog: { n:'HoG session', t:10, c:'#60A5FA', rpe:'2-3', sets:3, rest:2, fixed:true,
     links:[{label:'Open Grip Gains', url:'https://gripgains.ca'}],
-    why:'Volg het Grip Gains schema. Rotatie: week 1 Crusher/Micro/Crusher, week 2 Micro/Crusher/Micro. Crusher = FDS, Micro = FDP. Open de app voor je sets en gewichten.' },
+    why:'Follow the Grip Gains schedule. Rotation: week 1 Crusher/Micro/Crusher, week 2 Micro/Crusher/Micro. Crusher = FDS, Micro = FDP. Open the app for your sets and weights.' },
 
   // ── skill cores ──
   drillBlocks: { n:'Drill blocks', t:45, c:'#A78BFA', rpe:'5-6', sets:3, rest:2, drills:true,
-    why:'3 drills × 15 min op boulders 2 grades onder max. Per drill: eerst bewust traag, dan op normale snelheid, dan op een net-uitdagende boulder. Film jezelf minstens één keer per drill.' },
+    why:'3 drills × 15 min on boulders 2 grades below max. Per drill: first deliberately slow, then at normal speed, then on a just-challenging boulder. Film yourself at least once per drill.' },
   boardApply: { n:'Board application', t:12, c:'#4ADE80', rpe:'6', sets:4, rest:3,
-    why:'Pas de drills toe op 3-4 Kilterboard boulders. Geen score — alleen kwaliteit van beweging telt.' },
+    why:'Apply the drills on 3-4 Kilterboard boulders. No score — only quality of movement counts.' },
 
   // ── conditioning / closers ──
   mini1: { n:'Mini circuit 1', t:15, c:'#E6F557', rpe:'6', sets:5, rest:2,
@@ -1052,82 +1057,82 @@ const BLOCKLIB = {
   mini3: { n:'Mini circuit 3', t:15, c:'#E6F557', rpe:'7', sets:3, rest:3,
     why:'Weighted pull-ups 3×3 RIR1 · Dumbbell press 3×4 RIR2 · Lateral raises 3×8 RIR4.' },
   lockoffs: { n:'Lock-offs', t:10, c:'#E6F557', rpe:'7', sets:2, rest:2,
-    why:'2×10 sec op 90 en 120 graden. 2 sec voor failure stoppen. Wide grip.' },
-  gymWarmup: { n:'Gym warming-up', t:10, c:'#3A3A38', rpe:'2-3',
-    why:'Rustig op temperatuur komen: 5 min cardio (roeien, hometrainer of touwtjespringen) plus schoudermobiliteit, band pull-aparts en wat lichte opwarmsets voor de eerste oefening. Pezen en gewrichten klaarmaken voor belasting.' },
-  pullStrength: { n:'Trekkracht', t:18, c:'#F59E0B', rpe:'7-8', sets:4, rest:3,
-    why:'Weighted pull-ups of rows als hoofdoefening. 3-5 sets van 3-6 reps met gecontroleerde excentrische fase. Volledige rust tussen sets — dit is kracht, geen conditie.' },
-  pushStrength: { n:'Drukkracht', t:15, c:'#F59E0B', rpe:'7-8', sets:4, rest:3,
-    why:'Bench press of overhead press. 3-4 sets van 6-10 reps. Houd 1-2 reps in reserve (RIR), barspeed hoog. Antagonist-balans voor je schouders na al het trekwerk in klimmen.' },
-  coreLegs: { n:'Core & benen', t:12, c:'#E6F557', rpe:'6-7', sets:3, rest:2,
-    why:'Single-leg Romanian deadlift, Bulgarian split squats en anti-rotatie core (TRX body saws of pallof press). 3 sets, 8-10 reps. Stabiliteit en kracht voor je onderlichaam — vaak verwaarloosd bij klimmers.' },
-  slab: { n:'Slab (als energie het toelaat)', t:12, c:'#A3E635', rpe:'5',
-    why:'Easy slab als technisch toetje. Balans en voetwerk. Skip zonder schuldgevoel als je leeg bent — walk away fresh.' },
-  skillLight: { n:'Movement skill licht', t:12, c:'#A3E635', rpe:'3-4', drills:true,
-    why:'Eén drill naar keuze op makkelijk terrein. Puur coördinatie, nul kracht. Zenuwstelsel afkoelen.' },
+    why:'2×10 sec at 90 and 120 degrees. Stop 2 sec before failure. Wide grip.' },
+  gymWarmup: { n:'Gym warm-up', t:10, c:'#3A3A38', rpe:'2-3',
+    why:'Get up to temperature calmly: 5 min cardio (rowing, bike or jump rope) plus shoulder mobility, band pull-aparts and a few light warm-up sets for the first exercise. Prepare tendons and joints for load.' },
+  pullStrength: { n:'Pull strength', t:18, c:'#F59E0B', rpe:'7-8', sets:4, rest:3,
+    why:'Weighted pull-ups or rows as the main lift. 3-5 sets of 3-6 reps with a controlled eccentric. Full rest between sets — this is strength, not conditioning.' },
+  pushStrength: { n:'Push strength', t:15, c:'#F59E0B', rpe:'7-8', sets:4, rest:3,
+    why:'Bench press or overhead press. 3-4 sets of 6-10 reps. Keep 1-2 reps in reserve (RIR), bar speed high. Antagonist balance for your shoulders after all the pulling in climbing.' },
+  coreLegs: { n:'Core & legs', t:12, c:'#E6F557', rpe:'6-7', sets:3, rest:2,
+    why:'Single-leg Romanian deadlift, Bulgarian split squats and anti-rotation core (TRX body saws or pallof press). 3 sets, 8-10 reps. Stability and strength for your lower body — often neglected in climbers.' },
+  slab: { n:'Slab (if energy allows)', t:12, c:'#A3E635', rpe:'5',
+    why:'Easy slab as a technical dessert. Balance and footwork. Skip without guilt if you are empty — walk away fresh.' },
+  skillLight: { n:'Movement skill light', t:12, c:'#A3E635', rpe:'3-4', drills:true,
+    why:'One drill of your choice on easy terrain. Pure coordination, zero strength. Cool the nervous system down.' },
   drillsOnly: { n:'Movement drills', t:20, c:'#A78BFA', rpe:'4-5', drills:true,
-    why:'Korte gerichte drill-sessie als hoofdmoot. Kies de drill van vandaag en werk hem bewust af op boulders onder je max. Kwaliteit van beweging telt, geen score.' },
-  drillLibrary: { n:'Drill-bibliotheek', t:30, c:'#A78BFA', rpe:'4-5', library:true,
-    why:'De volledige bibliotheek. Kies zelf welke drills je vandaag doet.' },
-  sprayLight: { n:'Spray wall (kort)', t:15, c:'#4ADE80', rpe:'4-5',
-    why:'Korte, lichte spray-sessie. Bewust laag in RPE houden (4-5) zodat je vingers fris blijven voor HoG erna. 6-10 boulders ruim onder je max, focus op soepel bewegen en de drill van vandaag. Geen limit work — dit is geen power-sessie.' },
+    why:'A short focused drill session as the main course. Pick the drill of the day and work it deliberately on boulders below your max. Quality of movement counts, no score.' },
+  drillLibrary: { n:'Drill library', t:30, c:'#A78BFA', rpe:'4-5', library:true,
+    why:'The full library. Pick the drills you want to do today yourself.' },
+  sprayLight: { n:'Spray wall (short)', t:15, c:'#4ADE80', rpe:'4-5',
+    why:'Short, light spray session. Deliberately keep the RPE low (4-5) so your fingers stay fresh for HoG afterwards. 6-10 boulders well below your max, focus on smooth movement and the drill of the day. No limit work — this is not a power session.' },
   nohangs: { n:'No hangs + stretch', t:8, c:'#2A2A28', rpe:'-', sets:2, rest:1,
-    why:'No hangs 2×30 sec half crimp. Daarna kort stretchen: schouders en onderarmen.' },
-  // ── minimal dose micro-blokken (minimum effective dose; López/Lattice-onderzoek naar korte frequente vingertraining) ──
+    why:'No hangs 2×30 sec half crimp. Then a short stretch: shoulders and forearms.' },
+  // ── minimal dose micro blocks (minimum effective dose; López/Lattice research on short frequent finger training) ──
   activeCurls: { n:'Active finger curls', t:12, c:'#F59E0B', rpe:'8-9', sets:'4-6', rest:2, fixed:true,
-    why:'Power pulls op een rand of fingerboard: geen dood hangen maar actief kracht zetten alsof je de rand naar je toe krult. Isometrische holds van 7-10 sec op 80-90% van je max, 1-2 tellen voor falen stoppen, 2-3 min volledige rust, 4-6 sets. Actief krullen rekruteert meer met minder totale peesbelasting.' },
-  mdFinger: { n:'Vinger-prep', t:5, c:'#3A3A38', rpe:'3-5', fixed:true,
-    why:'Progressief opladen op de rand: 3-4 korte, steeds zwaardere hangs met volledige rust. Pezen op spanning brengen voor het maximale werk — nooit koud max hangen.' },
+    why:'Power pulls on an edge or fingerboard: no dead hanging but actively driving force as if curling the edge toward you. Isometric holds of 7-10 sec at 80-90% of your max, stop 1-2 counts before failure, 2-3 min full rest, 4-6 sets. Active curling recruits more with less total tendon load.' },
+  mdFinger: { n:'Finger prep', t:5, c:'#3A3A38', rpe:'3-5', fixed:true,
+    why:'Progressive loading on the edge: 3-4 short, increasingly heavy hangs with full rest. Bring the tendons up to tension before the maximal work — never max hang cold.' },
   mdMaxHangs: { n:'Micro max hangs', t:12, c:'#F59E0B', rpe:'8-9', sets:5, rest:2, fixed:true,
-    why:'5 hangs van 7-10 sec op 85-90% van je max (half crimp), 2 min volledige rust tussen elke hang. Kort en zwaar geeft het grootste deel van de kracht-adaptatie in een fractie van de tijd. Stop 1-2 tellen voor falen.' },
+    why:'5 hangs of 7-10 sec at 85-90% of your max (half crimp), 2 min full rest between hangs. Short and heavy delivers most of the strength adaptation in a fraction of the time. Stop 1-2 counts before failure.' },
   mdNoHangs: { n:'Micro no-hangs', t:10, c:'#F59E0B', rpe:'8', sets:4, rest:2, fixed:true,
-    why:'Lifting edge of blok van de grond: 4 lifts per hand van 8-10 sec op hoge intensiteit, 2 min rust. Schoudervriendelijk alternatief met dezelfde vingerprikkel, makkelijk exact te doseren.' },
+    why:'Lifting edge or block off the floor: 4 lifts per hand of 8-10 sec at high intensity, 2 min rest. Shoulder-friendly alternative with the same finger stimulus, easy to dose exactly.' },
   mdPull: { n:'Micro pull', t:6, c:'#E6F557', rpe:'7-8', sets:3, rest:2, fixed:true,
-    why:'3×3 zware pull-ups (weighted als 3 makkelijk is), volledige rust. Trekkracht onderhouden in zes minuten.' },
+    why:'3×3 heavy pull-ups (weighted if 3 is easy), full rest. Maintain pull strength in six minutes.' },
   mdCore: { n:'Micro core', t:5, c:'#E6F557', rpe:'6-7', sets:3, fixed:true,
-    why:'3 rondes: 20 sec hollow hold plus 8 hanging knee raises. Spanning onderhouden zonder tijd te vreten.' },
+    why:'3 rounds: 20 sec hollow hold plus 8 hanging knee raises. Maintain tension without eating time.' },
   stretch: { n:'Stretch', t:10, c:'#2A2A28', rpe:'-',
-    why:'Pancake-progressie (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine en lats. 2 min per positie. Adem uit.' },
-  stretchLong: { n:'Stretch uitgebreid', t:25, c:'#2A2A28', rpe:'-',
-    why:'Volledige routine: pancake 2 min, pigeon, shoulder flexion drills, T-spine rotaties, lats, wrist flexors. Aidan Roberts mobiliteitslijn.' },
+    why:'Pancake progression (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine and lats. 2 min per position. Breathe out.' },
+  stretchLong: { n:'Extended stretch', t:25, c:'#2A2A28', rpe:'-',
+    why:'Full routine: pancake 2 min, pigeon, shoulder flexion drills, T-spine rotations, lats, wrist flexors. Aidan Roberts mobility line.' },
 
-  // ── activatie-protocols ──
+  // ── activation protocols ──
   tensionAct: { n:'Tension activation', t:12, c:'#F59E0B', rpe:'6', sets:3, rest:2,
-    why:'Zenuwstelsel preloaden vóór limit werk. Zware isometrics kort en fris: heel-hook isometric pulls op 60/90/120 graden, 1 rep per hoek, ver van falen.' },
+    why:'Preload the nervous system before limit work. Heavy isometrics, short and fresh: heel-hook isometric pulls at 60/90/120 degrees, 1 rep per angle, far from failure.' },
 };
 
-// ══ SESSIONS = energiesysteem-containers ══
-// slots: vaste blokken (string) of keuzeslots (array = generator kiest er één, roteert per dag)
+// ══ SESSIONS = energy system containers ══
+// slots: fixed blocks (string) or choice slots (array = generator picks one, rotates per day)
 const sessions = [
-  { id:'strength', cat:'Strength', name:'Strength', desc:'Maximale kracht\nvingers en lichaam', color:'amber', rpe:'8-9', tags:['strength','max','vingers','limit','hangs'],
-    intent:'Maximale kracht. Zware, korte inspanningen met volledig herstel — vingers eerst (fris), dan limietboulders. Kwaliteit boven volume; kracht zakt = sessie voorbij.',
+  { id:'strength', cat:'Strength', name:'Strength', desc:'Max strength\nfingers and body', color:'amber', rpe:'8-9', tags:['strength','max','fingers','limit','hangs'],
+    intent:'Maximum strength. Heavy, short efforts with full recovery — fingers first (fresh), then limit boulders. Quality over volume; power drops = session over.',
     slots:[ 'dynamic', 'warmupFinger', ['maxHangs','nohangs'], ['limitBlocks','board1'], ['slab','skillLight'], 'stretch' ] },
-  { id:'power', cat:'Power', name:'Power', desc:'Explosiviteit\nsnelheid van kracht', color:'red', rpe:'8-9', tags:['power','explosief','campus','dynos','contact'],
-    intent:'Explosieve kracht: snelheid waarmee je kracht zet. Volledig fris, vol commitment, lange rust. Stop zodra je snelheid verliest — vermoeid powertrainen traint traagheid.',
+  { id:'power', cat:'Power', name:'Power', desc:'Explosiveness\nspeed of force', color:'red', rpe:'8-9', tags:['power','explosive','campus','dynos','contact'],
+    intent:'Explosive power: the speed at which you apply force. Fully fresh, full commitment, long rests. Stop the moment you lose speed — training power tired trains slowness.',
     slots:[ 'dynamic', 'warmupFinger', 'tensionAct', ['campus','dynos'], ['boardApply','board1'], 'stretch' ] },
-  { id:'pe', cat:'Power Endurance', name:'Power Endurance', desc:'Anaerobe capaciteit\npump-tolerantie', color:'lime', rpe:'7-8', tags:['power endurance','hehe','4x4','pump','anaeroob'],
-    intent:'Anaerobe capaciteit. Doorklimmen op vermoeide onderarmen zonder technisch in te storten — fatigue is hier het doel.',
+  { id:'pe', cat:'Power Endurance', name:'Power Endurance', desc:'Anaerobic capacity\npump tolerance', color:'lime', rpe:'7-8', tags:['power endurance','hehe','4x4','pump','anaerobic'],
+    intent:'Anaerobic capacity. Keep climbing on tired forearms without technique collapsing — fatigue is the goal here.',
     slots:[ 'dynamic', 'warmup', ['hehe','fourByFour','peFlow'], ['mini1','mini2'], 'stretch' ] },
-  { id:'capacity', cat:'Capacity', name:'Capacity', desc:'Aerobe basis\nvolume en herhaling', color:'green', rpe:'6-7', tags:['capacity','volume','aeroob','endurance','basis'],
-    intent:'Aerobe capaciteit bouwen. Veel herhalingen met goede techniek — lichte vermoeidheid is oké, falen niet.',
+  { id:'capacity', cat:'Capacity', name:'Capacity', desc:'Aerobic base\nvolume and repetition', color:'green', rpe:'6-7', tags:['capacity','volume','aerobic','endurance','base'],
+    intent:'Build aerobic capacity. Lots of repetitions with good technique — light fatigue is fine, failure is not.',
     slots:[ 'dynamic', 'warmup', ['volume','linked','boardVolume'], ['mini1','mini2'], 'nohangs' ] },
-  { id:'gym', cat:'Conditioning', name:'Conditioning', desc:'Kracht & conditie\nweg van de vingers', color:'amber', rpe:'7-8', tags:['conditioning','gym','kracht','antagonist','core'],
-    intent:'Krachttraining buiten het klimmen: trek, druk, core en benen. Antagonist-balans en algemene kracht zonder vingerbelasting.',
+  { id:'gym', cat:'Conditioning', name:'Conditioning', desc:'Strength & condition\naway from the fingers', color:'amber', rpe:'7-8', tags:['conditioning','gym','strength','antagonist','core'],
+    intent:'Strength training outside climbing: pull, push, core and legs. Antagonist balance and general strength without finger load.',
     slots:[ 'gymWarmup', 'pullStrength', 'pushStrength', 'coreLegs', ['mini1','mini2','mini3'], 'stretch' ] },
-  { id:'skill', cat:'Skill', name:'Skill', desc:'Techniek isolatie\nbewust klimmen', color:'purple', rpe:'5-6', tags:['skill','techniek','drills','movement'],
-    intent:'Techniek als hoofdgerecht. Drie drills grondig in plaats van twee terloops — videofeedback aangeraden.',
+  { id:'skill', cat:'Skill', name:'Skill', desc:'Technique isolation\ndeliberate climbing', color:'purple', rpe:'5-6', tags:['skill','technique','drills','movement'],
+    intent:'Technique as the main course. Three drills done thoroughly instead of two in passing — video feedback recommended.',
     slots:[ 'dynamic', 'warmup', 'drillBlocks', 'boardApply', 'stretch' ] },
-  { id:'perf', cat:'Performance', name:'Performance', desc:'Presteren\nprojecten en formats', color:'red', rpe:'8-10', tags:['performance','project','comp','pyramide'],
-    intent:'Presteren wanneer het telt. Volledig herstel tussen pogingen, elke poging met intentie. Noteer wat werkte.',
+  { id:'perf', cat:'Performance', name:'Performance', desc:'Performing\nprojects and formats', color:'red', rpe:'8-10', tags:['performance','project','comp','pyramid'],
+    intent:'Perform when it counts. Full recovery between attempts, every attempt with intention. Note what worked.',
     slots:[ 'dynamic', 'warmup', ['project','compStyle','pyramide'], ['skillLight','slab'], 'stretch' ] },
-  { id:'recovery', cat:'Recovery', name:'Recovery', desc:'Actief herstel\nHoG en mobiliteit', color:'blue', rpe:'2-4', tags:['recovery','herstel','hog','mobiliteit','grippers'],
-    intent:'Herstellen door te bewegen. Bloedsomloop, mobiliteit en vingeronderhoud — zonder klimbelasting van betekenis.',
+  { id:'recovery', cat:'Recovery', name:'Recovery', desc:'Active recovery\nHoG and mobility', color:'blue', rpe:'2-4', tags:['recovery','hog','mobility','grippers'],
+    intent:'Recover by moving. Circulation, mobility and finger maintenance — without any climbing load of significance.',
     slots:[ 'dynamic', ['hog','easyClimb'], ['skillLight','lockoffs'], 'stretchLong' ] },
-  { id:'minidose', cat:'Minimal Dose', name:'Minimal Dose', desc:'Hoog rendement\n±20 minuten', color:'amber', rpe:'8', tags:['minimal dose','kort','vingers','efficient'],
-    intent:'Minimum effective dose: het kleinste volume dat nog adaptatie oplevert. Vingers eerst, fris en zwaar, korte totaaltijd. Twee tot vier keer per week houdbaar naast een druk leven.',
+  { id:'minidose', cat:'Minimal Dose', name:'Minimal Dose', desc:'High return\n~20 minutes', color:'amber', rpe:'8', tags:['minimal dose','short','fingers','efficient'],
+    intent:'Minimum effective dose: the smallest volume that still drives adaptation. Fingers first, fresh and heavy, short total time. Sustainable two to four times a week next to a busy life.',
     slots:[ 'mdFinger', ['mdMaxHangs','mdNoHangs'], ['mdPull','mdCore'] ] },
-  { id:'drills', cat:'Drills', name:'Drill-bibliotheek', desc:'Volledige bibliotheek\nkies zelf', color:'purple', rpe:'4-5', tags:['drills','techniek','movement','skill','bibliotheek'],
-    intent:'De volledige drill-bibliotheek. Kies zelf welke drills je doet, met uitleg.',
+  { id:'drills', cat:'Drills', name:'Drill library', desc:'Full library\npick your own', color:'purple', rpe:'4-5', tags:['drills','technique','movement','skill','library'],
+    intent:'The full drill library. Pick the drills you want to do, with instructions.',
     slots:[ 'drillLibrary' ] },
 ];
 
@@ -1190,11 +1195,11 @@ function logSessionDone(id, variant, time, sig, snap) {
 }
 function agoLabel(ts) {
   const d = Math.floor((Date.now() - ts) / 86400000);
-  if (d <= 0) return 'vandaag';
-  if (d === 1) return 'gisteren';
-  if (d < 7) return d + ' dgn';
-  if (d < 30) return Math.floor(d/7) + ' wk';
-  return Math.floor(d/30) + ' mnd';
+  if (d <= 0) return 'today';
+  if (d === 1) return 'yesterday';
+  if (d < 7) return d + 'd ago';
+  if (d < 30) return Math.floor(d/7) + 'w ago';
+  return Math.floor(d/30) + 'mo ago';
 }
 function rebuildRecent() {
   const h = loadHistory();
@@ -1374,7 +1379,7 @@ function guardedExit(fn) {
     const v = activeView();
     const msg = v === 'v-check'
       ? `Je hebt ${checkCount} boulders geteld. Die raak je kwijt als je weggaat.`
-      : 'Je timer loopt nog. Weet je het zeker?';
+      : 'Your timer is still running. Are you sure?';
     document.getElementById('confirmMsg').textContent = msg;
     document.getElementById('confirmExit').style.display = 'flex';
   } else {
@@ -1394,9 +1399,9 @@ function confirmLeave() {
 }
 function restoreConfirmDialog() {
   const dlg = document.getElementById('confirmExit');
-  document.getElementById('confirmTitle').textContent = 'Sessie verlaten?';
+  document.getElementById('confirmTitle').textContent = 'Leave session?';
   const leaveBtn = dlg.querySelector('button[onclick="confirmLeave()"]');
-  if (leaveBtn) leaveBtn.textContent = 'Verlaten';
+  if (leaveBtn) leaveBtn.textContent = 'Leave';
 }
 
 function goToSession() {
@@ -1418,7 +1423,7 @@ const QUOTES = [
   { q: "Finish Him!" }, { q: "Victory. Flawless." }, { q: "Level Complete." },
   { q: "Quest Complete." }, { q: "+1000 XP" }, { q: "Achievement Unlocked." },
   { q: "You Survived." }, { q: "Boss Defeated." }, { q: "New Skill Acquired." },
-  { q: "Checkpoint Reached." }, { q: "Een mans zwaard is een mans eer" },
+  { q: "Checkpoint Reached." }, { q: "A Man’s Sword Is A Man’s Honour." },
   // Boulder / Climbing
   { q: "Stronger Than Yesterday." }, { q: "One Move Closer." }, { q: "Trust the Process." },
   { q: "The Wall Remembers." }, { q: "Leave Skin. Take Strength." }, { q: "Every Send Starts Here." },
@@ -1464,7 +1469,7 @@ function showSessionSummary() {
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
 
-  document.getElementById('summaryTotal').textContent = `${blocks.length} onderdelen afgerond`;
+  document.getElementById('summaryTotal').textContent = `${blocks.length} block${blocks.length === 1 ? '' : 's'} done`;
   document.getElementById('summarySpentBig').textContent = spentMin;
   document.getElementById('summaryPlannedBig').textContent = plannedMin;
 
@@ -1472,8 +1477,8 @@ function showSessionSummary() {
   const totDiff = spentMin - plannedMin;
   const diffEl = document.getElementById('summaryDiff');
   if (Math.abs(totDiff) < 1) { diffEl.textContent = 'precies op schema'; diffEl.style.color = '#7A7A76'; }
-  else if (totDiff > 0) { diffEl.textContent = `${totDiff} min langer dan gepland`; diffEl.style.color = '#FCD34D'; }
-  else { diffEl.textContent = `${Math.abs(totDiff)} min korter dan gepland`; diffEl.style.color = '#86EFAC'; }
+  else if (totDiff > 0) { diffEl.textContent = `${totDiff} min longer than planned`; diffEl.style.color = '#FCD34D'; }
+  else { diffEl.textContent = `${Math.abs(totDiff)} min shorter than planned`; diffEl.style.color = '#86EFAC'; }
 
   // gestapelde verdelingsbalk (per blok, naar rato van bestede tijd)
   const barTotal = totalSpent || 1;
@@ -1485,7 +1490,7 @@ function showSessionSummary() {
   document.getElementById('summaryBlocks').innerHTML = blocks.map(b=>{
     const planned = b.planned||0, spent = b.spent||0;
     const diff = spent - planned;
-    const diffTxt = Math.abs(diff) < 30 ? 'op tijd' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
+    const diffTxt = Math.abs(diff) < 30 ? 'on time' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
     const diffCol = Math.abs(diff) < 30 ? '#7A7A76' : (diff > 0 ? '#FCD34D' : '#86EFAC');
     return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:#111;border-radius:8px;border-left:3px solid ${b.color||'#60A5FA'};">
       <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:#D8D8D4;">${b.name}</div>
@@ -1520,9 +1525,9 @@ function showSessionSummary() {
 // ── STOPLICHT (sessie-autoregulatie, één tik) ──
 let _pendingLog = null;
 const SIGNAL_ADVICE = {
-  green:  { col:'#4ADE80', title:'Groen', txt:'Sterk gedaan en fris gebleven. Volgende sessie mag er iets bij: één set, één graad, of vijf minuten.' },
-  orange: { col:'#FB923C', title:'Oranje', txt:'Net op of over de rand. Houd het volume de komende sessie gelijk of neem iets terug, en pak een extra rustdag als die zich aandient.' },
-  red:    { col:'#F87171', title:'Rood — herstel nu', txt:'Stop-signaal. Plan 1 à 2 dagen rust; de eerstvolgende sessie licht (Recovery of Skill). Pijn die niet wegtrekt? Laat het checken.' },
+  green:  { col:'#4ADE80', title:'Green', txt:'Strong work, and you stayed fresh. Next session can take a little more: one set, one grade, or five minutes.' },
+  orange: { col:'#FB923C', title:'Orange', txt:'Right at or just over the edge. Keep the volume flat or take a little off next session, and grab an extra rest day if one presents itself.' },
+  red:    { col:'#F87171', title:'Red — recover now', txt:'Stop signal. Plan 1-2 days of rest; make the next session light (Recovery or Skill). Pain that will not fade? Get it checked.' },
 };
 function signalTap(sig) {
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, sig, _pendingLog.snap); _pendingLog = null; }
@@ -1540,6 +1545,14 @@ function signalSkip() {
   closeSummary();
 }
 
+function shareSummary() {
+  if (!currentBlocks || !currentBlocks.length) return;
+  const s = getSession(activeSessionId);
+  const url = location.origin + location.pathname + '#s=' + encodeSession();
+  const name = s ? s.name : 'Session';
+  if (navigator.share) { navigator.share({ title: 'Crimpify: ' + name, text: shareText(name), url }).catch(()=>{ openShareDialog(url); }); }
+  else { openShareDialog(url); }
+}
 function closeSummary() {
   // vangnet: als er nog een ongelogde sessie hangt, log zonder signaal
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, null, _pendingLog.snap); _pendingLog = null; }
@@ -1605,7 +1618,7 @@ function startGuided(blockIdx) {
   loadGuidedItem(0);
   // niet auto-starten: toon overlay-startknop
   document.getElementById('guidedStartOverlay').style.display = 'flex';
-  document.getElementById('guidedPauseBtn').textContent = 'Pauze';
+  document.getElementById('guidedPauseBtn').textContent = 'Pause';
 }
 
 function guidedBegin() {
@@ -1643,7 +1656,7 @@ function loadGuidedItem(i) {
 
 function guidedRun() {
   gRunning = true;
-  document.getElementById('guidedPauseBtn').textContent = 'Pauze';
+  document.getElementById('guidedPauseBtn').textContent = 'Pause';
   clearInterval(gInterval);
   gInterval = setInterval(()=>{
     gRemain--;
@@ -1674,7 +1687,7 @@ function guidedToggle() {
   if (gRunning) {
     gRunning = false;
     clearInterval(gInterval);
-    document.getElementById('guidedPauseBtn').textContent = 'Hervat';
+    document.getElementById('guidedPauseBtn').textContent = 'Resume';
   } else {
     guidedRun();
   }
@@ -1725,8 +1738,8 @@ function startDrillPlayer(blockIdx) {
   const per = Math.max(3, Math.round(b.t / n));
   dpTimers = dpDrills.map(()=> per*60);
   dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillSub').textContent = `${n} drills · richttijd ${per} min elk · tik open voor uitleg`;
-  document.getElementById('drillFooter').innerHTML = `movement drills<br><b style="color:#A78BFA;">${b.t} min totaal</b>`;
+  document.getElementById('drillSub').textContent = `${n} drills · target ${per} min each · tap open for instructions`;
+  document.getElementById('drillFooter').innerHTML = `movement drills<br><b style="color:#A78BFA;">${b.t} min total</b>`;
   document.getElementById('drillTitle').textContent = 'Movement drills';
   renderDrillPlayer();
   goTo('v-drills');
@@ -1742,7 +1755,7 @@ function startDrillLibrary(blockIdx) {
   dpTimers = dpDrills.map(()=> 5*60); // 5 min richttijd per drill, vrij aan te passen
   dpIntervals = dpDrills.map(()=> null);
   document.getElementById('drillTitle').textContent = 'Drill-bibliotheek';
-  document.getElementById('drillSub').textContent = `${dpDrills.length} drills · kies zelf · tik open voor uitleg`;
+  document.getElementById('drillSub').textContent = `${dpDrills.length} drills · pick your own · tap open for instructions`;
   document.getElementById('drillFooter').innerHTML = `${dpDrills.length} drills`;
   renderDrillPlayer();
   goTo('v-drills');
@@ -1785,9 +1798,9 @@ function loadDf(i) {
   document.getElementById('dfDo').textContent = d.do;
   document.getElementById('dfGoal').textContent = d.goal;
   document.getElementById('dfInfo').style.display = 'none';
-  document.getElementById('dfInfoBtn').textContent = 'uitleg ▾';
+  document.getElementById('dfInfoBtn').textContent = 'instructions ▾';
   document.getElementById('dfPlayBtn').textContent = 'Start';
-  document.getElementById('dfState').textContent = 'richttijd';
+  document.getElementById('dfState').textContent = 'target time';
   dfRender();
 }
 
@@ -1812,14 +1825,14 @@ function dfToggle() {
   if (dfRunning) {
     dfRunning = false;
     clearInterval(dfInterval);
-    document.getElementById('dfPlayBtn').textContent = 'Hervat';
-    document.getElementById('dfState').textContent = 'gepauzeerd';
+    document.getElementById('dfPlayBtn').textContent = 'Resume';
+    document.getElementById('dfState').textContent = 'paused';
     return;
   }
   if (dfRemain <= 0) { dfRemain = dfTotal; dfRender(); }
   dfRunning = true;
-  document.getElementById('dfPlayBtn').textContent = 'Pauze';
-  document.getElementById('dfState').textContent = 'bezig';
+  document.getElementById('dfPlayBtn').textContent = 'Pause';
+  document.getElementById('dfState').textContent = 'running';
   clearInterval(dfInterval);
   dfInterval = setInterval(()=>{
     dfRemain--;
@@ -1828,7 +1841,7 @@ function dfToggle() {
       clearInterval(dfInterval);
       dfRunning = false;
       document.getElementById('dfPlayBtn').textContent = 'Opnieuw';
-      document.getElementById('dfState').textContent = 'tijd om!';
+      document.getElementById('dfState').textContent = 'time is up!';
     }
   }, 1000);
 }
@@ -1837,7 +1850,7 @@ function dfOpenInfo() {
   const el = document.getElementById('dfInfo');
   const open = el.style.display === 'block';
   el.style.display = open ? 'none' : 'block';
-  document.getElementById('dfInfoBtn').textContent = open ? 'uitleg ▾' : 'uitleg ▴';
+  document.getElementById('dfInfoBtn').textContent = open ? 'instructions ▾' : 'instructions ▴';
 }
 
 function dfBack() {
@@ -1858,9 +1871,9 @@ function dfSwitch() {
   dpDrills = DRILLS.filter(d=>d.cat !== 'meta');
   dpTimers = dpDrills.map(()=> 5*60);
   dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillTitle').textContent = 'Kies een drill';
-  document.getElementById('drillSub').textContent = `vervang "${dfDrills[swapTargetIdx].n}" — tik een drill om te kiezen`;
-  document.getElementById('drillFooter').innerHTML = `wissel drill<br><b style="color:#A78BFA;">${dpDrills.length} opties</b>`;
+  document.getElementById('drillTitle').textContent = 'Pick a drill';
+  document.getElementById('drillSub').textContent = `replace "${dfDrills[swapTargetIdx].n}" — tap a drill to pick it`;
+  document.getElementById('drillFooter').innerHTML = `switch drill<br><b style="color:#A78BFA;">${dpDrills.length} options</b>`;
   renderDrillPlayer();
   goTo('v-drills');
 }
@@ -1881,10 +1894,10 @@ function startChecklist(blockIdx) {
   checkTarget = b.target || 30;
   checkMax = parseInt((b.range||'25-35').split('-')[1]) || 35;
   document.getElementById('checkTitle').textContent = b.n;
-  document.getElementById('checkRange').textContent = `doel ${b.range||'25-35'}`;
+  document.getElementById('checkRange').textContent = `goal ${b.range||'25-35'}`;
   document.getElementById('checkSub').textContent = `${b.range||'25-35'} boulders · rpe ${b.rpe}`;
   document.getElementById('checkWhy').textContent = b.why;
-  document.getElementById('checkFooter').innerHTML = `volume boulders<br><b style="color:#4ADE80;">doel ${b.range||'25-35'}</b>`;
+  document.getElementById('checkFooter').innerHTML = `volume boulders<br><b style="color:#4ADE80;">goal ${b.range||'25-35'}</b>`;
   renderCheck();
   goTo('v-check');
 }
@@ -1970,14 +1983,14 @@ function renderDrillPlayer() {
         <div class="dp-detail-inner">
           <div class="dp-lbl">setup</div><p>${d.setup}</p>
           <div class="dp-lbl">uitvoering</div><p>${d.do}</p>
-          <div class="dp-lbl" style="color:#A78BFA;">doel</div><p style="color:#C4B5FD;">${d.goal}</p>
+          <div class="dp-lbl" style="color:#A78BFA;">goal</div><p style="color:#C4B5FD;">${d.goal}</p>
         </div>
       </div>
       <div class="dp-controls">
         ${drillMode === 'swap'
-          ? `<button class="dp-tbtn" onclick="dfApplySwap(${i})" style="border-color:#A78BFA;background:rgba(167,139,250,.18);">Kies deze →</button>`
-          : `<button class="dp-tbtn" id="dp-btn-${i}" onclick="dpToggleTimer(${i})">${running?'Pauze':'Start timer'}</button>
-             <button class="dp-tbtn done-btn" onclick="dpMarkDone(${i})">Klaar ✓</button>`}
+          ? `<button class="dp-tbtn" onclick="dfApplySwap(${i})" style="border-color:#A78BFA;background:rgba(167,139,250,.18);">Pick this one →</button>`
+          : `<button class="dp-tbtn" id="dp-btn-${i}" onclick="dpToggleTimer(${i})">${running?'Pause':'Start timer'}</button>
+             <button class="dp-tbtn done-btn" onclick="dpMarkDone(${i})">Done ✓</button>`}
       </div>
     </div>`;
   }).join('');
@@ -1993,7 +2006,7 @@ function dpToggleOpen(i) {
 function dpToggleTimer(i) {
   if (dpIntervals[i] != null) {
     clearInterval(dpIntervals[i]); dpIntervals[i] = null;
-    document.getElementById('dp-btn-'+i).textContent = 'Hervat';
+    document.getElementById('dp-btn-'+i).textContent = 'Resume';
     document.getElementById('dp-'+i).classList.remove('active');
     return;
   }
@@ -2001,11 +2014,11 @@ function dpToggleTimer(i) {
   dpIntervals.forEach((iv,k)=>{
     if (iv != null && k !== i) {
       clearInterval(dpIntervals[k]); dpIntervals[k] = null;
-      const ob = document.getElementById('dp-btn-'+k); if (ob) ob.textContent = 'Hervat';
+      const ob = document.getElementById('dp-btn-'+k); if (ob) ob.textContent = 'Resume';
       const oc = document.getElementById('dp-'+k); if (oc) oc.classList.remove('active');
     }
   });
-  document.getElementById('dp-btn-'+i).textContent = 'Pauze';
+  document.getElementById('dp-btn-'+i).textContent = 'Pause';
   document.getElementById('dp-'+i).classList.add('active');
   dpIntervals[i] = setInterval(()=>{
     dpTimers[i]--;
@@ -2015,7 +2028,7 @@ function dpToggleTimer(i) {
       clearInterval(dpIntervals[i]); dpIntervals[i] = null;
       if (t) t.style.color = '#4ADE80';
       const btn = document.getElementById('dp-btn-'+i);
-      if (btn) btn.textContent = 'Klaar ✓';
+      if (btn) btn.textContent = 'Done ✓';
       const c = document.getElementById('dp-'+i); if (c) c.classList.remove('active');
     }
   }, 1000);
@@ -2131,7 +2144,7 @@ function renderSignalCal() {
   // mini-samenvatting: sessies + rood-teller
   const trained = days.filter(d=>d.trained).length;
   const reds = days.filter(d=>d.col==='red').length;
-  document.getElementById('signalCalSummary').textContent = `${trained} sessies` + (reds ? ` · ${reds}× rood` : '');
+  document.getElementById('signalCalSummary').textContent = `${trained} sessions` + (reds ? ` · ${reds}× red` : '');
 }
 
 // ── ACWR: acute vs chronische belasting (Gabbett) ──
@@ -2147,11 +2160,11 @@ function computeACWR() {
   return { acute, chronic: Math.round(chronic), ratio };
 }
 function acwrZone(r) {
-  if (r == null) return { name:'te weinig data', col:'#8A8A86', txt:'Nog te weinig historie voor een betrouwbare ratio. Train 2 à 3 weken door, dan wordt dit beeld betekenisvol.' };
-  if (r < 0.8) return { name:'onderbelast', col:'#5A7A9A', txt:'Je traint deze week duidelijk minder dan je gewend bent. Prima als herstelweek; duurt dit langer, bouw dan geleidelijk weer op.' };
-  if (r <= 1.3) return { name:'sweet spot', col:'#4ADE80', txt:'Je belasting groeit in een gezond tempo ten opzichte van wat je lichaam gewend is. Hier wil je zitten.' };
-  if (r <= 1.5) return { name:'verhoogd', col:'#FB923C', txt:'Je acute belasting loopt op ten opzichte van je basis. Nog geen alarm, maar voeg deze week geen extra volume of intensiteit toe.' };
-  return { name:'hoog risico', col:'#F87171', txt:'Je traint fors meer dan je lichaam gewend is; dit is de zone met verhoogd blessurerisico. Neem rust of schakel terug naar Recovery en Skill.' };
+  if (r == null) return { name:'not enough data', col:'#8A8A86', txt:'Not enough history yet for a reliable ratio. Keep training for 2-3 weeks and this picture becomes meaningful.' };
+  if (r < 0.8) return { name:'undertraining', col:'#5A7A9A', txt:'You are training clearly less than you are used to this week. Fine as a recovery week; if it lasts longer, build back up gradually.' };
+  if (r <= 1.3) return { name:'sweet spot', col:'#4ADE80', txt:'Your load sits nicely on top of your base. This is the zone where you adapt with the lowest injury risk.' };
+  if (r <= 1.5) return { name:'elevated', col:'#FB923C', txt:'Your acute load is climbing relative to your base. No alarm yet, but do not add extra volume or intensity this week.' };
+  return { name:'high risk', col:'#F87171', txt:'You are training far more than your body is used to; this is the elevated injury-risk zone. Take rest or shift down to Recovery and Skill.' };
 }
 function renderLoadPanel() {
   const { acute, chronic, ratio } = computeACWR();
@@ -2182,7 +2195,7 @@ function toggleLoadPanel() {
 // 3. gisteren zwaar (strength/power/perf) → vandaag laag-intensief alterneren
 // 4. anders → progressie, roteer energiesystemen
 
-// ── TERUGBLIK OP EEN AFGERONDE SESSIE (openen vanuit Mijn sessies) ──
+// ── RECAP OF A FINISHED SESSION (openen vanuit Mijn sessies) ──
 let _recapEntry = null;
 const SIG_COL = { green:'#4ADE80', orange:'#FB923C', red:'#F87171' };
 function openRecap(ts) {
@@ -2190,11 +2203,11 @@ function openRecap(ts) {
   if (!e) return;
   _recapEntry = e;
   const s = getSession(e.id);
-  const name = e.name || (s ? s.name : 'Sessie');
+  const name = e.name || (s ? s.name : 'Session');
   const el = id => document.getElementById(id);
   el('recapName').textContent = name;
   const d = new Date(e.ts);
-  const sigTxt = e.sig === 'green' ? 'sterk' : e.sig === 'orange' ? 'op de rand' : e.sig === 'red' ? 'te veel' : 'geen signaal';
+  const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
   el('recapMeta').textContent = nlDate(d) + ' · ' + (e.time || 0) + ' min · ' + sigTxt;
   el('recapDot').style.background = SIG_COL[e.sig] || '#3A3A38';
   el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px ' + SIG_COL[e.sig] + '80' : 'none';
@@ -2215,7 +2228,7 @@ function openRecap(ts) {
   const note = el('recapNote');
   if (!canShare) {
     note.style.display = '';
-    note.textContent = 'Deze sessie is gelogd voor de update, dus de opbouw is niet bewaard. Sessies vanaf nu kun je hier terugzien en delen.';
+    note.textContent = 'This session was logged before the update, so its structure was not saved. Sessions from now on can be revisited and shared here.';
   } else { note.style.display = 'none'; }
   el('recapView').style.display = 'flex';
 }
@@ -2224,9 +2237,9 @@ function recapShare() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
   const s = getSession(e.id);
-  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Sessie'), e.keys, e.time || 60, e.color || 'lime');
-  const title = 'Crimpify: ' + (e.name || (s ? s.name : 'sessie'));
-  if (navigator.share) { navigator.share({ title, url }).catch(()=>{ openShareDialog(url); }); }
+  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Session'), e.keys, e.time || 60, e.color || 'lime');
+  const name = e.name || (s ? s.name : 'Session');
+  if (navigator.share) { navigator.share({ title: 'Crimpify: ' + name, text: shareText(name, e.time), url }).catch(()=>{ openShareDialog(url); }); }
   else { openShareDialog(url); }
 }
 function recapAgain() {
@@ -2234,7 +2247,7 @@ function recapAgain() {
   if (!e || !e.keys || !e.keys.length) return;
   closeRecap();
   const s = getSession(e.id);
-  customSession = { id:'custom', cat:'opnieuw', name: e.name || (s ? s.name : 'Sessie'), desc:'', color: e.color || 'lime', rpe: s ? s.rpe : '–', intent:'Zelfde sessie als eerder. Pas aan en leg vast, of start meteen.' };
+  customSession = { id:'custom', cat:'again', name: e.name || (s ? s.name : 'Session'), desc:'', color: e.color || 'lime', rpe: s ? s.rpe : '–', intent:'Same session as before. Adapt and lock in, or start right away.' };
   customKeys = e.keys.filter(k => BLOCKLIB[k]);
   activeSessionId = 'custom';
   sessionLocked = false;
@@ -2267,36 +2280,36 @@ function coachSuggest() {
   const HEAVY = ['strength','power','perf','pe'];
 
   if (!h.length) return { id:'capacity', time:60, badge:'#4ADE80',
-    reason:'Nog geen historie. Begin met een aerobe basis: volume met goede techniek, daar bouwt al het andere op.' };
+    reason:'No history yet. Start with an aerobic base: volume with good technique, everything else builds on that.' };
   if (sig1 === 'red') return { id:'recovery', time:45, badge:'#F87171',
-    reason:'Je laatste sessie was rood. Vandaag actief herstel: bloedsomloop en mobiliteit, geen belasting van betekenis.' };
+    reason:'Your last session was red. Active recovery today: circulation and mobility, no load of significance.' };
   if (ratio != null && ratio > 1.5) return { id:'recovery', time:45, badge:'#F87171',
-    reason:'Je acute belasting is fors hoger dan je gewend bent (ratio ' + ratio.toFixed(2) + '). Herstel nu voorkomt blessures straks.' };
+    reason:'Your acute load is far above what you are used to (ratio ' + ratio.toFixed(2) + '). Recovering now prevents injuries later.' };
   if (sig1 === 'orange' && sig2 === 'orange') return { id:'skill', time:60, badge:'#FB923C',
-    reason:'Twee keer oranje op rij. Techniekwerk houdt je in beweging zonder de belasting verder op te stapelen.' };
+    reason:'Orange twice in a row. Technique work keeps you moving without stacking more load.' };
   if (ratio != null && ratio > 1.3) return { id:'capacity', time:45, badge:'#FB923C',
-    reason:'Je belasting loopt op (ratio ' + ratio.toFixed(2) + '). Licht aeroob volume, geen intensiteit toevoegen deze week.' };
-  // rust is het standaardadvies vlak na een sessie; het ritme van de persoon corrigeert dat
+    reason:'Your load is climbing (ratio ' + ratio.toFixed(2) + '). Light aerobic volume, no added intensity this week.' };
+  // rest is the default advice right after a session; the person's own rhythm corrects it
   const gap = typicalGapDays(h);
   if (daysSince === 0) return { rest:true, id:'recovery', time:30, badge:'#60A5FA',
     reason: gap != null && gap <= 1
-      ? 'Je hebt vandaag al getraind. Je traint doorgaans dagelijks, dus een tweede sessie kan, maar houd hem licht.'
-      : 'Je hebt vandaag al getraind. De aanpassing gebeurt in de rust, niet in de sessie.' };
+      ? 'You already trained today. You usually train daily, so a second session is fine, but keep it light.'
+      : 'You already trained today. Adaptation happens in the rest, not in the session.' };
   if (daysSince === 1 && (gap == null || gap >= 2)) return { rest:true, id:'recovery', time:30, badge:'#60A5FA',
     reason: gap == null
-      ? 'Gisteren getraind. Eén dag rust laat de aanpassing landen; nog te weinig historie om je ritme te kennen.'
-      : 'Gisteren getraind, en je traint doorgaans om de ' + gap + ' dagen. Rust vandaag, morgen weer scherp.' };
+      ? 'You trained yesterday. One rest day lets the adaptation land; not enough history yet to know your rhythm.'
+      : 'You trained yesterday, and you usually train every ' + gap + ' days. Rest today, sharp again tomorrow.' };
   if (last && HEAVY.includes(last.id) && daysSince <= 1) {
     return { id:'skill', time:60, badge:'#4ADE80',
-      reason:'Gisteren zwaar getraind (' + (getSession(last.id) ? getSession(last.id).name : last.id) + '). Alterneren: vandaag techniek of licht volume, morgen weer intensief.' };
+      reason:'Heavy training yesterday (' + (getSession(last.id) ? getSession(last.id).name : last.id) + '). Alternate: technique or light volume today, intensity again tomorrow.' };
   }
   // progressie: roteer weg van het laatst getrainde systeem
   const rotation = ['strength','pe','capacity','power'];
   const lastIdx = rotation.indexOf(last ? last.id : '');
   const nextId = rotation[(lastIdx + 1 + rotation.length) % rotation.length] || 'capacity';
-  const extra = sig1 === 'green' ? ' Je vorige sessie was groen, dus er mag iets bij: een set, een graad of vijf minuten.' : '';
+  const extra = sig1 === 'green' ? ' Your last session was green, so you can add a little: a set, a grade or five minutes.' : '';
   return { id: nextId, time:60, badge:'#4ADE80',
-    reason:'Fris genoeg voor kwaliteit. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is aan de beurt in je rotatie.' + extra };
+    reason:'Fresh enough for quality. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is up next in your rotation.' + extra };
 }
 function renderCoach() {
   const card = document.getElementById('coachCard');
@@ -2308,14 +2321,14 @@ function renderCoach() {
   card.style.display = '';
   const btn = document.getElementById('coachApplyBtn');
   if (pick.rest) {
-    document.getElementById('coachName').textContent = 'Rustdag';
+    document.getElementById('coachName').textContent = 'Rest day';
     document.getElementById('coachName').style.color = '#93C5FD';
-    btn.textContent = 'Toch trainen? Licht herstel →';
+    btn.textContent = 'Train anyway? Easy recovery →';
   } else {
     const col = C[s.color] || C.lime;
     document.getElementById('coachName').textContent = s.name + ' · ' + pick.time + ' min';
     document.getElementById('coachName').style.color = col.text;
-    btn.textContent = 'Gebruik voorstel →';
+    btn.textContent = 'Use suggestion →';
   }
   document.getElementById('coachReason').textContent = pick.reason;
   document.getElementById('coachBadge').style.background = pick.badge;
@@ -2338,8 +2351,8 @@ function toggleGenerate() {
 }
 
 function startBuildPath() {
-  customSession = { id:'custom', cat:'eigen', name:'Eigen sessie', desc:'', color:'lime', rpe:'–',
-    intent:'Zelf samengesteld. Voeg blokken toe, pas duur aan in het blok zelf.' };
+  customSession = { id:'custom', cat:'own', name:'My session', desc:'', color:'lime', rpe:'–',
+    intent:'Self-assembled. Add blocks, adjust duration inside each block.' };
   customKeys = [];
   sessionLocked = false;
   sessionOwned = true;
@@ -2352,7 +2365,7 @@ function startBuildPath() {
 function openDraft() {
   const d = loadDraft();
   if (!d) return;
-  customSession = { id:'custom', cat:'eigen', name:d.name || 'Eigen sessie', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Zelf samengesteld.' };
+  customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
   customKeys = d.keys.slice();
   activeSessionId = 'custom';
   sessionLocked = !!d.locked;
@@ -2365,10 +2378,10 @@ function openFav(i) {
   if (_favLongPressed) return;
   const f = loadFavs()[i];
   if (!f) return;
-  customSession = { id:'custom', cat:'eigen', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favoriete sessie.' };
+  customSession = { id:'custom', cat:'own', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favourite session.' };
   customKeys = f.keys.slice();
   activeSessionId = 'custom';
-  sessionLocked = true;   // favorieten zijn eerder vastgelegd
+  sessionLocked = true;   // favourites were locked in earlier
   sessionOwned = true;
   buildSlab();
   goTo('v-session');
@@ -2379,31 +2392,31 @@ function ensureDraftMode() {
   if (activeSessionId === 'custom') return;
   const s = getSession(activeSessionId);
   customKeys = currentBlocks.map(b => b._key);
-  customSession = { id:'custom', cat:'eigen', name: s ? s.name : 'Eigen sessie', desc:'', color: s ? s.color : 'lime', rpe: s ? s.rpe : '–', intent: s ? s.intent : '' };
+  customSession = { id:'custom', cat:'own', name: s ? s.name : 'My session', desc:'', color: s ? s.color : 'lime', rpe: s ? s.rpe : '–', intent: s ? s.intent : '' };
   durationOverride['custom'] = {};
   activeSessionId = 'custom';
   sessionLocked = false;
 }
 
-// ── BLOK-PICKER (gegroepeerd + zoeken) ──
+// ── BLOCK PICKER (gegroepeerd + zoeken) ──
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activatie',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct'] },
-  { name:'Techniek & drills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
-  { name:'Capaciteit · aeroob volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct'] },
+  { name:'Technique & drills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
-  { name:'Max kracht & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
-  { name:'Vingerkracht',               keys:['maxHangs','nohangs','activeCurls','hog'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
+  { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls','hog'] },
   { name:'Antagonist, core & gym',     keys:['pullStrength','pushStrength','coreLegs','mini1','mini2','mini3','lockoffs'] },
-  { name:'Herstel & mobiliteit',       keys:['stretch','stretchLong'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong'] },
 ];
 // verborgen blokken (gebruiker kan de bibliotheek opschonen)
 function loadHidden() { try { return JSON.parse(localStorage.getItem('crimpify_hidden_blocks') || '[]'); } catch { return []; } }
 function saveHidden(a) { try { localStorage.setItem('crimpify_hidden_blocks', JSON.stringify(a)); } catch {} }
 function hideBlock(key) {
   const b = BLOCKLIB[key];
-  askConfirm('Blok verbergen?', `"${b ? b.n : key}" verdwijnt uit de bibliotheek. Onderin kun je hem altijd terugzetten.`, 'Verberg', ()=>{
+  askConfirm('Hide block?', `"${b ? b.n : key}" will disappear from the library. You can always restore it at the bottom.`, 'Hide', ()=>{
     const h = loadHidden();
     if (!h.includes(key)) h.push(key);
     saveHidden(h);
@@ -2417,8 +2430,10 @@ function restoreBlock(key) {
 function openBlockPicker() {
   document.getElementById('blockSearch').value = '';
   renderBlockPicker('');
+  if (_openGroups === null) _openGroups = new Set(['Own']);
   document.getElementById('blockPicker').style.display = 'flex';
 }
+let _openGroups = null;
 function renderBlockPicker(query) {
   const q = (query||'').toLowerCase().trim();
   const hidden = loadHidden();
@@ -2427,9 +2442,9 @@ function renderBlockPicker(query) {
   const own = Object.keys(BLOCKLIB).filter(k=>k.startsWith('ux_'));
   const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_'));
   const allGroups = [
-    ...(own.length ? [{name:'Eigen', keys:own}] : []),
+    ...(own.length ? [{name:'Own', keys:own}] : []),
     ...BLOCK_GROUPS,
-    ...(rest.length ? [{name:'Overig', keys:rest}] : [])
+    ...(rest.length ? [{name:'Other', keys:rest}] : [])
   ];
 
   const html = allGroups.map(g=>{
@@ -2449,26 +2464,40 @@ function renderBlockPicker(query) {
         return `<div onclick="pickBlock('${k}')" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:#111;border-radius:8px;border-left:3px solid ${b.c};cursor:pointer;">
           <div style="flex:1;">
             <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:#6A6A66;margin-top:2px;">rpe ${b.rpe || '–'} · basis ${b.t}'</div>
+            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:#6A6A66;margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
           </div>
           ${del}
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
         </div>`;
       }).join('');
     if (!items) return '';
-    return `<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#5A5A56;margin:10px 0 2px;">${g.name}</div>` + items;
+    const open = q ? true : (_openGroups && _openGroups.has(g.name));
+    const count = g.keys.filter(k=>BLOCKLIB[k] && !hidden.includes(k)).length;
+    const accent = BLOCKLIB[g.keys.find(k=>BLOCKLIB[k])] ? BLOCKLIB[g.keys.find(k=>BLOCKLIB[k])].c : '#5A5A56';
+    const head = `<div onclick="toggleBlockGroup('${g.name.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:9px;padding:12px 4px;margin-top:4px;cursor:pointer;border-bottom:1px solid #1E1E1C;">
+      <span style="width:8px;height:8px;border-radius:2px;background:${accent};flex-shrink:0;"></span>
+      <span style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:#D8D8D4;">${g.name}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:9px;color:#6A6A66;">${count}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:#6A6A66;">${open?'▾':'▸'}</span>
+    </div>`;
+    return head + (open ? `<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0 2px;">${items}</div>` : '');
   }).join('');
-  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed #3A3A38;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#A3E635;">+ nieuwe oefening</div>`;
+  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed #3A3A38;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#A3E635;">+ new exercise</div>`;
   // terugzet-sectie voor verborgen blokken
   const hiddenList = hidden.filter(k=>BLOCKLIB[k]);
   const hiddenHTML = (!q && hiddenList.length)
-    ? `<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#3E3E3C;margin:14px 0 2px;">verborgen · tik om terug te zetten</div>` +
+    ? `<div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:#3E3E3C;margin:14px 0 2px;">hidden · tap to restore</div>` +
       hiddenList.map(k=>`<div onclick="restoreBlock('${k}')" style="display:flex;align-items:center;gap:10px;padding:9px 14px;background:none;border:1px dashed #242422;border-radius:8px;cursor:pointer;">
         <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.03em;color:#5A5A56;">${BLOCKLIB[k].n}</div>
         <div style="font-family:'DM Mono',monospace;font-size:10px;color:#5A5A56;">↩</div>
       </div>`).join('')
     : '';
-  document.getElementById('blockPickerList').innerHTML = newBtn + (html || `<div style="padding:20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Niets gevonden voor "${query}".</div>`) + hiddenHTML;
+  document.getElementById('blockPickerList').innerHTML = newBtn + (html || `<div style="padding:20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Nothing found for "${query}".</div>`) + hiddenHTML;
+}
+function toggleBlockGroup(name) {
+  if (!_openGroups) _openGroups = new Set();
+  if (_openGroups.has(name)) _openGroups.delete(name); else _openGroups.add(name);
+  renderBlockPicker(document.getElementById('blockSearch') ? document.getElementById('blockSearch').value : '');
 }
 function closeBlockPicker() { document.getElementById('blockPicker').style.display = 'none'; }
 function pickBlock(key) {
@@ -2508,7 +2537,7 @@ function confirmNewExercise() {
   if (!name) { document.getElementById('neName').focus(); return; }
   const t = Math.max(3, parseInt(document.getElementById('neMin').value) || 10);
   const rpe = (document.getElementById('neRpe').value || '').trim() || '–';
-  const why = (document.getElementById('neWhy').value || '').trim() || 'Eigen oefening.';
+  const why = (document.getElementById('neWhy').value || '').trim() || 'Own exercise.';
   const url = (document.getElementById('neLink').value || '').trim();
   const key = 'ux_' + Date.now().toString(36);
   const block = { n: name, t, c: '#A3E635', rpe, why, fixed: false };
@@ -2555,7 +2584,7 @@ function duplicateSession() {
   if (customSession) customSession.name = customSession.name + ' · mijn variant';
   sessionOwned = true;
   sessionLocked = false;
-  if (customSession) customSession.intent = 'Eigen variant van een gedeelde sessie. Pas aan en leg vast.';
+  if (customSession) customSession.intent = 'Your own take on a shared session. Adapt and lock it in.';
   buildSlab();
 }
 function toggleFavorite() {
@@ -2573,10 +2602,10 @@ function toggleFavorite() {
 }
 function encodeSession() {
   const s = getSession(activeSessionId);
-  return encodePayload(s ? s.name : 'Sessie', currentBlocks.map(b=>b._key), getT(), s ? s.color : 'lime');
+  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getT(), s ? s.color : 'lime');
 }
 function encodePayload(name, keys, time, color) {
-  const payload = { n: name || 'Sessie', k: keys, t: time, c: color || 'lime' };
+  const payload = { n: name || 'Session', k: keys, t: time, c: color || 'lime' };
   // eigen oefeningen reizen mee in de link
   const own = keys.filter(k=>k.startsWith('ux_') && BLOCKLIB[k]);
   if (own.length) {
@@ -2596,12 +2625,18 @@ function shareSession() {
   if (!sessionLocked) { openSaveFav(); return; }
   doShare();
 }
+function shareText(sessName, time) {
+  let who = '';
+  try { who = localStorage.getItem('crimpify_name') || ''; } catch {}
+  const label = who ? who + "\u2019s \u201C" + sessName + "\u201D" : "\u201C" + sessName + "\u201D";
+  return label + ' \u00B7 ' + (time || getT()) + ' min boulder session \u2192 tap the link to train it';
+}
 function doShare() {
   const url = location.origin + location.pathname + '#s=' + encodeSession();
   const s = getSession(activeSessionId);
-  const title = 'Crimpify: ' + (s ? s.name : 'sessie');
+  const name = s ? s.name : 'Session';
   if (navigator.share) {
-    navigator.share({ title, url }).catch(()=>{ openShareDialog(url); });
+    navigator.share({ title: 'Crimpify: ' + name, text: shareText(name), url }).catch(()=>{ openShareDialog(url); });
   } else {
     openShareDialog(url);
   }
@@ -2616,7 +2651,7 @@ function copyShareLink() {
   inp.select();
   try { navigator.clipboard.writeText(inp.value); } catch { document.execCommand('copy'); }
   const btn = document.getElementById('copyLinkBtn');
-  btn.textContent = 'Gekopieerd ✓';
+  btn.textContent = 'Copied ✓';
   setTimeout(()=>{ btn.textContent = 'Kopieer link'; }, 1800);
 }
 function importFromHash() {
@@ -2630,7 +2665,7 @@ function importFromHash() {
     const store = loadCustomBlocks();
     Object.keys(p.x).forEach(k=>{
       const d = p.x[k];
-      const block = { n:d.n||'Oefening', t:d.t||10, c:'#A3E635', rpe:d.rpe||'–', why:d.why||'', fixed:false };
+      const block = { n:d.n||'Exercise', t:d.t||10, c:'#A3E635', rpe:d.rpe||'–', why:d.why||'', fixed:false };
       if (d.links) block.links = d.links;
       BLOCKLIB[k] = block;
       store[k] = block;
@@ -2639,7 +2674,7 @@ function importFromHash() {
   }
   const validKeys = p.k.filter(k=>BLOCKLIB[k]);
   if (!validKeys.length) return false;
-  customSession = { id:'custom', cat:'gedeeld', name: (p.n||'Gedeelde sessie'), desc:'', color: p.c||'lime', rpe:'–', intent:'Gedeelde sessie · vastgelegd door de maker. Wil je iets anders? Maak een eigen kopie (⧉).' };
+  customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent:'Shared session · locked by its maker. Want something different? Make your own copy (⧉).' };
   customKeys = validKeys;
   activeSessionId = 'custom';
   sessionLocked = true;
@@ -2651,17 +2686,17 @@ function importFromHash() {
   return true;
 }
 
-// ── FAVORIET BEWAREN ──
+// ── LOCK-IN DIALOG ──
 function openSaveFav() {
   if (!currentBlocks.length) return;
   const s = getSession(activeSessionId);
-  document.getElementById('favNameInput').value = s && s.name !== 'Eigen sessie' ? s.name : '';
+  document.getElementById('favNameInput').value = s && s.name !== 'My session' ? s.name : '';
   document.getElementById('saveFavDialog').style.display = 'flex';
 }
 function closeSaveFav() { document.getElementById('saveFavDialog').style.display = 'none'; _pendingShare = false; document.getElementById('favDialogHint').style.display = 'none'; }
 function confirmSaveFav() {
   // vastleggen: naam + slot. Favoriet is een aparte, latere keuze (☆).
-  const name = (document.getElementById('favNameInput').value || '').trim() || 'Mijn sessie';
+  const name = (document.getElementById('favNameInput').value || '').trim() || (getSession(activeSessionId) ? getSession(activeSessionId).name : 'My session');
   if (customSession && activeSessionId === 'custom') { customSession.name = name; }
   sessionLocked = true;
   closeSaveFav();
@@ -2676,7 +2711,7 @@ function buildCategories() {
       const col = C[s.color];
       const blocks = getBlocks(s.id);
       const total = blocks.reduce((sum,b)=>sum+b.t,0);
-      // core block = grootste niet-warmup blok → toon de variant van vandaag
+      // core block = biggest non-warmup block, show the variant of the day
       const core = blocks.filter(b=>b._slot>0).sort((a,b)=>b.t-a.t)[0];
       const isActive = s.id===activeSessionId;
       return `<div class="tile ${isActive?'active':''}"
@@ -2686,7 +2721,7 @@ function buildCategories() {
         <div class="tile-body">
           <div class="tile-cat" style="color:${col.color};">${s.cat}</div>
           <div class="tile-name" style="color:${col.text};">${s.name}</div>
-          <div class="tile-desc" style="color:${col.text};">vandaag:<br>${core ? core.n.toLowerCase() : s.desc}</div>
+          <div class="tile-desc" style="color:${col.text};">today:<br>${core ? core.n.toLowerCase() : s.desc}</div>
           <div class="tile-foot">
             <div class="tile-rpe" style="color:${col.color};">rpe ${s.rpe}</div>
             <div class="tile-dur-ghost" style="color:${col.color};">${total}'</div>
@@ -2694,7 +2729,7 @@ function buildCategories() {
         </div>
       </div>`;
     }).join('');
-  el.innerHTML = `<div><div class="section-head"><div class="section-title">Energiesysteem</div><div class="section-more">⟳ varieert per dag</div></div><div class="tiles-grid">${tilesHTML}</div></div>`;
+  el.innerHTML = `<div><div class="section-head"><div class="section-title">Energy system</div><div class="section-more">⟳ varies per day</div></div><div class="tiles-grid">${tilesHTML}</div></div>`;
 }
 
 function renderPreview() {
@@ -2733,7 +2768,7 @@ function applyRecentFold() {
   if (recentFolded) {
     row.style.display = 'none';
     if (chev) chev.textContent = '▸';
-    if (more) more.textContent = 'toon';
+    if (more) more.textContent = 'show';
   } else {
     row.style.display = '';
     if (chev) chev.textContent = '▾';
@@ -2743,9 +2778,9 @@ function applyRecentFold() {
 
 // tape-tooltip: welk blok en welke trainingscategorie zit achter deze kleur
 function blockGroupName(key) {
-  if (key && key.startsWith('ux_')) return 'Eigen';
+  if (key && key.startsWith('ux_')) return 'Own';
   for (const g of BLOCK_GROUPS) { if (g.keys.includes(key)) return g.name; }
-  return 'Overig';
+  return 'Other';
 }
 function tapeInfo(i) {
   const b = currentBlocks[i];
@@ -2781,7 +2816,7 @@ function buildSlab() {
   document.getElementById('slabMeta').textContent = `do · rpe ${s.rpe} · ${total} min`;
   document.getElementById('slabMeta').style.color = col.color;
   document.getElementById('slabMeta').style.opacity = '.5';
-  document.getElementById('slabFooterMeta').innerHTML = `${(s.cat||'eigen').toLowerCase()}<br><b>${total} min</b>`;
+  document.getElementById('slabFooterMeta').innerHTML = `${(s.cat||'own').toLowerCase()}<br><b>${total} min</b>`;
   document.getElementById('slabIntent').textContent = s.intent || '';
 
   // varieer alleen voor gegenereerde, niet-vastgelegde sessies
@@ -2813,17 +2848,17 @@ function buildSlab() {
     </div>`;
   }).join('');
   const emptyHint = currentBlocks.length === 0
-    ? `<div style="padding:26px 20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Nog leeg. Voeg je eerste blok toe.</div>` : '';
+    ? `<div style="padding:26px 20px;text-align:center;font-family:'Barlow',sans-serif;font-size:13px;color:#7A7A76;">Empty. Add your first block.</div>` : '';
   const addRow = `
     <div class="slab-block" style="background:none;border:1px dashed #2E2E2C;min-height:54px;justify-content:center;" onclick="openBlockPicker()">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">+ blok toevoegen</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8A8A86;">+ add block</div>
     </div>
     <div class="slab-block" style="background:none;min-height:44px;justify-content:center;" onclick="toggleSlabEdit()">
-      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid)':'#6A6A66'};">${slabEditMode?'✓ klaar met bewerken':'✎ volgorde bewerken'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid)':'#6A6A66'};">${slabEditMode?'✓ done editing':'✎ edit order'}</div>
     </div>`;
   const lockedRow = sessionLocked ? `
     <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
-      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#4A4A46;">${sessionOwned ? 'vastgelegd · ✎ om te bewerken' : 'gedeelde sessie · ⧉ voor een eigen kopie'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:#4A4A46;">${sessionOwned ? 'locked · ✎ to edit' : 'shared session · ⧉ for your own copy'}</div>
     </div>` : '';
   document.getElementById('slabBlocks').innerHTML = blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
 
@@ -2925,13 +2960,13 @@ function removeFav(i) {
   const favs = loadFavs();
   const f = favs[i];
   if (!f) return;
-  askConfirm('Favoriet verwijderen?', `"${f.name}" wordt uit je lijst gehaald.`, 'Verwijder', ()=>{
+  askConfirm('Remove favourite?', `"${f.name}" will be taken off your list.`, 'Remove', ()=>{
     favs.splice(i,1); saveFavs(favs); buildRecent();
   });
 }
 function deleteCustomBlock(key) {
   const b = BLOCKLIB[key];
-  askConfirm('Oefening verwijderen?', `"${b ? b.n : 'Oefening'}" verdwijnt uit je bibliotheek.`, 'Verwijder', ()=>{
+  askConfirm('Delete exercise?', `"${b ? b.n : 'Exercise'}" will disappear from your library.`, 'Delete', ()=>{
     delete BLOCKLIB[key];
     const store = loadCustomBlocks();
     delete store[key];
@@ -3003,10 +3038,10 @@ function buildDetail(idx) {
   if (fb) fb.style.display = 'none';
 
   // footer
-  document.getElementById('detailFooter').innerHTML = `blok ${idx+1} van ${currentBlocks.length}<br><b style="color:${b.c};">${b.t} min</b>`;
+  document.getElementById('detailFooter').innerHTML = `block ${idx+1} of ${currentBlocks.length}<br><b style="color:${b.c};">${b.t} min</b>`;
 
   // info
-  let info = `<div class="detail-section-lbl">waarom dit blok</div>
+  let info = `<div class="detail-section-lbl">why this block</div>
     <div class="detail-card"><p>${b.why}</p></div>`;
 
   // drills — Warm-up = 1 drill van de dag; Skill Focus drill blocks = 3.
@@ -3021,7 +3056,7 @@ function buildDetail(idx) {
         <p style="margin-bottom:6px;">${d.setup}</p>
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sub);margin:2px 0;">uitvoering</div>
         <p style="margin-bottom:6px;">${d.do}</p>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:${b.c};opacity:.6;margin:2px 0;">doel</div>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:${b.c};opacity:.6;margin:2px 0;">goal</div>
         <p style="color:${b.c};opacity:.75;">${d.goal}</p>
       </div>`;
     const seed = new Date().getDate() + new Date().getMonth()*31 + (variantOffset[activeSessionId]||0);
@@ -3058,7 +3093,7 @@ function buildDetail(idx) {
     } else {
       // Warm-up / skill licht: 1 drill van de dag (Charlie's regel)
       const d = pool[seed % pool.length];
-      info += `<div class="detail-section-lbl">drill van vandaag — één pijler per sessie</div>` + drillCard(d);
+      info += `<div class="detail-section-lbl">drill of the day — one pillar per session</div>` + drillCard(d);
     }
   }
 
@@ -3077,7 +3112,7 @@ function buildDetail(idx) {
     info += `<div class="detail-section-lbl">sets</div>
       <div class="detail-stat-row">
         <div class="detail-stat"><div class="detail-stat-val" style="color:${b.c};">${b.sets}</div><div class="detail-stat-lbl">sets</div></div>
-        ${b.rest ? `<div class="detail-stat"><div class="detail-stat-val" style="color:${b.c};">${b.rest}'</div><div class="detail-stat-lbl">rust</div></div>` : ''}
+        ${b.rest ? `<div class="detail-stat"><div class="detail-stat-val" style="color:${b.c};">${b.rest}'</div><div class="detail-stat-lbl">rest</div></div>` : ''}
         ${b.rpe !== '–' ? `<div class="detail-stat"><div class="detail-stat-val" style="color:${b.c};">${b.rpe}</div><div class="detail-stat-lbl">rpe</div></div>` : ''}
       </div>
       <div class="detail-section-lbl">log sets</div>
@@ -3087,7 +3122,7 @@ function buildDetail(idx) {
   if (!isLast) {
     const next = currentBlocks[idx+1];
     const nextWhy = (next.why || '').length > 140 ? next.why.slice(0,140).trim() + '…' : (next.why || '');
-    info += `<div class="detail-section-lbl">volgend blok</div>
+    info += `<div class="detail-section-lbl">next block</div>
       <div class="next-block" onclick="toggleNextInfo()">
         <div class="next-dot" style="background:${next.c};"></div>
         <div class="next-name" style="color:${next.c};">${next.n}</div>
@@ -3119,7 +3154,7 @@ function toggleTimer() {
 function runTimer() {
   timerRunning = true;
   document.getElementById('timerStartBtn').textContent = 'Pauzeer';
-  document.getElementById('timerLabel').textContent = 'bezig';
+  document.getElementById('timerLabel').textContent = 'running';
   // Reset + Finish beschikbaar zodra je gestart bent
   const rb = document.getElementById('timerResetBtn');
   if (rb) { rb.disabled = false; rb.style.opacity = '1'; }
@@ -3145,8 +3180,8 @@ function finishBlock() {
 function pauseTimer() {
   timerRunning = false;
   clearInterval(timerInterval);
-  document.getElementById('timerStartBtn').textContent = 'Hervat';
-  document.getElementById('timerLabel').textContent = 'gepauzeerd';
+  document.getElementById('timerStartBtn').textContent = 'Resume';
+  document.getElementById('timerLabel').textContent = 'paused';
 }
 
 function stopTimer() {
@@ -3159,7 +3194,7 @@ function resetTimerConfirm() {
   if (rb && rb.disabled) return;
   _pendingExit = () => resetTimer();
   document.getElementById('confirmTitle').textContent = 'Timer resetten?';
-  document.getElementById('confirmMsg').textContent = 'De tijd springt terug naar het begin van dit blok.';
+  document.getElementById('confirmMsg').textContent = 'The clock jumps back to the start of this block.';
   // hergebruik dezelfde dialoog, maar met reset-actie
   const dlg = document.getElementById('confirmExit');
   dlg.style.display = 'flex';
@@ -3202,7 +3237,7 @@ function updateTimerDisplay() {
     const sec = over % 60;
     if (disp) { disp.textContent = `+${m}:${sec.toString().padStart(2,'0')}`; disp.style.color = '#FCD34D'; }
     if (ring) { ring.style.strokeDashoffset = 0; ring.style.stroke = '#FCD34D'; }
-    if (lbl && timerRunning) lbl.textContent = 'over tijd · finish?';
+    if (lbl && timerRunning) lbl.textContent = 'over time · finish?';
   }
 }
 
@@ -3280,15 +3315,15 @@ function renderGreeting() {
   const h = document.createElement('div');
   h.style.cssText = "font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;color:#F5F5F2;letter-spacing:.01em;line-height:1.1;";
   if (name) {
-    h.textContent = 'Welkom terug, ' + name;
+    h.textContent = 'Welcome back, ' + name;
     el.appendChild(h);
   } else {
-    h.textContent = 'Welkom bij Crimpify';
+    h.textContent = 'Welcome to Crimpify';
     el.appendChild(h);
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;gap:8px;margin-top:10px;';
     const inp = document.createElement('input');
-    inp.type = 'text'; inp.placeholder = 'Hoe mogen we je noemen?'; inp.maxLength = 24;
+    inp.type = 'text'; inp.placeholder = 'What should we call you?'; inp.maxLength = 24;
     inp.style.cssText = "flex:1;min-width:0;padding:11px 13px;border-radius:10px;border:1px solid #2E2E2C;background:#0E0E0C;color:#F5F5F2;font-family:'Barlow',sans-serif;font-size:14px;outline:none;";
     const btn = document.createElement('button');
     btn.textContent = 'OK';
@@ -3298,7 +3333,7 @@ function renderGreeting() {
     row.appendChild(inp); row.appendChild(btn);
     el.appendChild(row);
     const hint = document.createElement('div');
-    hint.textContent = 'blijft alleen op dit toestel · geen account nodig';
+    hint.textContent = 'stays on this device only · no account needed';
     hint.style.cssText = "font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:#6A6A66;margin-top:7px;";
     el.appendChild(hint);
   }
@@ -3306,8 +3341,8 @@ function renderGreeting() {
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch {}
 
 // ── echte datum + eerlijke weekteller ──
-const NL_DAYS = ['zo','ma','di','wo','do','vr','za'];
-const NL_MONTHS = ['jan','feb','mrt','apr','mei','jun','jul','aug','sep','okt','nov','dec'];
+const NL_DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const NL_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 function nlDate(d) { return NL_DAYS[d.getDay()] + ' ' + d.getDate() + ' ' + NL_MONTHS[d.getMonth()]; }
 function renderDates() {
   const now = new Date();
@@ -3321,10 +3356,10 @@ function renderStreakLine() {
   const week = h.filter(e => now - e.ts < 7*86400000).length;
   const streakEl = document.getElementById('streakEl');
   const phaseEl = document.getElementById('phaseLine');
-  if (streakEl) streakEl.innerHTML = week > 0 ? `deze week <b>${week} sessie${week===1?'':'s'}</b>` : '';
+  if (streakEl) streakEl.innerHTML = week > 0 ? `this week <b>${week} session${week===1?'':'s'}</b>` : '';
   if (phaseEl) {
     if (h.length === 0) { phaseEl.innerHTML = ''; }
-    else { phaseEl.innerHTML = `${h.length} sessie${h.length===1?'':'s'} gelogd · <b>laatste ${agoLabel(h[0].ts)}</b>`; }
+    else { phaseEl.innerHTML = `${h.length} session${h.length===1?'':'s'} logged · <b>last ${agoLabel(h[0].ts)}</b>`; }
   }
 }
 

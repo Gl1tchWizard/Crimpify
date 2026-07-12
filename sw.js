@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v2';
+const CACHE = 'crimpify-v3';
 const CORE = [
   './',
   'index.html',

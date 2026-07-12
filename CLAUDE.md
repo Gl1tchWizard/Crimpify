@@ -69,9 +69,11 @@ voedt de ACWR-berekening; heeft ~4 weken historie nodig).
 
 ## Taalregel
 
-Interface, acties en navigatie in het Nederlands (Start sessie, Bouw een sessie,
-Sessies, Bibliotheek). Energiesysteem-namen in het Engels als vakjargon (Strength,
-Capacity, Power Endurance, Minimal Dose). Geen andere mix.
+De hele interface is Engels (sinds v0.11), inclusief drills, blokuitleg, coach en
+deel-teksten. Nederlandse strings mogen nergens terugkeren in user-facing tekst.
+De code-commentaren zijn deels nog Nederlands; die mogen bij gelegenheid mee,
+maar nooit ten koste van werkende code. De "Dynamic warm-up" heet "Charlie
+warm-up" (inside joke, bewust).
 
 ## Landing-hiërarchie (staat sinds 0.1 zo, bewaken)
 
@@ -104,7 +106,8 @@ begroeting, tijd en Genereer.
 ## Werkafspraken
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
-- Sober Nederlands in UI-copy, geen consultant-taal, geen em-dashes in teksten.
+- Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
+- Versienummer op de splash (nu v0.11) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.
