@@ -1485,10 +1485,41 @@ function coachSuggest() {
   return { id: nextId, time:60, badge:'#4ADE80',
     reason:'Fresh enough for quality. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is up next in your rotation.' + extra };
 }
+// MOCK-prototype: verzoen wat je lijf nodig heeft (coachSuggest) met de tijd die je hébt (slider).
+// De suggestie loopt live mee met de tijdbalk; autoregulatie wint altijd van ambitie.
+function adaptCoachToTime(pick) {
+  const t = getT();
+  const p = { ...pick };
+  if (!isFinite(t)) {
+    p.reason += ' No time limit set. The stoplight ends this session, not the clock.';
+    return p;
+  }
+  if (t <= 30) {
+    if (p.rest || p.id === 'recovery') {
+      p.time = 30;
+      p.reason += ' Thirty minutes of easy movement is plenty today.';
+      return p;
+    }
+    return { id:'minidose', time:30, badge:p.badge,
+      reason:'Short window today. Minimal dose: fingers and pull in twenty focused minutes, no filler.' };
+  }
+  if (t >= 75) {
+    if (p.rest) {
+      p.reason += ' Planning ' + t + ' minutes on a rest day? You know best. If you go, keep it light and log it honestly.';
+      return p;
+    }
+    if (p.id === 'recovery') {
+      p.reason += ' You have ' + t + ' minutes, your body asked for ' + p.time + '. Recovery does not scale; do it well and go home.';
+      return p;
+    }
+  }
+  return p;
+}
+
 function renderCoach() {
   const card = document.getElementById('coachCard');
   if (!card) return;
-  const pick = coachSuggest();
+  const pick = adaptCoachToTime(coachSuggest());
   _coachPick = pick;
   const s = getSession(pick.id);
   if (!s) { card.style.display = 'none'; return; }
@@ -1509,9 +1540,10 @@ function renderCoach() {
 }
 function applyCoach() {
   if (!_coachPick) return;
-  const ti = timeValues.indexOf(_coachPick.time);
+  const pick = _coachPick;  // vastpakken: setTimeIdx hieronder ververst _coachPick via renderCoach
+  const ti = timeValues.indexOf(pick.time);
   if (ti >= 0) setTimeIdx(ti);
-  selectSession(_coachPick.id);
+  selectSession(pick.id);
   goToSession();
 }
 
@@ -2441,6 +2473,7 @@ function setTimeIdx(idx){
   const v=timeValues[idx];
   if(sum) sum.textContent = isFinite(v) ? v + ' min' : 'no limit';
   buildCategories(); renderPreview();
+  renderCoach();  // MOCK: coach-suggestie loopt mee met de tijdkeuze
 }
 function toggleTimePicker(){
   const w=document.getElementById('timeTrackWrap');
@@ -2659,10 +2692,8 @@ function openMockSession(i) {
   activeSessionId = 'custom';
   sessionLocked = true;
   sessionOwned = false;
-  // tijdselectie op de dichtstbijzijnde chip zetten (zelfde idee als importFromHash)
-  let best = 0, bd = Infinity;
-  timeValues.forEach((t, ti) => { const d = Math.abs(t - s.mins); if (d < bd) { bd = d; best = ti; } });
-  activeTimeIdx = best;
+  // de gekozen tijd op de landing bepaalt het schema, ook voor Choose-sessies;
+  // de minuten op de kaart zijn browse-informatie, geen override
   buildSlab();
   goTo('v-session');
 }
