@@ -1615,10 +1615,37 @@ const BLOCK_GROUPS = [
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
   { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
-  { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls','hog'] },
+  { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls'] },
   { name:'Antagonist, core & gym',     keys:['pullStrength','pushStrength','coreLegs','mini1','mini2','mini3','lockoffs'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog'] },
 ];
+// ── KLEURGRAMMATICA ──
+// kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
+// Elke categorie één kleur uit de C-palette; blokken erven die van hun groep.
+const CAT_COLOR = {
+  'Warm-up & activation':       '#60A5FA',  // blue
+  'Technique & drills':         '#A78BFA',  // purple
+  'Capacity · aerobic volume': '#4ADE80',  // green
+  'Power endurance':            '#A3E635',  // lime
+  'Max strength & power':       '#F59E0B',  // amber
+  'Finger strength':            '#F59E0B',  // amber (strength)
+  'Antagonist, core & gym':     '#F59E0B',  // amber (conditioning)
+  'Recovery & mobility':        '#60A5FA',  // blue (HoG blijft blauw)
+};
+const UX_COLOR = '#3A3A38';  // eigen oefeningen: geen aparte kleur, wel een YOURS-badge
+function applyCategoryColors() {
+  BLOCK_GROUPS.forEach(g => {
+    const col = CAT_COLOR[g.name];
+    if (!col) return;
+    g.keys.forEach(k => { if (BLOCKLIB[k]) BLOCKLIB[k].c = col; });
+  });
+  Object.keys(BLOCKLIB).filter(k => k.startsWith('ux_')).forEach(k => { BLOCKLIB[k].c = UX_COLOR; });
+}
+function yoursBadge(key) {
+  return key && key.startsWith('ux_')
+    ? `<span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:#9A9A96;border:1px solid #2E2E2C;border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:middle;">YOURS</span>`
+    : '';
+}
 // verborgen blokken (gebruiker kan de bibliotheek opschonen)
 function loadHidden() { try { return JSON.parse(localStorage.getItem('crimpify_hidden_blocks') || '[]'); } catch { return []; } }
 function saveHidden(a) { try { localStorage.setItem('crimpify_hidden_blocks', JSON.stringify(a)); } catch {} }
@@ -1665,14 +1692,14 @@ function renderBlockPicker(query) {
       })
       .map(k=>{
         const b = BLOCKLIB[k];
-        const bm = b.bm ? `<span style="font-size:7px;letter-spacing:.1em;color:#E6F557;border:1px solid rgba(230,245,87,.3);border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:middle;">BENCHMARK</span>` : '';
+        const bm = b.bm ? `<span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:#E6F557;border:1px solid rgba(230,245,87,.3);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:middle;">BENCHMARK</span>` : '';
         const del = k.startsWith('ux_')
           ? `<div onclick="event.stopPropagation();deleteCustomBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:#F87171;padding:6px 10px;margin-right:2px;">×</div>`
           : `<div onclick="event.stopPropagation();hideBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:#5A5A56;padding:6px 10px;margin-right:2px;">×</div>`;
         return `<div onclick="pickBlock('${k}')" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:#111;border-radius:8px;border-left:3px solid ${b.c};cursor:pointer;">
           <div style="flex:1;">
-            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.08em;color:#6A6A66;margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}${yoursBadge(k)}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:#6A6A66;margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
           </div>
           ${del}
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
@@ -1681,7 +1708,7 @@ function renderBlockPicker(query) {
     if (!items) return '';
     const open = q ? true : (_openGroups && _openGroups.has(g.name));
     const count = g.keys.filter(k=>BLOCKLIB[k] && !hidden.includes(k)).length;
-    const accent = BLOCKLIB[g.keys.find(k=>BLOCKLIB[k])] ? BLOCKLIB[g.keys.find(k=>BLOCKLIB[k])].c : '#5A5A56';
+    const accent = CAT_COLOR[g.name] || '#5A5A56';
     const head = `<div onclick="toggleBlockGroup('${g.name.replace(/'/g,"\\'")}')" style="display:flex;align-items:center;gap:9px;padding:12px 4px;margin-top:4px;cursor:pointer;border-bottom:1px solid #1E1E1C;">
       <span style="width:8px;height:8px;border-radius:2px;background:${accent};flex-shrink:0;"></span>
       <span style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.05em;text-transform:uppercase;color:#D8D8D4;">${g.name}</span>
@@ -1690,7 +1717,7 @@ function renderBlockPicker(query) {
     </div>`;
     return head + (open ? `<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0 2px;">${items}</div>` : '');
   }).join('');
-  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed #3A3A38;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#A3E635;">+ new exercise</div>`;
+  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed #3A3A38;border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);">+ new exercise</div>`;
   // terugzet-sectie voor verborgen blokken
   const hiddenList = hidden.filter(k=>BLOCKLIB[k]);
   const hiddenHTML = (!q && hiddenList.length)
@@ -1748,7 +1775,7 @@ function confirmNewExercise() {
   const why = (document.getElementById('neWhy').value || '').trim() || 'Own exercise.';
   const url = (document.getElementById('neLink').value || '').trim();
   const key = 'ux_' + Date.now().toString(36);
-  const block = { n: name, t, c: '#A3E635', rpe, why, fixed: false };
+  const block = { n: name, t, c: UX_COLOR, rpe, why, fixed: false };
   if (url) block.links = [{ label: linkLabel(url), url }];
   const store = loadCustomBlocks();
   store[key] = block;
@@ -2044,14 +2071,14 @@ function buildSlab() {
       return `<div class="slab-block slab-real" data-idx="${i}" style="background:${b.c}18;">
         <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
         <div class="slab-drag-handle" ontouchstart="handleDragStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="handleDragStart(event,this)" style="z-index:3;">≡</div>
-        <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}</div>
+        <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}${yoursBadge(b._key)}</div>
         <button onclick="removeBlock(${i})" class="edit-mini" style="color:#F87171;border-color:#F8717144;z-index:3;flex-shrink:0;">×</button>
       </div>`;
     }
     const dragAttrs = sessionLocked ? '' : `ontouchstart="slabPressStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="slabPressStart(event,this)"`;
     return `<div class="slab-block slab-real" data-idx="${i}" style="background:${b.c}18;" onclick="slabBlockTap(${i})" ${dragAttrs}>
       <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
-      <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}</div>
+      <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}${yoursBadge(b._key)}</div>
       <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
     </div>`;
   }).join('');
@@ -2601,6 +2628,7 @@ function renderStreakLine() {
 // ── INIT ──
 ['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });
 registerCustomBlocks();
+applyCategoryColors();
 rebuildRecent(); renderSignalCal(); renderCoach(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
 importFromHash();  // gedeelde sessie via #s=… direct openen
 setTimeout(()=>setTimeIdx(activeTimeIdx),60);
