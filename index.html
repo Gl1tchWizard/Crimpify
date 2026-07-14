@@ -61,9 +61,9 @@
     <div class="scroll-body">
       <div class="main-content" id="mainContent">
         <!-- tijd-slider terug op de landing (origineel), met oneindig-chip als toevoeging -->
-        <div class="slabel" style="display:flex;justify-content:space-between;align-items:center;">
+        <div class="slabel" onclick="toggleTimePicker()" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
           <span>time available</span>
-          <span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span>
+          <span style="display:flex;align-items:center;gap:6px;"><span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.04em;">60 min</span><span id="timeChev" style="font-size:11px;opacity:.5;">▴</span></span>
         </div>
         <div class="time-track-wrap" id="timeTrackWrap">
           <div class="time-track" id="timeTrack">

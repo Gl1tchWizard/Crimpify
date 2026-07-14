@@ -2471,17 +2471,21 @@ function setTimeIdx(idx){
   if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2,behavior:'smooth'});
   const sum=document.getElementById('timeSummary');
   const v=timeValues[idx];
-  if(sum) sum.textContent = isFinite(v) ? v + ' min' : 'no limit';
+  if(sum) sum.textContent = isFinite(v) ? v + ' min' : '∞ no limit';
   buildCategories(); renderPreview();
   renderCoach();  // MOCK: coach-suggestie loopt mee met de tijdkeuze
 }
-function toggleTimePicker(){
+function setTimePickerOpen(open){
   const w=document.getElementById('timeTrackWrap');
-  const open = w.style.display !== 'none';
-  w.style.display = open ? 'none' : 'block';
-  if(!open){ const item=track.querySelectorAll('.time-item')[activeTimeIdx]; if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2}); }
+  w.style.display = open ? 'block' : 'none';
+  const chev=document.getElementById('timeChev');
+  if(chev) chev.textContent = open ? '▴' : '▾';
+  if(open){ const item=track.querySelectorAll('.time-item')[activeTimeIdx]; if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2}); }
 }
-[...track.querySelectorAll('.time-item')].forEach((item,i)=>item.addEventListener('click',()=>{ setTimeIdx(i); document.getElementById('timeTrackWrap').style.display='none'; }));
+function toggleTimePicker(){
+  setTimePickerOpen(document.getElementById('timeTrackWrap').style.display==='none');
+}
+[...track.querySelectorAll('.time-item')].forEach((item,i)=>item.addEventListener('click',()=>{ setTimeIdx(i); setTimePickerOpen(false); }));
 
 // ── SEARCH ──
 const searchInput = document.getElementById('searchInput');
