@@ -1309,7 +1309,7 @@ function renderSignalCal() {
       if (e.sig && (!col || SIG_RANK[e.sig] > SIG_RANK[col])) col = e.sig;
     });
     // entries staat nieuwste-eerst; recap opent de laatste sessie van die dag
-    days.push({ trained: entries.length > 0, col, load, ts: entries.length ? entries[0].ts : null });
+    days.push({ trained: entries.length > 0, n: entries.length, col, load, ts: entries.length ? entries[0].ts : null });
   }
   cal.innerHTML = days.map(d => {
     const bg = d.trained ? (d.col ? SIG_COL[d.col] : '#4A4A46') : '#161614';
@@ -1317,10 +1317,10 @@ function renderSignalCal() {
     const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
     return `<div${click} title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:5px;background:${bg};${d.ts ? 'cursor:pointer;' : ''}${glow}"></div>`;
   }).join('');
-  // mini-samenvatting: sessies + rood-teller
-  const trained = days.filter(d=>d.trained).length;
+  // mini-samenvatting: sessies binnen het getoonde venster + rood-teller
+  const trained = days.reduce((s,d)=>s+d.n,0);
   const reds = days.filter(d=>d.col==='red').length;
-  document.getElementById('signalCalSummary').textContent = `${trained} sessions` + (reds ? ` · ${reds}× red` : '');
+  document.getElementById('signalCalSummary').textContent = `${trained} session${trained === 1 ? '' : 's'}` + (reds ? ` · ${reds}× red` : '');
 }
 
 // ── ACWR: acute vs chronische belasting (Gabbett) ──
