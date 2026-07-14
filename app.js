@@ -1287,7 +1287,7 @@ function favPressStart(i) {
 }
 function favPressEnd() { clearTimeout(_favPressTimer); setTimeout(()=>{ _favLongPressed = false; }, 300); }
 
-// ── STOPLICHT-KALENDER (laatste 28 dagen, afgeleid uit historie) ──
+// ── STOPLICHT-KALENDER (weergave: laatste 14 dagen; ACWR rekent los hiervan over de volle historie) ──
 function renderSignalCal() {
   const wrap = document.getElementById('signalCalWrap');
   const cal = document.getElementById('signalCal');
@@ -1300,7 +1300,7 @@ function renderSignalCal() {
   // per dag: zwaarste signaal wint; sessie zonder signaal = neutraal gevuld
   const days = [];
   const now = new Date(); now.setHours(0,0,0,0);
-  for (let i = 27; i >= 0; i--) {
+  for (let i = 13; i >= 0; i--) {
     const d = new Date(now.getTime() - i*86400000);
     const entries = h.filter(e => { const t = new Date(e.ts); t.setHours(0,0,0,0); return t.getTime() === d.getTime(); });
     let col = null, load = 0;
@@ -1315,7 +1315,7 @@ function renderSignalCal() {
     const bg = d.trained ? (d.col ? SIG_COL[d.col] : '#4A4A46') : '#161614';
     const glow = d.col === 'red' ? 'box-shadow:0 0 8px rgba(248,113,113,.4);' : '';
     const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
-    return `<div${click} title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:3px;background:${bg};${d.ts ? 'cursor:pointer;' : ''}${glow}"></div>`;
+    return `<div${click} title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:5px;background:${bg};${d.ts ? 'cursor:pointer;' : ''}${glow}"></div>`;
   }).join('');
   // mini-samenvatting: sessies + rood-teller
   const trained = days.filter(d=>d.trained).length;
