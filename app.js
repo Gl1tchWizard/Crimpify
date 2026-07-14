@@ -1308,12 +1308,14 @@ function renderSignalCal() {
       load += e.load || 0;
       if (e.sig && (!col || SIG_RANK[e.sig] > SIG_RANK[col])) col = e.sig;
     });
-    days.push({ trained: entries.length > 0, col, load });
+    // entries staat nieuwste-eerst; recap opent de laatste sessie van die dag
+    days.push({ trained: entries.length > 0, col, load, ts: entries.length ? entries[0].ts : null });
   }
   cal.innerHTML = days.map(d => {
     const bg = d.trained ? (d.col ? SIG_COL[d.col] : '#4A4A46') : '#161614';
     const glow = d.col === 'red' ? 'box-shadow:0 0 8px rgba(248,113,113,.4);' : '';
-    return `<div title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:3px;background:${bg};${glow}"></div>`;
+    const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
+    return `<div${click} title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:3px;background:${bg};${d.ts ? 'cursor:pointer;' : ''}${glow}"></div>`;
   }).join('');
   // mini-samenvatting: sessies + rood-teller
   const trained = days.filter(d=>d.trained).length;
