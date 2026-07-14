@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose B · Join</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* throwaway verkenning B "Join" - doel eerst, geordende lijst, utility-led */
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root {
+    --acid:#E6F557; --bg:#0A0A0A; --s1:#111110; --s2:#161614;
+    --border:#1E1E1C; --border2:#252523; --text:#F5F5F2; --sub:#9A9A96; --muted:#6A6A66;
+  }
+  html,body { background:#050505; color:var(--text); font-family:'Barlow',sans-serif; }
+  .phone { max-width:390px; margin:0 auto; min-height:100vh; background:var(--bg); border-left:1px solid var(--border); border-right:1px solid var(--border); padding-bottom:40px; }
+
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 20px 6px; }
+  .logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:19px; letter-spacing:.06em; font-style:italic; }
+  .view-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+
+  .page-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:30px; text-transform:uppercase; letter-spacing:.02em; padding:10px 20px 2px; line-height:1; }
+  .page-sub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:0 20px 14px; }
+
+  /* ── doel-chips ── */
+  .goal-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); padding:0 20px 8px; }
+  .goals { display:flex; gap:8px; overflow-x:auto; padding:0 20px 4px; scrollbar-width:none; }
+  .goals::-webkit-scrollbar { display:none; }
+  .goal { flex-shrink:0; display:flex; align-items:center; gap:7px; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; letter-spacing:.05em; text-transform:uppercase; color:var(--sub); border:1px solid var(--border2); border-radius:999px; padding:9px 15px; background:var(--s1); cursor:pointer; }
+  .goal .dot { width:8px; height:8px; border-radius:2px; }
+  .goal.active { color:#0A0A0A; background:var(--acid); border-color:var(--acid); }
+  .goal.active .dot { background:#0A0A0A !important; }
+
+  /* ── ranglijst ── */
+  .list-head { display:flex; align-items:baseline; justify-content:space-between; padding:20px 20px 10px; }
+  .list-title { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:19px; text-transform:uppercase; letter-spacing:.04em; }
+  .list-sort { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .list { display:flex; flex-direction:column; gap:9px; padding:0 20px; }
+
+  .row { display:flex; align-items:stretch; gap:12px; background:var(--s1); border:1px solid var(--border2); border-radius:12px; padding:13px 14px 13px 0; cursor:pointer; overflow:hidden; }
+  .row .accent { width:4px; flex-shrink:0; border-radius:0 2px 2px 0; }
+  .rank { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:22px; color:#3E3E3C; width:26px; text-align:center; align-self:center; flex-shrink:0; }
+  .row-main { flex:1; min-width:0; }
+  .row-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:19px; line-height:1; text-transform:uppercase; letter-spacing:.02em; }
+  .row-meta { display:flex; flex-wrap:wrap; align-items:center; gap:5px 12px; margin-top:7px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.05em; color:var(--sub); }
+  .row-meta .sys { font-size:10px; letter-spacing:.08em; text-transform:uppercase; padding:1px 6px; border-radius:4px; border:1px solid; }
+  .row-side { display:flex; flex-direction:column; align-items:flex-end; justify-content:space-between; flex-shrink:0; }
+  .row-mins { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; line-height:1; }
+  .row-mins span { font-size:12px; color:var(--muted); }
+  /* intensiteit: vier vingerkootjes van de crimp */
+  .knuckles { display:flex; gap:3px; margin-top:8px; }
+  .knuckles i { width:9px; height:12px; border-radius:2px; background:#242422; }
+  .footnote { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#3E3E3C; text-align:center; padding:26px 20px 0; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar"><div class="logo">CRIMPIFY</div><div class="view-tag">choose · b</div></div>
+  <div class="page-title">What do you want<br>to train?</div>
+  <div class="page-sub">pick a goal · sessions that deliver it, ranked</div>
+
+  <div class="goals">
+    <div class="goal active"><span class="dot" style="background:#F59E0B;"></span>Fingers</div>
+    <div class="goal"><span class="dot" style="background:#F59E0B;"></span>Power</div>
+    <div class="goal"><span class="dot" style="background:#4ADE80;"></span>Capacity</div>
+    <div class="goal"><span class="dot" style="background:#A78BFA;"></span>Technique</div>
+    <div class="goal"><span class="dot" style="background:#A3E635;"></span>Pump</div>
+    <div class="goal"><span class="dot" style="background:#60A5FA;"></span>Recovery</div>
+  </div>
+
+  <div class="list-head"><div class="list-title">12 sessions</div><div class="list-sort">sort: best match ▾</div></div>
+  <div class="list">
+
+    <div class="row">
+      <div class="accent" style="background:#F59E0B;"></div>
+      <div class="rank">1</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCD34D;">Crimp Factory</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F59E0B;border-color:rgba(245,158,11,.35);">strength</span>
+          <span>Mila Berg</span><span>rpe 8-9</span><span>♥ 214</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">75<span>'</span></div>
+        <div class="knuckles"><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#F59E0B;"></div>
+      <div class="rank">2</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCD34D;">Finger School</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F59E0B;border-color:rgba(245,158,11,.35);">strength</span>
+          <span>Mila Berg</span><span>rpe 8-9</span><span>♥ 96</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">60<span>'</span></div>
+        <div class="knuckles"><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#F59E0B;"></div>
+      <div class="rank">3</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCD34D;">Board Blitz</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F59E0B;border-color:rgba(245,158,11,.35);">power</span>
+          <span>Teo Marchetti</span><span>rpe 8</span><span>♥ 12</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">60<span>'</span></div>
+        <div class="knuckles"><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i style="background:#F59E0B;"></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#F87171;"></div>
+      <div class="rank">4</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCA5A5;">Power Hour</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F87171;border-color:rgba(248,113,113,.3);">power</span>
+          <span>Teo Marchetti</span><span>rpe 8-9</span><span>♥ 187</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">60<span>'</span></div>
+        <div class="knuckles"><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#F87171;"></div>
+      <div class="rank">5</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCA5A5;">Send Day</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F87171;border-color:rgba(248,113,113,.3);">performance</span>
+          <span>Mila Berg</span><span>rpe 9-10</span><span>♥ 298</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">75<span>'</span></div>
+        <div class="knuckles"><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#F87171;"></div>
+      <div class="rank">6</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#FCA5A5;">Comp Simulator</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#F87171;border-color:rgba(248,113,113,.3);">performance</span>
+          <span>Teo Marchetti</span><span>rpe 8-9</span><span>♥ 74</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">90<span>'</span></div>
+        <div class="knuckles"><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i><i style="background:#F87171;"></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#A3E635;"></div>
+      <div class="rank">7</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#BEF264;">The Grinder</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#A3E635;border-color:rgba(163,230,53,.3);">power endurance</span>
+          <span>Ana Kovač</span><span>rpe 7-8</span><span>♥ 342</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">90<span>'</span></div>
+        <div class="knuckles"><i style="background:#A3E635;"></i><i style="background:#A3E635;"></i><i style="background:#A3E635;"></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#4ADE80;"></div>
+      <div class="rank">8</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#86EFAC;">Base Camp</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#4ADE80;border-color:rgba(74,222,128,.3);">capacity</span>
+          <span>Ana Kovač</span><span>rpe 6</span><span>♥ 156</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">90<span>'</span></div>
+        <div class="knuckles"><i style="background:#4ADE80;"></i><i style="background:#4ADE80;"></i><i></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#A78BFA;"></div>
+      <div class="rank">9</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#C4B5FD;">Flow State</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#A78BFA;border-color:rgba(167,139,250,.3);">skill</span>
+          <span>Ines Fujimoto</span><span>rpe 5-6</span><span>♥ 8</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">75<span>'</span></div>
+        <div class="knuckles"><i style="background:#A78BFA;"></i><i style="background:#A78BFA;"></i><i></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#A78BFA;"></div>
+      <div class="rank">10</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#C4B5FD;">Silent Feet</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#A78BFA;border-color:rgba(167,139,250,.3);">skill</span>
+          <span>Ines Fujimoto</span><span>rpe 4-5</span><span>♥ 19</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">45<span>'</span></div>
+        <div class="knuckles"><i style="background:#A78BFA;"></i><i style="background:#A78BFA;"></i><i></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#60A5FA;"></div>
+      <div class="rank">11</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#93C5FD;">Easy Does It</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#60A5FA;border-color:rgba(96,165,250,.3);">recovery</span>
+          <span>Jonas Steen</span><span>rpe 3-4</span><span>♥ 251</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">45<span>'</span></div>
+        <div class="knuckles"><i style="background:#60A5FA;"></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="accent" style="background:#60A5FA;"></div>
+      <div class="rank">12</div>
+      <div class="row-main">
+        <div class="row-name" style="color:#93C5FD;">The Reset</div>
+        <div class="row-meta">
+          <span class="sys" style="color:#60A5FA;border-color:rgba(96,165,250,.3);">recovery</span>
+          <span>Jonas Steen</span><span>rpe 2-3</span><span>♥ 63</span>
+        </div>
+      </div>
+      <div class="row-side">
+        <div class="row-mins">45<span>'</span></div>
+        <div class="knuckles"><i style="background:#60A5FA;"></i><i></i><i></i><i></i></div>
+      </div>
+    </div>
+
+  </div>
+  <div class="footnote">throwaway exploration · not wired up</div>
+</div>
+</body>
+</html>

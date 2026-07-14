@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Choose A · Spotify</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* throwaway verkenning A "Spotify" - editorial hero + shelves, discovery-led */
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  :root {
+    --acid:#E6F557; --bg:#0A0A0A; --s1:#111110; --s2:#161614;
+    --border:#1E1E1C; --border2:#252523; --text:#F5F5F2; --sub:#9A9A96; --muted:#6A6A66;
+  }
+  html,body { background:#050505; color:var(--text); font-family:'Barlow',sans-serif; }
+  .phone { max-width:390px; margin:0 auto; min-height:100vh; background:var(--bg); border-left:1px solid var(--border); border-right:1px solid var(--border); padding-bottom:40px; }
+
+  .topbar { display:flex; align-items:center; justify-content:space-between; padding:18px 20px 6px; }
+  .logo { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:19px; letter-spacing:.06em; font-style:italic; }
+  .view-tag { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--muted); }
+
+  .page-title { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:30px; text-transform:uppercase; letter-spacing:.02em; padding:10px 20px 2px; line-height:1; }
+  .page-sub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); padding:0 20px 14px; }
+
+  /* ── hero: cover-stijl, kleur als artwork ── */
+  .hero { margin:0 20px; border-radius:16px; overflow:hidden; border:1px solid var(--border2); position:relative; cursor:pointer; }
+  .hero-art { height:268px; position:relative; }
+  .hero-art .tape { position:absolute; left:0; right:0; bottom:0; top:0; display:flex; }
+  .hero-art .tape div { height:100%; }
+  .hero-art::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,10,0) 20%, rgba(10,10,10,.55) 62%, rgba(10,10,10,.96) 100%); }
+  .hero-flag { position:absolute; top:14px; left:14px; z-index:2; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:#0A0A0A; background:var(--acid); border-radius:4px; padding:3px 8px; }
+  .hero-likes { position:absolute; top:14px; right:14px; z-index:2; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; color:var(--text); background:rgba(10,10,10,.55); border-radius:4px; padding:3px 8px; }
+  .hero-body { position:absolute; left:0; right:0; bottom:0; z-index:2; padding:0 16px 14px; }
+  .hero-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:44px; line-height:.92; text-transform:uppercase; letter-spacing:.01em; }
+  .hero-meta { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.06em; color:var(--sub); margin-top:7px; }
+  .hero-intent { font-size:13px; line-height:1.45; color:#C8C8C4; margin-top:6px; max-width:30ch; }
+  .hero-cta { display:inline-block; margin-top:12px; background:var(--acid); color:#0A0A0A; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; letter-spacing:.06em; text-transform:uppercase; border-radius:8px; padding:9px 18px; }
+
+  /* ── shelves ── */
+  .shelf-head { display:flex; align-items:baseline; justify-content:space-between; padding:22px 20px 10px; }
+  .shelf-title { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:19px; text-transform:uppercase; letter-spacing:.04em; }
+  .shelf-more { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .shelf { display:flex; gap:12px; overflow-x:auto; padding:2px 20px 6px; scrollbar-width:none; }
+  .shelf::-webkit-scrollbar { display:none; }
+
+  .cover-card { flex-shrink:0; width:158px; border-radius:12px; overflow:hidden; border:1px solid var(--border2); background:var(--s1); cursor:pointer; }
+  .cover { height:110px; position:relative; }
+  .cover .tape { position:absolute; inset:0; display:flex; }
+  .cover .tape div { height:100%; }
+  .cover::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg, rgba(10,10,10,0) 35%, rgba(10,10,10,.72) 100%); }
+  .cover .mins { position:absolute; right:8px; bottom:7px; z-index:2; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; color:var(--text); background:rgba(10,10,10,.6); border-radius:4px; padding:2px 6px; }
+  .cover-body { padding:10px 11px 12px; }
+  .cover-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:18px; line-height:1; text-transform:uppercase; letter-spacing:.02em; }
+  .cover-coach { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; color:var(--muted); margin-top:5px; }
+
+  .footnote { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:#3E3E3C; text-align:center; padding:26px 20px 0; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="topbar"><div class="logo">CRIMPIFY</div><div class="view-tag">choose · a</div></div>
+  <div class="page-title">Choose a session</div>
+  <div class="page-sub">made by coaches · train it with your timers</div>
+
+  <!-- hero: Crimp Factory, kleur als artwork uit de blok-tape -->
+  <div class="hero">
+    <div class="hero-art">
+      <div class="tape">
+        <div style="flex:10;background:linear-gradient(160deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:28;background:linear-gradient(160deg,#F59E0B,#a35f00);"></div>
+        <div style="flex:42;background:linear-gradient(160deg,#c97f04,#F59E0B);"></div>
+        <div style="flex:10;background:linear-gradient(160deg,#60A5FA,#274e8d);"></div>
+      </div>
+      <div class="hero-flag">featured</div>
+      <div class="hero-likes">♥ 214</div>
+      <div class="hero-body">
+        <div class="hero-name">Crimp<br>Factory</div>
+        <div class="hero-meta">Mila Berg · 75 min · rpe 8-9</div>
+        <div class="hero-intent">Max finger strength on small edges. Long rests, full effort.</div>
+        <div class="hero-cta">Train this →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured shelf (rest) -->
+  <div class="shelf-head"><div class="shelf-title">Featured</div><div class="shelf-more">all →</div></div>
+  <div class="shelf">
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:12;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:45;background:linear-gradient(150deg,#F87171,#a03030);"></div>
+        <div style="flex:30;background:linear-gradient(150deg,#c04848,#F87171);"></div>
+        <div style="flex:13;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">60'</div></div>
+      <div class="cover-body"><div class="cover-name">Power Hour</div><div class="cover-coach">Teo Marchetti</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:25;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:45;background:linear-gradient(150deg,#4ADE80,#1d7c42);"></div>
+        <div style="flex:14;background:linear-gradient(150deg,#2b9a55,#4ADE80);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">90'</div></div>
+      <div class="cover-body"><div class="cover-name">Base Camp</div><div class="cover-coach">Ana Kovač</div></div>
+    </div>
+  </div>
+
+  <!-- New -->
+  <div class="shelf-head"><div class="shelf-title">New</div><div class="shelf-more">all →</div></div>
+  <div class="shelf">
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:14;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:34;background:linear-gradient(150deg,#F59E0B,#a35f00);"></div>
+        <div style="flex:36;background:linear-gradient(150deg,#c97f04,#F59E0B);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">60'</div></div>
+      <div class="cover-body"><div class="cover-name">Board Blitz</div><div class="cover-coach">Teo Marchetti</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:22;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:38;background:linear-gradient(150deg,#A78BFA,#5f43b3);"></div>
+        <div style="flex:24;background:linear-gradient(150deg,#4ADE80,#1d7c42);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">75'</div></div>
+      <div class="cover-body"><div class="cover-name">Flow State</div><div class="cover-coach">Ines Fujimoto</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:40;background:linear-gradient(150deg,#A78BFA,#5f43b3);"></div>
+        <div style="flex:28;background:linear-gradient(150deg,#7d5fd0,#A78BFA);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">45'</div></div>
+      <div class="cover-body"><div class="cover-name">Silent Feet</div><div class="cover-coach">Ines Fujimoto</div></div>
+    </div>
+  </div>
+
+  <!-- Popular -->
+  <div class="shelf-head"><div class="shelf-title">Popular</div><div class="shelf-more">all →</div></div>
+  <div class="shelf">
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:22;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:32;background:linear-gradient(150deg,#A3E635,#5f8a10);"></div>
+        <div style="flex:30;background:linear-gradient(150deg,#7fb31d,#A3E635);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">90'</div></div>
+      <div class="cover-body"><div class="cover-name">The Grinder</div><div class="cover-coach">Ana Kovač</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:22;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:62;background:linear-gradient(150deg,#F87171,#a03030);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">75'</div></div>
+      <div class="cover-body"><div class="cover-name">Send Day</div><div class="cover-coach">Mila Berg</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:22;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:40;background:linear-gradient(150deg,#4ADE80,#1d7c42);"></div>
+        <div style="flex:38;background:linear-gradient(150deg,#3b82c9,#60A5FA);"></div>
+      </div><div class="mins">45'</div></div>
+      <div class="cover-body"><div class="cover-name">Easy Does It</div><div class="cover-coach">Jonas Steen</div></div>
+    </div>
+  </div>
+
+  <!-- By coach -->
+  <div class="shelf-head"><div class="shelf-title">By coach</div><div class="shelf-more">all →</div></div>
+  <div class="shelf">
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:20;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:34;background:linear-gradient(150deg,#F59E0B,#a35f00);"></div>
+        <div style="flex:30;background:linear-gradient(150deg,#c97f04,#F59E0B);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">60'</div></div>
+      <div class="cover-body"><div class="cover-name">Finger School</div><div class="cover-coach">Mila Berg</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:14;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:38;background:linear-gradient(150deg,#A3E635,#5f8a10);"></div>
+        <div style="flex:32;background:linear-gradient(150deg,#F87171,#a03030);"></div>
+        <div style="flex:16;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">90'</div></div>
+      <div class="cover-body"><div class="cover-name">Comp Simulator</div><div class="cover-coach">Teo Marchetti</div></div>
+    </div>
+    <div class="cover-card">
+      <div class="cover"><div class="tape">
+        <div style="flex:30;background:linear-gradient(150deg,#60A5FA,#2f5ea8);"></div>
+        <div style="flex:26;background:linear-gradient(150deg,#3b82c9,#60A5FA);"></div>
+        <div style="flex:22;background:linear-gradient(150deg,#F59E0B,#a35f00);"></div>
+        <div style="flex:22;background:linear-gradient(150deg,#60A5FA,#274e8d);"></div>
+      </div><div class="mins">45'</div></div>
+      <div class="cover-body"><div class="cover-name">The Reset</div><div class="cover-coach">Jonas Steen</div></div>
+    </div>
+  </div>
+
+  <div class="footnote">throwaway exploration · not wired up</div>
+</div>
+</body>
+</html>
