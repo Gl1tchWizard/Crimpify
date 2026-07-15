@@ -133,7 +133,11 @@
     <div class="scroll-body">
       <div class="main-content" id="previewBody"></div>
     </div>
-    <div class="footer" style="justify-content:stretch;">
+    <div class="footer" style="flex-direction:column;gap:10px;align-items:stretch;">
+      <div class="pv-actions">
+        <button class="pv-act" id="pvSaveBtn" data-label="1" onclick="toggleChooseSave(event, _previewIdx)">☆ Save</button>
+        <button class="pv-act" onclick="customizeFromChoose()">⧉ Customize</button>
+      </div>
       <button class="start-btn" style="width:100%;padding:13px;" onclick="startFromPreview()">Start session</button>
     </div>
   </div>
@@ -192,6 +196,7 @@
           <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--disabled);" id="slabWeek">–</div>
         </div>
       </div>
+      <div class="slab-basedon" id="slabBasedOn" style="display:none;"></div>
       <div class="slab-title" id="slabTitle">–</div>
       <div class="slab-meta" id="slabMeta">–</div>
       <div class="slab-intent" id="slabIntent" style="font-family:'Barlow',sans-serif;font-size:13px;color:color-mix(in srgb, var(--acid) 45%, var(--chalk));letter-spacing:.01em;line-height:1.55;margin-top:10px;padding:11px 13px;background:color-mix(in srgb, var(--acid) 5%, transparent);border:1px solid color-mix(in srgb, var(--acid) 12%, transparent);border-radius:6px;">–</div>

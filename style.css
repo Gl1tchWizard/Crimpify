@@ -477,3 +477,11 @@ body {
 .ch-result-coach span { color:var(--dust); font-size:12px; }
 .ch-empty { padding:48px 20px; text-align:center; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:18px; text-transform:uppercase; letter-spacing:.04em; color:var(--dust); }
 .ch-empty span { display:block; margin-top:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:none; color:var(--disabled); }
+
+/* preview-acties: save/customize als ghost-rij onder de content, Start session blijft de enige primaire CTA */
+.pv-actions { display:flex; gap:10px; }
+.pv-act { flex:1; padding:11px 0; border-radius:8px; border:1px solid var(--graphite); background:none; color:var(--dust); cursor:pointer; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+.pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
+
+/* attributie op kopieën: BASED ON <origineel> by <coach> */
+.slab-basedon { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--dust); margin:6px 0 2px; }

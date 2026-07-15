@@ -446,7 +446,7 @@ let customKeys = null;      // array van blok-keys van de draft
 
 function saveDraft() {
   try {
-    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned }));
+    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined }));
   } catch {}
 }
 function loadDraft() {
@@ -1689,6 +1689,7 @@ function openDraft() {
   const d = loadDraft();
   if (!d) return;
   customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
+  if (d.basedOn) customSession.basedOn = d.basedOn;
   customKeys = d.keys.slice();
   activeSessionId = 'custom';
   sessionLocked = !!d.locked;
@@ -1702,6 +1703,7 @@ function openFav(i) {
   const f = loadFavs()[i];
   if (!f) return;
   customSession = { id:'custom', cat:'own', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favourite session.' };
+  if (f.basedOn) customSession.basedOn = f.basedOn;
   customKeys = f.keys.slice();
   activeSessionId = 'custom';
   sessionLocked = true;   // favourites were locked in earlier
@@ -1931,7 +1933,7 @@ function unlockEdit() {
   buildSlab();
 }
 function duplicateSession() {
-  if (customSession) customSession.name = customSession.name + ' · mijn variant';
+  if (customSession) customSession.name = chooseCopyTitle(customSession.name);
   sessionOwned = true;
   sessionLocked = false;
   if (customSession) customSession.intent = 'Your own take on a shared session. Adapt and lock it in.';
@@ -1944,7 +1946,9 @@ function toggleFavorite() {
   if (favs.some(f => f.name === s.name)) {
     favs = favs.filter(f => f.name !== s.name);
   } else {
-    favs.unshift({ name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite() });
+    const entry = { name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite() };
+    if (activeSessionId === 'custom' && customSession && customSession.basedOn) entry.basedOn = customSession.basedOn;
+    favs.unshift(entry);
   }
   saveFavs(favs);
   buildRecent();
@@ -2179,6 +2183,13 @@ function buildSlab() {
   document.getElementById('slabMeta').style.opacity = '.5';
   document.getElementById('slabFooterMeta').innerHTML = `${(s.cat||'own').toLowerCase()}<br><b>${total} min</b>`;
   document.getElementById('slabIntent').textContent = s.intent || '';
+
+  // attributie op kopieën uit de catalogus; originelen en eigen sessies tonen niets
+  const bo = document.getElementById('slabBasedOn');
+  if (bo) {
+    if (s.basedOn) { bo.style.display = ''; bo.textContent = 'BASED ON ' + s.basedOn.title + ' by ' + s.basedOn.coach; }
+    else bo.style.display = 'none';
+  }
 
   // varieer alleen voor gegenereerde, niet-vastgelegde sessies
   const rerollBtn = document.querySelector('button[onclick="rerollSession(activeSessionId)"]');
@@ -3155,6 +3166,9 @@ function openChoosePreview(i) {
       <div class="pv-chips">${s.gear.map(g => `<div class="pv-chip">${g}</div>`).join('')}</div>
       <div style="height:16px;"></div>
     </div>`;
+  const sb = document.getElementById('pvSaveBtn');
+  if (sb) { sb.dataset.chstar = i; }
+  syncChooseStars();
   const pv = document.getElementById('previewView');
   pv.style.display = 'flex';
   pv.querySelector('.scroll-body').scrollTop = 0;
@@ -3165,6 +3179,25 @@ function startFromPreview() {
   const i = _previewIdx;
   closeChoosePreview();
   openMockSession(i);  // bestaande sessie-flow: slab, timers, delen — onaangeroerd
+}
+// customize = lokale kopie met attributie; het origineel in de catalogus is read-only
+function chooseCopyTitle(base) {
+  let who = '';
+  try { who = localStorage.getItem('crimpify_name') || ''; } catch {}
+  return base + ' · ' + (who ? who + ' version' : 'your version');
+}
+function customizeFromChoose() {
+  if (_previewIdx == null) return;
+  const s = MOCK_CHOOSE[_previewIdx];
+  customSession = { id:'custom', cat:'own', name: chooseCopyTitle(s.name), desc:'', color: s.color, rpe: s.rpe, intent: s.intent, basedOn: { title: s.name, coach: s.coach } };
+  customKeys = s.keys.slice();
+  durationOverride['custom'] = {};  // verse kopie, geen stale slot-overrides
+  activeSessionId = 'custom';
+  sessionLocked = false;
+  sessionOwned = true;
+  closeChoosePreview();
+  buildSlab();
+  goTo('v-session');
 }
 
 function openMockSession(i) {
