@@ -188,6 +188,14 @@ const BLOCKLIB = {
   boardVolume: { n:'Kilterboard volume', t:40, c:'var(--volume)', rpe:'6-7', sets:18, rest:3,
     why:'15-20 boulders below your board max (6a-6b on the board). 3 min rest, timer on. Watch your skin — stop at flappers or move to the gym wall. Repeat boulders that could flow better.' },
 
+  // ── count-blokken: denken in aantal boulders op een niveau, niet in tijd.
+  //    checklist:true + target/range sturen de boulder-teller; grade is data
+  //    (nog nergens op gefilterd), t blijft de tijdschatting voor tape en schaling.
+  easyTen: { n:'10 easy boulders', t:15, c:'var(--prepare)', rpe:'3-4', grade:'easy', checklist:true, target:10, range:'10',
+    why:'Ten boulders well below your limit, 2-3 grades under your max. Move calmly, place feet deliberately, breathe. This is the warm-up: leave every boulder feeling easier than the last.' },
+  mediumTwenty: { n:'20 medium boulders', t:35, c:'var(--volume)', rpe:'5-6', grade:'medium', checklist:true, target:20, range:'20',
+    why:'Twenty boulders around your comfortable flash level. Rest as needed, keep the quality high and do not count boulders that fall apart. Twenty good ones beat twenty-five sloppy ones.' },
+
   // ── power endurance cores ──
   hehe: { n:'HEHE sets', t:42, c:'var(--volume)', rpe:'7-8', sets:4, rest:8,
     why:'Set = hard boulder (doable but not flashable, ~6b/6c) → straight into a very easy one → straight into a hard one again → finish easy. 3-6 sets, 5-10 min rest between sets. First 2-3 sets just short of failure. Progression: more sets first, only then harder.' },
@@ -562,7 +570,7 @@ function guardedExit(fn) {
     _pendingExit = fn;
     const v = activeView();
     const msg = v === 'v-check'
-      ? `Je hebt ${checkCount} boulders geteld. Die raak je kwijt als je weggaat.`
+      ? `You counted ${checkCount} boulders. Leaving now loses that count.`
       : 'Your timer is still running. Are you sure?';
     document.getElementById('confirmMsg').textContent = msg;
     document.getElementById('confirmExit').style.display = 'flex';
@@ -1144,12 +1152,16 @@ function startChecklist(blockIdx) {
   const b = currentBlocks[blockIdx];
   checkCount = 0;
   checkTarget = b.target || 30;
-  checkMax = parseInt((b.range||'25-35').split('-')[1]) || 35;
+  const range = b.range || '25-35';
+  const parts = range.split('-');
+  checkMax = parseInt(parts[1] || parts[0]) || 35;  // '20' = exact doel, '25-35' = bereik
   document.getElementById('checkTitle').textContent = b.n;
-  document.getElementById('checkRange').textContent = `goal ${b.range||'25-35'}`;
-  document.getElementById('checkSub').textContent = `${b.range||'25-35'} boulders · rpe ${b.rpe}`;
+  document.getElementById('checkRange').textContent = `goal ${range}`;
+  document.getElementById('checkSub').textContent = `${range} boulders${b.grade ? ' · ' + b.grade : ''} · rpe ${b.rpe}`;
   document.getElementById('checkWhy').textContent = b.why;
-  document.getElementById('checkFooter').innerHTML = `volume boulders<br><b style="color:var(--success);">goal ${b.range||'25-35'}</b>`;
+  document.getElementById('checkFooter').innerHTML = `${b.n.toLowerCase()}<br><b style="color:var(--success);">goal ${range}</b>`;
+  const sub = document.getElementById('checkSuccessSub');
+  if (sub) sub.textContent = `${parseInt(parts[0]) || 25}+ boulders, everything after is bonus`;
   renderCheck();
   goTo('v-check');
 }
@@ -1713,9 +1725,9 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen'] },
   { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
-  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
   { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
   { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls'] },
@@ -2814,10 +2826,14 @@ const MOCK_CHOOSE = [
     why:'Comp format: four-minute walls of effort with real decisions under fatigue. Train the format before you meet it.' },
   { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', done:63,  load:1, sys:'recovery', goal:'Recovery', gear:['Fingerboard'], level:'all levels', keys:['mobilityOpen','hog','nohangs','stretchLong'],
     intent:'Tendon care and easy movement on a rest week.',
-    why:'Tendon care and easy movement for a rest week. The point of resting well is coming back stronger.' }
+    why:'Tendon care and easy movement for a rest week. The point of resting well is coming back stronger.' },
+  // echte gecureerde sessie: denkt in aantallen (count-blokken), niet in tijd
+  { cat:'coach',    name:'Easy Thirty',    coach:'Vincent',       mins:60, color:'green',  rpe:'4-5', done:57,  load:2, sys:'capacity', goal:'Easy volume', gear:['Gym wall'], level:'all levels', keys:['dynamic','easyTen','mediumTwenty'],
+    intent:'Thirty boulders, counted, not timed. Warm up and flow.',
+    why:'A session that thinks in boulders instead of minutes: ten easy ones to warm up, twenty medium ones as the main course. You tick them off as you climb, and quality decides whether a boulder counts.' }
 ];
-const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach' };
-function coachShort(name) { const p = name.split(' '); return p[0] + ' ' + p[1][0] + '.'; }
+const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach', 'Vincent':'easy day coach' };
+function coachShort(name) { const p = name.split(' '); return p.length > 1 ? p[0] + ' ' + p[1][0] + '.' : name; }
 
 // vingerafdruk: de echte bloksequentie, breedte naar rato van basisduur, categoriekleuren
 function chBlueprint(keys) {
