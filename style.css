@@ -361,3 +361,56 @@ body {
 
 /* lege staat: één zin onder de deuren */
 .empty-hint { margin:10px 20px 0; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.55; color:#9A9A96; }
+
+/* ════════════════════════════
+   CHOOSE — catalogus (hero + planken) en preview-laag
+════════════════════════════ */
+.ch-kicker { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--acid); padding:12px 20px 6px; }
+.ch-feat { margin:0 20px; border-bottom:1px solid var(--border2); padding-bottom:18px; }
+.ch-feat-name { font-weight:900; font-size:46px; line-height:.9; text-transform:uppercase; letter-spacing:.01em; color:#F5F5F2; }
+.ch-promise { font-family:'Barlow',sans-serif; font-size:14px; line-height:1.5; color:#C8C8C4; margin-top:10px; }
+.ch-whybtn { display:inline-block; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--acid); margin-top:8px; cursor:pointer; }
+.ch-why { display:none; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.55; color:#9A9A96; margin-top:8px; }
+.ch-why.open { display:block; }
+.ch-byline { display:flex; align-items:center; gap:10px; margin-top:14px; }
+.ch-monogram { width:34px; height:34px; border-radius:50%; background:var(--s2); border:1px solid var(--border2); display:flex; align-items:center; justify-content:center; font-weight:900; font-size:13px; flex-shrink:0; }
+.ch-byline-name { font-weight:800; font-size:15px; text-transform:uppercase; letter-spacing:.04em; color:#F5F5F2; }
+.ch-byline-role { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; color:#6A6A66; margin-top:1px; }
+.ch-tape { display:flex; gap:2px; height:10px; border-radius:5px; overflow:hidden; margin-top:14px; }
+.ch-feat-meta { display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; margin-top:9px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.05em; color:#9A9A96; }
+.ch-feat-meta span { white-space:nowrap; }
+.ch-view-btn { display:block; width:100%; margin-top:14px; text-align:center; background:var(--acid); color:#0A0A0A; border:none; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:15px; letter-spacing:.06em; text-transform:uppercase; border-radius:10px; padding:12px; cursor:pointer; }
+
+/* phalanx: vier vingerkootjes = verwachte belasting (expected load), nooit rpe of voortgang */
+.phalanx { display:inline-flex; gap:3px; vertical-align:middle; }
+.phalanx i { width:9px; height:12px; border-radius:2px; background:#242422; }
+.phalanx.mini i { width:7px; height:10px; }
+
+/* planken */
+.ch-shelf-head { display:flex; align-items:baseline; justify-content:space-between; padding:20px 20px 2px; }
+.ch-shelf-title { font-weight:800; font-size:19px; text-transform:uppercase; letter-spacing:.04em; color:#F5F5F2; }
+.ch-shelf-sub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:#6A6A66; padding:0 20px 8px; }
+.ch-shelf { display:flex; gap:12px; overflow-x:auto; padding:2px 20px 6px; scrollbar-width:none; }
+.ch-shelf::-webkit-scrollbar { display:none; }
+
+/* discovery-kaart: vingerafdruk ~50%, daaronder naam en metadata; tik = view session (opent preview) */
+.ch-card { flex-shrink:0; width:166px; border-radius:12px; overflow:hidden; border:1px solid var(--border2); background:var(--s1); cursor:pointer; transition:filter .15s; }
+.ch-card:active { filter:brightness(1.2); }
+.ch-print { height:80px; position:relative; display:flex; gap:2px; }
+.ch-print div { height:100%; }
+.ch-card-body { padding:9px 11px 11px; }
+.ch-name { font-weight:900; font-size:17px; line-height:1; text-transform:uppercase; letter-spacing:.02em; color:#F5F5F2; }
+.ch-line { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; color:#9A9A96; margin-top:5px; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ch-foot { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:7px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.05em; color:#6A6A66; }
+
+/* preview-laag */
+.pv-name { font-weight:900; font-size:40px; line-height:.92; text-transform:uppercase; letter-spacing:.01em; color:#F5F5F2; padding:6px 20px 0; }
+.pv-section { padding:0 20px; }
+.pv-lbl { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:#6A6A66; margin:18px 0 8px; }
+.pv-meta { display:flex; flex-wrap:wrap; gap:6px 14px; align-items:center; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.05em; color:#9A9A96; margin-top:10px; padding:0 20px; }
+.pv-why { font-family:'Barlow',sans-serif; font-size:14px; line-height:1.55; color:#C8C8C4; }
+.pv-block { display:flex; align-items:center; gap:12px; padding:10px 12px; background:var(--s1); border-radius:8px; border-left:3px solid #60A5FA; margin-bottom:8px; }
+.pv-block-name { flex:1; font-weight:700; font-size:15px; text-transform:uppercase; letter-spacing:.03em; color:#D8D8D4; }
+.pv-block-t { font-weight:900; font-size:17px; }
+.pv-chips { display:flex; flex-wrap:wrap; gap:8px; }
+.pv-chip { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:#9A9A96; border:1px solid var(--border2); border-radius:6px; padding:6px 11px; background:var(--s1); }

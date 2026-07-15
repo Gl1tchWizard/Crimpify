@@ -2690,53 +2690,209 @@ if ('serviceWorker' in navigator) {
 // verzonnen sessies, verzonnen coaches, verzonnen like-tellers.
 // Geen backend, geen opslag. Verwijderen na de test.
 // ══════════════════════════════════════════════════════════════
+// Datamodel volgt CLAUDE.md Choose-flow punt 5 (vastgelegd, backend later):
+// sys = energiesysteem (matcht sessie-cats voor For you), goal = primary_goal,
+// gear = equipment[], level = recommended_level, load = expected_load (1-4,
+// door de maker, voedt ACWR), done = completion_count (mock tot er een backend is).
 const MOCK_CHOOSE = [
-  // cat: 'featured' | 'new' | 'popular' | 'coach'
-  { cat:'featured', name:'Crimp Factory',  coach:'Mila Berg',     mins:75, color:'amber',  rpe:'8-9', likes:214, keys:['dynamic','maxHangs','board1','stretch'],            intent:'Max finger strength on small edges. Long rests, full effort.' },
-  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', likes:187, keys:['dynamic','limitBlocks','dynos','stretch'],          intent:'Hard moves, big holds, full commitment.' },
-  { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   likes:156, keys:['warmup','volume','boardApply','stretchLong'],       intent:'Volume day. Stay smooth, stop before form breaks.' },
-  { cat:'new',      name:'Board Blitz',    coach:'Teo Marchetti', mins:60, color:'amber',  rpe:'8',   likes:12,  keys:['dynamic','campus','board1','stretch'],              intent:'Short and sharp board work.' },
-  { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', mins:75, color:'purple', rpe:'5-6', likes:8,   keys:['warmup','drillBlocks','sprayLight','stretch'],      intent:'Movement quality over difficulty. Quiet feet, straight arms.' },
-  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', likes:19,  keys:['dynamic','drillsOnly','skillLight','stretch'],      intent:'Technique session. Every foot placement counts.' },
-  { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', likes:342, keys:['warmup','hehe','fourByFour','stretchLong'],         intent:'Power endurance. Pace yourself, the last set decides.' },
-  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',likes:298, keys:['warmupFinger','project','stretch'],                 intent:'Project attempts at full freshness. Rest long, try hard.' },
-  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', likes:251, keys:['mobilityOpen','easyClimb','hog','stretch'],         intent:'Recovery climbing. Leave the gym feeling better.' },
-  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', likes:96,  keys:['warmupFinger','maxHangs','activeCurls','stretch'],  intent:'Structured finger loading, from prep to max.' },
-  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', likes:74,  keys:['dynamic','compStyle','pyramide','stretchLong'],     intent:'Four-minute walls of effort, comp format.' },
-  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', likes:63,  keys:['mobilityOpen','hog','nohangs','stretchLong'],       intent:'Tendon care and easy movement on a rest week.' }
+  // cat: 'featured' | 'new' | 'popular' | 'coach' (redactionele herkomst)
+  { cat:'featured', name:'Crimp Factory',  coach:'Mila Berg',     mins:75, color:'amber',  rpe:'8-9', done:214, load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['dynamic','maxHangs','board1','stretch'],
+    intent:'Max finger strength on small edges. Long rests, full effort.',
+    why:'Most climbers plateau because their fingers never see a truly maximal stimulus. Crimp Factory is built around one thing: small edges, long rests, full effort. You leave strong, not wrecked.' },
+  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', done:187, load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['dynamic','limitBlocks','dynos','stretch'],
+    intent:'Hard moves, big holds, full commitment.',
+    why:'Hard moves on big holds train your ability to pull fast. Attempts are short, rests are long, and quality beats volume all session.' },
+  { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   done:156, load:2, sys:'capacity', goal:'Aerobic base', gear:['Gym wall','Kilterboard'], level:'all levels', keys:['warmup','volume','boardApply','stretchLong'],
+    intent:'Volume day. Stay smooth, stop before form breaks.',
+    why:'A wide aerobic base makes every other session land better. Base Camp keeps you moving at a volume you can finish smooth, and you stop before form breaks.' },
+  { cat:'new',      name:'Board Blitz',    coach:'Teo Marchetti', mins:60, color:'amber',  rpe:'8',   done:12,  load:3, sys:'power', goal:'Max power', gear:['Kilterboard'], level:'intermediate+', keys:['dynamic','campus','board1','stretch'],
+    intent:'Short and sharp board work.',
+    why:'Board work compresses power training into an hour: controlled attempts, full rests, skin watched. Short and sharp beats long and sloppy.' },
+  { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', mins:75, color:'purple', rpe:'5-6', done:8,   load:2, sys:'skill', goal:'Technique', gear:['Gym wall','Spray wall'], level:'all levels', keys:['warmup','drillBlocks','sprayLight','stretch'],
+    intent:'Movement quality over difficulty. Quiet feet, straight arms.',
+    why:'Movement quality over difficulty. You climb below your max so your attention can go where it matters: hips, feet and pace.' },
+  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', done:19,  load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','drillsOnly','skillLight','stretch'],
+    intent:'Technique session. Every foot placement counts.',
+    why:'Every foot placement counts. One session of deliberate feet changes how you climb for weeks after.' },
+  { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', done:342, load:3, sys:'power endurance', goal:'Power endurance', gear:['Gym wall'], level:'intermediate+', keys:['warmup','hehe','fourByFour','stretchLong'],
+    intent:'Power endurance. Pace yourself, the last set decides.',
+    why:'Pump tolerance is trainable. The Grinder builds it in sets: pace yourself early, because the last set decides.' },
+  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',done:298, load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['warmupFinger','project','stretch'],
+    intent:'Project attempts at full freshness. Rest long, try hard.',
+    why:'Project attempts at full freshness. The long rests feel slow and are the point: every try deserves your best power.' },
+  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', done:251, load:1, sys:'recovery', goal:'Recovery', gear:['Gym wall'], level:'all levels', keys:['mobilityOpen','easyClimb','hog','stretch'],
+    intent:'Recovery climbing. Leave the gym feeling better.',
+    why:'Recovery climbing keeps you moving without adding load. The goal is simple: leave the gym feeling better than you came in.' },
+  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', done:96,  load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard'], level:'intermediate+', keys:['warmupFinger','maxHangs','activeCurls','stretch'],
+    intent:'Structured finger loading, from prep to max.',
+    why:'Structured finger loading from preparation to maximal work, in the order tendons like. No cold max hangs, ever.' },
+  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', done:74,  load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['dynamic','compStyle','pyramide','stretchLong'],
+    intent:'Four-minute walls of effort, comp format.',
+    why:'Comp format: four-minute walls of effort with real decisions under fatigue. Train the format before you meet it.' },
+  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', done:63,  load:1, sys:'recovery', goal:'Recovery', gear:['Fingerboard'], level:'all levels', keys:['mobilityOpen','hog','nohangs','stretchLong'],
+    intent:'Tendon care and easy movement on a rest week.',
+    why:'Tendon care and easy movement for a rest week. The point of resting well is coming back stronger.' }
 ];
+const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach' };
+function coachShort(name) { const p = name.split(' '); return p[0] + ' ' + p[1][0] + '.'; }
 
-function renderChooseRows() {
-  const rowIds = { featured:'chooseRowFeatured', new:'chooseRowNew', popular:'chooseRowPopular', coach:'chooseRowCoach' };
-  Object.keys(rowIds).forEach(cat => {
-    const el = document.getElementById(rowIds[cat]);
-    if (!el) return;
-    el.innerHTML = MOCK_CHOOSE
-      .map((s, i) => ({ s, i }))
-      .filter(x => x.s.cat === cat)
-      .map(({ s, i }) => {
-        const col = C[s.color] || C.lime;
-        return `<div class="recent-card" style="width:150px;background:${col.bg};border-color:${col.border};" onclick="openMockSession(${i})">
-          <div class="rc-top" style="background:${col.color};"></div>
-          <div class="rc-body">
-            <div class="rc-name" style="color:${col.text};">${s.name}</div>
-            <div class="rc-meta" style="color:${col.color};font-size:10px;">${s.coach}</div>
-            <div class="rc-date" style="font-size:10px;">${s.mins}' · rpe ${s.rpe} · ♥ ${s.likes}</div>
-          </div>
-        </div>`;
-      }).join('');
-  });
+// vingerafdruk: de echte bloksequentie, breedte naar rato van basisduur, categoriekleuren
+function chBlueprint(keys) {
+  return keys.filter(k => BLOCKLIB[k]).map(k => {
+    const b = BLOCKLIB[k];
+    return `<div style="flex:${b.t};background:${b.c};" title="${b.n}"></div>`;
+  }).join('');
+}
+// phalanx = verwachte belasting (vier standen, door de maker); nooit rpe, nooit voortgang
+function chPhalanx(load, color, mini) {
+  const blocks = [1,2,3,4].map(n => `<i${n <= load ? ` style="background:${color};"` : ''}></i>`).join('');
+  return `<span class="phalanx${mini ? ' mini' : ''}">${blocks}</span>`;
+}
+function chCard(i) {
+  const s = MOCK_CHOOSE[i];
+  const col = C[s.color] || C.lime;
+  return `<div class="ch-card" onclick="openChoosePreview(${i})">
+    <div class="ch-print">${chBlueprint(s.keys)}</div>
+    <div class="ch-card-body">
+      <div class="ch-name">${s.name}</div>
+      <div class="ch-line">${s.goal} · ${s.mins} min</div>
+      <div class="ch-line">${s.gear[0]} · load ${chPhalanx(s.load, col.color, true)}</div>
+      <div class="ch-foot"><span>${coachShort(s.coach)}</span><span>${s.done} done</span></div>
+    </div>
+  </div>`;
+}
+function chShelf(shelf) {
+  if (!shelf || !shelf.idxs.length) return '';
+  return `<div class="ch-shelf-head"><div class="ch-shelf-title">${shelf.title}</div></div>
+    ${shelf.sub ? `<div class="ch-shelf-sub">${shelf.sub}</div>` : ''}
+    <div class="ch-shelf">${shelf.idxs.map(chCard).join('')}</div>`;
 }
 
-let _chooseRendered = false;
-function openChoose() {
-  if (!_chooseRendered) {
-    renderChooseRows();
-    enableWheelScroll('#chooseRowFeatured'); enableWheelScroll('#chooseRowNew');
-    enableWheelScroll('#chooseRowPopular'); enableWheelScroll('#chooseRowCoach');
-    _chooseRendered = true;
+// For you: client-side uit localStorage-historie (recente energiesystemen en signalen).
+// Geen historie → vriendelijke starterskeuze. Geen account, geen server (productprincipe 1).
+function computeForYou() {
+  const idxOf = name => MOCK_CHOOSE.findIndex(s => s.name === name);
+  const h = loadHistory();
+  if (!h.length) return { title:'For you', sub:'new here · good first sessions', idxs:[idxOf('Base Camp'), idxOf('Silent Feet'), idxOf('Easy Does It')] };
+  const needRest = h[0].sig === 'red' || (h[0].sig === 'orange' && h[1] && h[1].sig === 'orange');
+  if (needRest) {
+    return { title:'For you', sub:'your last signals ask for an easy day',
+      idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.load <= 2).sort((a, b) => a.s.load - b.s.load || b.s.done - a.s.done).slice(0, 4).map(x => x.i) };
   }
+  // roteer energiesystemen: wat je de laatste 7 dagen niet trainde komt eerst
+  const now = Date.now();
+  const recentCats = new Set(h.filter(e => now - e.ts < 7 * 86400000)
+    .map(e => { const s = getSession(e.id); return s ? s.cat.toLowerCase() : null; }).filter(Boolean));
+  const fresh = MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => !recentCats.has(x.s.sys))
+    .sort((a, b) => b.s.done - a.s.done).slice(0, 4).map(x => x.i);
+  return { title:'For you', sub:'rotates with your recent training', idxs: fresh };
+}
+// tijd-plank: live uit de lokale tijd-slider; geen match → plank verbergen (echt, geen mock)
+function computeTimeShelf() {
+  const t = getT();
+  const all = MOCK_CHOOSE.map((s, i) => ({ s, i }));
+  if (!isFinite(t)) return { title:'Any length', sub:'no time limit set', idxs: all.sort((a, b) => b.s.mins - a.s.mins).map(x => x.i) };
+  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => x.s.mins <= t).sort((a, b) => b.s.done - a.s.done).map(x => x.i) };
+}
+// gecureerd: handmatig samengestelde lijst in afstemming met de Apex-gym, hardcoded tot er
+// een backend is; wordt dan berekend, het ontwerp blijft gelijk (CLAUDE.md Choose-flow punt 4)
+const APEX_PICKS = ['The Grinder', 'Send Day', 'Easy Does It', 'Board Blitz'];
+
+function renderChoose() {
+  const body = document.getElementById('chooseBody');
+  if (!body) return;
+  const fi = 0;  // session of the week: redactionele keuze
+  const f = MOCK_CHOOSE[fi];
+  const fcol = C[f.color] || C.lime;
+  const hero = `
+    <div class="ch-kicker">session of the week</div>
+    <div class="ch-feat">
+      <div class="ch-feat-name">${f.name}</div>
+      <div class="ch-promise">${f.intent}</div>
+      <div class="ch-whybtn" onclick="toggleHeroWhy(this)">why it works →</div>
+      <div class="ch-why" id="heroWhy">${f.why}</div>
+      <div class="ch-byline">
+        <div class="ch-monogram" style="color:${fcol.text};">${f.coach.split(' ').map(w => w[0]).join('')}</div>
+        <div>
+          <div class="ch-byline-name">${f.coach}</div>
+          <div class="ch-byline-role">${COACH_ROLE[f.coach] || 'coach'} · ${f.done} done</div>
+        </div>
+      </div>
+      <div class="ch-tape">${chBlueprint(f.keys)}</div>
+      <div class="ch-feat-meta">
+        <span>${f.mins} min</span><span>${f.goal.toLowerCase()}</span><span>${f.done} done</span>
+        <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">load ${chPhalanx(f.load, fcol.color)}</span>
+      </div>
+      <button class="ch-view-btn" onclick="openChoosePreview(${fi})">View session</button>
+    </div>`;
+  const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
+  const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
+  body.innerHTML = hero
+    + chShelf(computeForYou())
+    + chShelf(computeTimeShelf())
+    + chShelf(apexShelf)
+    + chShelf(newShelf)
+    + '<div style="height:16px;"></div>';
+  enableWheelScroll('#chooseBody .ch-shelf');
+}
+function toggleHeroWhy(btn) {
+  const el = document.getElementById('heroWhy');
+  const open = el.classList.toggle('open');
+  btn.textContent = open ? 'why it works ▴' : 'why it works →';
+}
+
+function openChoose() {
+  renderChoose();  // elke keer vers: tijd-plank en For you zijn live
   goTo('v-choose');
+}
+
+// ── PREVIEW-LAAG (kaart → preview → sessie; starten kan alleen hier, nooit uit de catalogus) ──
+let _previewIdx = null;
+function openChoosePreview(i) {
+  const s = MOCK_CHOOSE[i];
+  if (!s) return;
+  _previewIdx = i;
+  const col = C[s.color] || C.lime;
+  const blocks = s.keys.filter(k => BLOCKLIB[k]).map(k => {
+    const b = BLOCKLIB[k];
+    return `<div class="pv-block" style="border-left-color:${b.c};">
+      <div class="pv-block-name">${b.n}</div>
+      <div class="pv-block-t" style="color:${nameColor(b.c)};">${b.t} min</div>
+    </div>`;
+  }).join('');
+  document.getElementById('previewBody').innerHTML = `
+    <div class="ch-kicker">preview</div>
+    <div class="pv-name">${s.name}</div>
+    <div class="pv-meta">
+      <span>${s.mins} min</span><span>${s.goal.toLowerCase()}</span><span>${s.level}</span><span>${s.done} done</span>
+      <span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load, col.color)}</span>
+    </div>
+    <div class="pv-section">
+      <div class="ch-byline" style="margin-top:12px;">
+        <div class="ch-monogram" style="color:${col.text};">${s.coach.split(' ').map(w => w[0]).join('')}</div>
+        <div>
+          <div class="ch-byline-name">${s.coach}</div>
+          <div class="ch-byline-role">${COACH_ROLE[s.coach] || 'coach'}</div>
+        </div>
+      </div>
+      <div class="pv-lbl">why this session</div>
+      <div class="pv-why">${s.why}</div>
+      <div class="pv-lbl">session structure · scales to your time when you start</div>
+      ${blocks}
+      <div class="pv-lbl">equipment</div>
+      <div class="pv-chips">${s.gear.map(g => `<div class="pv-chip">${g}</div>`).join('')}</div>
+      <div style="height:16px;"></div>
+    </div>`;
+  const pv = document.getElementById('previewView');
+  pv.style.display = 'flex';
+  pv.querySelector('.scroll-body').scrollTop = 0;
+}
+function closeChoosePreview() { document.getElementById('previewView').style.display = 'none'; _previewIdx = null; }
+function startFromPreview() {
+  if (_previewIdx == null) return;
+  const i = _previewIdx;
+  closeChoosePreview();
+  openMockSession(i);  // bestaande sessie-flow: slab, timers, delen — onaangeroerd
 }
 
 function openMockSession(i) {
