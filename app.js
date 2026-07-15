@@ -368,9 +368,10 @@ function logSessionDone(id, variant, time, sig, snap) {
   if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; }
   h.unshift(e);
   saveHistory(h);
+  if (typeof clearActive === 'function') clearActive();
   rebuildRecent();
   renderSignalCal();
-  if (typeof renderCoach === 'function') renderCoach();
+  if (typeof renderTodaysPick === 'function') renderTodaysPick();
   if (typeof renderStreakLine === 'function') renderStreakLine();
 }
 function agoLabel(ts) {
@@ -517,6 +518,7 @@ function getSession(id) { if (id === 'custom') return customSession; return sess
 function goTo(viewId) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(viewId).classList.add('active');
+  if (viewId === 'v-browse' && typeof renderContinue === 'function') renderContinue();
   stopTimer();
   if (viewId !== 'v-guided') { gRunning = false; clearInterval(gInterval); }
   if (viewId !== 'v-drills' && typeof dpIntervals !== 'undefined') { dpIntervals.forEach((iv,i)=>{ if(iv) clearInterval(iv); dpIntervals[i]=null; }); }
@@ -645,6 +647,7 @@ function fmtMin(sec){
 }
 
 function showSessionSummary() {
+  clearActive();  // sessie afgerond — geen Continue-kaart meer
   const blocks = Object.keys(sessionLog).map(k=>sessionLog[k]);
   const totalSpent = blocks.reduce((s,b)=>s+(b.spent||0),0);
   const totalPlanned = blocks.reduce((s,b)=>s+(b.planned||0),0);
@@ -740,8 +743,74 @@ function closeSummary() {
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, null, _pendingLog.snap); _pendingLog = null; }
   document.getElementById('sessionSummary').style.display = 'none';
   sessionLog = {};
+  sessionStartTime = null;
+  clearActive();
   recentFolded = false; applyRecentFold();
   goTo('v-browse');
+}
+
+// ── ONAFGEMAAKTE SESSIE (Continue-kaart) ──
+// crimpify_active bewaart de lopende training per blokgrens; hervatten kan na
+// reload of app-sluiting. Lopende timers overleven dat niet, blokvoortgang wel.
+function saveActive() {
+  if (!sessionStartTime) return;  // alleen echt gestarte sessies
+  try {
+    const s = getSession(activeSessionId);
+    if (!s || !currentBlocks.length) return;
+    const spent = {};
+    Object.keys(sessionLog).forEach(k => { spent[k] = sessionLog[k].spent || 0; });
+    localStorage.setItem('crimpify_active', JSON.stringify({
+      keys: currentBlocks.map(b => b._key), name: s.name, color: s.color || 'lime',
+      sessionId: s.id, idx: currentBlockIdx, spent, ts: Date.now(),
+    }));
+  } catch {}
+}
+function clearActive() {
+  try { localStorage.removeItem('crimpify_active'); } catch {}
+  if (typeof renderContinue === 'function') renderContinue();
+}
+function loadActive() {
+  try {
+    const a = JSON.parse(localStorage.getItem('crimpify_active') || 'null');
+    if (!a || !Array.isArray(a.keys) || !a.keys.length) return null;
+    if (Date.now() - a.ts > 12 * 3600000) { localStorage.removeItem('crimpify_active'); return null; }  // verlopen
+    return a;
+  } catch { return null; }
+}
+function renderContinue() {
+  const el = document.getElementById('continueCard');
+  if (!el) return;
+  const a = loadActive();
+  if (!a) { el.innerHTML = ''; return; }
+  const keys = a.keys.filter(k => BLOCKLIB[k]);
+  const spentMin = Object.values(a.spent || {}).reduce((s, v) => s + v, 0) / 60;
+  const plannedMin = keys.reduce((s, k) => s + (BLOCKLIB[k].t || 0), 0);
+  const left = Math.max(1, Math.round(plannedMin - spentMin));
+  el.innerHTML = `<div class="continue-card" onclick="resumeActive()">
+    <div style="min-width:0;">
+      <div class="pick-kicker">continue</div>
+      <div class="continue-name">${a.name}</div>
+      <div class="continue-meta">Block ${Math.min(a.idx + 1, keys.length)} of ${keys.length} · ~${left} min remaining</div>
+    </div>
+    <button class="pick-btn" onclick="event.stopPropagation();resumeActive()">Resume →</button>
+  </div>`;
+}
+function resumeActive() {
+  const a = loadActive();
+  if (!a) return;
+  customSession = { id:'custom', cat:'again', name: a.name, desc:'', color: a.color || 'lime', rpe:'–', intent:'Picked up where you left off.' };
+  customKeys = a.keys.filter(k => BLOCKLIB[k]);
+  activeSessionId = 'custom';
+  sessionLocked = true;
+  sessionOwned = true;
+  buildSlab();
+  sessionLog = {};
+  Object.keys(a.spent || {}).forEach(k => {
+    const i = parseInt(k), b = currentBlocks[i];
+    if (b) sessionLog[i] = { name: b.n, planned: b.t * 60, spent: a.spent[k], color: b.c };
+  });
+  sessionStartTime = Date.now();
+  openBlock(Math.min(a.idx, currentBlocks.length - 1));
 }
 
 function startSession() {
@@ -773,6 +842,7 @@ function openBlock(idx) {
   const b = currentBlocks[idx];
   timerElapsed = 0;
   blockClockStart = Date.now();   // start de echte klok voor dit blok
+  saveActive();                   // blokgrens: voortgang bewaren voor de Continue-kaart
   updateSlabProgress(idx);
   if (b && b.guided && b.items) {
     startGuided(idx);
@@ -1246,32 +1316,21 @@ function buildRecent() {
     </div>`;
   }
 
-  // 2. favorieten
+  // 2. favorieten — Saved toont alleen wat je zelf bewaarde of bouwde; recaps
+  //    van losse sessies lopen via de rhythm-strip. Stoplicht-dot = jongste
+  //    gelogde sessie met dezelfde naam.
   const favs = loadFavs();
+  const hist = loadHistory();
   favs.forEach((f, i) => {
     const col = C[f.color] || C.lime;
+    const last = hist.find(e => (e.name || '') === f.name);
+    const dot = last && last.sig ? `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${SIG_COL[last.sig]};margin-right:5px;"></span>` : '';
     html += `<div class="recent-card" style="background:${col.bg};border-color:${col.border};" onclick="openFav(${i})" ontouchstart="favPressStart(${i})" ontouchend="favPressEnd()" ontouchmove="favPressEnd()" onmousedown="favPressStart(${i})" onmouseup="favPressEnd()">
       <div class="rc-top" style="background:${col.color};"></div>
       <div class="rc-body">
         <div class="rc-name" style="color:${col.text};">★ ${f.name}</div>
         <div class="rc-meta" style="color:${col.color};">favourite</div>
-        <div class="rc-date">${f.keys.length} blocks · ${f.time}'</div>
-      </div>
-    </div>`;
-  });
-
-  // 3. slimme recents (uit historie)
-  recent.forEach(r => {
-    const s = getSession(r.id);
-    if (!s) return;
-    const col = C[s.color];
-    const isActive = s.id === activeSessionId;
-    html += `<div class="recent-card${isActive?' active':''}" style="background:${col.bg};border-color:${isActive?col.color:col.border};${isActive?'--rc-color:'+col.color+';':''}" onclick="openRecap(${r.ts})">
-      <div class="rc-top" style="background:${col.color};"></div>
-      <div class="rc-body">
-        <div class="rc-name" style="color:${col.text};">${s.name}</div>
-        <div class="rc-meta" style="color:${col.color};">${r.variant || 'rpe '+s.rpe}</div>
-        <div class="rc-date">${(function(){const c=r.sig==='green'?'var(--sig-green)':r.sig==='orange'?'var(--sig-orange)':r.sig==='red'?'var(--sig-red)':null;return c?'<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:'+c+';margin-right:5px;"></span>':'';})()}${r.ago} · ${r.time}'</div>
+        <div class="rc-date">${dot}${f.keys.length} blocks · ${f.time}'</div>
       </div>
     </div>`;
   });
@@ -1316,18 +1375,24 @@ function renderSignalCal() {
       if (e.sig && (!col || SIG_RANK[e.sig] > SIG_RANK[col])) col = e.sig;
     });
     // entries staat nieuwste-eerst; recap opent de laatste sessie van die dag
-    days.push({ trained: entries.length > 0, n: entries.length, col, load, ts: entries.length ? entries[0].ts : null });
+    days.push({ trained: entries.length > 0, n: entries.length, col, load, day: d.getDay(), ts: entries.length ? entries[0].ts : null });
   }
-  cal.innerHTML = days.map(d => {
-    const bg = d.trained ? (d.col ? SIG_COL[d.col] : 'var(--disabled)') : 'var(--carbon)';
-    const glow = d.col === 'red' ? 'box-shadow:0 0 8px color-mix(in srgb, var(--sig-red) 40%, transparent);' : '';
-    const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
-    return `<div${click} title="${d.trained ? 'load ' + d.load : ''}" style="aspect-ratio:1;border-radius:5px;background:${bg};${d.ts ? 'cursor:pointer;' : ''}${glow}"></div>`;
-  }).join('');
-  // mini-samenvatting: sessies binnen het getoonde venster + rood-teller
+  // strip: dag-letters + één dot per dag. Dot = stoplichtsignaal van die dag,
+  // neutraal gevuld bij een sessie zonder signaal, leeg zonder training.
+  // Nooit sessietype-kleuren: de strip toont hoe het gaat, niet wat je trainde.
+  cal.innerHTML = `<div class="rhythm-letters">${days.map(d => `<span>${'SMTWTFS'[d.day]}</span>`).join('')}</div>
+    <div class="rhythm-dots">${days.map(d => {
+      const fill = d.trained ? `background:${d.col ? SIG_COL[d.col] : 'var(--disabled)'};` : 'border:1px solid var(--graphite);';
+      const glow = d.col === 'red' ? 'box-shadow:0 0 8px color-mix(in srgb, var(--sig-red) 40%, transparent);' : '';
+      const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
+      return `<i${click} title="${d.trained ? 'load ' + d.load : ''}" style="${fill}${glow}${d.ts ? 'cursor:pointer;' : ''}"></i>`;
+    }).join('')}</div>`;
+  // samenvatting: sessies in het venster + ACWR-zone in één woord (tik = ACWR-paneel)
   const trained = days.reduce((s,d)=>s+d.n,0);
-  const reds = days.filter(d=>d.col==='red').length;
-  document.getElementById('signalCalSummary').textContent = `${trained} session${trained === 1 ? '' : 's'}` + (reds ? ` · ${reds}× red` : '');
+  const { ratio } = computeACWR();
+  const zoneWord = ratio == null ? 'building history'
+    : ratio < 0.8 ? 'load light' : ratio <= 1.3 ? 'load balanced' : ratio <= 1.5 ? 'load climbing' : 'load high';
+  document.getElementById('signalCalSummary').textContent = `${trained} session${trained === 1 ? '' : 's'} · ${zoneWord}`;
 }
 
 // ── ACWR: acute vs chronische belasting (Gabbett) ──
@@ -1525,31 +1590,62 @@ function adaptCoachToTime(pick) {
   return p;
 }
 
-function renderCoach() {
-  const card = document.getElementById('coachCard');
+// ── TODAY'S PICK: het primaire moment op de landing. De coach/ACWR-logica
+// (coachSuggest + adaptCoachToTime) blijft ongewijzigd; alleen de vorm is nieuw. ──
+function deriveGear(blocks) {
+  // materiaal van het kernblok (grootste), niet van een kleine afsluiter
+  const FING = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog'];
+  const BOARD = ['board1','boardVolume','boardApply','campus'];
+  const GYM = ['gymWarmup','pullStrength','pushStrength','coreLegs','mini1','mini2','mini3'];
+  const core = blocks.slice().sort((a, b) => b.t - a.t)[0];
+  const k = core ? core._key : '';
+  if (FING.includes(k)) return 'Fingerboard';
+  if (BOARD.includes(k)) return 'Board';
+  if (GYM.includes(k)) return 'Gym';
+  return 'Gym wall';
+}
+// verwachte belasting van een gegenereerde sessie: intensiteitsfactor → vier standen
+function loadDots(id) {
+  const f = INTENSITY_FACTORS[id] != null ? INTENSITY_FACTORS[id] : 0.65;
+  return f >= 0.85 ? 4 : f >= 0.7 ? 3 : f >= 0.5 ? 2 : 1;
+}
+function renderTodaysPick() {
+  const card = document.getElementById('todaysPick');
   if (!card) return;
   const pick = adaptCoachToTime(coachSuggest());
   _coachPick = pick;
   const s = getSession(pick.id);
-  if (!s) { card.style.display = 'none'; return; }
-  card.style.display = '';
-  const btn = document.getElementById('coachApplyBtn');
+  if (!s) { card.innerHTML = ''; return; }
+  const reason = loadHistory().length ? pick.reason : 'A good first session to get you going.';
   if (pick.rest) {
-    document.getElementById('coachName').textContent = 'Rest day';
-    document.getElementById('coachName').style.color = 'var(--chalk)';
-    btn.textContent = 'Train anyway? Easy recovery →';
-  } else {
-    const col = C[s.color] || C.lime;
-    document.getElementById('coachName').textContent = s.name + ' · ' + pick.time + ' min';
-    document.getElementById('coachName').style.color = col.text;
-    btn.textContent = 'Use suggestion →';
+    card.innerHTML = `<div class="pick-card">
+      <div class="pick-body">
+        <div class="pick-kicker">today's pick</div>
+        <div class="pick-name">Rest day</div>
+        <div class="pick-reason">${reason}</div>
+        <button class="pick-btn ghost" onclick="applyCoach()">Easy recovery →</button>
+      </div>
+    </div>`;
+    return;
   }
-  document.getElementById('coachReason').textContent = pick.reason;
-  document.getElementById('coachBadge').style.background = pick.badge;
+  const blocks = getBlocks(pick.id);
+  const total = blocks.reduce((sum, b) => sum + b.t, 0);
+  const band = blocks.map(b => `<div style="flex:${b.t};background:${b.c};" title="${b.n}"></div>`).join('');
+  const t = getT();
+  card.innerHTML = `<div class="pick-card">
+    <div class="pick-band">${band}</div>
+    <div class="pick-body">
+      <div class="pick-kicker">today's pick</div>
+      <div class="pick-name">${s.name}</div>
+      <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${isFinite(t) ? t : total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
+      <div class="pick-reason">${reason}</div>
+      <button class="pick-btn" onclick="applyCoach()">Start session</button>
+    </div>
+  </div>`;
 }
 function applyCoach() {
   if (!_coachPick) return;
-  const pick = _coachPick;  // vastpakken: setTimeIdx hieronder ververst _coachPick via renderCoach
+  const pick = _coachPick;  // vastpakken: setTimeIdx hieronder ververst _coachPick via renderTodaysPick
   const ti = timeValues.indexOf(pick.time);
   if (ti >= 0) setTimeIdx(ti);
   selectSession(pick.id);
@@ -2483,54 +2579,24 @@ function updateTimerDisplay() {
   }
 }
 
-// ── TIME SCRUBBER (wieltje: getallen draaien onder een vast kader in het midden door) ──
+// ── TIJD-CHIPS (compacte rij: slepen scrollt, tik kiest en klapt de rij dicht) ──
 const track = document.getElementById('timeTrack');
-let tDrag=false,tTouch=false,tMoved=false,tSX,tSS;
+let tDrag=false,tMoved=false,tSX,tSS;
 track.addEventListener('mousedown',e=>{tDrag=true;tMoved=false;tSX=e.clientX;tSS=track.scrollLeft;});
 document.addEventListener('mousemove',e=>{if(!tDrag)return;if(Math.abs(e.clientX-tSX)>4)tMoved=true;track.scrollLeft=tSS-(e.clientX-tSX);});
-document.addEventListener('mouseup',()=>{if(!tDrag)return;tDrag=false;snapTime();});
-track.addEventListener('touchstart',e=>{tTouch=true;tMoved=false;tSX=e.touches[0].clientX;tSS=track.scrollLeft;},{passive:true});
-track.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientX-tSX)>4)tMoved=true;track.scrollLeft=tSS-(e.touches[0].clientX-tSX);},{passive:true});
-track.addEventListener('touchend',()=>{tTouch=false;snapTime();});
+document.addEventListener('mouseup',()=>{tDrag=false;});
+track.addEventListener('touchstart',e=>{tMoved=false;tSX=e.touches[0].clientX;},{passive:true});
+track.addEventListener('touchmove',e=>{if(Math.abs(e.touches[0].clientX-tSX)>4)tMoved=true;},{passive:true});
 
-function nearestTimeIdx(){
-  const items=[...track.querySelectorAll('.time-item')];
-  const center=track.scrollLeft+track.offsetWidth/2;
-  let best=0,bd=Infinity;
-  items.forEach((item,i)=>{const d=Math.abs(item.offsetLeft+item.offsetWidth/2-center);if(d<bd){bd=d;best=i;}});
-  return best;
-}
-function snapTime(){
-  const best=nearestTimeIdx();
-  if(best!==activeTimeIdx){ setTimeIdx(best); return; }
-  const item=track.querySelectorAll('.time-item')[best];
-  if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2,behavior:'smooth'});
-}
-// live: tijdens het draaien volgt de selectie het getal in het midden; commit pas als het wiel stilstaat
-let _wheelRaf=null,_wheelSettle=null;
-track.addEventListener('scroll',()=>{
-  if(_wheelRaf)return;
-  _wheelRaf=requestAnimationFrame(()=>{
-    _wheelRaf=null;
-    const best=nearestTimeIdx();
-    [...track.querySelectorAll('.time-item')].forEach((item,i)=>item.classList.toggle('active',i===best));
-    const sum=document.getElementById('timeSummary');
-    const v=timeValues[best];
-    if(sum) sum.textContent = isFinite(v) ? v + ' min' : '∞ no limit';
-    clearTimeout(_wheelSettle);
-    _wheelSettle=setTimeout(()=>{ if(!tDrag&&!tTouch) snapTime(); },160);
-  });
-});
 function setTimeIdx(idx){
   activeTimeIdx=idx;
   [...track.querySelectorAll('.time-item')].forEach((item,i)=>item.classList.toggle('active',i===idx));
   const item=track.querySelectorAll('.time-item')[idx];
   if(item) track.scrollTo({left:item.offsetLeft-track.offsetWidth/2+item.offsetWidth/2,behavior:'smooth'});
   const sum=document.getElementById('timeSummary');
-  const v=timeValues[idx];
-  if(sum) sum.textContent = isFinite(v) ? v + ' min' : '∞ no limit';
+  if(sum) sum.textContent = timeLabel();
   buildCategories(); renderPreview();
-  renderCoach();  // MOCK: coach-suggestie loopt mee met de tijdkeuze
+  renderTodaysPick();  // de pick loopt live mee met de tijdkeuze
 }
 function setTimePickerOpen(open){
   const w=document.getElementById('timeTrackWrap');
@@ -2574,21 +2640,31 @@ document.addEventListener('click',e=>{
 
 
 
-// ── begroeting: naam lokaal, geen account ──
+// ── begroeting: naam lokaal, geen account. Eén regel met rechts de tijd (context, geen formulier) ──
+function timeLabel() {
+  const v = timeValues[activeTimeIdx];
+  return isFinite(v) ? v + ' MIN' : '∞ NO LIMIT';
+}
 function renderGreeting() {
   const el = document.getElementById('greetEl');
   if (!el) return;
   let name = '';
   try { name = localStorage.getItem('crimpify_name') || ''; } catch {}
   el.innerHTML = '';
+  const line = document.createElement('div');
+  line.style.cssText = 'display:flex;align-items:baseline;justify-content:space-between;gap:10px;';
   const h = document.createElement('div');
-  h.style.cssText = "font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:26px;color:var(--chalk);letter-spacing:.01em;line-height:1.1;";
+  h.style.cssText = "font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;color:var(--chalk);letter-spacing:.01em;line-height:1.1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;";
+  const timeBtn = document.createElement('div');
+  timeBtn.onclick = toggleTimePicker;
+  timeBtn.style.cssText = 'display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;';
+  timeBtn.innerHTML = `<span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;">${timeLabel()}</span><span id="timeChev" style="font-size:11px;opacity:.5;color:var(--dust);">▾</span>`;
+  line.appendChild(h); line.appendChild(timeBtn);
+  el.appendChild(line);
   if (name) {
     h.textContent = 'Welcome back, ' + name;
-    el.appendChild(h);
   } else {
     h.textContent = 'Welcome to Crimpify';
-    el.appendChild(h);
     const row = document.createElement('div');
     row.style.cssText = 'display:flex;gap:8px;margin-top:10px;';
     const inp = document.createElement('input');
@@ -2636,7 +2712,7 @@ function renderStreakLine() {
 ['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });
 registerCustomBlocks();
 applyCategoryColors();
-rebuildRecent(); renderSignalCal(); renderCoach(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
+rebuildRecent(); renderSignalCal(); renderTodaysPick(); renderContinue(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
 importFromHash();  // gedeelde sessie via #s=… direct openen
 setTimeout(()=>setTimeIdx(activeTimeIdx),60);
 
@@ -2922,18 +2998,12 @@ function openGenerate() {
   setTimeIdx(activeTimeIdx);  // chip-status en samenvatting syncen nu de view zichtbaar is
 }
 
-// ── MOCK: deuren met lading + lege-staat-zin ──
-function renderDoors() {
-  const el = document.getElementById('doorChooseSub');
+// ── DISCOVER: etalage op de landing — de gecureerde Apex-plank met de
+// bestaande Choose-kaarten (tik → preview, nooit direct starten) ──
+function renderDiscover() {
+  const el = document.getElementById('discoverShelf');
   if (!el) return;
-  const names = MOCK_CHOOSE.slice(0, 3).map(s => s.name).join(' · ');
-  el.textContent = `${MOCK_CHOOSE.length} sessions · ${names}`;
+  el.innerHTML = APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0).map(chCard).join('');
 }
-function renderEmptyHint() {
-  const el = document.getElementById('emptyHint');
-  if (!el) return;
-  let h = [];
-  try { h = JSON.parse(localStorage.getItem('crimpify_history') || '[]'); } catch {}
-  el.style.display = (Array.isArray(h) && h.length) ? 'none' : '';
-}
-renderDoors(); renderEmptyHint();
+renderDiscover();
+enableWheelScroll('#discoverShelf');

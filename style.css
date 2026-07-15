@@ -164,14 +164,11 @@ body {
 #blockPickerList::-webkit-scrollbar { width:4px; }
 #blockPickerList::-webkit-scrollbar-thumb { background:var(--graphite); border-radius:2px; }
 #blockPickerList::-webkit-scrollbar-track { background:transparent; }
-/* vast selectiekader in het midden; de getallen draaien er als een wieltje onderdoor */
-.time-center-ring { position:absolute; top:3px; bottom:3px; left:50%; width:58px; margin-left:-29px; border:1px solid var(--acid); border-radius:6px; background:color-mix(in srgb, var(--acid) 5%, transparent); box-shadow:0 0 12px color-mix(in srgb, var(--acid) 18%, transparent); pointer-events:none; z-index:1; }
-.time-item { scroll-snap-align:center; flex-shrink:0; width:58px; padding:11px 0; border-radius:6px; border:1px solid var(--graphite); background:var(--carbon); text-align:center; cursor:pointer; transition:all .18s; user-select:none; }
-.time-item.active { border-color:transparent; background:transparent; }
-.t-num { font-size:23px; font-weight:900; color:var(--disabled); transition:color .18s; line-height:1; }
+/* compacte tijd-chips: tik kiest, rij klapt dicht; geen "min"-labels */
+.time-item { scroll-snap-align:center; flex-shrink:0; width:46px; padding:9px 0; border-radius:8px; border:1px solid transparent; background:var(--carbon); text-align:center; cursor:pointer; transition:all .18s; user-select:none; }
+.time-item.active { border-color:var(--acid); background:color-mix(in srgb, var(--acid) 5%, transparent); }
+.t-num { font-size:17px; font-weight:900; color:var(--dust); transition:color .18s; line-height:1; }
 .time-item.active .t-num { color:var(--acid); }
-.t-unit { font-family:'DM Mono',monospace; font-size:10px; color:var(--disabled); margin-top:1px; }
-.time-item.active .t-unit { color:color-mix(in srgb, var(--acid) 55%, transparent); }
 
 /* search */
 .search-wrap { padding:14px 20px 0; flex-shrink:0; }
@@ -370,17 +367,33 @@ body {
 .next-name { flex:1; font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; }
 .next-arr { font-size:16px; color:var(--disabled); }
 
-/* ══ MOCK Choose-prototype: deuren, lege staat ══ */
-/* de twee deuren */
-.doors { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:16px 20px 4px; }
-.door { border:1px solid color-mix(in srgb, var(--acid) 30%, transparent); border-radius:12px; background:var(--carbon); padding:16px 14px 14px; min-height:116px; cursor:pointer; display:flex; flex-direction:column; transition:filter .15s,border-color .15s; }
-.door:active { filter:brightness(1.3); border-color:var(--acid); }
-.door-ico { width:22px; height:22px; color:var(--acid); margin-bottom:10px; flex-shrink:0; }
-.door-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:26px; text-transform:uppercase; letter-spacing:.03em; color:var(--acid); line-height:1; }
-.door-sub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.05em; color:var(--disabled); margin-top:7px; line-height:1.55; }
-
-/* lege staat: één zin onder de deuren */
-.empty-hint { margin:10px 20px 0; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.55; color:var(--dust); }
+/* ════════════════════════════
+   LANDING — Today's Pick, routes, continue, rhythm
+   Drie niveaus: ink-achtergrond, gevulde carbon-kaarten, één primaire kaart.
+════════════════════════════ */
+.pick-card { margin:10px 20px 0; border-radius:14px; overflow:hidden; background:var(--carbon); }
+.pick-band { display:flex; gap:2px; height:14px; }
+.pick-band div { height:100%; }
+.pick-body { padding:12px 14px 14px; }
+.pick-kicker { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--acid); }
+.pick-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:32px; line-height:1; text-transform:uppercase; letter-spacing:.01em; color:var(--chalk); margin-top:6px; }
+.pick-meta { display:flex; flex-wrap:wrap; gap:4px 12px; margin-top:8px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.05em; color:var(--dust); }
+.pick-meta span { white-space:nowrap; }
+.pick-load { display:flex; align-items:center; gap:6px; }
+.pick-reason { font-family:'Barlow',sans-serif; font-size:13px; line-height:1.5; color:var(--dust); margin-top:9px; }
+.pick-btn { display:block; width:100%; margin-top:12px; text-align:center; background:var(--acid); color:var(--acid-text); border:none; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; border-radius:10px; padding:13px; cursor:pointer; box-shadow:0 0 16px color-mix(in srgb, var(--acid) 18%, transparent); }
+.pick-btn.ghost { background:none; border:1px solid var(--graphite); color:var(--dust); box-shadow:none; }
+.routes-row { display:flex; justify-content:center; gap:26px; padding:12px 20px 2px; }
+.route-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); cursor:pointer; }
+.route-btn:hover { color:var(--chalk); }
+.continue-card { margin:12px 20px 0; padding:12px 14px; border-radius:12px; background:var(--carbon); display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; }
+.continue-card .pick-btn { width:auto; margin-top:0; padding:10px 16px; flex-shrink:0; font-size:14px; }
+.continue-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; text-transform:uppercase; color:var(--chalk); line-height:1; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.continue-meta { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; color:var(--dust); margin-top:5px; }
+.rhythm-letters, .rhythm-dots { display:grid; grid-template-columns:repeat(14,1fr); gap:3px; }
+.rhythm-letters span { text-align:center; font-family:'DM Mono',monospace; font-size:10px; color:var(--dust); }
+.rhythm-dots { margin-top:4px; }
+.rhythm-dots i { display:block; width:14px; height:14px; border-radius:50%; margin:0 auto; }
 
 /* ════════════════════════════
    CHOOSE — catalogus (hero + planken) en preview-laag
