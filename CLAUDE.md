@@ -41,6 +41,7 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | `crimpify_custom_blocks` | eigen oefeningen, keys met `ux_`-prefix |
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
+| `crimpify_active` | onafgemaakte training voor de Continue-kaart: `{keys, name, color, sessionId, idx, spent, ts}`; verloopt na 12 uur |
 
 `sig` is het stoplicht: `'green' | 'orange' | 'red' | null`. `load` = duur ×
 intensiteitsfactor (zie `INTENSITY_FACTORS` in de code, Foster/Gabbett-model,
@@ -110,13 +111,42 @@ De code-commentaren zijn deels nog Nederlands; die mogen bij gelegenheid mee,
 maar nooit ten koste van werkende code. De "Dynamic warm-up" heet "Charlie
 warm-up" (inside joke, bewust).
 
-## Landing-hiërarchie (staat sinds 0.1 zo, bewaken)
+## Landing-hiërarchie (herbouwd juli 2026: één sterk moment, bewaken)
 
-begroeting → weekteller/fase-regel → tijdchips (altijd zichtbaar) → minimal-dose-regel
-(stil, grijs) → coach-kaart (alleen met data, met reden erbij) → Genereer/Bouw →
-Mijn sessies (alleen met inhoud, met stoplicht-dots) → rest. Zoekbalk staat verborgen;
-mag terug als icoon, niet als balk bovenaan. Lege staat toont vrijwel niets behalve
-begroeting, tijd en Genereer.
+1. **Header**: mark + wordmark, weekteller rechts. Klein, stil, geen avatar.
+2. **Begroeting + tijd op één regel**: "Welcome back, [naam] · 60 MIN ⌄".
+   Tijd is context, geen formulier; tik opent de compacte chip-rij (alle
+   waarden 30…150 + ∞, geen "min"-labels) die na een keuze weer dichtklapt.
+   Tijd wijzigen ververst Today's Pick live.
+3. **Today's Pick** — het primaire moment, één grote kaart: fingerprint-band
+   (echte bloksequentie), titel, doel/duur/materiaal/load-pips (acid), één
+   causale coachregel uit de bestaande coach/ACWR-logica (`coachSuggest` +
+   `adaptCoachToTime`), grote acid START SESSION (opent de slab, nooit blind
+   starten). De losse coach-kaart bestaat niet meer; rustadvies wordt een
+   "Rest day"-variant met ghost-CTA. Lege staat: starterspick met "A good
+   first session to get you going."
+4. **Secundaire routes**, één regel: "Choose another →" en "Build your own".
+   Het advies negeren kan altijd (productprincipe 3).
+5. **Continue** (alleen bij onafgemaakte training): eigen kaart boven Saved,
+   "Block X of N · ~M min remaining", Resume hervat op blokgrens.
+   Persistentie in `crimpify_active` (verloopt na 12 uur); lopende timers
+   overleven een reload niet, blokvoortgang wel.
+6. **Saved** (hernoemd van My sessions): alleen draft + favorieten, compacte
+   rij, stoplicht-dot van de jongste gelijknamige sessie, geen
+   history-kaarten meer (recaps lopen via de strip).
+7. **Training rhythm**: 14-daagse strip met dag-letters en één dot per dag.
+   Dot = stoplichtsignaal, neutraal gevuld zonder signaal, leeg zonder
+   training — nooit sessietype-kleuren (vastgelegde beslissing: de strip
+   toont hoe het gaat, niet wat je trainde). Eronder één regel
+   "N sessions · load balanced" (ACWR-zone in één woord); tik opent het
+   bestaande ACWR-paneel. Dots tikbaar naar de recap.
+8. **Discover**: één plank "Popular at Apex this week →" met de bestaande
+   Choose-kaarten; de catalogus is een etalage, geen deur.
+
+Visueel: drie niveaus (ink-achtergrond, gevulde carbon-kaarten, één primaire
+kaart met het kleurmoment en de acid-CTA); weinig randen; display-font alleen
+voor titels en primaire CTA's; metadata in DM Mono ≥10px in dust. Zoekbalk
+blijft verborgen; mag terug als icoon, niet als balk bovenaan.
 
 ## Choose-flow (ontwerpbeslissingen uit de verkenning, juli 2026)
 
