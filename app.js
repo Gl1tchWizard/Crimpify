@@ -72,9 +72,9 @@ const DRILLS = [
     setup:'Fingerboard, portable edge or a good rail. Pick an edge you can comfortably hold in half crimp or open hand. Make sure you are warmed up.',
     do:'No dead hanging: actively drive force with your fingers as if you want to curl the edge toward you. Pull your fingertips deliberately into the edge and keep the tension constantly high. Work in isometric holds of 7 to 10 seconds at around 80 to 90 percent of your max — heavy, but stop 1 to 2 counts before failure. Rest 2 to 3 minutes fully between sets. 4 to 6 sets. Feel your forearm and fingers actively working the whole hold, not passively hanging off the tendons.',
     goal:'Maximum finger strength through short, high isometric tension. Active curling instead of passive hanging recruits more, with less total load on your tendons.' },
-  { n:'One drill, full focus', tag:'meta / approach', cat:'meta', dur:'1-3m extra', src:'technique',
-    setup:'Just one drill per session. A ladder is a series of boulders increasing in difficulty, with more rest as it gets harder.',
-    do:'The drill adds one technique pillar to a warm-up that would otherwise run on autopilot. Take a minute or two to read your boulders and pick climbs that suit the movement of the day. Feel free to borrow holds from neighbouring routes if they fit better. Not everything works out? A handful of good repetitions is already a win.',
+  { n:'One skill, full focus', tag:'meta / approach', cat:'meta', dur:'1-3m extra', src:'technique',
+    setup:'Just one skill per session. A ladder is a series of boulders increasing in difficulty, with more rest as it gets harder.',
+    do:'The skill adds one technique pillar to a warm-up that would otherwise run on autopilot. Take a minute or two to read your boulders and pick climbs that suit the movement of the day. Feel free to borrow holds from neighbouring routes if they fit better. Not everything works out? A handful of good repetitions is already a win.',
     goal:'No stress. One pillar per session, added deliberately. Consistency over perfection.' },
 
   // ── Your own drills, same structure ──
@@ -97,7 +97,7 @@ const DRILLS = [
   { n:'Silent / Quiet Feet', tag:'foot precision & control', cat:'feet', dur:'10-15m', src:'external',
     setup:'Pick boulders 1-2 grades below your onsight level.',
     do:'Climb without your feet making any sound. Place every foot softly, deliberately and precisely — no stomping, no dragging. Did a foot make noise? Back to the previous foothold and again. Keep eye contact with your foot until it is placed. Climb back down with silent feet too.',
-    goal:'Precision, control and trust in your feet. One of the most cited footwork drills because it forces total focus on your feet.' },
+    goal:'Precision, control and trust in your feet. One of the most cited footwork skills because it forces total focus on your feet.' },
   { n:'Sticky Feet', tag:'foot precision', cat:'feet', dur:'10-15m', src:'external',
     setup:'Boulders 1-2 grades below onsight.',
     do:'The moment your foot touches a foothold it is glued — as if there is superglue under your big toe. No more corrections. This forces you to decide in advance where and in which orientation your foot needs to be, because the stance determines your next move.',
@@ -105,7 +105,7 @@ const DRILLS = [
   { n:'Downclimbing', tag:'foot awareness', cat:'feet', dur:'10-15m', src:'external',
     setup:'Boulders 1-2 grades below onsight, climb up first.',
     do:'Climb the boulder back down until both hands are on the start holds again. Downclimbing is feet-first, so you must consciously feel and search your foot placements. Try to touch the mat with your feet instead of jumping off.',
-    goal:'Builds deliberate foot awareness and control. Underrated drill because most climbers only practise going up.' },
+    goal:'Builds deliberate foot awareness and control. Underrated skill because most climbers only practise going up.' },
   { n:'Foothold Stab (precision)', tag:'precision & balance', cat:'precision', dur:'10m', src:'external',
     setup:'Standing in front of the wall, climbing shoes on, about 60 cm from the wall.',
     do:'Balance on one leg and "stab" your raised foot at pre-chosen footholds — big toe calmly and exactly on the hold, as if pecking at it. 20x per foot, stay in balance the whole time. Harder: pick footholds that demand a high step or precarious balance. Do not take your eye off the hold until your foot sits perfectly.',
@@ -173,8 +173,8 @@ const BLOCKLIB = {
       { n:'Leg swings front/back L', note:'10 — left leg', sec:12 },
       { n:'Leg swings front/back R', note:'10 — right leg', sec:12 },
     ] },
-  warmup: { n:'Progressive warm-up + drills', t:30, c:'var(--prepare)', rpe:'2-5', drills:true,
-    why:'Boulder ladder that gets progressively harder: 4, 4, 5a, 5b, 5c, 6a, 6a, 6b up to 6c. From 6a rest 3 min. The goal is not sending boulders but getting properly warm. Vary wall angle and style. Aim for 10-20 boulders, 1-2 per grade. Add the drill of the day (below) — one pillar per session.' },
+  warmup: { n:'Progressive warm-up + skills', t:30, c:'var(--prepare)', rpe:'2-5', drills:true,
+    why:'Boulder ladder that gets progressively harder: 4, 4, 5a, 5b, 5c, 6a, 6a, 6b up to 6c. From 6a rest 3 min. The goal is not sending boulders but getting properly warm. Vary wall angle and style. Aim for 10-20 boulders, 1-2 per grade. Add the skill of the day (below) — one pillar per session.' },
   warmupFinger: { n:'Warm-up + fingers', t:35, c:'var(--prepare)', rpe:'2-5', drills:true,
     why:'Progressive warm-up (boulder ladder 4 → 6c) plus specific finger prep: easy hangs, lifting pin building up, at least 15 min of tendon preparation. For heavy finger work this is non-negotiable.' },
   mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, c:'var(--prepare)', rpe:'-',
@@ -224,10 +224,10 @@ const BLOCKLIB = {
     why:'Follow the Grip Gains schedule. Rotation: week 1 Crusher/Micro/Crusher, week 2 Micro/Crusher/Micro. Crusher = FDS, Micro = FDP. Open the app for your sets and weights.' },
 
   // ── skill cores ──
-  drillBlocks: { n:'Drill blocks', t:45, c:'var(--skill)', rpe:'5-6', sets:3, rest:2, drills:true,
-    why:'3 drills × 15 min on boulders 2 grades below max. Per drill: first deliberately slow, then at normal speed, then on a just-challenging boulder. Film yourself at least once per drill.' },
+  drillBlocks: { n:'Skill blocks', t:45, c:'var(--skill)', rpe:'5-6', sets:3, rest:2, drills:true,
+    why:'3 skills × 15 min on boulders 2 grades below max. Per skill: first deliberately slow, then at normal speed, then on a just-challenging boulder. Film yourself at least once per skill.' },
   boardApply: { n:'Board application', t:12, c:'var(--max-effort)', rpe:'6', sets:4, rest:3,
-    why:'Apply the drills on 3-4 Kilterboard boulders. No score — only quality of movement counts.' },
+    why:'Apply the skills on 3-4 Kilterboard boulders. No score — only quality of movement counts.' },
 
   // ── conditioning / closers ──
   mini1: { n:'Mini circuit 1', t:15, c:'var(--prepare)', rpe:'6', sets:5, rest:2,
@@ -249,13 +249,13 @@ const BLOCKLIB = {
   slab: { n:'Slab (if energy allows)', t:12, c:'var(--skill)', rpe:'5',
     why:'Easy slab as a technical dessert. Balance and footwork. Skip without guilt if you are empty — walk away fresh.' },
   skillLight: { n:'Movement skill light', t:12, c:'var(--skill)', rpe:'3-4', drills:true,
-    why:'One drill of your choice on easy terrain. Pure coordination, zero strength. Cool the nervous system down.' },
-  drillsOnly: { n:'Movement drills', t:20, c:'var(--skill)', rpe:'4-5', drills:true,
-    why:'A short focused drill session as the main course. Pick the drill of the day and work it deliberately on boulders below your max. Quality of movement counts, no score.' },
-  drillLibrary: { n:'Drill library', t:30, c:'var(--skill)', rpe:'4-5', library:true,
-    why:'The full library. Pick the drills you want to do today yourself.' },
+    why:'One skill of your choice on easy terrain. Pure coordination, zero strength. Cool the nervous system down.' },
+  drillsOnly: { n:'Movement skills', t:20, c:'var(--skill)', rpe:'4-5', drills:true,
+    why:'A short focused skill session as the main course. Pick the skill of the day and work it deliberately on boulders below your max. Quality of movement counts, no score.' },
+  drillLibrary: { n:'Skill library', t:30, c:'var(--skill)', rpe:'4-5', library:true,
+    why:'The full library. Pick the skills you want to do today yourself.' },
   sprayLight: { n:'Spray wall (short)', t:15, c:'var(--volume)', rpe:'4-5',
-    why:'Short, light spray session. Deliberately keep the RPE low (4-5) so your fingers stay fresh for HoG afterwards. 6-10 boulders well below your max, focus on smooth movement and the drill of the day. No limit work — this is not a power session.' },
+    why:'Short, light spray session. Deliberately keep the RPE low (4-5) so your fingers stay fresh for HoG afterwards. 6-10 boulders well below your max, focus on smooth movement and the skill of the day. No limit work — this is not a power session.' },
   nohangs: { n:'No hangs + stretch', t:8, c:'var(--max-effort)', rpe:'-', sets:2, rest:1,
     why:'No hangs 2×30 sec half crimp. Then a short stretch: shoulders and forearms.' },
   // ── minimal dose micro blocks (minimum effective dose; López/Lattice research on short frequent finger training) ──
@@ -274,7 +274,7 @@ const BLOCKLIB = {
   stretch: { n:'Stretch', t:10, c:'var(--prepare)', rpe:'-',
     why:'Pancake progression (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine and lats. 2 min per position. Breathe out.' },
   stretchLong: { n:'Extended stretch', t:25, c:'var(--prepare)', rpe:'-',
-    why:'Full routine: pancake 2 min, pigeon, shoulder flexion drills, T-spine rotations, lats, wrist flexors. Aidan Roberts mobility line.' },
+    why:'Full routine: pancake 2 min, pigeon, shoulder flexion work, T-spine rotations, lats, wrist flexors. Aidan Roberts mobility line.' },
 
   // ── activation protocols ──
   tensionAct: { n:'Tension activation', t:12, c:'var(--prepare)', rpe:'6', sets:3, rest:2,
@@ -300,7 +300,7 @@ const sessions = [
     intent:'Strength training outside climbing: pull, push, core and legs. Antagonist balance and general strength without finger load.',
     slots:[ 'gymWarmup', 'pullStrength', 'pushStrength', 'coreLegs', ['mini1','mini2','mini3'], 'stretch' ] },
   { id:'skill', cat:'Skill', name:'Skill', desc:'Technique isolation\ndeliberate climbing', color:'purple', rpe:'5-6', tags:['skill','technique','drills','movement'],
-    intent:'Technique as the main course. Three drills done thoroughly instead of two in passing — video feedback recommended.',
+    intent:'Technique as the main course. Three skills done thoroughly instead of two in passing — video feedback recommended.',
     slots:[ 'dynamic', 'warmup', 'drillBlocks', 'boardApply', 'stretch' ] },
   { id:'perf', cat:'Performance', name:'Performance', desc:'Performing\nprojects and formats', color:'red', rpe:'8-10', tags:['performance','project','comp','pyramid'],
     intent:'Perform when it counts. Full recovery between attempts, every attempt with intention. Note what worked.',
@@ -311,8 +311,8 @@ const sessions = [
   { id:'minidose', cat:'Minimal Dose', name:'Minimal Dose', desc:'High return\n~20 minutes', color:'amber', rpe:'8', tags:['minimal dose','short','fingers','efficient'],
     intent:'Minimum effective dose: the smallest volume that still drives adaptation. Fingers first, fresh and heavy, short total time. Sustainable two to four times a week next to a busy life.',
     slots:[ 'mdFinger', ['mdMaxHangs','mdNoHangs'], ['mdPull','mdCore'] ] },
-  { id:'drills', cat:'Drills', name:'Drill library', desc:'Full library\npick your own', color:'purple', rpe:'4-5', tags:['drills','technique','movement','skill','library'],
-    intent:'The full drill library. Pick the drills you want to do, with instructions.',
+  { id:'drills', cat:'Skills', name:'Skill library', desc:'Full library\npick your own', color:'purple', rpe:'4-5', tags:['drills','skills','technique','movement','skill','library'],
+    intent:'The full skill library. Pick the skills you want to do, with instructions.',
     slots:[ 'drillLibrary' ] },
 ];
 
@@ -990,9 +990,9 @@ function startDrillPlayer(blockIdx) {
   const per = Math.max(3, Math.round(b.t / n));
   dpTimers = dpDrills.map(()=> per*60);
   dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillSub').textContent = `${n} drills · target ${per} min each · tap open for instructions`;
-  document.getElementById('drillFooter').innerHTML = `movement drills<br><b style="color:var(--skill);">${b.t} min total</b>`;
-  document.getElementById('drillTitle').textContent = 'Movement drills';
+  document.getElementById('drillSub').textContent = `${n} skills · target ${per} min each · tap open for instructions`;
+  document.getElementById('drillFooter').innerHTML = `movement skills<br><b style="color:var(--skill);">${b.t} min total</b>`;
+  document.getElementById('drillTitle').textContent = 'Movement skills';
   renderDrillPlayer();
   goTo('v-drills');
 }
@@ -1006,9 +1006,9 @@ function startDrillLibrary(blockIdx) {
   dpDrills = DRILLS.filter(d=>d.cat !== 'meta');
   dpTimers = dpDrills.map(()=> 5*60); // 5 min richttijd per drill, vrij aan te passen
   dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillTitle').textContent = 'Drill-bibliotheek';
-  document.getElementById('drillSub').textContent = `${dpDrills.length} drills · pick your own · tap open for instructions`;
-  document.getElementById('drillFooter').innerHTML = `${dpDrills.length} drills`;
+  document.getElementById('drillTitle').textContent = 'Skill library';
+  document.getElementById('drillSub').textContent = `${dpDrills.length} skills · pick your own · tap open for instructions`;
+  document.getElementById('drillFooter').innerHTML = `${dpDrills.length} skills`;
   renderDrillPlayer();
   goTo('v-drills');
 }
@@ -1123,9 +1123,9 @@ function dfSwitch() {
   dpDrills = DRILLS.filter(d=>d.cat !== 'meta');
   dpTimers = dpDrills.map(()=> 5*60);
   dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillTitle').textContent = 'Pick a drill';
-  document.getElementById('drillSub').textContent = `replace "${dfDrills[swapTargetIdx].n}" — tap a drill to pick it`;
-  document.getElementById('drillFooter').innerHTML = `switch drill<br><b style="color:var(--skill);">${dpDrills.length} options</b>`;
+  document.getElementById('drillTitle').textContent = 'Pick a skill';
+  document.getElementById('drillSub').textContent = `replace "${dfDrills[swapTargetIdx].n}" — tap a skill to pick it`;
+  document.getElementById('drillFooter').innerHTML = `switch skill<br><b style="color:var(--skill);">${dpDrills.length} options</b>`;
   renderDrillPlayer();
   goTo('v-drills');
 }
@@ -1217,7 +1217,7 @@ function renderDrillPlayer() {
   const stack = document.getElementById('drillStack');
   const q = (dpFilter||'').toLowerCase().trim();
   const shown = dpDrills.filter(d=>dpMatch(d,q)).length;
-  document.getElementById('drillProg').textContent = q ? `${shown} / ${dpDrills.length} drills` : `${dpDrills.length} drills`;
+  document.getElementById('drillProg').textContent = q ? `${shown} / ${dpDrills.length} skills` : `${dpDrills.length} skills`;
   stack.innerHTML = dpDrills.map((d,i)=>{
     if (!dpMatch(d,q)) return '';
     const running = dpIntervals[i] != null;
@@ -1234,7 +1234,7 @@ function renderDrillPlayer() {
       <div class="dp-detail">
         <div class="dp-detail-inner">
           <div class="dp-lbl">setup</div><p>${d.setup}</p>
-          <div class="dp-lbl">uitvoering</div><p>${d.do}</p>
+          <div class="dp-lbl">execution</div><p>${d.do}</p>
           <div class="dp-lbl" style="color:var(--skill);">goal</div><p style="color:color-mix(in srgb, var(--skill) 55%, var(--chalk));">${d.goal}</p>
         </div>
       </div>
@@ -1714,7 +1714,7 @@ function ensureDraftMode() {
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
   { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct'] },
-  { name:'Technique & drills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
+  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
   { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
@@ -1727,7 +1727,7 @@ const BLOCK_GROUPS = [
 // Elke categorie één kleur uit de C-palette; blokken erven die van hun groep.
 const CAT_COLOR = {
   'Warm-up & activation':       'var(--prepare)',
-  'Technique & drills':         'var(--skill)',
+  'Technique & skills':         'var(--skill)',
   'Capacity · aerobic volume': 'var(--volume)',
   'Power endurance':            'var(--volume)',
   'Max strength & power':       'var(--max-effort)',
@@ -2392,7 +2392,7 @@ function buildDetail(idx) {
         </div>
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--disabled);margin:2px 0;">setup</div>
         <p style="margin-bottom:6px;">${d.setup}</p>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--disabled);margin:2px 0;">uitvoering</div>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--disabled);margin:2px 0;">execution</div>
         <p style="margin-bottom:6px;">${d.do}</p>
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:${b.c};opacity:.6;margin:2px 0;">goal</div>
         <p style="color:${b.c};opacity:.75;">${d.goal}</p>
@@ -2424,14 +2424,14 @@ function buildDetail(idx) {
     };
     if (b._key === 'drillBlocks') {
       const picks = pickSpread(3);
-      info += `<div class="detail-section-lbl">3 drills · gespreid over categorieën</div>` + picks.map(drillCard).join('');
+      info += `<div class="detail-section-lbl">3 skills · spread across categories</div>` + picks.map(drillCard).join('');
     } else if (b._key === 'drillsOnly') {
       const picks = pickSpread(2);
-      info += `<div class="detail-section-lbl">2 drills · intelligent gekozen (${DRILLS.length} in bibliotheek)</div>` + picks.map(drillCard).join('');
+      info += `<div class="detail-section-lbl">2 skills · picked for you (${DRILLS.length} in the library)</div>` + picks.map(drillCard).join('');
     } else {
       // Warm-up / skill licht: 1 drill van de dag (Charlie's regel)
       const d = pool[seed % pool.length];
-      info += `<div class="detail-section-lbl">drill of the day — one pillar per session</div>` + drillCard(d);
+      info += `<div class="detail-section-lbl">skill of the day — one pillar per session</div>` + drillCard(d);
     }
   }
 

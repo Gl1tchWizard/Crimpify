@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.14</div>
+    <div id="splashBy">by Glitch Labs · v0.15</div>
   </div>
   <div id="splashFlash"></div>
 </div>
@@ -168,7 +168,7 @@
         </div>
         <div id="generateSection">
           <div id="categorySections"></div>
-          <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed var(--graphite);border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);">open the drill library →</div>
+          <div onclick="selectSession('drills');goToSession();" style="margin:2px 20px 8px;padding:11px;border:1px dashed var(--graphite);border-radius:8px;cursor:pointer;text-align:center;font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);">open the skill library →</div>
         </div>
         <div class="active-preview" id="activePreview"></div>
         <div class="movement"><div class="mvmt-dot"></div><div class="mvmt-text">movement skill <b>always included</b></div></div>
@@ -286,8 +286,8 @@
         <button class="back-btn" onclick="guardedExit(drillBack)">← back</button>
         <div class="detail-block-num" id="drillProg">–</div>
       </div>
-      <div class="detail-name" id="drillTitle" style="font-size:24px;color:var(--skill);">Movement drills</div>
-      <div class="detail-cat" id="drillSub" style="color:var(--skill);">tap a drill open for the instructions</div>
+      <div class="detail-name" id="drillTitle" style="font-size:24px;color:var(--skill);">Movement skills</div>
+      <div class="detail-cat" id="drillSub" style="color:var(--skill);">tap a skill open for the instructions</div>
       <input id="drillSearch" type="search" placeholder="search… (e.g. finger, feet, deadpoint)" oninput="dpFilter = this.value; renderDrillPlayer();" style="margin-top:10px;width:100%;padding:11px 13px;border-radius:10px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
     </div>
     <div class="scroll-body" id="drillStack" style="padding:10px 16px;"></div>
