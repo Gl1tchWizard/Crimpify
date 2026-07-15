@@ -85,6 +85,40 @@ Mijn sessies (alleen met inhoud, met stoplicht-dots) → rest. Zoekbalk staat ve
 mag terug als icoon, niet als balk bovenaan. Lege staat toont vrijwel niets behalve
 begroeting, tijd en Genereer.
 
+## Choose-flow (ontwerpbeslissingen uit de verkenning, juli 2026)
+
+1. **Phalanx = verwachte belasting.** De vier vingerkootjes op een kaart tonen
+   de verwachte belasting (vier standen), vastgesteld door de sessiemaker,
+   zichtbaar vóór de sessie. Dit vervangt de eerdere beslissing "phalanx = rpe".
+   RPE blijft een 1-10 gevoelde-inspanningsscore die de gebruiker ná een sessie
+   geeft en staat nooit op discovery-kaarten. Verwachte belasting voedt het
+   ACWR-model, consistent met het bestaande `load`-veld.
+2. **Sociale maat = completions, geen likes.** Kaarten tonen voltooiingen in de
+   stijl "184 done"; opslaan is de secundaire actie. Likes verdwijnen overal.
+   Echt tellen vraagt een backend: tot die er is zijn de aantallen mock.
+3. **Drie lagen kijkdiepte.** Discovery-kaart (kort: naam, vingerafdruk/tape,
+   load, coach, één metaregel) → tik → preview (blokken, materiaal, niveau,
+   volledige coachregel, why-this-session) → Start session opent de volledige
+   sessie met alle opties. De primaire CTA op kaarten en hero is View session;
+   Start session bestaat alleen op preview/detailniveau. Nooit rechtstreeks
+   starten vanuit de catalogus.
+4. **Planken, hybride strategie tot er een backend is.**
+   - "30 minutes or less" (of passend bij de gekozen tijd): live berekend uit
+     de lokale tijd-slider. Echt, geen mock.
+   - "For you": client-side berekend uit de localStorage-historie (recente
+     energiesystemen, signalen). Personalisatie zonder account, op het toestel,
+     consistent met productprincipe 1.
+   - "Popular at Apex": gecureerde plank, handmatig samengestelde lijst in
+     afstemming met de Apex-gym, voorlopig hardcoded. Curatie in plaats van
+     berekening; wordt berekend zodra er een backend is. Featured/New mogen
+     blijven als redactionele planken.
+   Als we groot gaan worden gecureerde planken berekende planken; het ontwerp
+   blijft gelijk, alleen de bron verandert.
+5. **Vastleggen, niet bouwen:** het vollere sessie-datamodel (title, creator,
+   duration, primary_goal, skills[], energy_blocks[], equipment[],
+   recommended_level, expected_load, completion_count, save_count) en de
+   analytics-funnel (impression → opened → started → completed → repeated).
+
 ## Backlog in volgorde
 
 1. **Deelbare eindkaart.** Canvas-gegenereerde afbeelding bij "Sessie klaar":
