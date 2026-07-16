@@ -182,7 +182,7 @@ const BLOCKLIB = {
 
   // ── finger/tendon prehab (guided, low load) — submaximaal, daarom prepare i.p.v. max-effort ──
   //    noHangsEmil = eindige lijst; tendon* = loopen tot de 10-min cap (capSec).
-  noHangsEmil: { n:'No Hangs (remix)', t:5, c:'var(--prepare)', rpe:'2-3', guided:true, fixed:true,
+  noHangsEmil: { n:'No Hangs (remix)', t:5, c:'var(--prepare)', rpe:'2-3', guided:true, fixed:true, addedDate:'2026-07-16',
     links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=sBTI9qiH4UE'}],
     why:'Based on Emil Abrahamsson\'s no hangs. Light, pain-free capacity work for tendon adaptation and prehab, never near your limit. Ten seconds on, twenty seconds off, working through the grips at 40 to 50 percent of a lift-off effort. Gentle enough to do twice a day.',
     items:[
@@ -206,7 +206,7 @@ const BLOCKLIB = {
       { n:'Rest', note:'ease off', sec:20, rest:true },
       { n:'Thumb press', note:'door frame · 40-50% · set 2 of 2', sec:10 },
     ] },
-  tendonClimb: { n:'Tendon Training: Climb', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600,
+  tendonClimb: { n:'Tendon Training: Climb', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
     why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
     items:[
       { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
@@ -215,7 +215,7 @@ const BLOCKLIB = {
       { n:'Lunge hold, right', note:'static · hold the position', sec:30 },
       { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
     ] },
-  tendonFull: { n:'Tendon Training: Full Body', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600,
+  tendonFull: { n:'Tendon Training: Full Body', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
     why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
     items:[
       { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
@@ -572,6 +572,7 @@ function goTo(viewId) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(viewId).classList.add('active');
   if (viewId === 'v-browse' && typeof renderContinue === 'function') renderContinue();
+  if (viewId === 'v-browse' && typeof renderNews === 'function') renderNews();
   stopTimer();
   if (viewId !== 'v-guided') { gRunning = false; clearInterval(gInterval); }
   if (viewId !== 'v-drills' && typeof dpIntervals !== 'undefined') { dpIntervals.forEach((iv,i)=>{ if(iv) clearInterval(iv); dpIntervals[i]=null; }); }
@@ -3291,6 +3292,81 @@ function renderDiscover() {
   // landing blijft sterloos (één sterk moment); opslaan kan in de Choose-view
   el.innerHTML = APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0).map(ix => chCard(ix, true)).join('');
 }
+// ── NEWS: rustige plank onderaan de landing (onder Discover) ──
+// Twee bronnen: ANNOUNCEMENTS (handmatig broadcast, geen backend — productprincipe 1)
+// en auto "Freshly added" uit een addedDate-veld op blokken/sessies (14 dagen, verloopt vanzelf).
+// Weggetikte items onthouden we in crimpify_seen_news; komen niet terug.
+const ANNOUNCEMENTS = [
+  { id:'beta-2026-07', title:'We are in beta', date:'2026-07-16',
+    body:'Still working out the beta, the sequence that makes it all flow. Expect things to change.' },
+];
+function loadSeenNews() { try { return JSON.parse(localStorage.getItem('crimpify_seen_news') || '[]'); } catch { return []; } }
+function saveSeenNews(a) { try { localStorage.setItem('crimpify_seen_news', JSON.stringify(a)); } catch {} }
+function computeNews() {
+  const seen = new Set(loadSeenNews());
+  const now = Date.now();
+  const fresh = d => { const t = Date.parse(d); return !isNaN(t) && (now - t) < 14*864e5 && (now - t) > -2*864e5; };
+  const ann = ANNOUNCEMENTS
+    .filter(a => !seen.has(a.id))
+    .map(a => ({ kind:'ann', id:a.id, title:a.title, body:a.body, link:a.link||null, sort:Date.parse(a.date)||0 }))
+    .sort((x, y) => y.sort - x.sort);
+  const auto = [];
+  Object.keys(BLOCKLIB).forEach(k => {
+    const b = BLOCKLIB[k];
+    if (b.addedDate && fresh(b.addedDate) && !seen.has('fresh:' + k))
+      auto.push({ kind:'auto', id:'fresh:' + k, name:b.n, link:{ type:'block', key:k }, sort:Date.parse(b.addedDate) });
+  });
+  MOCK_CHOOSE.forEach((s, i) => {
+    if (s.addedDate && fresh(s.addedDate) && !seen.has('fresh:session:' + s.name))
+      auto.push({ kind:'auto', id:'fresh:session:' + s.name, name:s.name, link:{ type:'session', idx:i }, sort:Date.parse(s.addedDate) });
+  });
+  auto.sort((x, y) => y.sort - x.sort);
+  return ann.concat(auto).slice(0, 4);  // announcements boven auto, nieuwste eerst, hoogstens een paar
+}
+function renderNews() {
+  const wrap = document.getElementById('newsWrap');
+  if (!wrap) return;
+  const items = computeNews();
+  if (!items.length) { wrap.style.display = 'none'; return; }  // niets zichtbaar → geen lege huls
+  wrap.style.display = '';
+  document.getElementById('newsList').innerHTML = items.map(it => {
+    const clickable = it.link ? `onclick="openNews('${it.id}')"` : '';
+    const arrow = it.link ? '<span class="news-arrow">→</span>' : '';
+    const head = it.kind === 'ann'
+      ? `<div class="news-line"><span class="news-new">NEW</span> <span class="news-title">${it.title}</span>${arrow}</div><div class="news-body">${it.body}</div>`
+      : `<div class="news-line"><span class="news-fresh">Freshly added:</span> <span class="news-title">${it.name}</span>${arrow}</div>`;
+    return `<div class="news-item">
+      <div class="news-main" ${clickable}>${head}</div>
+      <button class="news-x" onclick="dismissNews('${it.id}')" aria-label="dismiss">×</button>
+    </div>`;
+  }).join('');
+}
+function openNews(id) {
+  const it = computeNews().find(x => x.id === id);
+  if (!it || !it.link) return;
+  if (it.link.type === 'session') {
+    let idx = it.link.idx;
+    if (idx == null && it.link.name != null) idx = MOCK_CHOOSE.findIndex(s => s.name === it.link.name);
+    if (idx >= 0) openChoosePreview(idx);
+  } else if (it.link.type === 'block') {
+    openNewsBlock(it.link.key);
+  }
+}
+function openNewsBlock(key) {
+  const b = BLOCKLIB[key];
+  if (!b) return;
+  openBlockPicker();  // bibliotheek-overlay, voorgefilterd op dit blok
+  const inp = document.getElementById('blockSearch');
+  if (inp) inp.value = b.n;
+  renderBlockPicker(b.n);
+}
+function dismissNews(id) {
+  const seen = loadSeenNews();
+  if (!seen.includes(id)) { seen.push(id); saveSeenNews(seen); }
+  renderNews();
+}
+
 renderDiscover();
 enableWheelScroll('#discoverShelf');
 buildChSearch();
+renderNews();

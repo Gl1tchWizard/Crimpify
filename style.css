@@ -491,3 +491,19 @@ body {
 
 /* attributie op kopieën: BASED ON <origineel> by <coach> */
 .slab-basedon { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--dust); margin:6px 0 2px; }
+
+/* NEWS: rustige plank onderaan de landing; acid alleen op de NEW-marker en de pijl */
+#newsWrap { padding:2px 20px 0; }
+.news-head-row { margin:10px 0 6px; }
+.news-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--disabled); }
+.news-item { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-top:1px solid var(--graphite); }
+.news-item:first-child { border-top:none; }
+.news-main { flex:1; min-width:0; }
+.news-main[onclick] { cursor:pointer; }
+.news-line { font-family:'Barlow',sans-serif; font-size:13px; color:var(--chalk); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.news-new { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; color:var(--acid-text); background:var(--acid); border-radius:3px; padding:1px 4px; }
+.news-fresh { color:var(--dust); }
+.news-title { font-weight:600; }
+.news-arrow { color:var(--acid); }
+.news-body { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; color:var(--dust); margin-top:3px; line-height:1.5; }
+.news-x { flex-shrink:0; background:none; border:none; color:var(--disabled); font-size:16px; line-height:1; cursor:pointer; padding:0 2px; }

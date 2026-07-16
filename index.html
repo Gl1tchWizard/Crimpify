@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.19</div>
+    <div id="splashBy">by Glitch Labs · v0.20</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -114,6 +114,11 @@
         <!-- DISCOVER: etalage naar de catalogus (bestaande Choose-kaarten, curatie zie CLAUDE.md Choose-flow 4) -->
         <div class="section-head" onclick="openChoose()" style="cursor:pointer;"><div class="section-title">Popular at Apex this week <span style="font-size:13px;opacity:.6;">→</span></div></div>
         <div class="ch-shelf" id="discoverShelf"></div>
+        <!-- NEWS: rustig onderaan; auto (addedDate) + ANNOUNCEMENTS, dismissbaar (crimpify_seen_news) -->
+        <div id="newsWrap" style="display:none;">
+          <div class="news-head-row"><span class="news-head">News</span></div>
+          <div id="newsList"></div>
+        </div>
         <div style="height:16px;"></div>
       </div>
     </div>

@@ -42,6 +42,7 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
 | `crimpify_active` | onafgemaakte training voor de Continue-kaart: `{keys, name, color, sessionId, idx, spent, ts}`; verloopt na 12 uur |
+| `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 
 `basedOn` is optioneel en additief: `{title, coach}` op kopieën uit de
 catalogus; oude entries zonder basedOn blijven geldig.
@@ -145,6 +146,23 @@ warm-up" (inside joke, bewust).
    bestaande ACWR-paneel. Dots tikbaar naar de recap.
 8. **Discover**: één plank "Popular at Apex this week →" met de bestaande
    Choose-kaarten; de catalogus is een etalage, geen deur.
+9. **News**: rustige plank onderaan, onder Discover, mag Today's Pick nooit
+   beconcurreren (kleine DM Mono-rijen, gedempte kop, acid alleen op de
+   NEW-marker en de pijl). Twee bronnen: automatische "Freshly added: [naam]"
+   uit een `addedDate`-veld op blokken/sessies (binnen 14 dagen, verloopt
+   vanzelf, geen onderhoud) en handmatige `ANNOUNCEMENTS` in app.js
+   (`{id, title, body, date, link?}`). Announcements boven auto-items, nieuwste
+   eerst, hoogstens een paar zichtbaar. Elk item is wegtikbaar; weggetikte ids
+   staan in `crimpify_seen_news` en komen niet terug. Is er niets zichtbaar,
+   dan verbergt de sectie zich (geen lege huls). Een block-link opent de
+   voorgefilterde blok-bibliotheek, een session-link de preview.
+
+### Broadcast zonder backend
+`ANNOUNCEMENTS` is het kanaal om alle gebruikers tegelijk iets te vertellen:
+voeg een array-entry toe en deploy (GitHub Pages deployt vanaf main). Geen
+server, geen backend — consistent met productprincipe 1. Het `addedDate`-veld
+(ISO, bv. `'2026-07-16'`) is additief: blokken/sessies zonder dat veld doen
+gewoon niet mee, entries ouder dan 14 dagen verdwijnen vanzelf uit News.
 
 Visueel: drie niveaus (ink-achtergrond, gevulde carbon-kaarten, één primaire
 kaart met het kleurmoment en de acid-CTA); weinig randen; display-font alleen
