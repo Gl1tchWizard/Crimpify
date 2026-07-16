@@ -180,6 +180,51 @@ const BLOCKLIB = {
   mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, c:'var(--prepare)', rpe:'-',
     why:'Jumping jacks 30, seals 20, split jumps 20, trunk twists 20, leg swings 20+20, arm/elbow/shoulder circles. Tendon glides on top.' },
 
+  // ── finger/tendon prehab (guided, low load) — submaximaal, daarom prepare i.p.v. max-effort ──
+  //    noHangsEmil = eindige lijst; tendon* = loopen tot de 10-min cap (capSec).
+  noHangsEmil: { n:'No Hangs (remix)', t:5, c:'var(--prepare)', rpe:'2-3', guided:true, fixed:true,
+    links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=sBTI9qiH4UE'}],
+    why:'Based on Emil Abrahamsson\'s no hangs. Light, pain-free capacity work for tendon adaptation and prehab, never near your limit. Ten seconds on, twenty seconds off, working through the grips at 40 to 50 percent of a lift-off effort. Gentle enough to do twice a day.',
+    items:[
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 1 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 2 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 3 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 1 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 2 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 3 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Middle two finger pocket', note:'40-50% · 1 set', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Front two finger pocket', note:'40-50% · 1 set', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Thumb press', note:'door frame · 40-50% · set 1 of 2', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Thumb press', note:'door frame · 40-50% · set 2 of 2', sec:10 },
+    ] },
+  tendonClimb: { n:'Tendon Training: Climb', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600,
+    why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
+    items:[
+      { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
+      { n:'Three finger drag', note:'open hand · ~50% · static', sec:30 },
+      { n:'Lunge hold, left', note:'static · hold the position', sec:30 },
+      { n:'Lunge hold, right', note:'static · hold the position', sec:30 },
+      { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
+    ] },
+  tendonFull: { n:'Tendon Training: Full Body', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600,
+    why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
+    items:[
+      { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
+      { n:'Lunge hold, left', note:'static · hold the position', sec:30 },
+      { n:'Lunge hold, right', note:'static · hold the position', sec:30 },
+      { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
+      { n:'Squat hold', note:'wall sit · quads and Achilles · static', sec:30 },
+    ] },
+
   // ── capacity cores ──
   volume: { n:'Volume boulders', t:40, c:'var(--volume)', rpe:'6', sets:30, rest:3, checklist:true, target:30, range:'25-35',
     why:'25-35 boulders around 6a/6b. 3 min rest from 6a, timer on. Drop a grade when quality fades (first 5c, then 5b). Stop at technical failure, not muscular failure.' },
@@ -868,11 +913,14 @@ function openBlock(idx) {
 
 // ══ GUIDED WARMUP PLAYER ══
 let gItems = [], gIdx = 0, gRemain = 0, gInterval = null, gRunning = false;
+let gElapsed = 0, gCap = null;  // gCap (sec) = looptijd-cap; blok loopt de items rond tot de cap
 
 function startGuided(blockIdx) {
   const b = currentBlocks[blockIdx];
   gItems = b.items;
   gIdx = 0;
+  gElapsed = 0;
+  gCap = b.capSec || null;
   document.getElementById('guidedTitle').textContent = b.n;
   goTo('v-guided');
   loadGuidedItem(0);
@@ -903,10 +951,13 @@ function renderGuided() {
   // scroll active into center
   const active = document.getElementById('gi-'+gIdx);
   if (active) active.scrollIntoView({block:'center', behavior:'smooth'});
-  document.getElementById('guidedProg').textContent = `${Math.min(gIdx+1,gItems.length)} / ${gItems.length}`;
+  document.getElementById('guidedProg').textContent = gCap
+    ? `${fmtMMSS(gElapsed)} / ${fmtMMSS(gCap)}`
+    : `${Math.min(gIdx+1,gItems.length)} / ${gItems.length}`;
 }
 
 function formatSec(s){ return s + 's'; }
+function fmtMMSS(s){ const m = Math.floor(s/60); return m + ':' + String(s%60).padStart(2,'0'); }
 
 function loadGuidedItem(i) {
   gIdx = i;
@@ -920,6 +971,7 @@ function guidedRun() {
   clearInterval(gInterval);
   gInterval = setInterval(()=>{
     gRemain--;
+    if (gCap) gElapsed++;
     const tEl = document.getElementById('gi-t-'+gIdx);
     if (gRemain > 0) {
       if (tEl) tEl.textContent = formatSec(gRemain);
@@ -932,6 +984,18 @@ function guidedRun() {
 }
 
 function guidedAdvance() {
+  // cap-blokken (tendon): loop de rotatie tot de looptijd-cap, dan klaar
+  if (gCap) {
+    if (gElapsed >= gCap) {
+      gRunning = false;
+      clearInterval(gInterval);
+      nextBlock();
+      return;
+    }
+    loadGuidedItem((gIdx + 1) % gItems.length);
+    if (gRunning) guidedRun();
+    return;
+  }
   if (gIdx >= gItems.length - 1) {
     // warmup done → terug naar sessie, markeer blok als gedaan
     gRunning = false;
@@ -1727,7 +1791,7 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull'] },
   { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
