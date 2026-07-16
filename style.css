@@ -66,6 +66,12 @@
   100% { opacity: 1; background-position: -30% 0; transform: scale(1); }
 }
 @keyframes byFade { to { opacity: 1; } }
+#splashBeta {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--disabled); margin-top: 6px; padding-left: .25em;
+  opacity: 0; animation: byFade .6s ease .7s forwards;
+}
 #splashFlash {
   position: absolute; inset: 0; background: var(--acid);
   opacity: 0; pointer-events: none;
