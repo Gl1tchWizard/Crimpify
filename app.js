@@ -1706,9 +1706,11 @@ function renderTodaysPick() {
   if (pick.rest) {
     card.innerHTML = `<div class="pick-card">
       <div class="pick-body">
-        <div class="pick-kicker">today's pick</div>
+        <div class="pick-kicker">recommended today</div>
         <div class="pick-name">Rest day</div>
         <div class="pick-reason">${reason}</div>
+        <button class="pick-why-btn" onclick="togglePickWhy(this)">why this? →</button>
+        <div class="pick-why" id="pickWhy">${coachDetail(pick)}</div>
         <button class="pick-btn ghost" onclick="applyCoach()">Easy recovery →</button>
       </div>
     </div>`;
@@ -1721,13 +1723,47 @@ function renderTodaysPick() {
   card.innerHTML = `<div class="pick-card">
     <div class="pick-band">${band}</div>
     <div class="pick-body">
-      <div class="pick-kicker">today's pick</div>
+      <div class="pick-kicker">recommended today</div>
       <div class="pick-name">${s.name}</div>
       <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${isFinite(t) ? t : total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
       <div class="pick-reason">${reason}</div>
+      <button class="pick-why-btn" onclick="togglePickWhy(this)">why this? →</button>
+      <div class="pick-why" id="pickWhy">${coachDetail(pick)}</div>
       <button class="pick-btn" onclick="applyCoach()">Start session</button>
     </div>
   </div>`;
+}
+// WHY THIS?: de causale regel blijft staan, dit klapt de volledige coach-redenering uit.
+// Advies, geen oordeel (productprincipe 3). Samengesteld uit bestaande data.
+function coachZoneWord(ratio) {
+  if (ratio == null) return null;
+  if (ratio < 0.8) return 'building back up';
+  if (ratio <= 1.3) return 'balanced';
+  if (ratio <= 1.5) return 'pushing';
+  return 'high risk';
+}
+function coachDetail(pick) {
+  const s = getSession(pick.id);
+  const h = loadHistory();
+  const { ratio } = computeACWR();
+  const parts = [];
+  if (ratio != null) parts.push(`Your load ratio sits at ${ratio.toFixed(2)} (${coachZoneWord(ratio)}).`);
+  else parts.push('There is not enough history yet to read your load trend, so this is a gentle default.');
+  if (h.length && h[0].sig) parts.push(`Your last session logged ${h[0].sig}.`);
+  if (s) {
+    const blocks = getBlocks(pick.id);
+    const names = blocks.map(b => b.n).join(', ');
+    const what = s.desc ? s.desc.split('\n')[0].toLowerCase() : (s.goal ? s.goal.toLowerCase() : 'training');
+    if (names) parts.push(`${s.name} works ${what}: ${names}.`);
+  }
+  parts.push('This is advice, not a verdict. Your own rhythm and how you feel today win.');
+  return parts.join(' ');
+}
+function togglePickWhy(btn) {
+  const el = document.getElementById('pickWhy');
+  if (!el) return;
+  const open = el.classList.toggle('open');
+  btn.textContent = open ? 'why this? ▴' : 'why this? →';
 }
 function applyCoach() {
   if (!_coachPick) return;

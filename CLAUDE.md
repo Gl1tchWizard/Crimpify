@@ -122,15 +122,22 @@ warm-up" (inside joke, bewust).
    Tijd is context, geen formulier; tik opent de compacte chip-rij (alle
    waarden 30…150 + ∞, geen "min"-labels) die na een keuze weer dichtklapt.
    Tijd wijzigen ververst Today's Pick live.
-3. **Today's Pick** — het primaire moment, één grote kaart: fingerprint-band
-   (echte bloksequentie), titel, doel/duur/materiaal/load-pips (acid), één
-   causale coachregel uit de bestaande coach/ACWR-logica (`coachSuggest` +
-   `adaptCoachToTime`), grote acid START SESSION (opent de slab, nooit blind
-   starten). De losse coach-kaart bestaat niet meer; rustadvies wordt een
-   "Rest day"-variant met ghost-CTA. Lege staat: starterspick met "A good
-   first session to get you going."
-4. **Secundaire routes**, één regel: "Choose another →" en "Build your own".
-   Het advies negeren kan altijd (productprincipe 3).
+3. **Recommended today** (hernoemd van Today's Pick) — het primaire moment,
+   één grote kaart: fingerprint-band (echte bloksequentie), titel,
+   doel/duur/materiaal/load-pips (acid), één causale coachregel uit de
+   bestaande coach/ACWR-logica (`coachSuggest` + `adaptCoachToTime`), een
+   kleine "WHY THIS? →" die de volledige redenering uitklapt (`coachDetail`;
+   de causale regel blijft staan, advies niet oordeel — productprincipe 3),
+   grote acid START SESSION (opent de slab, nooit blind starten). De losse
+   coach-kaart bestaat niet meer; rustadvies wordt een "Rest day"-variant met
+   ghost-CTA. Lege staat: starterspick met "A good first session to get you
+   going."
+4. **Actieladder eronder** (bladeren is geen gedegradeerde nooduitgang meer):
+   niveau 2 = een gevulde carbon-kaart "⌕ BROWSE SESSIONS · Find by goal, time
+   or equipment" (opent Choose, géén acid-vulling); niveau 3 = een outline-knop
+   "+ BUILD A SESSION" (opent Build). Eén acid-knop op het scherm: START
+   SESSION (niveau 1) > BROWSE (gevuld, niveau 2) > BUILD (outline, niveau 3).
+   De oude losse monospace-links zijn weg (lazen als metadata, niet als route).
 5. **Continue** (alleen bij onafgemaakte training): eigen kaart boven Saved,
    "Block X of N · ~M min remaining", Resume hervat op blokgrens.
    Persistentie in `crimpify_active` (verloopt na 12 uur); lopende timers
@@ -144,9 +151,7 @@ warm-up" (inside joke, bewust).
    toont hoe het gaat, niet wat je trainde). Eronder één regel
    "N sessions · load balanced" (ACWR-zone in één woord); tik opent het
    bestaande ACWR-paneel. Dots tikbaar naar de recap.
-8. **Discover**: één plank "Popular at Apex this week →" met de bestaande
-   Choose-kaarten; de catalogus is een etalage, geen deur.
-9. **News**: rustige plank onderaan, onder Discover, mag Today's Pick nooit
+8. **News**: rustige plank net boven Discover, mag Recommended today nooit
    beconcurreren (kleine DM Mono-rijen, gedempte kop, acid alleen op de
    NEW-marker en de pijl). Twee bronnen: automatische "Freshly added: [naam]"
    uit een `addedDate`-veld op blokken/sessies (binnen 14 dagen, verloopt
@@ -156,6 +161,15 @@ warm-up" (inside joke, bewust).
    staan in `crimpify_seen_news` en komen niet terug. Is er niets zichtbaar,
    dan verbergt de sectie zich (geen lege huls). Een block-link opent de
    voorgefilterde blok-bibliotheek, een session-link de preview.
+9. **Discover**: één plank "Popular at Apex this week →" met de bestaande
+   Choose-kaarten, blijft onderaan; inspiratie, geen navigatie (niet omhoog
+   halen). De catalogus is een etalage, geen deur.
+
+### Bottom navigation (gepland, uitgesteld)
+De structurele oplossing voor navigatie is een vaste bottom-nav
+(HOME · SESSIONS · BUILD · SAVED). Bewust uitgesteld tot na de eerste
+veldtest; de actieladder op de landing (START > BROWSE > BUILD) overbrugt tot
+dan. Nu bouwen zou voortijdig zijn.
 
 ### Broadcast zonder backend
 `ANNOUNCEMENTS` is het kanaal om alle gebruikers tegelijk iets te vertellen:
