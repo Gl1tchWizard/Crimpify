@@ -32,6 +32,14 @@ de echte app driven in een headless browser en screenshots vastleggen.
 
 ## Gotcha's
 
+- **Verse Playwright-contexten verhullen de service worker.** Elke nieuwe
+  context heeft geen SW en geen HTTP-cache, dus je test altijd de nieuwste
+  code — terwijl een echte bezoeker door de SW-cache één of meer versies
+  achterloopt. Test bij SW-gerelateerde wijzigingen óók de tweede load in
+  DEZELFDE context (`navigator.serviceWorker.ready`, cache-inhoud checken,
+  dan reload en de flow driven). De install gebruikt `cache:'reload'` zodat
+  de named cache nooit oude bytes uit de HTTP-cache krijgt (sinds v18).
+
 - Headless klikt zó snel dat de toast (1.8 s) nog in beeld staat op latere
   screenshots; dat is timing, geen bug. Meet met `performance.now()` als je twijfelt.
 - De splash duurt ~2,3 s; wacht op een selector, niet op tijd.

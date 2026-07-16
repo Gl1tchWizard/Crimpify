@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v17';
+const CACHE = 'crimpify-v18';
 const CORE = [
   './',
   'index.html',
@@ -15,7 +15,12 @@ const CORE = [
 ];
 
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
+  // cache:'reload' dwingt verse bytes van het netwerk af; zonder dit mag de
+  // browser-HTTP-cache een oude app.js in de nieuwe named cache stoppen en
+  // blijft een bezoeker op verouderde code hangen tot die cache verloopt
+  e.waitUntil(caches.open(CACHE)
+    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
