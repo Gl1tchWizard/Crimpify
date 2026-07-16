@@ -83,7 +83,8 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
 
 ### Kleurregels
 1. Eén betekenis per kleur. Acid = merk, interactie, selectie en load; nooit
-   een fingerprint-kleur, nooit decoratie.
+   een fingerprint-kleur, nooit decoratie. Eén vastgelegde uitzondering: de
+   kleine NEW-marker in News (bewust besloten, juli 2026).
 2. Load-indicatoren (phalanx) altijd `--load-filled`/`--load-empty`. Dit
    corrigeert de eerdere beslissing "phalanx in de dominante sessiekleur".
 3. Stoplichtkleuren zijn exclusief het autoregulatiesignaal. Done/success =
@@ -91,6 +92,8 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
    neutraal dust, geen kleursignaal.
 4. Max 3 kleuren per sessiekaart; dominante prikkel 60–80%, prepare 10–25%
    (richtlijn voor sessiemakers; bestaande sessies niet herbalanceren).
+   Fresh First is een bewuste uitzondering: drie gelijke fase-derden zijn
+   daar het ontwerp (front-load-principe).
 5. Tekst chalk, nooit puur wit. Gedempt = dust. Randen = graphite.
 6. Geen willekeurige kleuren in sessiekaarten; alleen semantische tokens.
 
@@ -156,7 +159,8 @@ warm-up" (inside joke, bewust).
    NEW-marker en de pijl). Twee bronnen: automatische "Freshly added: [naam]"
    uit een `addedDate`-veld op blokken/sessies (binnen 14 dagen, verloopt
    vanzelf, geen onderhoud) en handmatige `ANNOUNCEMENTS` in app.js
-   (`{id, title, body, date, link?}`). Announcements boven auto-items, nieuwste
+   (`{id, title, body, date, link?}`; link = `{type:'session', name}` |
+   `{type:'block', key}` | url-string). Announcements boven auto-items, nieuwste
    eerst, hoogstens een paar zichtbaar. Elk item is wegtikbaar; weggetikte ids
    staan in `crimpify_seen_news` en komen niet terug. Is er niets zichtbaar,
    dan verbergt de sectie zich (geen lege huls). Een block-link opent de
@@ -272,7 +276,7 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.17) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.22) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.

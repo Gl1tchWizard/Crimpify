@@ -144,6 +144,8 @@ function drillOfDay() {
 
 // ══ BLOCK LIBRARY ══
 // Every key is a reusable training block. t = base time at a 90 min session.
+// Gedeelde uitleg voor beide tendon-blokken: één bron, geen drift tussen de varianten.
+const TENDON_WHY = 'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.';
 const BLOCKLIB = {
   // ── openers ──
   dynamic: { n:'Charlie warm-up', t:10, c:'var(--prepare)', rpe:'1-2', guided:true,
@@ -207,7 +209,7 @@ const BLOCKLIB = {
       { n:'Thumb press', note:'door frame · 40-50% · set 2 of 2', sec:10 },
     ] },
   tendonClimb: { n:'Tendon Training: Climb', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
-    why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
+    why:TENDON_WHY,
     items:[
       { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
       { n:'Three finger drag', note:'open hand · ~50% · static', sec:30 },
@@ -216,7 +218,7 @@ const BLOCKLIB = {
       { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
     ] },
   tendonFull: { n:'Tendon Training: Full Body', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
-    why:'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.',
+    why:TENDON_WHY,
     items:[
       { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
       { n:'Lunge hold, left', note:'static · hold the position', sec:30 },
@@ -602,7 +604,8 @@ function hasLiveProgress() {
   }
   if (v === 'v-guided') {
     const elapsed = gItems[gIdx] ? (gItems[gIdx].sec - gRemain) : 0;
-    return gIdx > 0 || elapsed >= 10;
+    // gElapsed dekt cap-blokken: daar wrapt gIdx terug naar 0 tijdens de rotatie
+    return gIdx > 0 || elapsed >= 10 || gElapsed >= 10;
   }
   if (v === 'v-drillfocus') {
     const elapsed = dfTotal - dfRemain;
@@ -967,7 +970,7 @@ function renderGuided() {
 }
 
 function formatSec(s){ return s + 's'; }
-function fmtMMSS(s){ const m = Math.floor(s/60); return m + ':' + String(s%60).padStart(2,'0'); }
+// mm:ss-weergave: fmtMMSS staat bij de drill-player (één definitie voor de hele app)
 
 function loadGuidedItem(i) {
   gIdx = i;
@@ -981,7 +984,12 @@ function guidedRun() {
   clearInterval(gInterval);
   gInterval = setInterval(()=>{
     gRemain--;
-    if (gCap) gElapsed++;
+    if (gCap) {
+      gElapsed++;
+      // de cap-teller moet per seconde meelopen, niet alleen op item-overgangen
+      const pEl = document.getElementById('guidedProg');
+      if (pEl) pEl.textContent = `${fmtMMSS(gElapsed)} / ${fmtMMSS(gCap)}`;
+    }
     const tEl = document.getElementById('gi-t-'+gIdx);
     if (gRemain > 0) {
       if (tEl) tEl.textContent = formatSec(gRemain);
@@ -994,26 +1002,18 @@ function guidedRun() {
 }
 
 function guidedAdvance() {
-  // cap-blokken (tendon): loop de rotatie tot de looptijd-cap, dan klaar
-  if (gCap) {
-    if (gElapsed >= gCap) {
-      gRunning = false;
-      clearInterval(gInterval);
-      nextBlock();
-      return;
-    }
-    loadGuidedItem((gIdx + 1) % gItems.length);
-    if (gRunning) guidedRun();
-    return;
-  }
-  if (gIdx >= gItems.length - 1) {
-    // warmup done → terug naar sessie, markeer blok als gedaan
+  // cap-blokken (tendon): overslaan telt als verbruikte tijd, anders is het blok
+  // met de Next-knop nooit af te ronden (de rotatie loopt tot de looptijd-cap)
+  if (gCap) gElapsed += Math.max(0, gRemain);
+  const done = gCap ? gElapsed >= gCap : gIdx >= gItems.length - 1;
+  if (done) {
+    // klaar → terug naar sessie, markeer blok als gedaan
     gRunning = false;
     clearInterval(gInterval);
     nextBlock();
     return;
   }
-  loadGuidedItem(gIdx + 1);
+  loadGuidedItem(gCap ? (gIdx + 1) % gItems.length : gIdx + 1);
   if (gRunning) guidedRun();
 }
 
@@ -1709,8 +1709,8 @@ function renderTodaysPick() {
         <div class="pick-kicker">recommended today</div>
         <div class="pick-name">Rest day</div>
         <div class="pick-reason">${reason}</div>
-        <button class="pick-why-btn" onclick="togglePickWhy(this)">why this? →</button>
-        <div class="pick-why" id="pickWhy">${coachDetail(pick)}</div>
+        <button class="pick-why-btn" onclick="togglePickWhy(this)">${_pickWhyOpen ? 'why this? ▴' : 'why this? →'}</button>
+        <div class="pick-why${_pickWhyOpen ? ' open' : ''}" id="pickWhy">${_pickWhyOpen ? coachDetail(pick) : ''}</div>
         <button class="pick-btn ghost" onclick="applyCoach()">Easy recovery →</button>
       </div>
     </div>`;
@@ -1727,27 +1727,21 @@ function renderTodaysPick() {
       <div class="pick-name">${s.name}</div>
       <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${isFinite(t) ? t : total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
       <div class="pick-reason">${reason}</div>
-      <button class="pick-why-btn" onclick="togglePickWhy(this)">why this? →</button>
-      <div class="pick-why" id="pickWhy">${coachDetail(pick)}</div>
+      <button class="pick-why-btn" onclick="togglePickWhy(this)">${_pickWhyOpen ? 'why this? ▴' : 'why this? →'}</button>
+      <div class="pick-why${_pickWhyOpen ? ' open' : ''}" id="pickWhy">${_pickWhyOpen ? coachDetail(pick) : ''}</div>
       <button class="pick-btn" onclick="applyCoach()">Start session</button>
     </div>
   </div>`;
 }
 // WHY THIS?: de causale regel blijft staan, dit klapt de volledige coach-redenering uit.
-// Advies, geen oordeel (productprincipe 3). Samengesteld uit bestaande data.
-function coachZoneWord(ratio) {
-  if (ratio == null) return null;
-  if (ratio < 0.8) return 'building back up';
-  if (ratio <= 1.3) return 'balanced';
-  if (ratio <= 1.5) return 'pushing';
-  return 'high risk';
-}
+// Advies, geen oordeel (productprincipe 3). Samengesteld uit bestaande data; het
+// zone-woord komt uit acwrZone zodat het nooit kan afwijken van het ACWR-paneel.
 function coachDetail(pick) {
   const s = getSession(pick.id);
   const h = loadHistory();
   const { ratio } = computeACWR();
   const parts = [];
-  if (ratio != null) parts.push(`Your load ratio sits at ${ratio.toFixed(2)} (${coachZoneWord(ratio)}).`);
+  if (ratio != null) parts.push(`Your load ratio sits at ${ratio.toFixed(2)} (${acwrZone(ratio).name}).`);
   else parts.push('There is not enough history yet to read your load trend, so this is a gentle default.');
   if (h.length && h[0].sig) parts.push(`Your last session logged ${h[0].sig}.`);
   if (s) {
@@ -1759,11 +1753,15 @@ function coachDetail(pick) {
   parts.push('This is advice, not a verdict. Your own rhythm and how you feel today win.');
   return parts.join(' ');
 }
+// open-staat overleeft re-renders (tijd-chip ververst de kaart); inhoud pas berekend bij openen
+let _pickWhyOpen = false;
 function togglePickWhy(btn) {
   const el = document.getElementById('pickWhy');
   if (!el) return;
-  const open = el.classList.toggle('open');
-  btn.textContent = open ? 'why this? ▴' : 'why this? →';
+  _pickWhyOpen = !_pickWhyOpen;
+  if (_pickWhyOpen && !el.textContent && _coachPick) el.textContent = coachDetail(_coachPick);
+  el.classList.toggle('open', _pickWhyOpen);
+  btn.textContent = _pickWhyOpen ? 'why this? ▴' : 'why this? →';
 }
 function applyCoach() {
   if (!_coachPick) return;
@@ -1963,12 +1961,14 @@ function toggleBlockGroup(name) {
 }
 function closeBlockPicker() { document.getElementById('blockPicker').style.display = 'none'; }
 function pickBlock(key) {
-  if (sessionLocked) return;
+  if (sessionLocked) { showToast('Session is locked. Unlock it to add blocks.'); return; }
   ensureDraftMode();
   customKeys.push(key);
   sessionLocked = false;
   closeBlockPicker();
   buildSlab();
+  // vanuit News/landing beland je anders onzichtbaar in een gewijzigde draft
+  if (activeView() !== 'v-session') goTo('v-session');
 }
 
 // ── EIGEN OEFENINGEN ──
@@ -3346,6 +3346,7 @@ function renderDiscover() {
 // en auto "Freshly added" uit een addedDate-veld op blokken/sessies (14 dagen, verloopt vanzelf).
 // Weggetikte items onthouden we in crimpify_seen_news; komen niet terug.
 const ANNOUNCEMENTS = [
+  // link is optioneel: {type:'session', name:'Easy Thirty'} | {type:'block', key:'tendonClimb'} | 'https://…'
   { id:'beta-2026-07', title:'We are in beta', date:'2026-07-16',
     body:'Still working out the beta, the sequence that makes it all flow. Expect things to change.' },
 ];
@@ -3353,7 +3354,10 @@ function loadSeenNews() { try { return JSON.parse(localStorage.getItem('crimpify
 function saveSeenNews(a) { try { localStorage.setItem('crimpify_seen_news', JSON.stringify(a)); } catch {} }
 function computeNews() {
   const seen = new Set(loadSeenNews());
+  const hidden = loadHidden();  // verborgen blokken horen ook niet in News (lege picker anders)
   const now = Date.now();
+  // ondergrens -2 dagen: Date.parse('2026-07-16') is UTC-middernacht, dus een addedDate
+  // van "vandaag" kan lokaal nog even in de toekomst liggen; verse deploys tonen meteen
   const fresh = d => { const t = Date.parse(d); return !isNaN(t) && (now - t) < 14*864e5 && (now - t) > -2*864e5; };
   const ann = ANNOUNCEMENTS
     .filter(a => !seen.has(a.id))
@@ -3362,7 +3366,7 @@ function computeNews() {
   const auto = [];
   Object.keys(BLOCKLIB).forEach(k => {
     const b = BLOCKLIB[k];
-    if (b.addedDate && fresh(b.addedDate) && !seen.has('fresh:' + k))
+    if (b.addedDate && fresh(b.addedDate) && !seen.has('fresh:' + k) && !hidden.includes(k))
       auto.push({ kind:'auto', id:'fresh:' + k, name:b.n, link:{ type:'block', key:k }, sort:Date.parse(b.addedDate) });
   });
   MOCK_CHOOSE.forEach((s, i) => {
@@ -3378,21 +3382,24 @@ function renderNews() {
   const items = computeNews();
   if (!items.length) { wrap.style.display = 'none'; return; }  // niets zichtbaar → geen lege huls
   wrap.style.display = '';
+  // ids kunnen sessienamen bevatten; escapen zodat een apostrof de onclick niet breekt
+  const esc = id => String(id).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
   document.getElementById('newsList').innerHTML = items.map(it => {
-    const clickable = it.link ? `onclick="openNews('${it.id}')"` : '';
+    const clickable = it.link ? `onclick="openNews('${esc(it.id)}')"` : '';
     const arrow = it.link ? '<span class="news-arrow">→</span>' : '';
     const head = it.kind === 'ann'
       ? `<div class="news-line"><span class="news-new">NEW</span> <span class="news-title">${it.title}</span>${arrow}</div><div class="news-body">${it.body}</div>`
       : `<div class="news-line"><span class="news-fresh">Freshly added:</span> <span class="news-title">${it.name}</span>${arrow}</div>`;
     return `<div class="news-item">
       <div class="news-main" ${clickable}>${head}</div>
-      <button class="news-x" onclick="dismissNews('${it.id}')" aria-label="dismiss">×</button>
+      <button class="news-x" onclick="dismissNews('${esc(it.id)}')" aria-label="dismiss">×</button>
     </div>`;
   }).join('');
 }
 function openNews(id) {
   const it = computeNews().find(x => x.id === id);
   if (!it || !it.link) return;
+  if (typeof it.link === 'string') { window.open(it.link, '_blank', 'noopener'); return; }  // announcement met url
   if (it.link.type === 'session') {
     let idx = it.link.idx;
     if (idx == null && it.link.name != null) idx = MOCK_CHOOSE.findIndex(s => s.name === it.link.name);
