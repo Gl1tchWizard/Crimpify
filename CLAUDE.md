@@ -42,6 +42,7 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
 | `crimpify_active` | onafgemaakte training voor de Continue-kaart: `{keys, name, color, sessionId, idx, spent, ts}`; verloopt na 12 uur |
+| `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 
 `basedOn` is optioneel en additief: `{title, coach}` op kopieën uit de
 catalogus; oude entries zonder basedOn blijven geldig.
@@ -82,7 +83,8 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
 
 ### Kleurregels
 1. Eén betekenis per kleur. Acid = merk, interactie, selectie en load; nooit
-   een fingerprint-kleur, nooit decoratie.
+   een fingerprint-kleur, nooit decoratie. Eén vastgelegde uitzondering: de
+   kleine NEW-marker in News (bewust besloten, juli 2026).
 2. Load-indicatoren (phalanx) altijd `--load-filled`/`--load-empty`. Dit
    corrigeert de eerdere beslissing "phalanx in de dominante sessiekleur".
 3. Stoplichtkleuren zijn exclusief het autoregulatiesignaal. Done/success =
@@ -90,6 +92,8 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
    neutraal dust, geen kleursignaal.
 4. Max 3 kleuren per sessiekaart; dominante prikkel 60–80%, prepare 10–25%
    (richtlijn voor sessiemakers; bestaande sessies niet herbalanceren).
+   Fresh First is een bewuste uitzondering: drie gelijke fase-derden zijn
+   daar het ontwerp (front-load-principe).
 5. Tekst chalk, nooit puur wit. Gedempt = dust. Randen = graphite.
 6. Geen willekeurige kleuren in sessiekaarten; alleen semantische tokens.
 
@@ -121,15 +125,22 @@ warm-up" (inside joke, bewust).
    Tijd is context, geen formulier; tik opent de compacte chip-rij (alle
    waarden 30…150 + ∞, geen "min"-labels) die na een keuze weer dichtklapt.
    Tijd wijzigen ververst Today's Pick live.
-3. **Today's Pick** — het primaire moment, één grote kaart: fingerprint-band
-   (echte bloksequentie), titel, doel/duur/materiaal/load-pips (acid), één
-   causale coachregel uit de bestaande coach/ACWR-logica (`coachSuggest` +
-   `adaptCoachToTime`), grote acid START SESSION (opent de slab, nooit blind
-   starten). De losse coach-kaart bestaat niet meer; rustadvies wordt een
-   "Rest day"-variant met ghost-CTA. Lege staat: starterspick met "A good
-   first session to get you going."
-4. **Secundaire routes**, één regel: "Choose another →" en "Build your own".
-   Het advies negeren kan altijd (productprincipe 3).
+3. **Recommended today** (hernoemd van Today's Pick) — het primaire moment,
+   één grote kaart: fingerprint-band (echte bloksequentie), titel,
+   doel/duur/materiaal/load-pips (acid), één causale coachregel uit de
+   bestaande coach/ACWR-logica (`coachSuggest` + `adaptCoachToTime`), een
+   kleine "WHY THIS? →" die de volledige redenering uitklapt (`coachDetail`;
+   de causale regel blijft staan, advies niet oordeel — productprincipe 3),
+   grote acid START SESSION (opent de slab, nooit blind starten). De losse
+   coach-kaart bestaat niet meer; rustadvies wordt een "Rest day"-variant met
+   ghost-CTA. Lege staat: starterspick met "A good first session to get you
+   going."
+4. **Actieladder eronder** (bladeren is geen gedegradeerde nooduitgang meer):
+   niveau 2 = een gevulde carbon-kaart "⌕ BROWSE SESSIONS · Find by goal, time
+   or equipment" (opent Choose, géén acid-vulling); niveau 3 = een outline-knop
+   "+ BUILD A SESSION" (opent Build). Eén acid-knop op het scherm: START
+   SESSION (niveau 1) > BROWSE (gevuld, niveau 2) > BUILD (outline, niveau 3).
+   De oude losse monospace-links zijn weg (lazen als metadata, niet als route).
 5. **Continue** (alleen bij onafgemaakte training): eigen kaart boven Saved,
    "Block X of N · ~M min remaining", Resume hervat op blokgrens.
    Persistentie in `crimpify_active` (verloopt na 12 uur); lopende timers
@@ -143,8 +154,79 @@ warm-up" (inside joke, bewust).
    toont hoe het gaat, niet wat je trainde). Eronder één regel
    "N sessions · load balanced" (ACWR-zone in één woord); tik opent het
    bestaande ACWR-paneel. Dots tikbaar naar de recap.
-8. **Discover**: één plank "Popular at Apex this week →" met de bestaande
-   Choose-kaarten; de catalogus is een etalage, geen deur.
+8. **News**: rustige plank net boven Discover, mag Recommended today nooit
+   beconcurreren (kleine DM Mono-rijen, gedempte kop, acid alleen op de
+   NEW-marker en de pijl). Twee bronnen: automatische "Freshly added: [naam]"
+   uit een `addedDate`-veld op blokken/sessies (binnen 14 dagen, verloopt
+   vanzelf, geen onderhoud) en handmatige `ANNOUNCEMENTS` in app.js
+   (`{id, title, body, date, link?}`; link = `{type:'session', name}` |
+   `{type:'block', key}` | url-string). Announcements boven auto-items, nieuwste
+   eerst, hoogstens een paar zichtbaar. Elk item is wegtikbaar; weggetikte ids
+   staan in `crimpify_seen_news` en komen niet terug. Is er niets zichtbaar,
+   dan verbergt de sectie zich (geen lege huls). Een block-link opent de
+   blok-detail-view, een session-link de preview.
+9. **Discover**: één plank "Popular at Apex this week →" met de bestaande
+   Choose-kaarten, blijft onderaan; inspiratie, geen navigatie (niet omhoog
+   halen). De catalogus is een etalage, geen deur.
+
+### Blok-detail-view (lezen → doen)
+Elke blok heeft een detail-overlay, bereikbaar vanuit News en via de ⓘ in de
+blok-bibliotheek (de + van de picker blijft de quick-add voor de builder).
+Header: groepskicker in de categoriekleur, bloknaam, metaregel met rpe-tekst
+als intensiteit (géén phalanx: pips = verwachte belasting, nooit rpe), basis-
+duur en vormhint (guided/counted/sets). Daaronder de volledige uitleg mét
+attributie en eventuele links. "Appears in" toont tikbare catalogus-kaarten
+van sessies die het blok bevatten; geen matches = sectie weg. Twee acties:
+TRY THIS NOW (acid, primair) genereert een minimale wrapper-sessie (Charlie
+warm-up + dit blok) en opent de slab startklaar; ADD TO SESSION voegt het blok
+toe aan de bestaande draft (of start een verse) en landt zichtbaar in de
+builder. Nooit een stille add.
+
+### Bottom navigation (gepland, uitgesteld)
+De structurele oplossing voor navigatie is een vaste bottom-nav
+(HOME · SESSIONS · BUILD · SAVED). Bewust uitgesteld tot na de eerste
+veldtest; de actieladder op de landing (START > BROWSE > BUILD) overbrugt tot
+dan. Nu bouwen zou voortijdig zijn.
+
+### Climb with intent (uitgesteld tot na de eerste veldtest)
+Intent-tracking op sessieniveau, nog niet bouwen. Gefundeerd op drie
+onderzoekslijnen:
+
+1. **Attentional focus** (Wulf, 15-jaars review): een EXTERNE focus (op het
+   effect van de beweging) verslaat een interne focus (op lichaamsdelen) voor
+   zowel prestatie als leren, over leeftijden en niveaus heen. Daarom worden
+   alle intents geformuleerd als externe effecten, nooit als
+   lichaamsinstructies: "no sound on the footholds", niet "focus on
+   footwork"; "push the hold away", niet "straighten your arms"; "touch the
+   hold where you aimed", niet "commit".
+2. **OPTIMAL-theorie** (Wulf & Lewthwaite): autonomie versnelt motorisch
+   leren. Intents worden altijd GEKOZEN door de klimmer uit een aangeboden
+   set, nooit toegewezen. Consistent met productprincipe 3 (autoregulatie).
+3. **Deliberate practice** (Ericsson): een goede intent beantwoordt "wat
+   houdt me tegen", gekoppeld aan een zwakte of doel, met feedback op de
+   uitvoeringskwaliteit.
+
+Ontwerp bij bouwen:
+- Vóór een sessie: optioneel 1-2 intents kiezen uit een kleine bibliotheek.
+- Tijdens: de gekozen intent blijft zichtbaar als rustig label.
+- Na afloop: één micro-reflectie naast het bestaande stoplicht: hield het
+  effect stand? Eén tik, geen huiswerk.
+- Intent-bibliotheek in vier categorieën: movement (silent feet, skeleton
+  hang), effort (true tries: visualise twice, climb as visualised), process
+  (no pulling on before a complete plan), head (falling is data).
+- Let op: het schema heeft al een `intent`-veld in favs/draft — dat is nu de
+  sessie-belofte-regel (één zin marketing-achtige omschrijving), niet dit
+  concept. Vóór het bouwen checken of hergebruik kan of dat het botst; een
+  naamconflict ligt voor de hand.
+- Geen score, geen streaks, geen voltooiingspercentages: bewustzijn, geen
+  gamification.
+
+### Broadcast zonder backend
+`ANNOUNCEMENTS` is het kanaal om alle gebruikers tegelijk iets te vertellen:
+voeg een array-entry toe en deploy (GitHub Pages deployt vanaf main). Geen
+server, geen backend — consistent met productprincipe 1. Het `addedDate`-veld
+(ISO, bv. `'2026-07-16'`) is additief: blokken/sessies zonder dat veld doen
+gewoon niet mee, entries ouder dan 14 dagen verdwijnen vanzelf uit News.
 
 Visueel: drie niveaus (ink-achtergrond, gevulde carbon-kaarten, één primaire
 kaart met het kleurmoment en de acid-CTA); weinig randen; display-font alleen
@@ -240,7 +322,7 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.17) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.24) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.

@@ -144,6 +144,8 @@ function drillOfDay() {
 
 // ══ BLOCK LIBRARY ══
 // Every key is a reusable training block. t = base time at a 90 min session.
+// Gedeelde uitleg voor beide tendon-blokken: één bron, geen drift tussen de varianten.
+const TENDON_WHY = 'Based on the tendon research of Prof. Keith Baar (UC Davis). Tendons respond to isometric load for about ten minutes, then the cells stop responding; more is not better, just more wear. So this caps at ten minutes whatever round you reach. Static holds only, no bounce, light to moderate at roughly 50 percent or less, always pain-free. Ideally a session of its own, morning or pre-training, and you can repeat it after six hours or more. You can also spread the holds across days instead of doing them all at once.';
 const BLOCKLIB = {
   // ── openers ──
   dynamic: { n:'Charlie warm-up', t:10, c:'var(--prepare)', rpe:'1-2', guided:true,
@@ -179,6 +181,51 @@ const BLOCKLIB = {
     why:'Progressive warm-up (boulder ladder 4 → 6c) plus specific finger prep: easy hangs, lifting pin building up, at least 15 min of tendon preparation. For heavy finger work this is non-negotiable.' },
   mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, c:'var(--prepare)', rpe:'-',
     why:'Jumping jacks 30, seals 20, split jumps 20, trunk twists 20, leg swings 20+20, arm/elbow/shoulder circles. Tendon glides on top.' },
+
+  // ── finger/tendon prehab (guided, low load) — submaximaal, daarom prepare i.p.v. max-effort ──
+  //    noHangsEmil = eindige lijst; tendon* = loopen tot de 10-min cap (capSec).
+  noHangsEmil: { n:'No Hangs (remix)', t:5, c:'var(--prepare)', rpe:'2-3', guided:true, fixed:true, addedDate:'2026-07-16',
+    links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=sBTI9qiH4UE'}],
+    why:'Based on Emil Abrahamsson\'s no hangs. Light, pain-free capacity work for tendon adaptation and prehab, never near your limit. Ten seconds on, twenty seconds off, working through the grips at 40 to 50 percent of a lift-off effort. Gentle enough to do twice a day.',
+    items:[
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 1 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 2 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Four finger crimp', note:'14mm edge · 40-50% lift-off · set 3 of 3', sec:10 },
+      { n:'Rest', note:'ease off the edge', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 1 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 2 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Three finger drag', note:'deep pocket · 40-50% · set 3 of 3', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Middle two finger pocket', note:'40-50% · 1 set', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Front two finger pocket', note:'40-50% · 1 set', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Thumb press', note:'door frame · 40-50% · set 1 of 2', sec:10 },
+      { n:'Rest', note:'ease off', sec:20, rest:true },
+      { n:'Thumb press', note:'door frame · 40-50% · set 2 of 2', sec:10 },
+    ] },
+  tendonClimb: { n:'Tendon Training: Climb', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
+    why:TENDON_WHY,
+    items:[
+      { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
+      { n:'Three finger drag', note:'open hand · ~50% · static', sec:30 },
+      { n:'Lunge hold, left', note:'static · hold the position', sec:30 },
+      { n:'Lunge hold, right', note:'static · hold the position', sec:30 },
+      { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
+    ] },
+  tendonFull: { n:'Tendon Training: Full Body', t:10, c:'var(--prepare)', rpe:'2', guided:true, fixed:true, capSec:600, addedDate:'2026-07-16',
+    why:TENDON_WHY,
+    items:[
+      { n:'Half crimp', note:'fingers and pulleys · ~50% · static', sec:30 },
+      { n:'Lunge hold, left', note:'static · hold the position', sec:30 },
+      { n:'Lunge hold, right', note:'static · hold the position', sec:30 },
+      { n:'Wrist flexion hold', note:'forearm · ~50% · static', sec:30 },
+      { n:'Squat hold', note:'wall sit · quads and Achilles · static', sec:30 },
+    ] },
 
   // ── capacity cores ──
   volume: { n:'Volume boulders', t:40, c:'var(--volume)', rpe:'6', sets:30, rest:3, checklist:true, target:30, range:'25-35',
@@ -279,6 +326,15 @@ const BLOCKLIB = {
     why:'3×3 heavy pull-ups (weighted if 3 is easy), full rest. Maintain pull strength in six minutes.' },
   mdCore: { n:'Micro core', t:5, c:'var(--prepare)', rpe:'6-7', sets:3, fixed:true,
     why:'3 rounds: 20 sec hollow hold plus 8 hanging knee raises. Maintain tension without eating time.' },
+  // ── front-load fasen (voor de Fresh First-sessie): drie flexibele blokken met
+  //    gelijke basis-t, zodat ze in gelijke derden meeschalen met de tijd-slider.
+  //    Kleur volgt uit de groep (orange → teal → blue = hardst eerst, rustig laatst).
+  frontGrowth: { n:'Limit work (fresh)', t:20, c:'var(--max-effort)', rpe:'8-9',
+    why:'First third, while your nervous system is fresh. Your hardest material: limit boulders, a project, committing dynos, complex coordination. This is the point of the session. Long rests, real effort, and you walk away before the quality drops.' },
+  frontBuild: { n:'Working boulders', t:20, c:'var(--volume)', rpe:'6-7',
+    why:'Middle third. Material you are developing: not comfortable, not impossible. Boulders you can nearly do. This is where skills consolidate. Keep the quality high and rest enough to try hard.' },
+  frontMaint: { n:'Easy wind-down', t:20, c:'var(--prepare)', rpe:'3-4',
+    why:'Final third. Easy volume, simple movement, familiar problems. Warm-up-style climbing belongs here, at the end, not the start. Move smooth and leave feeling good.' },
   stretch: { n:'Stretch', t:10, c:'var(--prepare)', rpe:'-',
     why:'Pancake progression (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine and lats. 2 min per position. Breathe out.' },
   stretchLong: { n:'Extended stretch', t:25, c:'var(--prepare)', rpe:'-',
@@ -527,6 +583,7 @@ function goTo(viewId) {
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(viewId).classList.add('active');
   if (viewId === 'v-browse' && typeof renderContinue === 'function') renderContinue();
+  if (viewId === 'v-browse' && typeof renderNews === 'function') renderNews();
   stopTimer();
   if (viewId !== 'v-guided') { gRunning = false; clearInterval(gInterval); }
   if (viewId !== 'v-drills' && typeof dpIntervals !== 'undefined') { dpIntervals.forEach((iv,i)=>{ if(iv) clearInterval(iv); dpIntervals[i]=null; }); }
@@ -547,7 +604,8 @@ function hasLiveProgress() {
   }
   if (v === 'v-guided') {
     const elapsed = gItems[gIdx] ? (gItems[gIdx].sec - gRemain) : 0;
-    return gIdx > 0 || elapsed >= 10;
+    // gElapsed dekt cap-blokken: daar wrapt gIdx terug naar 0 tijdens de rotatie
+    return gIdx > 0 || elapsed >= 10 || gElapsed >= 10;
   }
   if (v === 'v-drillfocus') {
     const elapsed = dfTotal - dfRemain;
@@ -868,11 +926,14 @@ function openBlock(idx) {
 
 // ══ GUIDED WARMUP PLAYER ══
 let gItems = [], gIdx = 0, gRemain = 0, gInterval = null, gRunning = false;
+let gElapsed = 0, gCap = null;  // gCap (sec) = looptijd-cap; blok loopt de items rond tot de cap
 
 function startGuided(blockIdx) {
   const b = currentBlocks[blockIdx];
   gItems = b.items;
   gIdx = 0;
+  gElapsed = 0;
+  gCap = b.capSec || null;
   document.getElementById('guidedTitle').textContent = b.n;
   goTo('v-guided');
   loadGuidedItem(0);
@@ -903,10 +964,13 @@ function renderGuided() {
   // scroll active into center
   const active = document.getElementById('gi-'+gIdx);
   if (active) active.scrollIntoView({block:'center', behavior:'smooth'});
-  document.getElementById('guidedProg').textContent = `${Math.min(gIdx+1,gItems.length)} / ${gItems.length}`;
+  document.getElementById('guidedProg').textContent = gCap
+    ? `${fmtMMSS(gElapsed)} / ${fmtMMSS(gCap)}`
+    : `${Math.min(gIdx+1,gItems.length)} / ${gItems.length}`;
 }
 
 function formatSec(s){ return s + 's'; }
+// mm:ss-weergave: fmtMMSS staat bij de drill-player (één definitie voor de hele app)
 
 function loadGuidedItem(i) {
   gIdx = i;
@@ -920,6 +984,12 @@ function guidedRun() {
   clearInterval(gInterval);
   gInterval = setInterval(()=>{
     gRemain--;
+    if (gCap) {
+      gElapsed++;
+      // de cap-teller moet per seconde meelopen, niet alleen op item-overgangen
+      const pEl = document.getElementById('guidedProg');
+      if (pEl) pEl.textContent = `${fmtMMSS(gElapsed)} / ${fmtMMSS(gCap)}`;
+    }
     const tEl = document.getElementById('gi-t-'+gIdx);
     if (gRemain > 0) {
       if (tEl) tEl.textContent = formatSec(gRemain);
@@ -932,14 +1002,18 @@ function guidedRun() {
 }
 
 function guidedAdvance() {
-  if (gIdx >= gItems.length - 1) {
-    // warmup done → terug naar sessie, markeer blok als gedaan
+  // cap-blokken (tendon): overslaan telt als verbruikte tijd, anders is het blok
+  // met de Next-knop nooit af te ronden (de rotatie loopt tot de looptijd-cap)
+  if (gCap) gElapsed += Math.max(0, gRemain);
+  const done = gCap ? gElapsed >= gCap : gIdx >= gItems.length - 1;
+  if (done) {
+    // klaar → terug naar sessie, markeer blok als gedaan
     gRunning = false;
     clearInterval(gInterval);
     nextBlock();
     return;
   }
-  loadGuidedItem(gIdx + 1);
+  loadGuidedItem(gCap ? (gIdx + 1) % gItems.length : gIdx + 1);
   if (gRunning) guidedRun();
 }
 
@@ -1632,9 +1706,11 @@ function renderTodaysPick() {
   if (pick.rest) {
     card.innerHTML = `<div class="pick-card">
       <div class="pick-body">
-        <div class="pick-kicker">today's pick</div>
+        <div class="pick-kicker">recommended today</div>
         <div class="pick-name">Rest day</div>
         <div class="pick-reason">${reason}</div>
+        <button class="pick-why-btn" onclick="togglePickWhy(this)">${_pickWhyOpen ? 'why this? ▴' : 'why this? →'}</button>
+        <div class="pick-why${_pickWhyOpen ? ' open' : ''}" id="pickWhy">${_pickWhyOpen ? coachDetail(pick) : ''}</div>
         <button class="pick-btn ghost" onclick="applyCoach()">Easy recovery →</button>
       </div>
     </div>`;
@@ -1647,13 +1723,45 @@ function renderTodaysPick() {
   card.innerHTML = `<div class="pick-card">
     <div class="pick-band">${band}</div>
     <div class="pick-body">
-      <div class="pick-kicker">today's pick</div>
+      <div class="pick-kicker">recommended today</div>
       <div class="pick-name">${s.name}</div>
       <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${isFinite(t) ? t : total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
       <div class="pick-reason">${reason}</div>
+      <button class="pick-why-btn" onclick="togglePickWhy(this)">${_pickWhyOpen ? 'why this? ▴' : 'why this? →'}</button>
+      <div class="pick-why${_pickWhyOpen ? ' open' : ''}" id="pickWhy">${_pickWhyOpen ? coachDetail(pick) : ''}</div>
       <button class="pick-btn" onclick="applyCoach()">Start session</button>
     </div>
   </div>`;
+}
+// WHY THIS?: de causale regel blijft staan, dit klapt de volledige coach-redenering uit.
+// Advies, geen oordeel (productprincipe 3). Samengesteld uit bestaande data; het
+// zone-woord komt uit acwrZone zodat het nooit kan afwijken van het ACWR-paneel.
+function coachDetail(pick) {
+  const s = getSession(pick.id);
+  const h = loadHistory();
+  const { ratio } = computeACWR();
+  const parts = [];
+  if (ratio != null) parts.push(`Your load ratio sits at ${ratio.toFixed(2)} (${acwrZone(ratio).name}).`);
+  else parts.push('There is not enough history yet to read your load trend, so this is a gentle default.');
+  if (h.length && h[0].sig) parts.push(`Your last session logged ${h[0].sig}.`);
+  if (s) {
+    const blocks = getBlocks(pick.id);
+    const names = blocks.map(b => b.n).join(', ');
+    const what = s.desc ? s.desc.split('\n')[0].toLowerCase() : (s.goal ? s.goal.toLowerCase() : 'training');
+    if (names) parts.push(`${s.name} works ${what}: ${names}.`);
+  }
+  parts.push('This is advice, not a verdict. Your own rhythm and how you feel today win.');
+  return parts.join(' ');
+}
+// open-staat overleeft re-renders (tijd-chip ververst de kaart); inhoud pas berekend bij openen
+let _pickWhyOpen = false;
+function togglePickWhy(btn) {
+  const el = document.getElementById('pickWhy');
+  if (!el) return;
+  _pickWhyOpen = !_pickWhyOpen;
+  if (_pickWhyOpen && !el.textContent && _coachPick) el.textContent = coachDetail(_coachPick);
+  el.classList.toggle('open', _pickWhyOpen);
+  btn.textContent = _pickWhyOpen ? 'why this? ▴' : 'why this? →';
 }
 function applyCoach() {
   if (!_coachPick) return;
@@ -1727,14 +1835,14 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull'] },
   { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
-  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide','frontGrowth'] },
   { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls'] },
   { name:'Antagonist, core & gym',     keys:['pullStrength','pushStrength','coreLegs','mini1','mini2','mini3','lockoffs'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','frontMaint'] },
 ];
 // ── KLEURGRAMMATICA ──
 // kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
@@ -1818,6 +1926,7 @@ function renderBlockPicker(query) {
             <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}${yoursBadge(k)}</div>
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--disabled);margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
           </div>
+          <div onclick="event.stopPropagation();openBlockDetail('${k}')" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dust);padding:5px 9px;border:1px solid var(--graphite);border-radius:5px;">i</div>
           ${del}
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
         </div>`;
@@ -1853,12 +1962,14 @@ function toggleBlockGroup(name) {
 }
 function closeBlockPicker() { document.getElementById('blockPicker').style.display = 'none'; }
 function pickBlock(key) {
-  if (sessionLocked) return;
+  if (sessionLocked) { showToast('Session is locked. Unlock it to add blocks.'); return; }
   ensureDraftMode();
   customKeys.push(key);
   sessionLocked = false;
   closeBlockPicker();
   buildSlab();
+  // vanuit News/landing beland je anders onzichtbaar in een gewijzigde draft
+  if (activeView() !== 'v-session') goTo('v-session');
 }
 
 // ── EIGEN OEFENINGEN ──
@@ -2966,9 +3077,13 @@ const MOCK_CHOOSE = [
   // echte gecureerde sessie: denkt in aantallen (count-blokken), niet in tijd
   { cat:'coach',    name:'Easy Thirty',    coach:'Vincent',       mins:60, color:'green',  rpe:'4-5', done:57,  load:2, sys:'capacity', goal:'Easy volume', gear:['Gym wall'], level:'all levels', keys:['dynamic','easyTen','mediumTwenty'],
     intent:'Thirty boulders, counted, not timed. Warm up and flow.',
-    why:'A session that thinks in boulders instead of minutes: ten easy ones to warm up, twenty medium ones as the main course. You tick them off as you climb, and quality decides whether a boulder counts.' }
+    why:'A session that thinks in boulders instead of minutes: ten easy ones to warm up, twenty medium ones as the main course. You tick them off as you climb, and quality decides whether a boulder counts.' },
+  // huis-sessie op een gevestigd principe: intensiteit vooraan terwijl je fris bent (geen merkclaim)
+  { cat:'coach',    name:'Fresh First',    coach:'Crimpify',      mins:60, color:'amber',  rpe:'8-9', done:88,  load:4, sys:'performance', goal:'Hardest first', gear:['Gym wall'], level:'intermediate+', keys:['frontGrowth','frontBuild','frontMaint'], addedDate:'2026-07-16',
+    intent:'Hardest work first while you are fresh, easy volume last. Arrive warm.',
+    why:'Most climbers do it backwards: they warm up forever, then try hard when they are already tired. Fresh First flips it. The hardest material goes first, while your nervous system is sharp and your focus is full, because that is when you can actually move the needle. The middle third builds the boulders you are developing. Easy volume and simple movement come last, as the wind-down, not the opener. Arrive warm, spend your best energy on what matters, and finish smooth.' }
 ];
-const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach', 'Vincent':'easy day coach' };
+const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach', 'Vincent':'easy day coach', 'Crimpify':'the house method' };
 function coachShort(name) { const p = name.split(' '); return p.length > 1 ? p[0] + ' ' + p[1][0] + '.' : name; }
 
 // vingerafdruk: de echte bloksequentie, breedte naar rato van basisduur, categoriekleuren
@@ -3227,6 +3342,164 @@ function renderDiscover() {
   // landing blijft sterloos (één sterk moment); opslaan kan in de Choose-view
   el.innerHTML = APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0).map(ix => chCard(ix, true)).join('');
 }
+// ── NEWS: rustige plank onderaan de landing (onder Discover) ──
+// Twee bronnen: ANNOUNCEMENTS (handmatig broadcast, geen backend — productprincipe 1)
+// en auto "Freshly added" uit een addedDate-veld op blokken/sessies (14 dagen, verloopt vanzelf).
+// Weggetikte items onthouden we in crimpify_seen_news; komen niet terug.
+const ANNOUNCEMENTS = [
+  // link is optioneel: {type:'session', name:'Easy Thirty'} | {type:'block', key:'tendonClimb'} | 'https://…'
+  { id:'beta-2026-07', title:'We are in beta', date:'2026-07-16',
+    body:'Still working out the beta, the sequence that makes it all flow. Expect things to change.' },
+];
+function loadSeenNews() { try { return JSON.parse(localStorage.getItem('crimpify_seen_news') || '[]'); } catch { return []; } }
+function saveSeenNews(a) { try { localStorage.setItem('crimpify_seen_news', JSON.stringify(a)); } catch {} }
+function computeNews() {
+  const seen = new Set(loadSeenNews());
+  const hidden = loadHidden();  // verborgen blokken horen ook niet in News (lege picker anders)
+  const now = Date.now();
+  // ondergrens -2 dagen: Date.parse('2026-07-16') is UTC-middernacht, dus een addedDate
+  // van "vandaag" kan lokaal nog even in de toekomst liggen; verse deploys tonen meteen
+  const fresh = d => { const t = Date.parse(d); return !isNaN(t) && (now - t) < 14*864e5 && (now - t) > -2*864e5; };
+  const ann = ANNOUNCEMENTS
+    .filter(a => !seen.has(a.id))
+    .map(a => ({ kind:'ann', id:a.id, title:a.title, body:a.body, link:a.link||null, sort:Date.parse(a.date)||0 }))
+    .sort((x, y) => y.sort - x.sort);
+  const auto = [];
+  Object.keys(BLOCKLIB).forEach(k => {
+    const b = BLOCKLIB[k];
+    if (b.addedDate && fresh(b.addedDate) && !seen.has('fresh:' + k) && !hidden.includes(k))
+      auto.push({ kind:'auto', id:'fresh:' + k, name:b.n, link:{ type:'block', key:k }, sort:Date.parse(b.addedDate) });
+  });
+  MOCK_CHOOSE.forEach((s, i) => {
+    if (s.addedDate && fresh(s.addedDate) && !seen.has('fresh:session:' + s.name))
+      auto.push({ kind:'auto', id:'fresh:session:' + s.name, name:s.name, link:{ type:'session', idx:i }, sort:Date.parse(s.addedDate) });
+  });
+  auto.sort((x, y) => y.sort - x.sort);
+  return ann.concat(auto).slice(0, 4);  // announcements boven auto, nieuwste eerst, hoogstens een paar
+}
+function renderNews() {
+  const wrap = document.getElementById('newsWrap');
+  if (!wrap) return;
+  const items = computeNews();
+  if (!items.length) { wrap.style.display = 'none'; return; }  // niets zichtbaar → geen lege huls
+  wrap.style.display = '';
+  // ids kunnen sessienamen bevatten; escapen zodat een apostrof de onclick niet breekt
+  const esc = id => String(id).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  document.getElementById('newsList').innerHTML = items.map(it => {
+    const clickable = it.link ? `onclick="openNews('${esc(it.id)}')"` : '';
+    const arrow = it.link ? '<span class="news-arrow">→</span>' : '';
+    const head = it.kind === 'ann'
+      ? `<div class="news-line"><span class="news-new">NEW</span> <span class="news-title">${it.title}</span>${arrow}</div><div class="news-body">${it.body}</div>`
+      : `<div class="news-line"><span class="news-fresh">Freshly added:</span> <span class="news-title">${it.name}</span>${arrow}</div>`;
+    return `<div class="news-item">
+      <div class="news-main" ${clickable}>${head}</div>
+      <button class="news-x" onclick="dismissNews('${esc(it.id)}')" aria-label="dismiss">×</button>
+    </div>`;
+  }).join('');
+}
+function openNews(id) {
+  const it = computeNews().find(x => x.id === id);
+  if (!it || !it.link) return;
+  if (typeof it.link === 'string') { window.open(it.link, '_blank', 'noopener'); return; }  // announcement met url
+  if (it.link.type === 'session') {
+    let idx = it.link.idx;
+    if (idx == null && it.link.name != null) idx = MOCK_CHOOSE.findIndex(s => s.name === it.link.name);
+    if (idx >= 0) openChoosePreview(idx);
+  } else if (it.link.type === 'block') {
+    openBlockDetail(it.link.key);
+  }
+}
+// ── BLOCK DETAIL: lezen → doen. Vanuit News en de bibliotheek (ⓘ); nooit een stille add. ──
+function blockGroupName(key) {
+  if (key.startsWith('ux_')) return 'Own';
+  const g = BLOCK_GROUPS.find(g => g.keys.includes(key));
+  return g ? g.name : 'Other';
+}
+// sessiekleur-naam (C-map) uit de blokgroep, voor try-now/verse drafts
+function blockColorName(key) {
+  const n = blockGroupName(key);
+  if (n === 'Technique & skills') return 'purple';
+  if (n === 'Max strength & power' || n === 'Finger strength') return 'amber';
+  if (n === 'Capacity · aerobic volume' || n === 'Power endurance') return 'green';
+  return 'blue';
+}
+function openBlockDetail(key) {
+  const b = BLOCKLIB[key];
+  if (!b) return;
+  const hasRpe = b.rpe && b.rpe !== '-' && b.rpe !== '–';
+  const shape = b.guided ? (b.capSec ? `guided · ${fmtMMSS(b.capSec)} cap` : 'guided')
+    : b.checklist ? `${b.target || ''} boulders, counted`
+    : b.sets ? `${b.sets} sets${b.rest ? ' · ' + b.rest + ' min rest' : ''}` : '';
+  const meta = [hasRpe ? 'rpe ' + b.rpe : null, 'base ' + b.t + ' min', shape || null]
+    .filter(Boolean).map(m => `<span>${m}</span>`).join('');
+  const links = (b.links || []).map(l => `<a class="bd-link" href="${l.url}" target="_blank" rel="noopener">${l.label} →</a>`).join('');
+  const inIdx = MOCK_CHOOSE.map((s, i) => i).filter(i => MOCK_CHOOSE[i].keys.includes(key));
+  const appears = inIdx.length ? `
+      <div class="pv-lbl">appears in</div>` : '';
+  document.getElementById('blockDetailBody').innerHTML = `
+    <div class="ch-kicker" style="color:${nameColor(b.c)};">${blockGroupName(key).toLowerCase()}</div>
+    <div class="pv-name">${b.n}${yoursBadge(key)}</div>
+    <div class="pv-meta">${meta}</div>
+    <div class="pv-section">
+      <div class="pv-lbl">why this block</div>
+      <div class="pv-why">${b.why || ''}</div>
+      ${links}${appears}
+    </div>
+    ${inIdx.length ? `<div class="ch-shelf">${inIdx.map(i => chCard(i, true)).join('')}</div>` : ''}
+    <div style="height:16px;"></div>`;
+  document.getElementById('bdTryBtn').onclick = () => tryBlockNow(key);
+  document.getElementById('bdAddBtn').onclick = () => addBlockToSession(key);
+  if (inIdx.length) enableWheelScroll('#blockDetailBody .ch-shelf');
+  const bd = document.getElementById('blockDetail');
+  bd.style.display = 'flex';
+  bd.querySelector('.scroll-body').scrollTop = 0;
+}
+function closeBlockDetail() { document.getElementById('blockDetail').style.display = 'none'; }
+// TRY THIS NOW: minimale wrapper-sessie (korte warm-up + dit blok), slab klaar om te starten
+function tryBlockNow(key) {
+  const b = BLOCKLIB[key];
+  if (!b) return;
+  customSession = { id:'custom', cat:'own', name:b.n, desc:'', color:blockColorName(key), rpe:b.rpe || '–',
+    intent:'A minimal session around this block. Warm up, do the work, done.' };
+  customKeys = key === 'dynamic' ? ['dynamic'] : ['dynamic', key];
+  durationOverride['custom'] = {};
+  activeSessionId = 'custom';
+  sessionOwned = true;
+  sessionLocked = true;  // klaar om te starten; ✎ ontgrendelt voor aanpassen
+  closeBlockDetail();
+  closeBlockPicker();
+  buildSlab();
+  goTo('v-session');
+}
+// ADD TO SESSION: bestaande draft + blok, of verse draft met dit blok; landt zichtbaar in de builder
+function addBlockToSession(key) {
+  const d = loadDraft();
+  if (d && d.keys && d.keys.length) {
+    customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
+    if (d.basedOn) customSession.basedOn = d.basedOn;
+    customKeys = d.keys.slice();
+  } else {
+    customSession = { id:'custom', cat:'own', name:'My session', desc:'', color:blockColorName(key), rpe:(BLOCKLIB[key] && BLOCKLIB[key].rpe) || '–',
+      intent:'Self-assembled. Add blocks, adjust duration inside each block.' };
+    customKeys = [];
+    durationOverride['custom'] = {};
+  }
+  customKeys.push(key);
+  activeSessionId = 'custom';
+  sessionLocked = false;
+  sessionOwned = true;
+  closeBlockDetail();
+  closeBlockPicker();
+  buildSlab();
+  goTo('v-session');
+}
+function dismissNews(id) {
+  const seen = loadSeenNews();
+  if (!seen.includes(id)) { seen.push(id); saveSeenNews(seen); }
+  renderNews();
+}
+
 renderDiscover();
 enableWheelScroll('#discoverShelf');
 buildChSearch();
+renderNews();

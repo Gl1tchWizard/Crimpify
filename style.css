@@ -66,6 +66,12 @@
   100% { opacity: 1; background-position: -30% 0; transform: scale(1); }
 }
 @keyframes byFade { to { opacity: 1; } }
+#splashBeta {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .25em; text-transform: uppercase;
+  color: var(--disabled); margin-top: 6px; padding-left: .25em;
+  opacity: 0; animation: byFade .6s ease .7s forwards;
+}
 #splashFlash {
   position: absolute; inset: 0; background: var(--acid);
   opacity: 0; pointer-events: none;
@@ -383,9 +389,20 @@ body {
 .pick-reason { font-family:'Barlow',sans-serif; font-size:13px; line-height:1.5; color:var(--dust); margin-top:9px; }
 .pick-btn { display:block; width:100%; margin-top:12px; text-align:center; background:var(--acid); color:var(--acid-text); border:none; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; border-radius:10px; padding:13px; cursor:pointer; box-shadow:0 0 16px color-mix(in srgb, var(--acid) 18%, transparent); }
 .pick-btn.ghost { background:none; border:1px solid var(--graphite); color:var(--dust); box-shadow:none; }
-.routes-row { display:flex; justify-content:center; gap:26px; padding:12px 20px 2px; }
-.route-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); cursor:pointer; }
-.route-btn:hover { color:var(--chalk); }
+/* WHY THIS?: uitklapbare volledige coach-redenering onder de causale regel */
+.pick-why-btn { margin-top:8px; background:none; border:none; padding:0; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); cursor:pointer; }
+.pick-why { display:none; margin-top:8px; font-family:'Barlow',sans-serif; font-size:13px; line-height:1.55; color:var(--dust); }
+.pick-why.open { display:block; }
+/* actie-niveau 2: bladeren (gevulde carbon-kaart, geen acid) */
+.browse-card { display:flex; align-items:center; gap:12px; margin:12px 20px 0; padding:15px 16px; background:var(--carbon); border:1px solid var(--graphite); border-radius:12px; cursor:pointer; }
+.browse-card:active { filter:brightness(1.2); }
+.browse-ic { font-size:20px; color:var(--chalk); line-height:1; flex-shrink:0; }
+.browse-tx { display:flex; flex-direction:column; gap:2px; min-width:0; }
+.browse-title { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase; color:var(--chalk); line-height:1; }
+.browse-sub { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.05em; color:var(--dust); }
+/* actie-niveau 3: zelf bouwen (outline, gedempt) */
+.build-btn { display:block; width:calc(100% - 40px); margin:10px 20px 0; padding:11px; background:none; border:1px solid var(--graphite); border-radius:10px; color:var(--dust); font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; cursor:pointer; }
+.build-btn:active { filter:brightness(1.3); }
 .continue-card { margin:12px 20px 0; padding:12px 14px; border-radius:12px; background:var(--carbon); display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; }
 .continue-card .pick-btn { width:auto; margin-top:0; padding:10px 16px; flex-shrink:0; font-size:14px; }
 .continue-name { font-family:'Barlow Condensed',sans-serif; font-weight:900; font-size:20px; text-transform:uppercase; color:var(--chalk); line-height:1; margin-top:4px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -483,5 +500,24 @@ body {
 .pv-act { flex:1; padding:11px 0; border-radius:8px; border:1px solid var(--graphite); background:none; color:var(--dust); cursor:pointer; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
 
+/* blok-detail: externe links (video's e.d.) onder de uitleg */
+.bd-link { display:inline-block; margin:10px 12px 0 0; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); text-decoration:none; border:1px solid var(--graphite); border-radius:6px; padding:7px 12px; }
+
 /* attributie op kopieën: BASED ON <origineel> by <coach> */
 .slab-basedon { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--dust); margin:6px 0 2px; }
+
+/* NEWS: rustige plank onderaan de landing; acid alleen op de NEW-marker en de pijl */
+#newsWrap { padding:2px 20px 0; }
+.news-head-row { margin:10px 0 6px; }
+.news-head { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--disabled); }
+.news-item { display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-top:1px solid var(--graphite); }
+.news-item:first-child { border-top:none; }
+.news-main { flex:1; min-width:0; }
+.news-main[onclick] { cursor:pointer; }
+.news-line { font-family:'Barlow',sans-serif; font-size:13px; color:var(--chalk); display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.news-new { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; color:var(--acid-text); background:var(--acid); border-radius:3px; padding:1px 4px; }
+.news-fresh { color:var(--dust); }
+.news-title { font-weight:600; }
+.news-arrow { color:var(--acid); }
+.news-body { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; color:var(--dust); margin-top:3px; line-height:1.5; }
+.news-x { flex-shrink:0; background:none; border:none; color:var(--disabled); font-size:16px; line-height:1; cursor:pointer; padding:0 2px; }
