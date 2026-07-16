@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.22</div>
+    <div id="splashBy">by Glitch Labs · v0.23</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -147,6 +147,18 @@
         <button class="pv-act" onclick="customizeFromChoose()">⧉ Customize</button>
       </div>
       <button class="start-btn" style="width:100%;padding:13px;" onclick="startFromPreview()">Start session</button>
+    </div>
+  </div>
+
+  <!-- ══ BLOCK DETAIL (lezen → doen: vanuit News en de bibliotheek; z tussen picker 55 en preview 60) ══ -->
+  <div id="blockDetail" style="display:none;position:absolute;inset:0;z-index:58;background:var(--ink);flex-direction:column;">
+    <div class="topbar"><button class="back-btn" onclick="closeBlockDetail()">← back</button><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
+    <div class="scroll-body">
+      <div class="main-content" id="blockDetailBody"></div>
+    </div>
+    <div class="footer" style="flex-direction:column;gap:10px;align-items:stretch;">
+      <button class="pv-act" id="bdAddBtn">+ Add to session</button>
+      <button class="start-btn" style="width:100%;padding:13px;" id="bdTryBtn">Try this now</button>
     </div>
   </div>
 

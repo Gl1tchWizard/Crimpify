@@ -500,6 +500,9 @@ body {
 .pv-act { flex:1; padding:11px 0; border-radius:8px; border:1px solid var(--graphite); background:none; color:var(--dust); cursor:pointer; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
 
+/* blok-detail: externe links (video's e.d.) onder de uitleg */
+.bd-link { display:inline-block; margin:10px 12px 0 0; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); text-decoration:none; border:1px solid var(--graphite); border-radius:6px; padding:7px 12px; }
+
 /* attributie op kopieën: BASED ON <origineel> by <coach> */
 .slab-basedon { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.12em; color:var(--dust); margin:6px 0 2px; }
 

@@ -1926,6 +1926,7 @@ function renderBlockPicker(query) {
             <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}${yoursBadge(k)}</div>
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--disabled);margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
           </div>
+          <div onclick="event.stopPropagation();openBlockDetail('${k}')" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dust);padding:5px 9px;border:1px solid var(--graphite);border-radius:5px;">i</div>
           ${del}
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
         </div>`;
@@ -3405,16 +3406,92 @@ function openNews(id) {
     if (idx == null && it.link.name != null) idx = MOCK_CHOOSE.findIndex(s => s.name === it.link.name);
     if (idx >= 0) openChoosePreview(idx);
   } else if (it.link.type === 'block') {
-    openNewsBlock(it.link.key);
+    openBlockDetail(it.link.key);
   }
 }
-function openNewsBlock(key) {
+// ── BLOCK DETAIL: lezen → doen. Vanuit News en de bibliotheek (ⓘ); nooit een stille add. ──
+function blockGroupName(key) {
+  if (key.startsWith('ux_')) return 'Own';
+  const g = BLOCK_GROUPS.find(g => g.keys.includes(key));
+  return g ? g.name : 'Other';
+}
+// sessiekleur-naam (C-map) uit de blokgroep, voor try-now/verse drafts
+function blockColorName(key) {
+  const n = blockGroupName(key);
+  if (n === 'Technique & skills') return 'purple';
+  if (n === 'Max strength & power' || n === 'Finger strength') return 'amber';
+  if (n === 'Capacity · aerobic volume' || n === 'Power endurance') return 'green';
+  return 'blue';
+}
+function openBlockDetail(key) {
   const b = BLOCKLIB[key];
   if (!b) return;
-  openBlockPicker();  // bibliotheek-overlay, voorgefilterd op dit blok
-  const inp = document.getElementById('blockSearch');
-  if (inp) inp.value = b.n;
-  renderBlockPicker(b.n);
+  const hasRpe = b.rpe && b.rpe !== '-' && b.rpe !== '–';
+  const shape = b.guided ? (b.capSec ? `guided · ${fmtMMSS(b.capSec)} cap` : 'guided')
+    : b.checklist ? `${b.target || ''} boulders, counted`
+    : b.sets ? `${b.sets} sets${b.rest ? ' · ' + b.rest + ' min rest' : ''}` : '';
+  const meta = [hasRpe ? 'rpe ' + b.rpe : null, 'base ' + b.t + ' min', shape || null]
+    .filter(Boolean).map(m => `<span>${m}</span>`).join('');
+  const links = (b.links || []).map(l => `<a class="bd-link" href="${l.url}" target="_blank" rel="noopener">${l.label} →</a>`).join('');
+  const inIdx = MOCK_CHOOSE.map((s, i) => i).filter(i => MOCK_CHOOSE[i].keys.includes(key));
+  const appears = inIdx.length ? `
+      <div class="pv-lbl">appears in</div>` : '';
+  document.getElementById('blockDetailBody').innerHTML = `
+    <div class="ch-kicker" style="color:${nameColor(b.c)};">${blockGroupName(key).toLowerCase()}</div>
+    <div class="pv-name">${b.n}${yoursBadge(key)}</div>
+    <div class="pv-meta">${meta}</div>
+    <div class="pv-section">
+      <div class="pv-lbl">why this block</div>
+      <div class="pv-why">${b.why || ''}</div>
+      ${links}${appears}
+    </div>
+    ${inIdx.length ? `<div class="ch-shelf">${inIdx.map(i => chCard(i, true)).join('')}</div>` : ''}
+    <div style="height:16px;"></div>`;
+  document.getElementById('bdTryBtn').onclick = () => tryBlockNow(key);
+  document.getElementById('bdAddBtn').onclick = () => addBlockToSession(key);
+  if (inIdx.length) enableWheelScroll('#blockDetailBody .ch-shelf');
+  const bd = document.getElementById('blockDetail');
+  bd.style.display = 'flex';
+  bd.querySelector('.scroll-body').scrollTop = 0;
+}
+function closeBlockDetail() { document.getElementById('blockDetail').style.display = 'none'; }
+// TRY THIS NOW: minimale wrapper-sessie (korte warm-up + dit blok), slab klaar om te starten
+function tryBlockNow(key) {
+  const b = BLOCKLIB[key];
+  if (!b) return;
+  customSession = { id:'custom', cat:'own', name:b.n, desc:'', color:blockColorName(key), rpe:b.rpe || '–',
+    intent:'A minimal session around this block. Warm up, do the work, done.' };
+  customKeys = key === 'dynamic' ? ['dynamic'] : ['dynamic', key];
+  durationOverride['custom'] = {};
+  activeSessionId = 'custom';
+  sessionOwned = true;
+  sessionLocked = true;  // klaar om te starten; ✎ ontgrendelt voor aanpassen
+  closeBlockDetail();
+  closeBlockPicker();
+  buildSlab();
+  goTo('v-session');
+}
+// ADD TO SESSION: bestaande draft + blok, of verse draft met dit blok; landt zichtbaar in de builder
+function addBlockToSession(key) {
+  const d = loadDraft();
+  if (d && d.keys && d.keys.length) {
+    customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
+    if (d.basedOn) customSession.basedOn = d.basedOn;
+    customKeys = d.keys.slice();
+  } else {
+    customSession = { id:'custom', cat:'own', name:'My session', desc:'', color:blockColorName(key), rpe:(BLOCKLIB[key] && BLOCKLIB[key].rpe) || '–',
+      intent:'Self-assembled. Add blocks, adjust duration inside each block.' };
+    customKeys = [];
+    durationOverride['custom'] = {};
+  }
+  customKeys.push(key);
+  activeSessionId = 'custom';
+  sessionLocked = false;
+  sessionOwned = true;
+  closeBlockDetail();
+  closeBlockPicker();
+  buildSlab();
+  goTo('v-session');
 }
 function dismissNews(id) {
   const seen = loadSeenNews();

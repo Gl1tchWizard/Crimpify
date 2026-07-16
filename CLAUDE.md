@@ -164,10 +164,23 @@ warm-up" (inside joke, bewust).
    eerst, hoogstens een paar zichtbaar. Elk item is wegtikbaar; weggetikte ids
    staan in `crimpify_seen_news` en komen niet terug. Is er niets zichtbaar,
    dan verbergt de sectie zich (geen lege huls). Een block-link opent de
-   voorgefilterde blok-bibliotheek, een session-link de preview.
+   blok-detail-view, een session-link de preview.
 9. **Discover**: één plank "Popular at Apex this week →" met de bestaande
    Choose-kaarten, blijft onderaan; inspiratie, geen navigatie (niet omhoog
    halen). De catalogus is een etalage, geen deur.
+
+### Blok-detail-view (lezen → doen)
+Elke blok heeft een detail-overlay, bereikbaar vanuit News en via de ⓘ in de
+blok-bibliotheek (de + van de picker blijft de quick-add voor de builder).
+Header: groepskicker in de categoriekleur, bloknaam, metaregel met rpe-tekst
+als intensiteit (géén phalanx: pips = verwachte belasting, nooit rpe), basis-
+duur en vormhint (guided/counted/sets). Daaronder de volledige uitleg mét
+attributie en eventuele links. "Appears in" toont tikbare catalogus-kaarten
+van sessies die het blok bevatten; geen matches = sectie weg. Twee acties:
+TRY THIS NOW (acid, primair) genereert een minimale wrapper-sessie (Charlie
+warm-up + dit blok) en opent de slab startklaar; ADD TO SESSION voegt het blok
+toe aan de bestaande draft (of start een verse) en landt zichtbaar in de
+builder. Nooit een stille add.
 
 ### Bottom navigation (gepland, uitgesteld)
 De structurele oplossing voor navigatie is een vaste bottom-nav
@@ -276,7 +289,7 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.22) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.23) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.
