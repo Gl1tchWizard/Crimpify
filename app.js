@@ -2989,11 +2989,12 @@ if ('serviceWorker' in navigator) {
   // controllerchange is hét signaal dat een nieuwe sw de controle pakt
   // (skipWaiting+claim), ongeacht wie de update ontdekte — dekt ook updates
   // die de browser zelf al bij de navigatie vond, waar updatefound niet
-  // voor vuurt. Op het allereerste bezoek vuurt claim() dit ook; dan is er
-  // geen oude code in beeld en hoort er niets te herladen.
-  const hadController = !!navigator.serviceWorker.controller;
+  // voor vuurt. Op het allereerste bezoek vuurt claim() dit ook; die eerste
+  // claim op een onbestuurde pagina is geen takeover en hoort niet te
+  // herladen — maar een látere wissel op diezelfde pagina wel.
+  let hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
-    if (!hadController) return;
+    if (!hadController) { hadController = true; return; }
     swReloadWhenSafe();
   });
   navigator.serviceWorker.register('sw.js').then(reg => {
