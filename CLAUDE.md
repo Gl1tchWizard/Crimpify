@@ -221,6 +221,35 @@ Ontwerp bij bouwen:
 - Geen score, geen streaks, geen voltooiingspercentages: bewustzijn, geen
   gamification.
 
+### In-session flexibility (uitgesteld tot na de eerste veldtest)
+Vastgelegd ontwerpprincipe, nog niet bouwen. Flexibiliteit volgt de
+autoregulatie-asymmetrie (productprincipe 3):
+
+- **Omlaag bijstellen** (blok inkorten, lichter, overslaan, sessie eerder
+  beëindigen) is één tik en oordeelvrij. Omlaag bijstellen ís autoregulatie.
+- **Omhoog bijstellen** (zwaarder, langer, extra blokken) vraagt een bewuste
+  extra stap. Omhoog bijstellen midden in een sessie is meestal het ego dat
+  door de vermoeidheid heen praat.
+- **Blokvolgorde** is tijdens een sessie nooit aanpasbaar, alleen vooraf in
+  de builder. De volgorde (zwaar werk eerst, onderhoud laatst) is
+  fysiologisch gefundeerd (front-loading) en precies wat een moe brein wil
+  herschikken.
+- **Elke afwijking is data, geen falen**: overgeslagen blokken plus het
+  stoplichtsignaal vertellen de coach-logica meer dan een perfect
+  afgevinkte sessie.
+
+Rationale, twee onderzoekslijnen: klassieke periodisering beschermt
+kwaliteit via pre-commitment (het plan is een afspraak, gemaakt voordat
+vermoeidheid meepraat); autoregulatie (RPE-gestuurd trainen, stopregels)
+past de dosering aan de vorm van de dag aan. De synthese: flexibiliteit in
+dosering, discipline in structuur.
+
+Huidige staat: blokken overslaan, niet-dwingende timers, het stoplicht en de
+exit-guard geven samen al minimaal levensvatbare flexibiliteit voor de
+veldtest. Wat ontbreekt (inkorten/wisselen/trimmen midden in de sessie)
+wacht op veldtest-bewijs: slaan testers echt blokken over of breken ze
+sessies af, en waar?
+
 ### Broadcast zonder backend
 `ANNOUNCEMENTS` is het kanaal om alle gebruikers tegelijk iets te vertellen:
 voeg een array-entry toe en deploy (GitHub Pages deployt vanaf main). Geen
