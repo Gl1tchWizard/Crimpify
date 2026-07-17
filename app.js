@@ -2524,7 +2524,7 @@ function buildDetail(idx) {
   document.getElementById('detailBlockNum').textContent = `${idx+1} / ${currentBlocks.length}`;
   document.getElementById('detailName').textContent = b.n;
   document.getElementById('detailName').style.color = b.c;
-  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? `rpe ${b.rpe}` : 'geen intensiteit';
+  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? `rpe ${b.rpe}` : 'no intensity set';
   document.getElementById('detailCat').style.color = b.c;
 
   // timer — volledige reset bij openen blok
