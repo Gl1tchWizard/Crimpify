@@ -281,7 +281,7 @@ const BLOCKLIB = {
   // ── skill cores ──
   drillBlocks: { n:'Skill blocks', t:45, c:'var(--skill)', rpe:'5-6', sets:3, rest:2, drills:true,
     why:'3 skills × 15 min on boulders 2 grades below max. Per skill: first deliberately slow, then at normal speed, then on a just-challenging boulder. Film yourself at least once per skill.' },
-  boardApply: { n:'Board application', t:12, c:'var(--max-effort)', rpe:'6', sets:4, rest:3,
+  boardApply: { n:'Board application', t:12, c:'var(--skill)', rpe:'6', sets:4, rest:3,
     why:'Apply the skills on 3-4 Kilterboard boulders. No score — only quality of movement counts.' },
 
   // ── conditioning / closers ──
@@ -291,11 +291,11 @@ const BLOCKLIB = {
     why:'Dumbbell deadlift 3×12 RIR4 · Compression (Y,T,row) 4×4 RIR3 · External rotations 3×10 RIR4 · Forearm conditioning 3×15 RIR2.' },
   mini3: { n:'Mini circuit 3', t:15, c:'var(--prepare)', rpe:'7', sets:3, rest:3,
     why:'Weighted pull-ups 3×3 RIR1 · Dumbbell press 3×4 RIR2 · Lateral raises 3×8 RIR4.' },
-  lockoffs: { n:'Lock-offs', t:10, c:'var(--prepare)', rpe:'7', sets:2, rest:2,
+  lockoffs: { n:'Lock-offs', t:10, c:'var(--max-effort)', rpe:'7', sets:2, rest:2,
     why:'2×10 sec at 90 and 120 degrees. Stop 2 sec before failure. Wide grip.' },
   gymWarmup: { n:'Gym warm-up', t:10, c:'var(--prepare)', rpe:'2-3',
     why:'Get up to temperature calmly: 5 min cardio (rowing, bike or jump rope) plus shoulder mobility, band pull-aparts and a few light warm-up sets for the first exercise. Prepare tendons and joints for load.' },
-  pullStrength: { n:'Pull strength', t:18, c:'var(--prepare)', rpe:'7-8', sets:4, rest:3,
+  pullStrength: { n:'Pull strength', t:18, c:'var(--max-effort)', rpe:'7-8', sets:4, rest:3,
     why:'Weighted pull-ups or rows as the main lift. 3-5 sets of 3-6 reps with a controlled eccentric. Full rest between sets — this is strength, not conditioning.' },
   pushStrength: { n:'Push strength', t:15, c:'var(--prepare)', rpe:'7-8', sets:4, rest:3,
     why:'Bench press or overhead press. 3-4 sets of 6-10 reps. Keep 1-2 reps in reserve (RIR), bar speed high. Antagonist balance for your shoulders after all the pulling in climbing.' },
@@ -311,7 +311,7 @@ const BLOCKLIB = {
     why:'The full library. Pick the skills you want to do today yourself.' },
   sprayLight: { n:'Spray wall (short)', t:15, c:'var(--volume)', rpe:'4-5',
     why:'Short, light spray session. Deliberately keep the RPE low (4-5) so your fingers stay fresh for HoG afterwards. 6-10 boulders well below your max, focus on smooth movement and the skill of the day. No limit work — this is not a power session.' },
-  nohangs: { n:'No hangs + stretch', t:8, c:'var(--max-effort)', rpe:'-', sets:2, rest:1,
+  nohangs: { n:'No hangs + stretch', t:8, c:'var(--prepare)', rpe:'-', sets:2, rest:1,
     why:'No hangs 2×30 sec half crimp. Then a short stretch: shoulders and forearms.' },
   // ── minimal dose micro blocks (minimum effective dose; López/Lattice research on short frequent finger training) ──
   activeCurls: { n:'Active finger curls', t:12, c:'var(--max-effort)', rpe:'8-9', sets:'4-6', rest:2, fixed:true,
@@ -322,7 +322,7 @@ const BLOCKLIB = {
     why:'5 hangs of 7-10 sec at 85-90% of your max (half crimp), 2 min full rest between hangs. Short and heavy delivers most of the strength adaptation in a fraction of the time. Stop 1-2 counts before failure.' },
   mdNoHangs: { n:'Micro no-hangs', t:10, c:'var(--max-effort)', rpe:'8', sets:4, rest:2, fixed:true,
     why:'Lifting edge or block off the floor: 4 lifts per hand of 8-10 sec at high intensity, 2 min rest. Shoulder-friendly alternative with the same finger stimulus, easy to dose exactly.' },
-  mdPull: { n:'Micro pull', t:6, c:'var(--prepare)', rpe:'7-8', sets:3, rest:2, fixed:true,
+  mdPull: { n:'Micro pull', t:6, c:'var(--max-effort)', rpe:'7-8', sets:3, rest:2, fixed:true,
     why:'3×3 heavy pull-ups (weighted if 3 is easy), full rest. Maintain pull strength in six minutes.' },
   mdCore: { n:'Micro core', t:5, c:'var(--prepare)', rpe:'6-7', sets:3, fixed:true,
     why:'3 rounds: 20 sec hollow hold plus 8 hanging knee raises. Maintain tension without eating time.' },
@@ -1836,13 +1836,13 @@ function ensureDraftMode() {
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
   { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull'] },
-  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab'] },
+  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply'] },
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','boardApply','pyramide','frontGrowth'] },
-  { name:'Finger strength',               keys:['maxHangs','nohangs','activeCurls'] },
-  { name:'Antagonist, core & gym',     keys:['pullStrength','pushStrength','coreLegs','mini1','mini2','mini3','lockoffs'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','frontMaint'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength'] },
+  { name:'Finger strength',               keys:['maxHangs','activeCurls'] },
+  { name:'Antagonist, core & gym',     keys:['pushStrength','coreLegs','mini1','mini2','mini3'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint'] },
 ];
 // ── KLEURGRAMMATICA ──
 // kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
