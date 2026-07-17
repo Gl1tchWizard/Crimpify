@@ -258,6 +258,50 @@ veldtest. Wat ontbreekt (inkorten/wisselen/trimmen midden in de sessie)
 wacht op veldtest-bewijs: slaan testers echt blokken over of breken ze
 sessies af, en waar?
 
+### Credibility and coach model (deferred, needs backend and real coaches)
+
+Vastgelegd ontwerp, nog niet bouwen. Twee assen en drie lagen, strikt
+gescheiden houden.
+
+**Twee badges (twee soorten autoriteit, nooit vermengen):**
+
+- **COACH VERIFIED = menselijke autoriteit.** Een vertrouwde, bekende coach
+  staat achter deze sessie. Juridische/verantwoordelijkheidsnotitie:
+  "verified" op een sessie zetten is een impliciete veiligheidsclaim. Daarom
+  start verified uitsluitend met EIGEN en BEKENDE coaches; nooit een stempel
+  die Crimpify op het werk van vreemden drukt. Aansprakelijkheid is de reden
+  om het in het begin smal te houden.
+- **SCIENCE APPROVED = bronautoriteit.** Het protocol is gefundeerd op
+  geciteerd onderzoek (bv. Baar-peeswerk, Emil no-hangs). Strikte regel:
+  alleen op sessies/blokken die echt naar een bestaande bron verwijzen,
+  nooit op "voelt wetenschappelijk". Een merkteken, geen stemming — anders
+  verliest het alle geloofwaardigheid.
+
+**Drie maker-lagen (maken is open, autoriteit wordt verdiend):**
+
+- **Maker:** iedereen kan een sessie bouwen en delen (open model, zoals een
+  playlist maken). Nieuwe klimmers inbegrepen.
+- **Verified coach:** een bekende, vertrouwde coach; diens sessies kunnen
+  Coach Verified dragen.
+- **Coach governance (toekomstvisie):** verified coaches bepalen samen de
+  kwaliteitsnorm, bv. wat Science Approved mag heten of het verifiëren van
+  elkaars sessies. Past bij de non-capture/digitale-soevereiniteitswaarden:
+  de gemeenschap bezit de kwaliteitsstandaard, niet een bedrijf. Een
+  governancevraag om MET echte coaches te beantwoorden, nooit te ontwerpen
+  voor coaches die nog niet bestaan.
+
+**Ranking / het meuk-probleem (los van verificatie):**
+
+- Groeit de user content, dan moeten goede sessies bovendrijven en zwakke
+  zinken. Dat vraagt een signaal: completions, saves, coach-verified — alles
+  backend, fase 2.
+- Coach Verified is later ook een rankingsignaal: verified eerst, dan op
+  completions, dan de rest.
+
+**Huidige staat (veldtest):** geen badges, geen ranking, geen accounts.
+Curatie met de hand: Govert is de enige verified coach, zijn eigen sessies
+zijn de vertrouwde set, Featured is handmatig gekozen.
+
 ### Broadcast zonder backend
 `ANNOUNCEMENTS` is het kanaal om alle gebruikers tegelijk iets te vertellen:
 voeg een array-entry toe en deploy (GitHub Pages deployt vanaf main). Geen
@@ -329,31 +373,66 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
    sessie is afgemaakt. Tot die tijd blijft "N done" het enige mock-getal;
    geen nieuwe nepgetallen introduceren.
 
-## Backlog in volgorde
+## Backlog
+
+Eén lijst, vier statusgroepen. De grote ontwerpsecties (bottom-nav, climb
+with intent, in-session flexibility, Choose-flow) blijven staan waar ze
+staan; de items hieronder verwijzen ernaar.
+
+### Nu bouwbaar (in deze volgorde)
 
 1. **Deelbare eindkaart.** Canvas-gegenereerde afbeelding bij "Sessie klaar":
    sessienaam, blokken, tijd, stoplicht, mark, en altijd de sessie-link (de
-   identiteitsloop moet terugvoeren naar de rekruteringsloop). Web Share API met
-   afbeelding, fallback download.
-2. **Klikbare historie.** Sessies bij "Mijn sessies" zijn aanklikbaar en openen
-   de recap-overlay. Staat hier omdat het punt 1 versterkt: de recap (met
-   eindkaart en sessie-link) wordt zo ook achteraf bereikbaar, dus delen is niet
-   langer beperkt tot het moment direct na de sessie.
-3. **Export/backup.** Historie + favorieten serialiseren naar bestand of link,
-   met import. Zelfde codeertruc als de deel-links. Dit is de derde
-   verdedigingslinie voor dataverlies (naast `storage.persist()` en PWA-installatie,
-   die er al zijn).
-4. **Light mode.** De token-refactor is gedaan (juli 2026, palette-overhaul);
-   light mode kan nu als alternatieve variabelenset achter
-   `prefers-color-scheme`.
-5. **Lege-staat-verfijning en microtypografie-opschoning** (10px-ondergrens,
-   contrastfloor: geen #4A4A46-tekst op #0A0A0A voor kleine labels).
-6. **Zoek als icoon** in de topbar, bibliotheek als eigen weergave. (Voor de
-   Choose-catalogus gedaan, juli 2026; dit punt betreft nog de landing.)
-7. Later, uit de concept-mocks over te nemen skelet-ideeën: vaste bottom-nav,
-   shortcuts-rij (horizontaal scrollend, acht energiesystemen, geen "Mobility"
-   als categorie). Afgewezen uit die mocks: avatar, notificatiebel,
-   voltooiingspercentages, derde bouw-ingang, Engels/Nederlands-mix.
+   identiteitsloop moet terugvoeren naar de rekruteringsloop). Web Share API
+   met afbeelding, fallback download.
+2. **Klikbare historie.** History-items openen de recap-overlay; versterkt
+   punt 1 doordat delen ook achteraf kan, niet alleen direct na de sessie.
+3. **Export/backup.** Historie + favorieten naar bestand of link, met import;
+   zelfde codeertruc als de deel-links. Derde verdedigingslinie voor
+   dataverlies (naast `storage.persist()` en PWA-installatie, die er al zijn).
+4. **Light mode.** Alternatieve variabelenset achter `prefers-color-scheme`;
+   de token-refactor (juli 2026) is al gedaan.
+5. **Lege-staat & microtypografie.** 10px-ondergrens en contrastfloor
+   doorvoeren (geen #4A4A46-tekst op #0A0A0A voor kleine labels).
+6. **Zoek als icoon op de landing.** Bibliotheek als eigen weergave; voor de
+   Choose-catalogus is dit al gedaan (juli 2026).
+7. **NL code-commentaren naar Engels.** Chore, bij gelegenheid, nooit ten
+   koste van werkende code (zie Taalregel).
+
+### Wacht op de eerste veldtest
+
+8. **Bottom navigation.** Vaste nav HOME · SESSIONS · BUILD · SAVED; ontwerp
+   staat in de eigen sectie hierboven.
+9. **Climb with intent.** Gekozen intents (externe focus) + micro-reflectie;
+   ontwerp in de eigen sectie. Let op het naamconflict met het bestaande
+   `intent`-veld in favs/draft.
+10. **In-session flexibility, uitbreiding.** Inkorten/lichter/trimmen midden
+    in de sessie; wacht op veldtest-bewijs (slaan testers blokken over of
+    breken ze sessies af, en waar?). Principe in de eigen sectie.
+
+### Wacht op een backend
+
+11. **Echte completions.** "N done" is nu mock; een completion telt pas bij
+    een afgemaakte sessie. Geen nieuwe nepgetallen tot die tijd.
+12. **Remix-tellers.** Een remix telt pas wanneer de kopie wordt opgeslagen.
+13. **Berekende planken.** Popular at Apex e.a. van curatie naar berekening;
+    het ontwerp blijft gelijk, alleen de bron verandert.
+14. **Sessie-datamodel + analytics-funnel.** Vastgelegd in de
+    Choose-flow-sectie (punt 5); bouwen zodra er een backend is.
+15. **Credibility & coach model.** Coach Verified- en Science
+    Approved-badges, drie maker-lagen en ranking tegen het meuk-probleem;
+    ontwerp in de eigen sectie. Vraagt een backend én echte coaches.
+
+### Ideeën (kans, geen verplichting)
+
+16. **Signatuur-motief.** Phalanx als voortgangsindicator, hexagon-C als
+    lege-staat- en kadermotief; merkherkenning uit vorm.
+17. **Shortcuts-rij.** Acht energiesystemen, horizontaal scrollend (uit de
+    concept-mocks; na de veldtest).
+
+Afgewezen uit de concept-mocks, niet opnieuw voorstellen: avatar,
+notificatiebel, voltooiingspercentages, derde bouw-ingang,
+Engels/Nederlands-mix.
 
 ## Werkafspraken
 
