@@ -371,7 +371,7 @@ const sessions = [
     slots:[ 'dynamic', 'warmup', ['project','compStyle','pyramide'], ['skillLight','slab'], 'stretch' ] },
   { id:'recovery', cat:'Recovery', name:'Recovery', desc:'Active recovery\nHoG and mobility', color:'blue', rpe:'2-4', tags:['recovery','hog','mobility','grippers'],
     intent:'Recover by moving. Circulation, mobility and finger maintenance — without any climbing load of significance.',
-    slots:[ 'dynamic', ['hog','easyClimb'], ['skillLight','lockoffs'], 'stretchLong' ] },
+    slots:[ 'dynamic', ['hog','easyClimb'], 'skillLight', 'stretchLong' ] },
   { id:'minidose', cat:'Minimal Dose', name:'Minimal Dose', desc:'High return\n~20 minutes', color:'amber', rpe:'8', tags:['minimal dose','short','fingers','efficient'],
     intent:'Minimum effective dose: the smallest volume that still drives adaptation. Fingers first, fresh and heavy, short total time. Sustainable two to four times a week next to a busy life.',
     slots:[ 'mdFinger', ['mdMaxHangs','mdNoHangs'], ['mdPull','mdCore'] ] },
