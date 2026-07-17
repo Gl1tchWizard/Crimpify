@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.24</div>
+    <div id="splashBy">by Glitch Labs · v0.26</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -483,7 +483,7 @@
   <!-- ══ NEW EXERCISE ══ -->
   <div id="newExerciseDialog" style="display:none;position:absolute;inset:0;z-index:58;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;">
     <div style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:90%;overflow-y:auto;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">New exercise</div>
+      <div id="neTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:20px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">New exercise</div>
       <input id="neName" type="text" placeholder="Name (e.g. Hip-shift ladder)" style="margin-top:14px;width:100%;padding:11px;border-radius:8px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
       <div style="display:flex;gap:8px;margin-top:8px;">
         <input id="neMin" type="number" min="3" placeholder="min" style="flex:1;padding:11px;border-radius:8px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
@@ -493,7 +493,7 @@
       <input id="neLink" type="url" placeholder="Link (Instagram / YouTube / Kilter)" style="margin-top:8px;width:100%;padding:11px;border-radius:8px;border:1px solid var(--graphite);background:var(--ink);color:var(--dust);font-family:'DM Mono',monospace;font-size:11px;outline:none;">
       <div style="display:flex;gap:10px;margin-top:16px;">
         <button onclick="closeNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Cancel</button>
-        <button onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Add</button>
+        <button id="neConfirmBtn" onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Add</button>
       </div>
     </div>
   </div>
@@ -548,5 +548,8 @@
 </div>
 
 <script src="app.js"></script>
+<!-- GoatCounter: cookieloos, aggregaat-only; count.js telt localhost zelf niet mee -->
+<script data-goatcounter="https://crimpify.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

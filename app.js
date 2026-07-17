@@ -1921,13 +1921,16 @@ function renderBlockPicker(query) {
         const del = k.startsWith('ux_')
           ? `<div onclick="event.stopPropagation();deleteCustomBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--danger);padding:6px 10px;margin-right:2px;">×</div>`
           : `<div onclick="event.stopPropagation();hideBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--disabled);padding:6px 10px;margin-right:2px;">×</div>`;
+        const edit = k.startsWith('ux_')
+          ? `<div onclick="event.stopPropagation();openNewExercise('${k}')" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dust);padding:5px 9px;border:1px solid var(--graphite);border-radius:5px;">✎</div>`
+          : '';
         return `<div onclick="pickBlock('${k}')" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.c};cursor:pointer;">
           <div style="flex:1;">
             <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}${yoursBadge(k)}</div>
             <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--disabled);margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
           </div>
           <div onclick="event.stopPropagation();openBlockDetail('${k}')" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dust);padding:5px 9px;border:1px solid var(--graphite);border-radius:5px;">i</div>
-          ${del}
+          ${edit}${del}
           <div style="font-family:'DM Mono',monospace;font-size:12px;color:${nameColor(b.c)};">+</div>
         </div>`;
       }).join('');
@@ -1977,7 +1980,9 @@ function loadCustomBlocks() { try { return JSON.parse(localStorage.getItem('crim
 function saveCustomBlocks(o) { try { localStorage.setItem('crimpify_custom_blocks', JSON.stringify(o)); } catch {} }
 function registerCustomBlocks() {
   const o = loadCustomBlocks();
-  Object.keys(o).forEach(k => { BLOCKLIB[k] = o[k]; });
+  // eigen oefeningen zijn altijd vast: de ingevoerde minuten zijn de duur,
+  // nooit een schaalbare basis (oude entries hebben nog fixed:false)
+  Object.keys(o).forEach(k => { o[k].fixed = true; BLOCKLIB[k] = o[k]; });
 }
 function linkLabel(url) {
   try {
@@ -1989,12 +1994,23 @@ function linkLabel(url) {
     return 'Bekijk bron';
   } catch { return 'Bekijk bron'; }
 }
-function openNewExercise() {
-  ['neName','neMin','neRpe','neWhy','neLink'].forEach(id => { document.getElementById(id).value = ''; });
-  document.getElementById('neMin').value = '10';
+let _editingBlockKey = null;   // ux_-key in bewerkmodus; null = nieuw
+function openNewExercise(editKey) {
+  _editingBlockKey = (editKey && BLOCKLIB[editKey]) ? editKey : null;
+  const b = _editingBlockKey ? BLOCKLIB[_editingBlockKey] : null;
+  document.getElementById('neName').value = b ? b.n : '';
+  document.getElementById('neMin').value = b ? b.t : '10';
+  document.getElementById('neRpe').value = (b && b.rpe !== '–') ? b.rpe : '';
+  document.getElementById('neWhy').value = b ? (b.why || '') : '';
+  document.getElementById('neLink').value = (b && b.links && b.links[0]) ? b.links[0].url : '';
+  document.getElementById('neTitle').textContent = b ? 'Edit exercise' : 'New exercise';
+  document.getElementById('neConfirmBtn').textContent = b ? 'Save' : 'Add';
   document.getElementById('newExerciseDialog').style.display = 'flex';
 }
-function closeNewExercise() { document.getElementById('newExerciseDialog').style.display = 'none'; }
+function closeNewExercise() {
+  _editingBlockKey = null;
+  document.getElementById('newExerciseDialog').style.display = 'none';
+}
 function confirmNewExercise() {
   const name = (document.getElementById('neName').value || '').trim();
   if (!name) { document.getElementById('neName').focus(); return; }
@@ -2002,14 +2018,21 @@ function confirmNewExercise() {
   const rpe = (document.getElementById('neRpe').value || '').trim() || '–';
   const why = (document.getElementById('neWhy').value || '').trim() || 'Own exercise.';
   const url = (document.getElementById('neLink').value || '').trim();
-  const key = 'ux_' + Date.now().toString(36);
-  const block = { n: name, t, c: UX_COLOR, rpe, why, fixed: false };
+  const editing = _editingBlockKey;
+  const key = editing || ('ux_' + Date.now().toString(36));
+  // fixed:true — de ingevoerde minuten zijn de duur, de tijd-fitter blijft eraf
+  const block = { n: name, t, c: UX_COLOR, rpe, why, fixed: true };
   if (url) block.links = [{ label: linkLabel(url), url }];
   const store = loadCustomBlocks();
   store[key] = block;
   saveCustomBlocks(store);
   BLOCKLIB[key] = block;
   closeNewExercise();
+  if (editing) {
+    renderBlockPicker(document.getElementById('blockSearch').value);
+    if (currentBlocks.some(b => b._key === key)) buildSlab();
+    return;
+  }
   // direct toevoegen aan de huidige sessie
   pickBlock(key);
 }
@@ -2141,7 +2164,7 @@ function importFromHash() {
     const store = loadCustomBlocks();
     Object.keys(p.x).forEach(k=>{
       const d = p.x[k];
-      const block = { n:d.n||'Exercise', t:d.t||10, c: UX_COLOR, rpe:d.rpe||'–', why:d.why||'', fixed:false };
+      const block = { n:d.n||'Exercise', t:d.t||10, c: UX_COLOR, rpe:d.rpe||'–', why:d.why||'', fixed:true };
       if (d.links) block.links = d.links;
       BLOCKLIB[k] = block;
       store[k] = block;
@@ -2501,7 +2524,7 @@ function buildDetail(idx) {
   document.getElementById('detailBlockNum').textContent = `${idx+1} / ${currentBlocks.length}`;
   document.getElementById('detailName').textContent = b.n;
   document.getElementById('detailName').style.color = b.c;
-  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? `rpe ${b.rpe}` : 'geen intensiteit';
+  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? `rpe ${b.rpe}` : 'no intensity set';
   document.getElementById('detailCat').style.color = b.c;
 
   // timer — volledige reset bij openen blok
@@ -2853,12 +2876,50 @@ function renderStreakLine() {
   }
 }
 
+// ── LEVENSCYCLUS: flush bij achtergrond, herstel na tab-discard ──
+// Mobiel gooit achtergrond-tabs weg; terugkomen is dan een volledige reload
+// die anders altijd op de landing eindigt. Bij verbergen schrijven we draft
+// en actieve sessie weg plus een marker; init zet de gebruiker binnen
+// RESUME_WINDOW_MS terug waar die was. Daarbuiten dekken de Continue-kaart
+// (12 uur) en de draft-kaart de terugweg.
+const RESUME_WINDOW_MS = 30 * 60000;
+function saveResumeMarker() {
+  try {
+    // alleen een marker als de gebruiker ín de flow zit; wie op de landing
+    // staat (ook met een onafgemaakte sessie) hoort daar terug te komen
+    const v = activeView();
+    const inFlow = ['v-session','v-detail','v-guided','v-drills','v-drillfocus','v-check'].includes(v);
+    const running = inFlow && !!sessionStartTime && currentBlocks.length > 0;
+    const building = inFlow && !running && v === 'v-session' && activeSessionId === 'custom' && !!customKeys;
+    if (!running && !building) { localStorage.removeItem('crimpify_resume'); return; }
+    localStorage.setItem('crimpify_resume', JSON.stringify({ mode: running ? 'run' : 'build', ts: Date.now() }));
+  } catch {}
+}
+function flushState() {
+  saveDraft();
+  saveActive();
+  saveResumeMarker();
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushState(); });
+window.addEventListener('pagehide', flushState);
+
 // ── INIT ──
 ['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });
 registerCustomBlocks();
 applyCategoryColors();
 rebuildRecent(); renderSignalCal(); renderTodaysPick(); renderContinue(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
-importFromHash();  // gedeelde sessie via #s=… direct openen
+const importedShare = importFromHash();  // gedeelde sessie via #s=… direct openen
+// terugkeer na tab-discard of sw-reload: binnen het venster terug waar je was
+if (!importedShare) {
+  try {
+    const rm = JSON.parse(localStorage.getItem('crimpify_resume') || 'null');
+    localStorage.removeItem('crimpify_resume');
+    if (rm && Date.now() - rm.ts <= RESUME_WINDOW_MS) {
+      if (rm.mode === 'run' && loadActive()) resumeActive();
+      else if (rm.mode === 'build' && loadDraft()) openDraft();
+    }
+  } catch {}
+}
 setTimeout(()=>setTimeIdx(activeTimeIdx),60);
 
 // desktop: verticaal scrollwiel → horizontaal op de rijen
@@ -2904,8 +2965,10 @@ if ('serviceWorker' in navigator) {
       const sw = reg.installing;
       if (!sw) return;
       sw.addEventListener('statechange', () => {
-        // nieuwe versie geïnstalleerd terwijl er al een actief was → ververs
+        // nieuwe versie geïnstalleerd terwijl er al een actief was → ververs,
+        // maar nooit midden in een training of build; de volgende load pakt hem
         if (sw.state === 'installed' && navigator.serviceWorker.controller) {
+          if (sessionStartTime || hasLiveProgress()) return;
           location.reload();
         }
       });
