@@ -25,8 +25,8 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v25`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v26`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v26`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v27`, enz.), anders zien bezoekers de oude versie.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
@@ -453,7 +453,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.31) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.32) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.
