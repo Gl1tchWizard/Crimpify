@@ -232,7 +232,7 @@ const BLOCKLIB = {
     why:'25-35 boulders around 6a/6b. 3 min rest from 6a, timer on. Drop a grade when quality fades (first 5c, then 5b). Stop at technical failure, not muscular failure.' },
   linked: { n:'Linked boulders', t:40, tMin:25, tMax:60, c:'var(--volume)', rpe:'6-7', sets:8, rest:4,
     why:'Link two boulders together (climb down or step straight through). Grades around 5c-6a per boulder so the link stays doable. 3-4 min rest between links. 6-10 links total.' },
-  boardVolume: { n:'Kilterboard volume', t:40, tMin:30, tMax:60, c:'var(--volume)', rpe:'6-7', sets:18, rest:3,
+  boardVolume: { n:'Kilterboard volume', t:75, tMin:45, tMax:180, c:'var(--volume)', rpe:'6-7', sets:18, rest:3,
     why:'15-20 boulders below your board max (6a-6b on the board). 3 min rest, timer on. Watch your skin — stop at flappers or move to the gym wall. Repeat boulders that could flow better.' },
 
   // ── count-blokken: denken in aantal boulders op een niveau, niet in tijd.
@@ -314,8 +314,9 @@ const BLOCKLIB = {
   nohangs: { n:'No hangs + stretch', t:8, tMin:5, tMax:12, c:'var(--prepare)', rpe:'-', sets:2, rest:1,
     why:'No hangs 2×30 sec half crimp. Then a short stretch: shoulders and forearms.' },
   // ── minimal dose micro blocks (minimum effective dose; López/Lattice research on short frequent finger training) ──
-  activeCurls: { n:'Active finger curls', t:12, c:'var(--max-effort)', rpe:'8-9', sets:'4-6', rest:2, fixed:true,
-    why:'Power pulls on an edge or fingerboard: no dead hanging but actively driving force as if curling the edge toward you. Isometric holds of 7-10 sec at 80-90% of your max, stop 1-2 counts before failure, 2-3 min full rest, 4-6 sets. Active curling recruits more with less total tendon load.' },
+  // korte neurale primer voor het klimmen, geen krachtblok (C4HP / Tyler Nelson)
+  activeCurls: { n:'Active Finger Curl Primer', t:6, tMin:5, tMax:8, c:'var(--prepare)', rpe:'build to max',
+    why:'Build through three smooth pulls per hand, then perform two maximal 5 second recruitment curls. Keep your feet down and actively curl against the immovable edge. Build force gradually, never jerk into it. One arm at a time, feet on the floor. Three building pulls per hand: 3 seconds each at roughly 40, 60 and 80 percent intention, alternating left and right, 15 to 30 seconds between pulls. Then two maximal recruitment curls per hand: aim for 5 seconds, 7 seconds is the cap, not the goal. Build force calmly for 1 to 2 seconds, then curl as hard as you can against the immovable edge. Give each hand about 90 seconds before its next turn. Then move on to progressive climbing or the main block. Technique: pick a comfortable edge you can pull hard on without the grip deforming. Start with light tension and actively close the fingers, as if rolling the edge into your palm. Shoulder and elbow stay stable: no pull up, no lat pull. The edge does not move and your feet stay down. Half crimp is the default. Stop or scale back on pain or sharp sensations, a grip that pops open, compensation from back, shoulder or elbow, clearly less force on the second maximal curl, or cold fingers that are not ready for maximal intention. High recruitment with very little total time under tension. All levels, scalable. Based on the C4HP protocol by Tyler Nelson. The broader principle of progressive finger recruitment is also used by Eva López; this specific variant comes from C4HP. Supported coach protocol, not a directly validated climbing protocol.' },
   mdFinger: { n:'Finger prep', t:5, c:'var(--prepare)', rpe:'3-5', fixed:true,
     why:'Progressive loading on the edge: 3-4 short, increasingly heavy hangs with full rest. Bring the tendons up to tension before the maximal work — never max hang cold.' },
   mdMaxHangs: { n:'Micro max hangs', t:12, c:'var(--max-effort)', rpe:'8-9', sets:5, rest:2, fixed:true,
@@ -343,6 +344,41 @@ const BLOCKLIB = {
   // ── activation protocols ──
   tensionAct: { n:'Tension activation', t:12, tMin:8, tMax:15, c:'var(--prepare)', rpe:'6', sets:3, rest:2,
     why:'Preload the nervous system before limit work. Heavy isometrics, short and fresh: heel-hook isometric pulls at 60/90/120 degrees, 1 rep per angle, far from failure.' },
+
+  // ── coach-sessieblokken (vier gecureerde sessies, juli 2026) ──
+  fiveWarmup: { n:'Warm-up + pick-ups', t:15, tMin:12, tMax:20, c:'var(--prepare)', rpe:'2-4', addedDate:'2026-07-21',
+    why:'Two minutes of jumping jacks, eight minutes of easy stretching, then five minutes of finger warm-up with progressive pick-ups. Stop at seventy five percent effort; this is preparation, not training.' },
+  wallRamp: { n:'Progressive wall warm-up', t:20, tMin:15, tMax:30, c:'var(--prepare)', rpe:'2-5', addedDate:'2026-07-21',
+    why:'Ten to twelve boulders building in difficulty. Start very easy, focus on smooth movement, and finish two to three grades below your max. Do not fatigue yourself.' },
+  fiveProblems: { n:'Five problems', t:50, tMin:40, tMax:70, c:'var(--volume)', rpe:'8-9', sets:5, rest:5, addedDate:'2026-07-21',
+    why:'Pick five hard boulders targeting different skills; avoid slab. Climb each three times within five minutes, then rest five minutes before the next. Comp climbers may add two problems. If you send all of them your estimate was too easy, you can do better. If you fail three or more sets it is too hard, tune it down next time. Aim for the sweet spot of suffering.' },
+  slabWork: { n:'Slab work', t:30, tMin:20, tMax:40, c:'var(--skill)', rpe:'5-6', addedDate:'2026-07-21',
+    why:'Work slab boulders and invent a couple of original moves. This is deliberate technique work under fatigue, not filler.' },
+  squatLat: { n:'Deep squat + lats', t:5, tMin:4, tMax:8, c:'var(--prepare)', rpe:'-', addedDate:'2026-07-21',
+    links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=4K9VrVIX93w'}],
+    why:'Two times two minutes: deep squat and PVC lat stretch. Breathe out into each position.' },
+  skillChoice: { n:'Skill choice', t:10, tMin:10, tMax:25, c:'var(--skill)', rpe:'4-6', pick:true, addedDate:'2026-07-21',
+    why:'A concrete skill drill, prefilled from the library so the session is always ready to start. Not the one you need today? Change it: pick from the library (what do you want to improve or struggle with?) or make your own exercise. Work it deliberately on boulders below your max.' },
+  fourShots: { n:'Four Shots', t:40, tMin:30, tMax:60, c:'var(--max-effort)', rpe:'8', addedDate:'2026-07-21',
+    links:[{label:'Watch the original drill', url:'https://youtu.be/K5NLcANk1X8'}],
+    why:'Climb hard with good technique, without letting quality collapse. Pick four to eight boulders you can probably send within one to four attempts: hard enough to truly challenge you, not so hard that you are only trying single moves. You are looking for the zone between limit bouldering and successful execution. Deliberately vary styles, holds and wall angles: compression, small crimps, big slopers, dynamic moves, tension, precise feet. A system board makes this easy to steer; regular set boulders work too. Rest long enough to climb powerfully again. Every attempt has a plan: look at your beta, choose one adjustment, execute it with conviction. Four attempts max, so learn fast instead of repeating the same try. Falling is fine, you gained new information: find what went wrong and change something small. A different foot, more tension, later deadpoint, pulling harder. The goal is not to never fall but to make every attempt better. Stop when power, explosiveness or movement quality clearly drops. This is not an exhaustion session. Setup: four to eight boulders, one to four attempts each, full recovery between attempts, lots of variety in holds, moves and angles, stop before quality fades. Based on the original Sub Limit Bouldering drill by Charlie Schreiber.' },
+  cleanRepeat: { n:'Clean repeat', t:5, tMin:5, tMax:10, c:'var(--skill)', rpe:'4', addedDate:'2026-07-21',
+    why:'Repeat one drill boulder once, clean and successful. Ending on a good execution consolidates the skill.' },
+  meditation: { n:'Reflect + breathe', t:3, c:'var(--prepare)', rpe:'-', fixed:true, addedDate:'2026-07-21',
+    why:'Name one thing that went differently today, and which adjustment caused it. Then breathe consciously for two minutes: follow the breath, do not steer it. "Breathing in, I calm my body. Breathing out, I smile. Dwelling in the present moment, I know this is a wonderful moment!" (Thich Nhat Hanh)' },
+  ownWarmup: { n:'Your warm-up', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'2-4', addedDate:'2026-07-21',
+    why:'Run your favourite warm-up routine. You know what your body needs; end warm and fresh.' },
+  easyDozen: { n:'12 easy boulders', t:40, tMin:30, tMax:50, c:'var(--volume)', rpe:'3-4', checklist:true, target:12, range:'12', grade:'easy', addedDate:'2026-07-21',
+    why:'Around twelve easy problems, counted as you go. Move well and do not fatigue yourself yet; the hard work comes later in this session.' },
+  terminator: { n:'Terminator mode', t:25, tMin:20, tMax:35, c:'var(--volume)', rpe:'7-8', sets:3, rest:3, addedDate:'2026-07-21',
+    why:'Gym circuit, three rounds, sub-maximal but deliberately fatiguing: weighted pull-ups, rows, a sideways hand-over-hand traverse between hangboards with feet supported, and lower rung hangs. Scale the load: if a pull-up with roughly ten extra kilos is near your max, start around half of that and adjust so the last reps of each round are hard but clean. Optional progression for experienced climbers: sideways campus between the hangboards. High impact, skip it if in doubt.' },
+  progDeadhangs: { n:'Progressive deadhangs', t:15, tMin:12, tMax:20, c:'var(--max-effort)', rpe:'7-8', addedDate:'2026-07-21',
+    why:'Start with active finger curls, then build towards the smallest edge you can hang for five seconds, around ninety percent effort. Full rest between hangs; stop while your fingers still feel sharp.' },
+  capacityMix: { n:'Capacity mix', t:50, tMin:40, tMax:70, c:'var(--volume)', rpe:'5-6', checklist:true, target:30, range:'25-35', addedDate:'2026-07-21',
+    why:'Twenty five to thirty five boulders at medium intensity, counted. Start with ten to fifteen board or spray wall problems, then move into the gym. All styles welcome: comp, slab, overhang. Most boulders should go in one or two attempts, otherwise they are too hard. Add one or two boulders each session; more than that risks injury.' },
+  yogaFlow: { n:'Yoga cool-down', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'-', addedDate:'2026-07-21',
+    links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=w5Qqy6b_yd0'}],
+    why:'A calm yoga flow to close the session: hips, shoulders and long exhales. Follow the video.' },
 };
 
 // ══ SESSIONS = energy system containers ══
@@ -474,7 +510,7 @@ const variantOffset = {};
 const durationOverride = {};
 
 const timeValues = [30,45,60,75,90,105,120,150,Infinity];  // Infinity = geen tijdslimiet (MOCK-prototype)
-let activeTimeIdx = 2;
+let activeTimeIdx = 6;   // default 120 min: realistisch voor een hal-sessie; lichte sessies stoppen bij hun cap
 let activeSessionId = 'capacity';
 let currentBlocks = [];
 let currentBlockIdx = 0;
@@ -525,18 +561,40 @@ function clampToBounds(b, minutes) {
   const bd = blockBounds(b);
   return Math.min(bd.max, Math.max(bd.min, minutes));
 }
+// intensiteitslabel: numeriek = "rpe 8-9", tekstueel ("build to max") staat op zichzelf
+function rpeLabel(r) { return /^\d/.test(r || '') ? 'rpe ' + r : (r || ''); }
+
+// skill-keuzeblokken (pick:true) zijn standaard voorgevuld met een concrete
+// drill: per dag roterend en verschillend per blok binnen dezelfde sessie,
+// dus de sessie is altijd meteen startbaar. Wisselen kan in het blok-paneel
+// (voor start) en in de speler (dfSwitch).
+const skillOverride = {};   // { sessionId: { slotIdx: drillNaam } }
+function drillByName(n) { return DRILLS.find(d => d.n === n) || null; }
+function assignSkillDrills(blocks, id) {
+  const lib = DRILLS.filter(d => d.cat !== 'meta');
+  if (!lib.length) return blocks;
+  const daySeed = new Date().getDate() + new Date().getMonth()*31;
+  let k = 0;
+  blocks.forEach(b => {
+    if (!b.pick) return;
+    const ov = skillOverride[id] && skillOverride[id][b._slot];
+    b._drill = (ov && drillByName(ov)) || lib[(daySeed + k) % lib.length];
+    k++;
+  });
+  return blocks;
+}
 
 // BUILDER (Design / self-assembled): de som is leidend. De blokken bepalen de
 // sessieduur; de landing-tijdinstelling geldt hier niet en er wordt nooit
 // proportioneel geknepen. Aanpassen doet de gebruiker per blok (steppers).
 function composeFromKeys(keys) {
   _fitInfo['custom'] = null;   // geen budget, dus nooit een conflict
-  return keys.filter(k=>BLOCKLIB[k]).map((key, i) => {
+  return assignSkillDrills(keys.filter(k=>BLOCKLIB[k]).map((key, i) => {
     const b = {...BLOCKLIB[key], _key:key, _slot:i, _alts:1};
     const ov = durationOverride['custom'] && durationOverride['custom'][i];
     if (ov != null) b.t = clampToBounds(b, ov);
     return b;
-  });
+  }), 'custom');
 }
 
 // GENERATE: tijd is leidend. Water-filling binnen [tMin, tMax]; past het niet
@@ -581,7 +639,7 @@ function fitToBudget(base, id) {
       }
     }
   }
-  return items.map(x => ({...x.b, t: x.t}));
+  return assignSkillDrills(items.map(x => ({...x.b, t: x.t})), id);
 }
 
 function getBlocks(id) {
@@ -632,7 +690,37 @@ function adjustBlock(id, slotIdx, currentT, delta) {
 function getSession(id) { if (id === 'custom') return customSession; return sessions.find(x=>x.id===id); }
 
 // ── NAVIGATION ──
+// Navigatiestack: BACK gaat overal precies één stap terug. In-app stack plus
+// één sentinel-history-entry (zie onderaan): systeem-back triggert popstate →
+// goBack(), zonder per-stap pushState en dus zonder botsing met #s=-deel-links.
+const _navStack = [];
+let _navSuppress = false;
+function goBack() {
+  // overlays eerst, bovenste laag sluit; de DOM is de waarheid (geen desync)
+  const overlays = [
+    ['blockEditDialog', closeBlockEdit],
+    ['newExerciseDialog', closeNewExercise],
+    ['saveFavDialog', closeSaveFav],
+    ['shareDialog', closeShareDialog],
+    ['previewView', closeChoosePreview],
+    ['blockDetail', closeBlockDetail],
+    ['blockPicker', closeBlockPicker],
+  ];
+  for (const [id, close] of overlays) {
+    const el = document.getElementById(id);
+    if (el && el.style.display === 'flex') { close(); return; }
+  }
+  const prev = _navStack.pop();
+  _navSuppress = true;
+  goTo(prev && prev.view ? prev.view : 'v-browse');
+  _navSuppress = false;
+}
 function goTo(viewId) {
+  const cur = document.querySelector('.view.active');
+  if (!_navSuppress && cur && cur.id !== viewId) {
+    _navStack.push({ view: cur.id });
+    if (_navStack.length > 20) _navStack.shift();
+  }
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(viewId).classList.add('active');
   if (viewId === 'v-browse' && typeof renderContinue === 'function') renderContinue();
@@ -763,26 +851,6 @@ const QUOTES = [
   { q: "Recovery Starts Now.", gym: true }, { q: "Built, Not Bought.", gym: true },
   { q: "Small Gains. Big Results.", gym: true }, { q: "Consistency Wins.", gym: true },
   { q: "You Did the Work.", gym: true }, { q: "Mission Complete.", gym: true },
-  // Stoïcijns / Minimalistisch
-  { q: "Discipline > Motivation." }, { q: "Done Is Powerful." }, { q: "Keep Showing Up." },
-  { q: "No Zero Days." }, { q: "Earn Tomorrow." }, { q: "Progress Compounds." },
-  { q: "Another Brick in the Wall." }, { q: "One Percent Better." }, { q: "The Work Is the Reward." },
-  { q: "Return Tomorrow." },
-  // Harder / Badass
-  { q: "Pain Paid." }, { q: "Earned." }, { q: "Built Different." }, { q: "No Excuses." },
-  { q: "Another One Down." }, { q: "Outworked Yesterday." }, { q: "The Mountain Doesn't Care." },
-  { q: "Stay Dangerous." }, { q: "Built by Reps." }, { q: "Never Finished." },
-  { q: "Vincent gives you strength" }, { q: "You're Almost there" },
-  // Met een knipoog
-  { q: "Go Eat Some Protein." }, { q: "Hydrate, You Goblin." }, { q: "Your Forearms Hate You." },
-  { q: "Your Couch Can Wait." }, { q: "Gravity Lost Again." }, { q: "Fingerprints Not Found." },
-  { q: "Achievement: Didn't Skip Leg Day." }, { q: "You May Now Complain." },
-  { q: "Please Return Tomorrow." }, { q: "Congratulations. You're Sore Tomorrow." },
-  // Soulslike / Fantasy
-  { q: "Bonfire Lit." }, { q: "Praise the Send." }, { q: "Strength +1" }, { q: "Vitality Increased." },
-  { q: "You Grew Stronger." }, { q: "Forge Complete." }, { q: "Steel Tempered." },
-  { q: "The Hero Returns." }, { q: "Your Legend Continues." }, { q: "The Journey Never Ends." },
-  { q: "Guru is impressed" },
 ];
 
 function fmtMin(sec){
@@ -990,6 +1058,8 @@ function openBlock(idx) {
   updateSlabProgress(idx);
   if (b && b.guided && b.items) {
     startGuided(idx);
+  } else if (b && b.pick) {
+    playAssignedSkill(idx);   // voorgevuld: direct spelen, wisselen kan altijd
   } else if (b && b.library) {
     startDrillLibrary(idx);
   } else if (b && b.checklist) {
@@ -1175,14 +1245,59 @@ function startDrillLibrary(blockIdx) {
 
 function drillBack() {
   if (drillMode === 'swap') { drillMode = 'session'; swapTargetIdx = null; goTo('v-drillfocus'); return; }
+  if (drillMode === 'choose') { drillMode = 'session'; goTo('v-session'); return; }   // geen keuze = blok niet gestart
   if (drillMode === 'library') goTo('v-browse');
   else goTo('v-session');
 }
 function drillDone() {
   if (drillMode === 'swap') { drillMode = 'session'; swapTargetIdx = null; goTo('v-drillfocus'); return; }
+  if (drillMode === 'choose') { drillMode = 'session'; goTo('v-session'); return; }   // geen keuze = blok niet gestart
   if (drillMode === 'library') goTo('v-browse');
   else nextBlock();
 }
+
+// ── SKILL CHOICE: het keuzeblok. De gebruiker kiest een skill uit de
+// bibliotheek (of maakt een eigen oefening); zonder keuze start het blok
+// niet. De gekozen drill draait in de focused player op de blokduur. ──
+let _chooseBlockIdx = null;
+let _chooseOwnPending = false;
+function startSkillChoice(blockIdx) {
+  _chooseBlockIdx = blockIdx;
+  drillMode = 'choose';
+  dpFilter = '';
+  const dsi = document.getElementById('drillSearch');
+  if (dsi) dsi.value = '';
+  dpDrills = DRILLS.filter(d => d.cat !== 'meta');
+  dpTimers = dpDrills.map(() => 5*60);
+  dpIntervals = dpDrills.map(() => null);
+  document.getElementById('drillTitle').textContent = 'Skill choice';
+  document.getElementById('drillSub').textContent = 'What do you want to improve or struggle with? Tap a skill to pick it.';
+  document.getElementById('drillFooter').innerHTML = `your choice<br><b style="color:var(--skill);">${dpDrills.length} skills, or make your own</b>`;
+  renderDrillPlayer();
+  goTo('v-drills');
+}
+// de toegewezen drill spelen in de focused player, op de blokduur
+function playAssignedSkill(idx) {
+  const b = currentBlocks[idx];
+  drillMode = 'session';
+  dfDrills = [(b && b._drill) || DRILLS[0]];
+  dfTotal = Math.max(3, b ? b.t : 10) * 60;
+  loadDf(0);
+  goTo('v-drillfocus');
+}
+function chooseApply(libIdx) {
+  const b = currentBlocks[_chooseBlockIdx];
+  drillMode = 'session';
+  if (b) {
+    if (!skillOverride[activeSessionId]) skillOverride[activeSessionId] = {};
+    skillOverride[activeSessionId][b._slot] = dpDrills[libIdx].n;
+  }
+  buildSlab();
+  // in een lopende sessie meteen spelen; voor start terug naar de slab
+  if (sessionStartTime) { playAssignedSkill(_chooseBlockIdx); return; }
+  goTo('v-session');
+}
+function chooseOwnExercise() { _chooseOwnPending = true; openNewExercise(); }
 
 // ══ FOCUSED DRILL PLAYER (big timer) ══
 let dfDrills = [], dfIdx = 0, dfRemain = 0, dfTotal = 0, dfInterval = null, dfRunning = false;
@@ -1405,11 +1520,25 @@ function renderDrillPlayer() {
       <div class="dp-controls">
         ${drillMode === 'swap'
           ? `<button class="dp-tbtn" onclick="dfApplySwap(${i})" style="border-color:var(--skill);background:color-mix(in srgb, var(--skill) 18%, transparent);">Pick this one →</button>`
+          : drillMode === 'choose'
+          ? `<button class="dp-tbtn" onclick="chooseApply(${i})" style="border-color:var(--skill);background:color-mix(in srgb, var(--skill) 18%, transparent);">Pick this one →</button>`
           : `<button class="dp-tbtn" id="dp-btn-${i}" onclick="dpToggleTimer(${i})">${running?'Pause':'Start timer'}</button>
              <button class="dp-tbtn done-btn" onclick="dpMarkDone(${i})">Done ✓</button>`}
       </div>
     </div>`;
   }).join('');
+  // keuzeblok: eigen oefening maken hoort bij de keuze
+  if (drillMode === 'choose') {
+    stack.innerHTML += `<div class="dp-card" style="border:1px dashed var(--graphite);background:none;">
+      <div class="dp-head" onclick="chooseOwnExercise()" style="cursor:pointer;">
+        <div class="dp-num">+</div>
+        <div class="dp-info">
+          <div class="dp-name">Make your own exercise</div>
+          <div class="dp-tag">it lands in this block and in your library</div>
+        </div>
+      </div>
+    </div>`;
+  }
 }
 
 function fmtMMSS(s){ const m=Math.floor(Math.max(0,s)/60); const sec=Math.max(0,s)%60; return `${m}:${sec.toString().padStart(2,'0')}`; }
@@ -1815,7 +1944,7 @@ function renderTodaysPick() {
     <div class="pick-body">
       <div class="pick-kicker">recommended today</div>
       <div class="pick-name">${s.name}</div>
-      <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${isFinite(t) ? t : total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
+      <div class="pick-meta"><span>${s.desc.split('\n')[0].toLowerCase()}</span><span>${total} min</span><span>${deriveGear(blocks)}</span><span class="pick-load">load ${chPhalanx(loadDots(pick.id), true)}</span></div>
       <div class="pick-reason">${reason}</div>
       <button class="pick-why-btn" onclick="togglePickWhy(this)">${_pickWhyOpen ? 'why this? ▴' : 'why this? →'}</button>
       <div class="pick-why${_pickWhyOpen ? ' open' : ''}" id="pickWhy">${_pickWhyOpen ? coachDetail(pick) : ''}</div>
@@ -1931,14 +2060,14 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull'] },
-  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply'] },
-  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild'] },
-  { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength'] },
-  { name:'Finger strength',               keys:['maxHangs','activeCurls'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls'] },
+  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix'] },
+  { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots'] },
+  { name:'Finger strength',               keys:['maxHangs','progDeadhangs'] },
   { name:'Antagonist, core & gym',     keys:['pushStrength','coreLegs','mini1','mini2','mini3'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow'] },
 ];
 // ── KLEURGRAMMATICA ──
 // kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
@@ -2026,7 +2155,7 @@ function renderBlockPicker(query) {
         return `<div onclick="pickBlock('${k}')" style="display:flex;align-items:center;gap:8px;padding:12px 14px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.c};cursor:pointer;">
           <div style="flex:1;">
             <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:${nameColor(b.c)};">${b.n}${bm}${yoursBadge(k)}</div>
-            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--disabled);margin-top:2px;">rpe ${b.rpe || '–'} · base ${b.t}'</div>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--disabled);margin-top:2px;">${rpeLabel(b.rpe) || 'rpe –'} · base ${b.t}'</div>
           </div>
           <div onclick="event.stopPropagation();openBlockDetail('${k}')" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--dust);padding:5px 9px;border:1px solid var(--graphite);border-radius:5px;">i</div>
           ${edit}${del}
@@ -2113,6 +2242,7 @@ function openNewExercise(editKey) {
 }
 function closeNewExercise() {
   _editingBlockKey = null;
+  _chooseOwnPending = false;
   document.getElementById('newExerciseDialog').style.display = 'none';
 }
 function confirmNewExercise() {
@@ -2133,10 +2263,21 @@ function confirmNewExercise() {
   store[key] = block;
   saveCustomBlocks(store);
   BLOCKLIB[key] = block;
+  const choosing = _chooseOwnPending;   // vóór closeNewExercise, die reset de vlag
   closeNewExercise();
   if (editing) {
     renderBlockPicker(document.getElementById('blockSearch').value);
     if (currentBlocks.some(b => b._key === key)) buildSlab();
+    return;
+  }
+  // vanuit het skill-keuzeblok: de eigen oefening wórdt de invulling van dit blok
+  if (choosing && _chooseBlockIdx != null && customKeys) {
+    const slot = currentBlocks[_chooseBlockIdx] ? currentBlocks[_chooseBlockIdx]._slot : _chooseBlockIdx;
+    customKeys[slot] = key;
+    drillMode = 'session';
+    buildSlab();
+    // speler alleen in een lopende sessie; voor start terug naar de slab
+    if (sessionStartTime) openBlock(_chooseBlockIdx); else goTo('v-session');
     return;
   }
   // direct toevoegen aan de huidige sessie
@@ -2461,27 +2602,22 @@ function buildSlab() {
   // blocks + acties
   const blocksHTML = currentBlocks.map((b,i)=>{
     if (slabEditMode) {
-      return `<div class="slab-block slab-real" data-idx="${i}" style="background:color-mix(in srgb, ${b.c} 9%, transparent);">
+      // een bewerkmodel: ook met EDIT actief opent een tik het paneel;
+      // handle en × stoppen hun eigen events (slepen en verwijderen)
+      return `<div class="slab-block slab-real" data-idx="${i}" style="background:color-mix(in srgb, ${b.c} 9%, transparent);" onclick="slabBlockTap(${i})">
         <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
-        <div class="slab-drag-handle" ontouchstart="handleDragStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="handleDragStart(event,this)" style="z-index:3;">≡</div>
-        <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}${yoursBadge(b._key)}</div>
-        <button onclick="removeBlock(${i})" class="edit-mini" style="color:var(--danger);border-color:color-mix(in srgb, var(--danger) 27%, transparent);z-index:3;flex-shrink:0;">×</button>
+        <div class="slab-drag-handle" onclick="event.stopPropagation()" ontouchstart="handleDragStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="handleDragStart(event,this)" style="z-index:3;">≡</div>
+        <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.pick && b._drill ? b._drill.n : b.n}${yoursBadge(b._key)}</div>
+        <button onclick="event.stopPropagation();removeBlock(${i})" class="edit-mini" style="color:var(--danger);border-color:color-mix(in srgb, var(--danger) 27%, transparent);z-index:3;flex-shrink:0;">×</button>
       </div>`;
     }
     const dragAttrs = sessionLocked ? '' : `ontouchstart="slabPressStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="slabPressStart(event,this)"`;
-    // builder: duur per blok direct instelbaar binnen het duurmodel (min/max)
-    const bd = blockBounds(b);
-    const dur = (isCustom && !sessionLocked && bd.min !== bd.max)
-      ? `<div class="slab-stepper" onclick="event.stopPropagation()">
-          <button class="step-btn" onclick="adjustBlock('custom',${i},${b.t},-5)" aria-label="shorter">&minus;</button>
-          <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
-          <button class="step-btn" onclick="adjustBlock('custom',${i},${b.t},5)" aria-label="longer">+</button>
-        </div>`
-      : `<div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>`;
+    // voor lock-in opent de tik het bewerkpaneel (slabBlockTap); de duur
+    // staat als ghost op de rij, de steppers zitten in het paneel
     return `<div class="slab-block slab-real" data-idx="${i}" style="background:color-mix(in srgb, ${b.c} 9%, transparent);" onclick="slabBlockTap(${i})" ${dragAttrs}>
       <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
-      <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}${yoursBadge(b._key)}</div>
-      ${dur}
+      <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.pick && b._drill ? b._drill.n : b.n}${yoursBadge(b._key)}</div>
+      <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
     </div>`;
   }).join('');
   const emptyHint = currentBlocks.length === 0
@@ -2515,7 +2651,96 @@ let _dragging = false, _dragEl = null, _pressY = 0, _justDragged = false;
 
 function slabBlockTap(i) {
   if (_justDragged) { _justDragged = false; return; }
-  openBlock(i);
+  // interactiemodel: tik = altijd blok-info; de speler opent alleen via START.
+  // Enige vastgelegde uitzondering: in een lopende sessie is de tik
+  // navigatie/overslaan binnen de run (in-session flexibiliteit).
+  if (sessionStartTime) { openBlock(i); return; }
+  openBlockEdit(i);
+}
+
+// ── BLOK-INFO/BEWERKPANEEL: past zich aan de context aan ──
+// eigen bewerkbaar concept → steppers + verwijderen; gelockt eigen → hint ✎;
+// gecureerd/gedeeld → alleen-lezen + remix; preview-rij (key) → alleen-lezen
+let _editBlockIdx = null;   // slab-context (index in currentBlocks)
+let _editBlockKey = null;   // key-context (preview-rijen)
+function openBlockEdit(i) {
+  _editBlockIdx = i; _editBlockKey = null;
+  renderBlockEdit();
+  document.getElementById('blockEditDialog').style.display = 'flex';
+}
+function openBlockInfo(key) {
+  _editBlockKey = key; _editBlockIdx = null;
+  renderBlockEdit();
+  document.getElementById('blockEditDialog').style.display = 'flex';
+}
+function closeBlockEdit() { _editBlockIdx = null; _editBlockKey = null; document.getElementById('blockEditDialog').style.display = 'none'; }
+function renderBlockEdit() {
+  const slabCtx = _editBlockIdx != null;
+  const b = slabCtx
+    ? currentBlocks[_editBlockIdx]
+    : (BLOCKLIB[_editBlockKey] ? { ...BLOCKLIB[_editBlockKey], _key: _editBlockKey } : null);
+  if (!b) { closeBlockEdit(); return; }
+  const bd = blockBounds(b);
+  const grp = blockGroupName(b._key);
+  const col = CAT_COLOR[grp] || b.c;
+  const editable = slabCtx && !sessionLocked && sessionOwned;
+  // skill-keuzeblok: het paneel toont de toegewezen drill en laat wisselen (voor start)
+  const drill = (slabCtx && b.pick && b._drill) ? b._drill : null;
+  const durRow = (editable && bd.min !== bd.max)
+    ? `<div class="be-dur">
+        <button class="step-btn" onclick="beAdjust(-5)" aria-label="shorter">&minus;</button>
+        <div class="be-dur-val">${b.t}<span>'</span></div>
+        <button class="step-btn" onclick="beAdjust(5)" aria-label="longer">+</button>
+       </div>
+       <div class="be-dur-range">${bd.min} to ${bd.max} min</div>`
+    : `<div class="be-dur"><div class="be-dur-val">${b.t}<span>'</span></div></div>
+       <div class="be-dur-range">${bd.min === bd.max ? 'fixed duration' : bd.min + ' to ' + bd.max + ' min'}</div>`;
+  const hasRpe = b.rpe && b.rpe !== '-' && b.rpe !== '–';
+  // context-hint en acties
+  let hint = '', actions = '';
+  if (editable) {
+    const editBtn = (b._key && b._key.startsWith('ux_'))
+      ? `<button class="be-secondary" onclick="closeBlockEdit();openNewExercise('${b._key}')">✎ Edit</button>` : '';
+    actions = `${editBtn}<button class="be-secondary" style="color:var(--danger);border-color:color-mix(in srgb, var(--danger) 27%, transparent);" onclick="beRemove()">Remove</button><button class="be-done" onclick="closeBlockEdit()">Done</button>`;
+  } else if (slabCtx && sessionOwned) {
+    hint = 'Locked session. Unlock with the ✎ edit row below to change blocks.';
+    actions = `<button class="be-done" onclick="closeBlockEdit()">Done</button>`;
+  } else if (slabCtx) {
+    hint = 'Curated session, read only. Remix it to make your own editable copy.';
+    actions = `<button class="be-secondary" onclick="closeBlockEdit();duplicateSession()">⧉ Remix</button><button class="be-done" onclick="closeBlockEdit()">Done</button>`;
+  } else {
+    hint = 'Read only. Remix the session to make an editable copy.';
+    actions = `<button class="be-secondary" onclick="closeBlockEdit();closeChoosePreview();customizeFromChoose()">⧉ Remix</button><button class="be-done" onclick="closeBlockEdit()">Done</button>`;
+  }
+  // bronvermelding en links horen bij de info, ook in dit paneel
+  const links = (b.links || []).map(l => `<a class="be-link" href="${l.url}" target="_blank" rel="noopener">${l.label} →</a>`).join('');
+  // wisselen voor start: dezelfde functie als in de speler, maar dan vooraf
+  if (drill && !sessionStartTime) {
+    actions = `<button class="be-secondary" onclick="closeBlockEdit();startSkillChoice(${_editBlockIdx})">⇄ Change skill</button>` + actions;
+  }
+  const whyHTML = drill
+    ? `<div class="be-why"><b style="color:var(--chalk);font-weight:600;">Setup.</b> ${drill.setup} <b style="color:var(--chalk);font-weight:600;">Execution.</b> ${drill.do} <b style="color:var(--chalk);font-weight:600;">Goal.</b> ${drill.goal}</div>`
+    : `<div class="be-why">${b.why || ''}</div>`;
+  document.getElementById('blockEditBody').innerHTML = `
+    <div class="be-kicker" style="color:${col};">${grp}${drill ? ' · skill choice' : ''}</div>
+    <div class="be-name">${drill ? drill.n : b.n}</div>
+    ${durRow}
+    ${hasRpe ? `<div class="be-rpe">${rpeLabel(b.rpe)}</div>` : ''}
+    ${whyHTML}
+    ${links}
+    ${hint ? `<div class="be-hint">${hint}</div>` : ''}
+    <div class="be-actions">${actions}</div>`;
+}
+function beAdjust(delta) {
+  const b = currentBlocks[_editBlockIdx];
+  if (!b) return;
+  adjustBlock(activeSessionId, _editBlockIdx, b.t, delta);  // klemt op [tMin, tMax], herbouwt slab en preview
+  renderBlockEdit();
+}
+function beRemove() {
+  const i = _editBlockIdx;
+  closeBlockEdit();
+  if (i != null) removeBlock(i);
 }
 function slabPressStart(ev, el) {
   clearTimeout(_pressTimer);
@@ -2659,7 +2884,7 @@ function buildDetail(idx) {
   document.getElementById('detailBlockNum').textContent = `${idx+1} / ${currentBlocks.length}`;
   document.getElementById('detailName').textContent = b.n;
   document.getElementById('detailName').style.color = b.c;
-  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? `rpe ${b.rpe}` : 'no intensity set';
+  document.getElementById('detailCat').textContent = (b.rpe && b.rpe !== '-' && b.rpe !== '–') ? rpeLabel(b.rpe) : 'no intensity set';
   document.getElementById('detailCat').style.color = b.c;
 
   // timer — volledige reset bij openen blok
@@ -3094,6 +3319,22 @@ window.addEventListener('beforeunload', e => {
   }
 });
 
+// ── SYSTEEM-BACK: sentinel-entry, popstate gaat in-app één stap terug ──
+// Eén pushState (zonder hash) direct na init; de deel-link-import heeft de
+// #s=-hash dan al gelezen en gestript, dus history en hash botsen nooit.
+try { history.pushState({ crimpify: 'nav' }, '', location.pathname); } catch {}
+window.addEventListener('popstate', () => {
+  try { history.pushState({ crimpify: 'nav' }, '', location.pathname); } catch {}
+  // tijdens een lopend blok eerst de exit-guard, net als de in-app back
+  if (typeof hasLiveProgress === 'function' && hasLiveProgress()) { guardedExit(() => goBack()); return; }
+  goBack();
+});
+// deel-link opnieuw geopend in dezelfde tab: na de eerdere replaceState is dat
+// een hashchange (geen page-load), dus alsnog importeren
+window.addEventListener('hashchange', () => {
+  if (location.hash.startsWith('#s=')) importFromHash();
+});
+
 // ── PWA: register external service worker (auto-updating) ──
 if ('serviceWorker' in navigator) {
   // controllerchange is hét signaal dat een nieuwe sw de controle pakt
@@ -3140,8 +3381,8 @@ function chMatch(s) {
   if (q && !(s.name + ' ' + s.coach + ' ' + s.goal + ' ' + s.gear.join(' ')).toLowerCase().includes(q)) return false;
   const f = chFilters;
   if (f.time != null) {
-    if (f.time === 90) { if (s.mins < 90) return false; }
-    else if (s.mins > f.time) return false;
+    if (f.time === 90) { if (sessionMins(s) < 90) return false; }
+    else if (sessionMins(s) > f.time) return false;
   }
   if (f.goal && !CH_GOAL_SYS[f.goal].includes(s.sys)) return false;
   if (f.gear) {
@@ -3219,8 +3460,8 @@ function chResultCard(i) {
     <div class="ch-result-body">
       <div class="ch-name">${s.name}</div>
       <div class="ch-result-coach">by ${s.coach} <span>· ${COACH_ROLE[s.coach] || 'coach'}</span></div>
-      <div class="ch-line">${s.goal} · ${s.mins} min · ${s.gear.join(', ')}</div>
-      <div class="ch-foot"><span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load, true)}</span><span>${s.done} done</span></div>
+      <div class="ch-line">${s.goal} · ${sessionMins(s)} min · ${s.gear.join(', ')}</div>
+      <div class="ch-foot"><span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load, true)}</span><span>${s.done ? s.done + ' done' : ''}</span></div>
     </div>
   </div>`;
 }
@@ -3239,7 +3480,7 @@ function renderChooseResults() {
 // door de maker, voedt ACWR), done = completion_count (mock tot er een backend is).
 const MOCK_CHOOSE = [
   // cat: 'featured' | 'new' | 'popular' | 'coach' (redactionele herkomst)
-  { cat:'featured', name:'Crimp Factory',  coach:'Mila Berg',     mins:75, color:'amber',  rpe:'8-9', done:214, load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['dynamic','maxHangs','board1','stretch'],
+  { cat:'featured', name:'Crimp Factory',  coach:'Jaap dJ',     mins:75, color:'amber',  rpe:'8-9', done:214, load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['dynamic','maxHangs','board1','stretch'],
     intent:'Max finger strength on small edges. Long rests, full effort.',
     why:'Most climbers plateau because their fingers never see a truly maximal stimulus. Crimp Factory is built around one thing: small edges, long rests, full effort. You leave strong, not wrecked.' },
   { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', done:187, load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['dynamic','limitBlocks','dynos','stretch'],
@@ -3282,10 +3523,34 @@ const MOCK_CHOOSE = [
   // huis-sessie op een gevestigd principe: intensiteit vooraan terwijl je fris bent (geen merkclaim)
   { cat:'coach',    name:'Fresh First',    coach:'Crimpify',      mins:60, color:'amber',  rpe:'8-9', done:88,  load:4, sys:'performance', goal:'Hardest first', gear:['Gym wall'], level:'intermediate+', keys:['frontGrowth','frontBuild','frontMaint'], addedDate:'2026-07-16',
     intent:'Hardest work first while you are fresh, easy volume last. Arrive warm.',
-    why:'Most climbers do it backwards: they warm up forever, then try hard when they are already tired. Fresh First flips it. The hardest material goes first, while your nervous system is sharp and your focus is full, because that is when you can actually move the needle. The middle third builds the boulders you are developing. Easy volume and simple movement come last, as the wind-down, not the opener. Arrive warm, spend your best energy on what matters, and finish smooth.' }
+    why:'Most climbers do it backwards: they warm up forever, then try hard when they are already tired. Fresh First flips it. The hardest material goes first, while your nervous system is sharp and your focus is full, because that is when you can actually move the needle. The middle third builds the boulders you are developing. Easy volume and simple movement come last, as the wind-down, not the opener. Arrive warm, spend your best energy on what matters, and finish smooth.' },
+  // vier gecureerde coach-sessies (Fundamentals, juli 2026); done:0 = eerlijk,
+  // de kaart verbergt de teller tot er echte completions zijn
+  { cat:'coach', name:'Five by Five', coach:'Guru', mins:120, color:'lime', rpe:'8-9', done:0, load:3, sys:'power endurance', goal:'Comp capacity', gear:['Gym wall'], level:'all levels', keys:['fiveWarmup','wallRamp','fiveProblems','slabWork','squatLat'], addedDate:'2026-07-21',
+    intent:'Five hard problems, three climbs each on the clock, then slab under fatigue.',
+    why:'Comp style capacity. Five hard problems targeting different skills, each climbed three times within five minutes with five minutes rest between problems, then deliberate slab work while tired. If you send everything your estimate was too easy; if you fail three or more sets, tune it down. Aim for the sweet spot of suffering.' },
+  { cat:'coach', name:'Four Shots', coach:'Glitch', mins:120, color:'purple', rpe:'7-8', done:0, load:3, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','activeCurls','skillChoice','skillChoice','skillChoice','fourShots','cleanRepeat','meditation'], addedDate:'2026-07-21',
+    intent:'Three drills of your choice, then hard climbing with a plan.',
+    why:'Skill training is the most important part of climbing. This session includes public drills from Charlie "Paradigm" Schreiber: three skill blocks of your own choice, then Four Shots, hard boulders climbed with a plan and full recovery, closed with one clean repeat and two quiet minutes.' },
+  { cat:'new', name:'Sarah Connor', coach:'Sarah', mins:120, color:'green', rpe:'6-7', done:0, load:3, sys:'capacity', goal:'Capacity + strength', gear:['Gym wall','Fingerboard'], level:'all levels', keys:['ownWarmup','skillChoice','easyDozen','terminator','yogaFlow'], addedDate:'2026-07-21',
+    intent:'Easy mileage first, then Terminator mode in the gym.',
+    why:'Easy bouldering to build the base without tiring yourself, then a deliberately fatiguing gym circuit: weighted pull-ups, rows, traverses and hangs, three rounds. Cool down with a calm yoga flow. She will be back.' },
+  { cat:'coach', name:'Summer Capacity', coach:'Magnus W', mins:120, color:'green', rpe:'5-6', done:0, load:3, sys:'capacity', goal:'Volume', gear:['Gym wall','Kilterboard','Spray wall'], level:'all levels', keys:['ownWarmup','progDeadhangs','skillChoice','skillChoice','capacityMix','stretch'], addedDate:'2026-07-21',
+    intent:'Deadhangs while fresh, two skill blocks, then a big counted capacity set.',
+    why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' }
 ];
-const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach', 'Vincent':'easy day coach', 'Crimpify':'the house method' };
-function coachShort(name) { const p = name.split(' '); return p.length > 1 ? p[0] + ' ' + p[1][0] + '.' : name; }
+// kop = som: getoonde en gefilterde minuten zijn altijd de som van de
+// blok-basisduren van de sessie; het statische mins-veld is alleen fallback
+function sessionMins(s) {
+  const sum = (s.keys || []).reduce((t, k) => t + (BLOCKLIB[k] ? BLOCKLIB[k].t : 0), 0);
+  return sum || s.mins || 0;
+}
+const COACH_ROLE = { 'Mila Berg':'strength coach', 'Teo Marchetti':'power & comp coach', 'Ana Kovač':'endurance coach', 'Ines Fujimoto':'technique coach', 'Jonas Steen':'recovery coach', 'Vincent':'easy day coach', 'Crimpify':'the house method', 'Glitch':'head coach', 'Guru':'comp coach', 'Sarah':'conditioning coach', 'Magnus W':'capacity coach', 'Jaap dJ':'finger strength coach' };
+function coachShort(name) {
+  if (name.length <= 12) return name;   // kort genoeg voor de kaartvoet: voluit (Jaap dJ, Magnus W, Mila Berg)
+  const p = name.split(' ');
+  return p.length > 1 ? p[0] + ' ' + p[1][0] + '.' : name;
+}
 
 // vingerafdruk: de echte bloksequentie, breedte naar rato van basisduur, categoriekleuren
 function chBlueprint(keys) {
@@ -3303,7 +3568,7 @@ function chPhalanx(load, mini) {
 // ster = opslaan, nooit sociaal: hergebruikt crimpify_favs (dedupe op naam, max 12)
 function isChooseSaved(name) { return loadFavs().some(f => f.name === name); }
 function chooseFavEntry(s) {
-  return { name: s.name, keys: s.keys.slice(), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: s.mins };
+  return { name: s.name, keys: s.keys.slice(), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: sessionMins(s) };
 }
 function toggleChooseSave(ev, i) {
   if (ev) ev.stopPropagation();  // kaart-onclick opent de preview
@@ -3342,9 +3607,9 @@ function chCard(i, noStar) {
     <div class="ch-print">${chBlueprint(s.keys)}</div>
     <div class="ch-card-body">
       <div class="ch-name">${s.name}</div>
-      <div class="ch-line">${s.goal} · ${s.mins} min</div>
+      <div class="ch-line">${s.goal} · ${sessionMins(s)} min</div>
       <div class="ch-line">${s.gear[0]} · load ${chPhalanx(s.load, true)}</div>
-      <div class="ch-foot"><span>${coachShort(s.coach)}</span><span>${s.done} done</span></div>
+      <div class="ch-foot"><span>${coachShort(s.coach)}</span><span>${s.done ? s.done + ' done' : ''}</span></div>
     </div>
   </div>`;
 }
@@ -3378,12 +3643,12 @@ function computeForYou() {
 function computeTimeShelf() {
   const t = getT();
   const all = MOCK_CHOOSE.map((s, i) => ({ s, i }));
-  if (!isFinite(t)) return { title:'Any length', sub:'no time limit set', idxs: all.sort((a, b) => b.s.mins - a.s.mins).map(x => x.i) };
-  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => x.s.mins <= t).sort((a, b) => b.s.done - a.s.done).map(x => x.i) };
+  if (!isFinite(t)) return { title:'Any length', sub:'no time limit set', idxs: all.sort((a, b) => sessionMins(b.s) - sessionMins(a.s)).map(x => x.i) };
+  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => sessionMins(x.s) <= t).sort((a, b) => b.s.done - a.s.done).map(x => x.i) };
 }
 // gecureerd: handmatig samengestelde lijst in afstemming met de Apex-gym, hardcoded tot er
 // een backend is; wordt dan berekend, het ontwerp blijft gelijk (CLAUDE.md Choose-flow punt 4)
-const APEX_PICKS = ['The Grinder', 'Send Day', 'Easy Does It', 'Board Blitz'];
+const APEX_PICKS = ['Five by Five', 'The Grinder', 'Send Day', 'Easy Does It', 'Board Blitz'];
 
 function renderChoose() {
   const body = document.getElementById('chooseBody');
@@ -3403,16 +3668,19 @@ function renderChoose() {
         <div class="ch-monogram" style="color:${fcol.text};">${f.coach.split(' ').map(w => w[0]).join('')}</div>
         <div>
           <div class="ch-byline-name">${f.coach}</div>
-          <div class="ch-byline-role">${COACH_ROLE[f.coach] || 'coach'} · ${f.done} done</div>
+          <div class="ch-byline-role">${COACH_ROLE[f.coach] || 'coach'}${f.done ? ' · ' + f.done + ' done' : ''}</div>
         </div>
       </div>
       <div class="ch-tape">${chBlueprint(f.keys)}</div>
       <div class="ch-feat-meta">
-        <span>${f.mins} min</span><span>${f.goal.toLowerCase()}</span><span>${f.done} done</span>
+        <span>${sessionMins(f)} min</span><span>${f.goal.toLowerCase()}</span>${f.done ? `<span>${f.done} done</span>` : ''}
         <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">load ${chPhalanx(f.load)}</span>
       </div>
       <button class="ch-view-btn" onclick="openChoosePreview(${fi})">View session</button>
     </div>`;
+  // coach-sessies verdeeld over de gecureerde planken (Apex, New); For you en
+  // de tijdplank rekenen zelf en worden nooit handmatig gevuld. De eigen
+  // coach-plank boven de hero is teruggedraaid: die brak de landing-hiërarchie.
   const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
   body.innerHTML = hero
@@ -3450,11 +3718,15 @@ let _previewIdx = null;
 function openChoosePreview(i) {
   const s = MOCK_CHOOSE[i];
   if (!s) return;
+  // navigatie: een openstaand blok-detail (appears-in-route) sluit hier,
+  // anders blijft dat overlay als wees boven de sessie hangen
+  closeBlockDetail();
   _previewIdx = i;
   const col = C[s.color] || C.lime;
+  // interactiemodel: preview-rijen zijn tikbaar → alleen-lezen blok-info
   const blocks = s.keys.filter(k => BLOCKLIB[k]).map(k => {
     const b = BLOCKLIB[k];
-    return `<div class="pv-block" style="border-left-color:${b.c};">
+    return `<div class="pv-block" style="border-left-color:${b.c};cursor:pointer;" onclick="openBlockInfo('${k}')">
       <div class="pv-block-name">${b.n}</div>
       <div class="pv-block-t" style="color:${nameColor(b.c)};">${b.t} min</div>
     </div>`;
@@ -3463,7 +3735,7 @@ function openChoosePreview(i) {
     <div class="ch-kicker">preview</div>
     <div class="pv-name">${s.name}</div>
     <div class="pv-meta">
-      <span>${s.mins} min</span><span>${s.goal.toLowerCase()}</span><span>${s.level}</span><span>${s.done} done</span>
+      <span>${sessionMins(s)} min</span><span>${s.goal.toLowerCase()}</span><span>${s.level}</span>${s.done ? `<span>${s.done} done</span>` : ''}
       <span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load)}</span>
     </div>
     <div class="pv-section">
@@ -3501,6 +3773,18 @@ function chooseCopyTitle(base) {
   let who = '';
   try { who = localStorage.getItem('crimpify_name') || ''; } catch {}
   return base + ' · ' + (who ? who + ' version' : 'your version');
+}
+// SHARE op de preview: deelt de gecureerde sessie via het bestaande linkmechanisme
+function sharePreviewSession() {
+  if (_previewIdx == null) return;
+  const s = MOCK_CHOOSE[_previewIdx];
+  const keys = s.keys.filter(k => BLOCKLIB[k]);
+  const url = location.origin + location.pathname + '#s=' + encodePayload(s.name, keys, sessionMins(s), s.color, keys.map(k => BLOCKLIB[k].t));
+  if (navigator.share) {
+    navigator.share({ title: 'Crimpify: ' + s.name, text: shareText(s.name, sessionMins(s)), url }).catch(() => openShareDialog(url));
+  } else {
+    openShareDialog(url);
+  }
 }
 function customizeFromChoose() {
   if (_previewIdx == null) return;
@@ -3754,7 +4038,6 @@ function openBlockDetail(key) {
     </div>
     ${inIdx.length ? `<div class="ch-shelf">${inIdx.map(i => chCard(i, true)).join('')}</div>` : ''}
     <div style="height:16px;"></div>`;
-  document.getElementById('bdTryBtn').onclick = () => tryBlockNow(key);
   document.getElementById('bdAddBtn').onclick = () => addBlockToSession(key);
   if (inIdx.length) enableWheelScroll('#blockDetailBody .ch-shelf');
   const bd = document.getElementById('blockDetail');
@@ -3762,22 +4045,8 @@ function openBlockDetail(key) {
   bd.querySelector('.scroll-body').scrollTop = 0;
 }
 function closeBlockDetail() { document.getElementById('blockDetail').style.display = 'none'; }
-// TRY THIS NOW: minimale wrapper-sessie (korte warm-up + dit blok), slab klaar om te starten
-function tryBlockNow(key) {
-  const b = BLOCKLIB[key];
-  if (!b) return;
-  customSession = { id:'custom', cat:'own', name:b.n, desc:'', color:blockColorName(key), rpe:b.rpe || '–',
-    intent:'A minimal session around this block. Warm up, do the work, done.' };
-  customKeys = key === 'dynamic' ? ['dynamic'] : ['dynamic', key];
-  durationOverride['custom'] = {};
-  activeSessionId = 'custom';
-  sessionOwned = true;
-  sessionLocked = true;  // klaar om te starten; ✎ ontgrendelt voor aanpassen
-  closeBlockDetail();
-  closeBlockPicker();
-  buildSlab();
-  goTo('v-session');
-}
+// TRY THIS NOW is vervallen (productbeslissing juli 2026): de wrapper-sessie
+// was onzinnig; ADD TO SESSION is de primaire actie, context loopt via APPEARS IN.
 // ADD TO SESSION: bestaande draft + blok, of verse draft met dit blok; landt zichtbaar in de builder
 function addBlockToSession(key) {
   const d = loadDraft();

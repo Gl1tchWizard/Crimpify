@@ -195,8 +195,21 @@ body {
   letter-spacing: .08em; text-transform: uppercase;
   color: var(--dust); line-height: 1.6;
 }
-/* builder: duur-steppers binnen het blokmodel */
-.slab-stepper { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+/* blok-bewerkpaneel (builder, voor lock-in) */
+.be-kicker { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.14em; text-transform:uppercase; }
+.be-name { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; color:var(--chalk); margin:2px 0 12px; }
+.be-dur { display:flex; align-items:center; gap:14px; }
+.be-dur-val { font-family:'DM Mono',monospace; font-size:26px; color:var(--chalk); min-width:64px; text-align:center; }
+.be-dur-val span { font-size:15px; color:var(--dust); }
+.be-dur-range { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--disabled); margin-top:4px; }
+.be-rpe { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
+.be-why { font-family:'Barlow',sans-serif; font-size:13px; color:var(--dust); line-height:1.55; margin-top:10px; }
+.be-link { display:inline-block; margin-top:10px; margin-right:14px; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; border-bottom:1px solid var(--graphite); padding-bottom:2px; }
+.be-link:hover { color:var(--chalk); }
+.be-actions { display:flex; gap:10px; margin-top:16px; }
+.be-secondary { flex:1; padding:12px; border-radius:10px; border:1px solid var(--graphite); background:none; color:var(--dust); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; text-transform:uppercase; cursor:pointer; }
+.be-done { flex:1; padding:12px; border-radius:10px; border:none; background:var(--acid); color:var(--acid-text); font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:14px; text-transform:uppercase; cursor:pointer; }
+.be-dur .step-btn { width:38px; height:38px; font-size:17px; }
 .step-btn {
   width: 26px; height: 26px; border-radius: 7px;
   border: 1px solid var(--graphite); background: none;
@@ -536,9 +549,14 @@ body {
 .ch-empty span { display:block; margin-top:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:none; color:var(--disabled); }
 
 /* preview-acties: save/customize als ghost-rij onder de content, Start session blijft de enige primaire CTA */
+/* actieladder onder START: remix, save, share — gelabeld en volwaardig,
+   geen grijze mini-icoontjes; acid alleen voor de aan-staat (selectie) */
 .pv-actions { display:flex; gap:10px; }
-.pv-act { flex:1; padding:11px 0; border-radius:8px; border:1px solid var(--graphite); background:none; color:var(--dust); cursor:pointer; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; }
+.pv-act { flex:1; padding:13px 0; border-radius:10px; border:1px solid var(--graphite); background:var(--carbon); color:var(--chalk); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
+.pv-act:hover { border-color:var(--dust); }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
+/* context-hint in het blok-info-paneel */
+.be-hint { margin-top:12px; padding:10px 12px; border:1px dashed var(--graphite); border-radius:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); line-height:1.6; }
 
 /* blok-detail: externe links (video's e.d.) onder de uitleg */
 .bd-link { display:inline-block; margin:10px 12px 0 0; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); text-decoration:none; border:1px solid var(--graphite); border-radius:6px; padding:7px 12px; }

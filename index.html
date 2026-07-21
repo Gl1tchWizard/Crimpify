@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.32</div>
+    <div id="splashBy">by Glitch Labs · v0.39</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -128,7 +128,7 @@
 
   <!-- ══ CHOOSE (catalogus: hero + planken, zie CLAUDE.md Choose-flow) ══ -->
   <div class="view" id="v-choose">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button><div style="display:flex;align-items:center;gap:14px;"><button class="tb-icon" id="chSearchToggle" onclick="toggleChSearch()" aria-label="search">⌕</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div></div>
+    <div class="topbar"><button class="back-btn" onclick="goBack()">← back</button><div style="display:flex;align-items:center;gap:14px;"><button class="tb-icon" id="chSearchToggle" onclick="toggleChSearch()" aria-label="search">⌕</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div></div>
     <div id="chSearchWrap" style="display:none;"></div>
     <div class="scroll-body">
       <div class="main-content" id="chooseBody"></div>
@@ -137,34 +137,34 @@
 
   <!-- ══ CHOOSE PREVIEW (tussenlaag: kaart → preview → sessie; starten kan alleen hier) ══ -->
   <div id="previewView" style="display:none;position:absolute;inset:0;z-index:60;background:var(--ink);flex-direction:column;">
-    <div class="topbar"><button class="back-btn" onclick="closeChoosePreview()">← back</button><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
+    <div class="topbar"><button class="back-btn" onclick="goBack()">← back</button><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content" id="previewBody"></div>
     </div>
     <div class="footer" style="flex-direction:column;gap:10px;align-items:stretch;">
-      <div class="pv-actions">
-        <button class="pv-act" id="pvSaveBtn" data-label="1" onclick="toggleChooseSave(event, _previewIdx)">☆ Save</button>
-        <button class="pv-act" onclick="customizeFromChoose()">⧉ Customize</button>
-      </div>
       <button class="start-btn" style="width:100%;padding:13px;" onclick="startFromPreview()">Start session</button>
+      <div class="pv-actions">
+        <button class="pv-act" onclick="customizeFromChoose()">⧉ Remix</button>
+        <button class="pv-act" id="pvSaveBtn" data-label="1" onclick="toggleChooseSave(event, _previewIdx)">☆ Save</button>
+        <button class="pv-act" onclick="sharePreviewSession()">↗ Share</button>
+      </div>
     </div>
   </div>
 
   <!-- ══ BLOCK DETAIL (lezen → doen: vanuit News en de bibliotheek; z tussen picker 55 en preview 60) ══ -->
   <div id="blockDetail" style="display:none;position:absolute;inset:0;z-index:58;background:var(--ink);flex-direction:column;">
-    <div class="topbar"><button class="back-btn" onclick="closeBlockDetail()">← back</button><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
+    <div class="topbar"><button class="back-btn" onclick="goBack()">← back</button><div class="logo"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content" id="blockDetailBody"></div>
     </div>
     <div class="footer" style="flex-direction:column;gap:10px;align-items:stretch;">
-      <button class="pv-act" id="bdAddBtn">+ Add to session</button>
-      <button class="start-btn" style="width:100%;padding:13px;" id="bdTryBtn">Try this now</button>
+      <button class="start-btn" style="width:100%;padding:13px;" id="bdAddBtn">+ Add to session</button>
     </div>
   </div>
 
   <!-- ══ MOCK VIEW: BUILD MENU (throwaway prototype) ══ -->
   <div class="view" id="v-build">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-browse')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
+    <div class="topbar"><button class="back-btn" onclick="goBack()">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
         <div class="slabel">build a session</div>
@@ -184,7 +184,7 @@
 
   <!-- ══ MOCK VIEW: GENERATE (bestaande generator, verplaatst van de landing) ══ -->
   <div class="view" id="v-generate">
-    <div class="topbar"><button class="back-btn" onclick="goTo('v-build')">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
+    <div class="topbar"><button class="back-btn" onclick="goBack()">← back</button><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div></div>
     <div class="scroll-body">
       <div class="main-content">
         <div id="genFlow"></div>
@@ -211,7 +211,7 @@
   <div class="view" id="v-session">
     <div class="slab-header">
       <div class="slab-topbar">
-        <button class="back-btn" onclick="goTo('v-browse')">← back</button>
+        <button class="back-btn" onclick="goBack()">← back</button>
         <div style="display:flex;align-items:center;gap:12px;">
           <button onclick="rerollSession(activeSessionId)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb, var(--acid) 55%, transparent);background:none;border:1px solid color-mix(in srgb, var(--acid) 20%, transparent);border-radius:4px;padding:5px 10px;cursor:pointer;">⟳ vary</button>
           <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--disabled);" id="slabWeek">–</div>
@@ -498,6 +498,11 @@
         <button id="neConfirmBtn" onclick="confirmNewExercise()" style="flex:1;padding:12px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;cursor:pointer;">Add</button>
       </div>
     </div>
+  </div>
+
+  <!-- ══ BLOK-BEWERKPANEEL (builder, voor lock-in) ══ -->
+  <div id="blockEditDialog" style="display:none;position:absolute;inset:0;z-index:58;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeBlockEdit()">
+    <div id="blockEditBody" style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:85%;overflow-y:auto;"></div>
   </div>
 
   <!-- ══ SHARE DIALOG ══ -->

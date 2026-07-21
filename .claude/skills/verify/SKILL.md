@@ -30,6 +30,29 @@ de echte app driven in een headless browser en screenshots vastleggen.
 - Exit-guard: `#confirmExit`, knoppen "Stay"/"Leave" — selecteer binnen
   `#confirmExit` (losse `text=Leave` matcht ook verborgen catalogusteksten).
 
+## Reistests (verplicht na elke wijziging)
+
+Vier complete gebruikersreizen in `journeys.js` (deze map), te draaien in
+plaats van losse padchecks. Server op 8317, dan vanuit een map met
+playwright-core: `node <repo>\.claude\skills\verify\journeys.js`.
+
+- **A** Nieuws → blok-detail → APPEARS IN → sessie-preview → START → speler
+  → terug. Asserteert ook: preview toont blokken, blok-detail sluit netjes
+  (geen wees-overlay), geen TRY THIS NOW.
+- **B** Nieuws → blok-detail → ADD TO SESSION → builder → blok tikken →
+  duur aanpassen → LOCK IN → START → speler.
+- **C** Choose → gecureerde plank (coach-sessies verdeeld: Five by Five in
+  Popular at Apex, Sarah Connor in New; geen eigen coach-plank) → preview →
+  blok tikken (info, geen speler; alleen-lezen) → REMIX → eigen concept →
+  blok tikken (bewerken) → LOCK IN → START. Plus: BACK vanaf de preview
+  landt één stap terug, en kop-minuten == som van de blokduren.
+- **D** Gedeelde link openen → gelockte slab → blok tikken (alleen-lezen,
+  remix-hint) → START → systeem-back (één stap terug in-app) → dezelfde
+  link opnieuw openen in dezelfde tab (hashchange-import) werkt.
+
+Elke reis eindigt met: nul console/page-errors, en elke tik deed wat het
+interactiemodel zegt (CLAUDE.md, "Interactiemodel: blok-tik en de ladder").
+
 ## Gotcha's
 
 - **Verse Playwright-contexten verhullen de service worker.** Elke nieuwe
