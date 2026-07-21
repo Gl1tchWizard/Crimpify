@@ -376,7 +376,8 @@ const BLOCKLIB = {
   capacityMix: { n:'Capacity mix', t:50, tMin:40, tMax:70, c:'var(--volume)', rpe:'5-6', checklist:true, target:30, range:'25-35', addedDate:'2026-07-21',
     why:'Twenty five to thirty five boulders at medium intensity, counted. Start with ten to fifteen board or spray wall problems, then move into the gym. All styles welcome: comp, slab, overhang. Most boulders should go in one or two attempts, otherwise they are too hard. Add one or two boulders each session; more than that risks injury.' },
   yogaFlow: { n:'Yoga cool-down', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'-', addedDate:'2026-07-21',
-    why:'A calm yoga flow to close the session: hips, shoulders and long exhales. Follow a video you like.' },
+    links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=w5Qqy6b_yd0'}],
+    why:'A calm yoga flow to close the session: hips, shoulders and long exhales. Follow the video.' },
 };
 
 // ══ SESSIONS = energy system containers ══
