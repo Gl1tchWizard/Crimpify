@@ -33,6 +33,14 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   standaard niet mee, dus lokaal testen blijft schoon. Consistent met
   productprincipe 1: we tellen bezoeken, nooit individuen. Geen andere
   analytics of tracking toevoegen.
+- **Tijdmodel (juli 2026):** elk blok heeft `t` (basis) plus optioneel
+  `tMin`/`tMax`. In de builder (Design/self-assembled) is de som van de
+  blokduren leidend; de tijd-slider geldt daar niet en er wordt nooit
+  proportioneel geknepen — aanpassen doet de gebruiker per blok (steppers
+  binnen min/max). In Generate is tijd wel leidend: de fitter schaalt
+  blokken binnen [tMin, tMax] (water-filling) en meldt een eerlijk conflict
+  als het minimum niet in het budget past, in plaats van stil te knijpen.
+  Vaste blokken (`fixed:true`) schalen nooit.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
@@ -44,8 +52,8 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | key | inhoud |
 |---|---|
 | `crimpify_history` | array, nieuwste eerst, max 50: `{id, variant, time, ts, sig, load}` |
-| `crimpify_favs` | max 12: `{name, keys, color, rpe, intent, time, basedOn?}` |
-| `crimpify_draft` | `{keys, name, color, rpe, intent, locked, owned, basedOn?}` |
+| `crimpify_favs` | max 12: `{name, keys, color, rpe, intent, time, d?, basedOn?}` |
+| `crimpify_draft` | `{keys, name, color, rpe, intent, locked, owned, ov?, basedOn?}` |
 | `crimpify_custom_blocks` | eigen oefeningen, keys met `ux_`-prefix |
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
@@ -53,7 +61,10 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 
 `basedOn` is optioneel en additief: `{title, coach}` op kopieën uit de
-catalogus; oude entries zonder basedOn blijven geldig.
+catalogus; oude entries zonder basedOn blijven geldig. `d` (favs, dichte
+array minuten per blok) en `ov` (draft, sparse overrides per slot) zijn ook
+additief: oude entries zonder deze velden vallen terug op de basisduren.
+Deel-links dragen hetzelfde additieve `d`-veld.
 
 `sig` is het stoplicht: `'green' | 'orange' | 'red' | null`. `load` = duur ×
 intensiteitsfactor (zie `INTENSITY_FACTORS` in de code, Foster/Gabbett-model,
@@ -79,8 +90,12 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
   antagonist/core/gym, recovery & mobility, stretching, cooldown),
   `--volume #42D6A4` (capacity/aeroob volume, power endurance),
   `--max-effort #FF861F` (max strength & power, finger strength),
-  `--skill #A58BFA` (technique & skills). Eigen oefeningen (`ux_`) = graphite
-  met YOURS-badge. In `app.js` blijven de oude kleur-*namen* (green/lime/
+  `--skill #A58BFA` (technique & skills). Eigen oefeningen (`ux_`): de
+  gebruiker kiest bij aanmaken een categorie (fingerprint-groep) die de
+  kleur bepaalt; oude blokken zonder categorie blijven graphite tot ze via
+  bewerken alsnog een categorie krijgen. De YOURS-badge blijft de herkomst
+  markeren (kleur = wat het traint, badge = waar het vandaan komt). In
+  `app.js` blijven de oude kleur-*namen* (green/lime/
   amber/red/blue/purple) bestaan als sleutels — localStorage, favorieten en
   deel-links slaan namen op — maar ze wijzen naar de vier tokens.
 - **Load:** `--load-filled #E6F557` / `--load-empty #30332B`.

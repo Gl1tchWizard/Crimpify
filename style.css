@@ -165,6 +165,24 @@ body {
 .time-track-wrap::after { right:0; background:linear-gradient(-90deg,var(--ink),transparent); }
 .time-track { display:flex; gap:7px; padding:3px calc(50% - 29px); overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; scrollbar-width:none; cursor:grab; }
 .time-track::-webkit-scrollbar { display:none; }
+/* eerlijk tijdconflict (generate): neutrale melding, geen kleursignaal */
+.fit-warning {
+  margin: 0 0 8px; padding: 10px 12px;
+  border: 1px dashed var(--graphite); border-radius: 8px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--dust); line-height: 1.6;
+}
+/* builder: duur-steppers binnen het blokmodel */
+.slab-stepper { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+.step-btn {
+  width: 26px; height: 26px; border-radius: 7px;
+  border: 1px solid var(--graphite); background: none;
+  color: var(--dust); font-size: 14px; line-height: 1; cursor: pointer;
+  flex-shrink: 0; padding: 0;
+}
+.step-btn:active { background: var(--acid); color: var(--acid-text); border-color: var(--acid); }
+
 /* Add a block: onopvallende scrollbar — dun, donker, geen lichte track */
 #blockPickerList { scrollbar-width:thin; scrollbar-color:var(--graphite) transparent; }
 #blockPickerList::-webkit-scrollbar { width:4px; }

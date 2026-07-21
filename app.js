@@ -175,11 +175,11 @@ const BLOCKLIB = {
       { n:'Leg swings front/back L', note:'10 — left leg', sec:12 },
       { n:'Leg swings front/back R', note:'10 — right leg', sec:12 },
     ] },
-  warmup: { n:'Progressive warm-up + skills', t:30, c:'var(--prepare)', rpe:'2-5', drills:true,
+  warmup: { n:'Progressive warm-up + skills', t:30, tMin:15, tMax:45, c:'var(--prepare)', rpe:'2-5', drills:true,
     why:'Boulder ladder that gets progressively harder: 4, 4, 5a, 5b, 5c, 6a, 6a, 6b up to 6c. From 6a rest 3 min. The goal is not sending boulders but getting properly warm. Vary wall angle and style. Aim for 10-20 boulders, 1-2 per grade. Add the skill of the day (below) — one pillar per session.' },
-  warmupFinger: { n:'Warm-up + fingers', t:35, c:'var(--prepare)', rpe:'2-5', drills:true,
+  warmupFinger: { n:'Warm-up + fingers', t:35, tMin:20, tMax:45, c:'var(--prepare)', rpe:'2-5', drills:true,
     why:'Progressive warm-up (boulder ladder 4 → 6c) plus specific finger prep: easy hangs, lifting pin building up, at least 15 min of tendon preparation. For heavy finger work this is non-negotiable.' },
-  mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, c:'var(--prepare)', rpe:'-',
+  mobilityOpen: { n:'Dynamic stretching + tendon glides', t:20, tMin:10, tMax:25, c:'var(--prepare)', rpe:'-',
     why:'Jumping jacks 30, seals 20, split jumps 20, trunk twists 20, leg swings 20+20, arm/elbow/shoulder circles. Tendon glides on top.' },
 
   // ── finger/tendon prehab (guided, low load) — submaximaal, daarom prepare i.p.v. max-effort ──
@@ -228,90 +228,90 @@ const BLOCKLIB = {
     ] },
 
   // ── capacity cores ──
-  volume: { n:'Volume boulders', t:40, c:'var(--volume)', rpe:'6', sets:30, rest:3, checklist:true, target:30, range:'25-35',
+  volume: { n:'Volume boulders', t:40, tMin:30, tMax:60, c:'var(--volume)', rpe:'6', sets:30, rest:3, checklist:true, target:30, range:'25-35',
     why:'25-35 boulders around 6a/6b. 3 min rest from 6a, timer on. Drop a grade when quality fades (first 5c, then 5b). Stop at technical failure, not muscular failure.' },
-  linked: { n:'Linked boulders', t:40, c:'var(--volume)', rpe:'6-7', sets:8, rest:4,
+  linked: { n:'Linked boulders', t:40, tMin:30, tMax:55, c:'var(--volume)', rpe:'6-7', sets:8, rest:4,
     why:'Link two boulders together (climb down or step straight through). Grades around 5c-6a per boulder so the link stays doable. 3-4 min rest between links. 6-10 links total.' },
-  boardVolume: { n:'Kilterboard volume', t:40, c:'var(--volume)', rpe:'6-7', sets:18, rest:3,
+  boardVolume: { n:'Kilterboard volume', t:40, tMin:30, tMax:60, c:'var(--volume)', rpe:'6-7', sets:18, rest:3,
     why:'15-20 boulders below your board max (6a-6b on the board). 3 min rest, timer on. Watch your skin — stop at flappers or move to the gym wall. Repeat boulders that could flow better.' },
 
   // ── count-blokken: denken in aantal boulders op een niveau, niet in tijd.
   //    checklist:true + target/range sturen de boulder-teller; grade is data
   //    (nog nergens op gefilterd), t blijft de tijdschatting voor tape en schaling.
-  easyTen: { n:'10 easy boulders', t:15, c:'var(--prepare)', rpe:'3-4', grade:'easy', checklist:true, target:10, range:'10',
+  easyTen: { n:'10 easy boulders', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'3-4', grade:'easy', checklist:true, target:10, range:'10',
     why:'Ten boulders well below your limit, 2-3 grades under your max. Move calmly, place feet deliberately, breathe. This is the warm-up: leave every boulder feeling easier than the last.' },
-  mediumTwenty: { n:'20 medium boulders', t:35, c:'var(--volume)', rpe:'5-6', grade:'medium', checklist:true, target:20, range:'20',
+  mediumTwenty: { n:'20 medium boulders', t:35, tMin:25, tMax:45, c:'var(--volume)', rpe:'5-6', grade:'medium', checklist:true, target:20, range:'20',
     why:'Twenty boulders around your comfortable flash level. Rest as needed, keep the quality high and do not count boulders that fall apart. Twenty good ones beat twenty-five sloppy ones.' },
 
   // ── power endurance cores ──
-  hehe: { n:'HEHE sets', t:42, c:'var(--volume)', rpe:'7-8', sets:4, rest:8,
+  hehe: { n:'HEHE sets', t:42, tMin:30, tMax:60, c:'var(--volume)', rpe:'7-8', sets:4, rest:8,
     why:'Set = hard boulder (doable but not flashable, ~6b/6c) → straight into a very easy one → straight into a hard one again → finish easy. 3-6 sets, 5-10 min rest between sets. First 2-3 sets just short of failure. Progression: more sets first, only then harder.' },
-  fourByFour: { n:'4×4 circuits', t:42, c:'var(--volume)', rpe:'7-8', sets:4, rest:4,
+  fourByFour: { n:'4×4 circuits', t:42, tMin:30, tMax:50, c:'var(--volume)', rpe:'7-8', sets:4, rest:4,
     why:'Pick 4 boulders 2-3 grades below max (~5c-6a), different styles, slightly overhanging, no rest positions. Climb all 4 back to back without rest, then rest 4 min. 4 rounds. Too easy if you never come close to falling; too hard if you already fail in round 2.' },
-  peFlow: { n:'PE Flow', t:42, c:'var(--volume)', rpe:'6-8',
+  peFlow: { n:'PE Flow', t:42, tMin:30, tMax:60, c:'var(--volume)', rpe:'6-8',
     why:'Power endurance by feel. Climb blocks of 2-4 boulders back to back with short rests. Alternate hard and easy. 30-45 min of near-continuous movement with building pump. Stop when technique falls apart.' },
 
   // ── power cores ──
-  board1: { n:'Board Session 1', t:42, c:'var(--max-effort)', rpe:'8', sets:6, rest:4,
+  board1: { n:'Board Session 1', t:45, tMin:45, tMax:75, c:'var(--max-effort)', rpe:'8', sets:6, rest:4,
     why:'4-8 boulders at your limit. Different styles, grips and wall angles. Pick boulders you can climb within 4 tries: first try = too easy, hopeless after 4 tries = too hard. Weekly progression: wk1 4, wk2 5, wk3 6, wk4 7 boulders. 3+ min rest.' },
-  limitBlocks: { n:'Limit boulder blocks', t:42, c:'var(--max-effort)', rpe:'9', sets:3, rest:8,
+  limitBlocks: { n:'Limit boulder blocks', t:42, tMin:30, tMax:60, c:'var(--max-effort)', rpe:'9', sets:3, rest:8,
     why:'2-3 limit blocks of 2-4 moves. Rest 2 min per move (4-move block = 8 min rest). Max effort, fast movement, form under tension. Do not repeat moves to polish beta — this is testing your limit. Power drops = stop.' },
-  campus: { n:'Campus boarding', t:22, c:'var(--max-effort)', rpe:'8', sets:5, rest:3,
+  campus: { n:'Campus boarding', t:22, tMin:15, tMax:30, c:'var(--max-effort)', rpe:'8', sets:5, rest:3,
     why:'~20 total impacts. Ladders 1-2-3 or 1-3-5. Use rungs you control easily and hit fast. Focus on speed and precision, not distance. Avoid failure and slow grinding reps.' },
-  dynos: { n:'Dynos', t:20, c:'var(--max-effort)', rpe:'8', sets:4, rest:2,
+  dynos: { n:'Dynos', t:20, tMin:15, tMax:30, c:'var(--max-effort)', rpe:'8', sets:4, rest:2,
     why:'3-4 dynos on flat walls, no overhang. 3 reps per dyno. Vary direction and foot positions. Drive from the feet, accuracy first. 2+ min rest per full attempt.' },
-  maxHangs: { n:'Max hangs', t:28, c:'var(--max-effort)', rpe:'8-9', sets:4, rest:4,
+  maxHangs: { n:'Max hangs', t:28, tMin:20, tMax:40, c:'var(--max-effort)', rpe:'8-9', sets:4, rest:4,
     why:'3-5 sets of 3-5 sec @ 90-95% of max hang load. Half crimp unless it hurts. Edge 10-30mm. Pull into the edge, shoulder engaged. 3-5 min rest between reps. Fingers not perfect? Skip — no exceptions.' },
 
   // ── performance cores ──
-  compStyle: { n:'Comp blocks', t:50, c:'var(--volume)', rpe:'8-9', sets:6, rest:5,
+  compStyle: { n:'Comp blocks', t:50, tMin:40, tMax:70, c:'var(--volume)', rpe:'8-9', sets:6, rest:5,
     why:'Pick 6 physically demanding boulders (ones you normally just barely send). Per boulder: climb it 3x within 5 min, then rest 5 min, then the next. Ideally you make it three times, on your last legs. Three easy sends = go harder next time. Failing on the third is fine, as long as it does not happen on every boulder.' },
-  pyramide: { n:'Pyramid', t:50, c:'var(--max-effort)', rpe:'7-9', sets:8, rest:3,
+  pyramide: { n:'Pyramid', t:50, tMin:40, tMax:75, c:'var(--max-effort)', rpe:'7-9', sets:8, rest:3,
     why:'8 progressively harder boulders, weaknesses included (e.g. dynamic if that is your weakness): 6a, 6a, 6b, 6a dyn, 6c, 6c dyn, 7a, 7a+. Three tries per boulder, ~3 min rest between tries. Failure only in the top grades — otherwise adjust the difficulty.' },
-  project: { n:'Project attempts', t:48, c:'var(--max-effort)', rpe:'9-10', sets:8, rest:6,
+  project: { n:'Project attempts', t:48, tMin:40, tMax:90, c:'var(--max-effort)', rpe:'9-10', sets:8, rest:6,
     why:'Max 8-10 attempts. Full recovery between tries (5-8 min — feels long, is needed). Between attempts: evaluate beta, filming helps. Power drops = done for today.' },
 
   // ── recovery cores ──
-  easyClimb: { n:'Easy climbing', t:40, c:'var(--prepare)', rpe:'3-4',
+  easyClimb: { n:'Easy climbing', t:40, tMin:20, tMax:60, c:'var(--prepare)', rpe:'3-4',
     why:'At least 2 grades below max (4-5b). Focus on calm movement and footwork. No mini-projects, no temptation.' },
   hog: { n:'HoG session', t:10, c:'var(--prepare)', rpe:'2-3', sets:3, rest:2, fixed:true,
     links:[{label:'Open Grip Gains', url:'https://gripgains.ca'}],
     why:'Follow the Grip Gains schedule. Rotation: week 1 Crusher/Micro/Crusher, week 2 Micro/Crusher/Micro. Crusher = FDS, Micro = FDP. Open the app for your sets and weights.' },
 
   // ── skill cores ──
-  drillBlocks: { n:'Skill blocks', t:45, c:'var(--skill)', rpe:'5-6', sets:3, rest:2, drills:true,
+  drillBlocks: { n:'Skill blocks', t:45, tMin:30, tMax:60, c:'var(--skill)', rpe:'5-6', sets:3, rest:2, drills:true,
     why:'3 skills × 15 min on boulders 2 grades below max. Per skill: first deliberately slow, then at normal speed, then on a just-challenging boulder. Film yourself at least once per skill.' },
-  boardApply: { n:'Board application', t:12, c:'var(--skill)', rpe:'6', sets:4, rest:3,
+  boardApply: { n:'Board application', t:12, tMin:10, tMax:20, c:'var(--skill)', rpe:'6', sets:4, rest:3,
     why:'Apply the skills on 3-4 Kilterboard boulders. No score — only quality of movement counts.' },
 
   // ── conditioning / closers ──
-  mini1: { n:'Mini circuit 1', t:15, c:'var(--prepare)', rpe:'6', sets:5, rest:2,
+  mini1: { n:'Mini circuit 1', t:15, tMin:12, tMax:20, c:'var(--prepare)', rpe:'6', sets:5, rest:2,
     why:'Dumbbell bench 3×10 RIR4 · Gorilla squat 3×8 RIR4 · Seated rows 3×10 RIR4 · Dips (assisted) 3×5 RIR3 · Facepulls 3×10.' },
-  mini2: { n:'Mini circuit 2', t:15, c:'var(--prepare)', rpe:'6', sets:4, rest:2,
+  mini2: { n:'Mini circuit 2', t:15, tMin:12, tMax:20, c:'var(--prepare)', rpe:'6', sets:4, rest:2,
     why:'Dumbbell deadlift 3×12 RIR4 · Compression (Y,T,row) 4×4 RIR3 · External rotations 3×10 RIR4 · Forearm conditioning 3×15 RIR2.' },
-  mini3: { n:'Mini circuit 3', t:15, c:'var(--prepare)', rpe:'7', sets:3, rest:3,
+  mini3: { n:'Mini circuit 3', t:15, tMin:12, tMax:20, c:'var(--prepare)', rpe:'7', sets:3, rest:3,
     why:'Weighted pull-ups 3×3 RIR1 · Dumbbell press 3×4 RIR2 · Lateral raises 3×8 RIR4.' },
-  lockoffs: { n:'Lock-offs', t:10, c:'var(--max-effort)', rpe:'7', sets:2, rest:2,
+  lockoffs: { n:'Lock-offs', t:10, tMin:8, tMax:15, c:'var(--max-effort)', rpe:'7', sets:2, rest:2,
     why:'2×10 sec at 90 and 120 degrees. Stop 2 sec before failure. Wide grip.' },
-  gymWarmup: { n:'Gym warm-up', t:10, c:'var(--prepare)', rpe:'2-3',
+  gymWarmup: { n:'Gym warm-up', t:10, tMin:8, tMax:15, c:'var(--prepare)', rpe:'2-3',
     why:'Get up to temperature calmly: 5 min cardio (rowing, bike or jump rope) plus shoulder mobility, band pull-aparts and a few light warm-up sets for the first exercise. Prepare tendons and joints for load.' },
-  pullStrength: { n:'Pull strength', t:18, c:'var(--max-effort)', rpe:'7-8', sets:4, rest:3,
+  pullStrength: { n:'Pull strength', t:18, tMin:15, tMax:30, c:'var(--max-effort)', rpe:'7-8', sets:4, rest:3,
     why:'Weighted pull-ups or rows as the main lift. 3-5 sets of 3-6 reps with a controlled eccentric. Full rest between sets — this is strength, not conditioning.' },
-  pushStrength: { n:'Push strength', t:15, c:'var(--prepare)', rpe:'7-8', sets:4, rest:3,
+  pushStrength: { n:'Push strength', t:15, tMin:12, tMax:25, c:'var(--prepare)', rpe:'7-8', sets:4, rest:3,
     why:'Bench press or overhead press. 3-4 sets of 6-10 reps. Keep 1-2 reps in reserve (RIR), bar speed high. Antagonist balance for your shoulders after all the pulling in climbing.' },
-  coreLegs: { n:'Core & legs', t:12, c:'var(--prepare)', rpe:'6-7', sets:3, rest:2,
+  coreLegs: { n:'Core & legs', t:12, tMin:10, tMax:20, c:'var(--prepare)', rpe:'6-7', sets:3, rest:2,
     why:'Single-leg Romanian deadlift, Bulgarian split squats and anti-rotation core (TRX body saws or pallof press). 3 sets, 8-10 reps. Stability and strength for your lower body — often neglected in climbers.' },
-  slab: { n:'Slab (if energy allows)', t:12, c:'var(--skill)', rpe:'5',
+  slab: { n:'Slab (if energy allows)', t:12, tMin:8, tMax:20, c:'var(--skill)', rpe:'5',
     why:'Easy slab as a technical dessert. Balance and footwork. Skip without guilt if you are empty — walk away fresh.' },
-  skillLight: { n:'Movement skill light', t:12, c:'var(--skill)', rpe:'3-4', drills:true,
+  skillLight: { n:'Movement skill light', t:12, tMin:8, tMax:20, c:'var(--skill)', rpe:'3-4', drills:true,
     why:'One skill of your choice on easy terrain. Pure coordination, zero strength. Cool the nervous system down.' },
-  drillsOnly: { n:'Movement skills', t:20, c:'var(--skill)', rpe:'4-5', drills:true,
+  drillsOnly: { n:'Movement skills', t:20, tMin:15, tMax:30, c:'var(--skill)', rpe:'4-5', drills:true,
     why:'A short focused skill session as the main course. Pick the skill of the day and work it deliberately on boulders below your max. Quality of movement counts, no score.' },
-  drillLibrary: { n:'Skill library', t:30, c:'var(--skill)', rpe:'4-5', library:true,
+  drillLibrary: { n:'Skill library', t:30, tMin:20, tMax:60, c:'var(--skill)', rpe:'4-5', library:true,
     why:'The full library. Pick the skills you want to do today yourself.' },
-  sprayLight: { n:'Spray wall (short)', t:15, c:'var(--volume)', rpe:'4-5',
+  sprayLight: { n:'Spray wall (short)', t:15, tMin:10, tMax:25, c:'var(--volume)', rpe:'4-5',
     why:'Short, light spray session. Deliberately keep the RPE low (4-5) so your fingers stay fresh for HoG afterwards. 6-10 boulders well below your max, focus on smooth movement and the skill of the day. No limit work — this is not a power session.' },
-  nohangs: { n:'No hangs + stretch', t:8, c:'var(--prepare)', rpe:'-', sets:2, rest:1,
+  nohangs: { n:'No hangs + stretch', t:8, tMin:5, tMax:12, c:'var(--prepare)', rpe:'-', sets:2, rest:1,
     why:'No hangs 2×30 sec half crimp. Then a short stretch: shoulders and forearms.' },
   // ── minimal dose micro blocks (minimum effective dose; López/Lattice research on short frequent finger training) ──
   activeCurls: { n:'Active finger curls', t:12, c:'var(--max-effort)', rpe:'8-9', sets:'4-6', rest:2, fixed:true,
@@ -329,19 +329,19 @@ const BLOCKLIB = {
   // ── front-load fasen (voor de Fresh First-sessie): drie flexibele blokken met
   //    gelijke basis-t, zodat ze in gelijke derden meeschalen met de tijd-slider.
   //    Kleur volgt uit de groep (orange → teal → blue = hardst eerst, rustig laatst).
-  frontGrowth: { n:'Limit work (fresh)', t:20, c:'var(--max-effort)', rpe:'8-9',
+  frontGrowth: { n:'Limit work (fresh)', t:20, tMin:15, tMax:45, c:'var(--max-effort)', rpe:'8-9',
     why:'First third, while your nervous system is fresh. Your hardest material: limit boulders, a project, committing dynos, complex coordination. This is the point of the session. Long rests, real effort, and you walk away before the quality drops.' },
-  frontBuild: { n:'Working boulders', t:20, c:'var(--volume)', rpe:'6-7',
+  frontBuild: { n:'Working boulders', t:20, tMin:10, tMax:40, c:'var(--volume)', rpe:'6-7',
     why:'Middle third. Material you are developing: not comfortable, not impossible. Boulders you can nearly do. This is where skills consolidate. Keep the quality high and rest enough to try hard.' },
-  frontMaint: { n:'Easy wind-down', t:20, c:'var(--prepare)', rpe:'3-4',
+  frontMaint: { n:'Easy wind-down', t:20, tMin:10, tMax:40, c:'var(--prepare)', rpe:'3-4',
     why:'Final third. Easy volume, simple movement, familiar problems. Warm-up-style climbing belongs here, at the end, not the start. Move smooth and leave feeling good.' },
-  stretch: { n:'Stretch', t:10, c:'var(--prepare)', rpe:'-',
+  stretch: { n:'Stretch', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'-',
     why:'Pancake progression (Aidan Roberts: Leaning → Rocking), shoulder flexion, T-spine and lats. 2 min per position. Breathe out.' },
-  stretchLong: { n:'Extended stretch', t:25, c:'var(--prepare)', rpe:'-',
+  stretchLong: { n:'Extended stretch', t:25, tMin:15, tMax:35, c:'var(--prepare)', rpe:'-',
     why:'Full routine: pancake 2 min, pigeon, shoulder flexion work, T-spine rotations, lats, wrist flexors. Aidan Roberts mobility line.' },
 
   // ── activation protocols ──
-  tensionAct: { n:'Tension activation', t:12, c:'var(--prepare)', rpe:'6', sets:3, rest:2,
+  tensionAct: { n:'Tension activation', t:12, tMin:8, tMax:15, c:'var(--prepare)', rpe:'6', sets:3, rest:2,
     why:'Preload the nervous system before limit work. Heavy isometrics, short and fresh: heel-hook isometric pulls at 60/90/120 degrees, 1 rep per angle, far from failure.' },
 };
 
@@ -493,8 +493,12 @@ function blockClockElapsed() { return blockClockStart ? Math.round((Date.now() -
 
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
-// eindige tijd voor opslag/encoding: bij ∞ de som van de huidige blokduren
-function getTFinite() { return isFinite(getT()) ? getT() : currentBlocks.reduce((s,b)=>s+b.t,0); }
+// eindige tijd voor opslag/encoding: in de builder is de som leidend;
+// elders de slider, en bij ∞ de som van de huidige blokduren
+function getTFinite() {
+  if (activeSessionId === 'custom') return currentBlocks.reduce((s,b)=>s+b.t,0);
+  return isFinite(getT()) ? getT() : currentBlocks.reduce((s,b)=>s+b.t,0);
+}
 
 // ── DRAFT (eigen/aangepaste sessie) ──
 let customSession = null;   // {id:'custom', cat, name, desc, color, rpe, intent, slots:[]}
@@ -502,28 +506,82 @@ let customKeys = null;      // array van blok-keys van de draft
 
 function saveDraft() {
   try {
-    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined }));
+    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined, ov: durationOverride['custom'] || undefined }));
   } catch {}
 }
 function loadDraft() {
   try { return JSON.parse(localStorage.getItem('crimpify_draft') || 'null'); } catch { return null; }
 }
+// duurmodel per blok: [min, max] waarbinnen de fitter en de steppers bewegen.
+// vast (fixed/dynamic) = min == max == t; ontbrekende velden krijgen een
+// conservatieve fallback (toekomstige/geimporteerde blokken)
+function blockBounds(b) {
+  if (b.fixed === true || b._key === 'dynamic') return { min: b.t, max: b.t };
+  const min = b.tMin != null ? b.tMin : Math.max(3, Math.round(b.t * 0.5));
+  const max = b.tMax != null ? b.tMax : Math.max(b.t, Math.round(b.t * 1.5));
+  return { min, max };
+}
+function clampToBounds(b, minutes) {
+  const bd = blockBounds(b);
+  return Math.min(bd.max, Math.max(bd.min, minutes));
+}
+
+// BUILDER (Design / self-assembled): de som is leidend. De blokken bepalen de
+// sessieduur; de landing-tijdinstelling geldt hier niet en er wordt nooit
+// proportioneel geknepen. Aanpassen doet de gebruiker per blok (steppers).
 function composeFromKeys(keys) {
-  const base = keys.filter(k=>BLOCKLIB[k]).map((key, i) => ({...BLOCKLIB[key], _key:key, _slot:i, _alts:1}));
-  const isFixed = (b) => b.fixed === true || b._key === 'dynamic' || (durationOverride['custom'] && durationOverride['custom'][b._slot] != null);
-  const fixedTotal = base.filter(isFixed).reduce((sum,b)=>{
-    const ov = durationOverride['custom'] && durationOverride['custom'][b._slot];
-    return sum + (ov != null ? ov : b.t);
-  }, 0);
-  const flexBase = base.filter(b=>!isFixed(b)).reduce((sum,b)=>sum+b.t,0);
-  const flexBudget = Math.max(0, getT() - fixedTotal);
-  const ratio = flexBase > 0 && isFinite(flexBudget) ? flexBudget / flexBase : 1;  // ∞ = natuurlijke lengte
-  return base.map(b=>{
-    const ov = durationOverride['custom'] && durationOverride['custom'][b._slot];
-    if (ov != null) return {...b, t: ov};
-    if (b.fixed === true || b._key === 'dynamic') return {...b};
-    return {...b, t: Math.max(3, Math.round(b.t * ratio))};
+  _fitInfo['custom'] = null;   // geen budget, dus nooit een conflict
+  return keys.filter(k=>BLOCKLIB[k]).map((key, i) => {
+    const b = {...BLOCKLIB[key], _key:key, _slot:i, _alts:1};
+    const ov = durationOverride['custom'] && durationOverride['custom'][i];
+    if (ov != null) b.t = clampToBounds(b, ov);
+    return b;
   });
+}
+
+// GENERATE: tijd is leidend. Water-filling binnen [tMin, tMax]; past het niet
+// eerlijk, dan alles op zijn minimum plus een conflictmelding (nooit stil
+// knijpen). _fitInfo voedt de banner in slab en preview.
+const _fitInfo = {};   // per sessie-id: { need, conflict } of null
+function fitToBudget(base, id) {
+  const ovs = durationOverride[id] || {};
+  const items = base.map(b => {
+    const ov = ovs[b._slot];
+    if (ov != null) return { b, t: clampToBounds(b, ov), fixed: true };
+    if (b.fixed === true || b._key === 'dynamic') return { b, t: b.t, fixed: true };
+    return { b, t: b.t, fixed: false };
+  });
+  const fixedTotal = items.filter(x=>x.fixed).reduce((s,x)=>s+x.t,0);
+  const flex = items.filter(x=>!x.fixed);
+  const minNeeded = fixedTotal + flex.reduce((s,x)=>s+blockBounds(x.b).min,0);
+  const budget = getT();
+  const conflict = isFinite(budget) && budget < minNeeded;
+  _fitInfo[id] = { need: minNeeded, conflict };
+  if (flex.length && isFinite(budget)) {
+    if (conflict) {
+      // eerlijke vloer: niets wordt korter dan zijn minimum
+      flex.forEach(x => { x.t = blockBounds(x.b).min; });
+    } else {
+      // water-filling: schaal vanaf de basis, klem wie buiten zijn model valt
+      // en herverdeel de rest tot niemand meer klemt
+      let avail = budget - fixedTotal;
+      let pool = flex.slice();
+      let guard = 0;
+      while (pool.length && guard++ < 30) {
+        const baseSum = pool.reduce((s,x)=>s+x.b.t,0);
+        const r = avail / baseSum;
+        const clamped = pool.filter(x => { const bd = blockBounds(x.b); return x.b.t*r < bd.min || x.b.t*r > bd.max; });
+        if (!clamped.length) { pool.forEach(x => { x.t = Math.round(x.b.t * r); }); break; }
+        clamped.forEach(x => {
+          const bd = blockBounds(x.b);
+          x.t = x.b.t*r < bd.min ? bd.min : bd.max;
+          avail -= x.t;
+        });
+        pool = pool.filter(x => !clamped.includes(x));
+      }
+    }
+  }
+  return items.map(x => ({...x.b, t: x.t}));
 }
 
 function getBlocks(id) {
@@ -542,21 +600,7 @@ function getBlocks(id) {
     }
     return {...BLOCKLIB[key], _key:key, _slot:i, _alts: Array.isArray(slot) ? slot.length : 1};
   });
-  // vaste blokken (fixed:true of handmatig overschreven) schalen niet mee
-  const isFixed = (b) => b.fixed === true || b._key === 'dynamic' || (durationOverride[id] && durationOverride[id][b._slot] != null);
-  const fixedTotal = base.filter(isFixed).reduce((sum,b)=>{
-    const ov = durationOverride[id] && durationOverride[id][b._slot];
-    return sum + (ov != null ? ov : b.t);
-  }, 0);
-  const flexBase = base.filter(b=>!isFixed(b)).reduce((sum,b)=>sum+b.t,0);
-  const flexBudget = Math.max(0, getT() - fixedTotal);
-  const ratio = flexBase > 0 && isFinite(flexBudget) ? flexBudget / flexBase : 1;  // ∞ = natuurlijke lengte
-  return base.map(b=>{
-    const ov = durationOverride[id] && durationOverride[id][b._slot];
-    if (ov != null) return {...b, t: ov};
-    if (b.fixed === true || b._key === 'dynamic') return {...b};
-    return {...b, t: Math.max(3, Math.round(b.t * ratio))};
-  });
+  return fitToBudget(base, id);
 }
 
 function rerollSession(id) {
@@ -569,9 +613,12 @@ function rerollSession(id) {
 }
 
 function adjustBlock(id, slotIdx, currentT, delta) {
+  const b = currentBlocks[slotIdx];
+  if (!b) return;
+  const bd = blockBounds(b);
+  if (bd.min === bd.max) return;   // vast blok: niets te draaien
   if (!durationOverride[id]) durationOverride[id] = {};
-  const next = Math.max(3, currentT + delta);
-  durationOverride[id][slotIdx] = next;
+  durationOverride[id][slotIdx] = Math.min(bd.max, Math.max(bd.min, currentT + delta));
   buildSlab();
   renderPreview();
 }
@@ -1824,6 +1871,7 @@ function openDraft() {
   customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
   if (d.basedOn) customSession.basedOn = d.basedOn;
   customKeys = d.keys.slice();
+  durationOverride['custom'] = (d.ov && typeof d.ov === 'object') ? d.ov : {};
   activeSessionId = 'custom';
   sessionLocked = !!d.locked;
   sessionOwned = d.owned !== false;
@@ -1838,6 +1886,9 @@ function openFav(i) {
   customSession = { id:'custom', cat:'own', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favourite session.' };
   if (f.basedOn) customSession.basedOn = f.basedOn;
   customKeys = f.keys.slice();
+  // bewaarde blokduren terugzetten (additief veld; oude favs vallen op basis terug)
+  durationOverride['custom'] = {};
+  if (Array.isArray(f.d)) f.d.forEach((mv, i) => { if (typeof mv === 'number') durationOverride['custom'][i] = mv; });
   activeSessionId = 'custom';
   sessionLocked = true;   // favourites were locked in earlier
   sessionOwned = true;
@@ -1851,7 +1902,9 @@ function ensureDraftMode() {
   const s = getSession(activeSessionId);
   customKeys = currentBlocks.map(b => b._key);
   customSession = { id:'custom', cat:'own', name: s ? s.name : 'My session', desc:'', color: s ? s.color : 'lime', rpe: s ? s.rpe : '–', intent: s ? s.intent : '' };
+  // gefitte duren meenemen: wat je zag is wat je bewerkt (som-leidende builder)
   durationOverride['custom'] = {};
+  currentBlocks.forEach((b, i) => { durationOverride['custom'][i] = b.t; });
   activeSessionId = 'custom';
   sessionLocked = false;
 }
@@ -1882,14 +1935,17 @@ const CAT_COLOR = {
   'Antagonist, core & gym':     'var(--prepare)',
   'Recovery & mobility':        'var(--prepare)',
 };
-const UX_COLOR = 'var(--graphite)';  // eigen oefeningen: geen aparte kleur, wel een YOURS-badge
+const UX_COLOR = 'var(--graphite)';  // eigen oefeningen zonder categorie; met gekozen categorie (g) volgt de groepskleur, YOURS-badge blijft de herkomst
 function applyCategoryColors() {
   BLOCK_GROUPS.forEach(g => {
     const col = CAT_COLOR[g.name];
     if (!col) return;
     g.keys.forEach(k => { if (BLOCKLIB[k]) BLOCKLIB[k].c = col; });
   });
-  Object.keys(BLOCKLIB).filter(k => k.startsWith('ux_')).forEach(k => { BLOCKLIB[k].c = UX_COLOR; });
+  Object.keys(BLOCKLIB).filter(k => k.startsWith('ux_')).forEach(k => {
+    const b = BLOCKLIB[k];
+    b.c = (b.g && CAT_COLOR[b.g]) ? CAT_COLOR[b.g] : UX_COLOR;
+  });
 }
 function yoursBadge(key) {
   return key && key.startsWith('ux_')
@@ -2023,6 +2079,11 @@ let _editingBlockKey = null;   // ux_-key in bewerkmodus; null = nieuw
 function openNewExercise(editKey) {
   _editingBlockKey = (editKey && BLOCKLIB[editKey]) ? editKey : null;
   const b = _editingBlockKey ? BLOCKLIB[_editingBlockKey] : null;
+  // categoriekeuze bepaalt de kleur; bestaande blokken zonder categorie
+  // kiezen hem alsnog bij het bewerken
+  const sel = document.getElementById('neCat');
+  sel.innerHTML = `<option value="" disabled ${b && b.g ? '' : 'selected'}>What does it train? Choose a category</option>` +
+    BLOCK_GROUPS.map(gr => `<option value="${gr.name}" ${b && b.g === gr.name ? 'selected' : ''}>${gr.name}</option>`).join('');
   document.getElementById('neName').value = b ? b.n : '';
   document.getElementById('neMin').value = b ? b.t : '10';
   document.getElementById('neRpe').value = (b && b.rpe !== '–') ? b.rpe : '';
@@ -2046,7 +2107,9 @@ function confirmNewExercise() {
   const editing = _editingBlockKey;
   const key = editing || ('ux_' + Date.now().toString(36));
   // fixed:true — de ingevoerde minuten zijn de duur, de tijd-fitter blijft eraf
-  const block = { n: name, t, c: UX_COLOR, rpe, why, fixed: true };
+  const g = document.getElementById('neCat').value;
+  if (!g || !CAT_COLOR[g]) { document.getElementById('neCat').focus(); return; }
+  const block = { n: name, t, c: CAT_COLOR[g], g, rpe, why, fixed: true };
   if (url) block.links = [{ label: linkLabel(url), url }];
   const store = loadCustomBlocks();
   store[key] = block;
@@ -2105,7 +2168,7 @@ function toggleFavorite() {
   if (favs.some(f => f.name === s.name)) {
     favs = favs.filter(f => f.name !== s.name);
   } else {
-    const entry = { name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite() };
+    const entry = { name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite(), d: currentBlocks.map(b=>b.t) };
     if (activeSessionId === 'custom' && customSession && customSession.basedOn) entry.basedOn = customSession.basedOn;
     favs.unshift(entry);
   }
@@ -2116,15 +2179,18 @@ function toggleFavorite() {
 }
 function encodeSession() {
   const s = getSession(activeSessionId);
-  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime');
+  // d (additief): duur per blok, zodat stepper-waardes meereizen; oude
+  // clients negeren het veld, oude links zonder d vallen terug op basisduren
+  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime', currentBlocks.map(b=>b.t));
 }
-function encodePayload(name, keys, time, color) {
+function encodePayload(name, keys, time, color, durations) {
   const payload = { n: name || 'Session', k: keys, t: time, c: color || 'lime' };
+  if (Array.isArray(durations) && durations.length === keys.length) payload.d = durations;
   // eigen oefeningen reizen mee in de link
   const own = keys.filter(k=>k.startsWith('ux_') && BLOCKLIB[k]);
   if (own.length) {
     payload.x = {};
-    own.forEach(k=>{ const b = BLOCKLIB[k]; payload.x[k] = { n:b.n, t:b.t, rpe:b.rpe, why:b.why, links:b.links }; });
+    own.forEach(k=>{ const b = BLOCKLIB[k]; payload.x[k] = { n:b.n, t:b.t, rpe:b.rpe, why:b.why, links:b.links, g:b.g }; });
   }
   return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
 }
@@ -2189,17 +2255,27 @@ function importFromHash() {
     const store = loadCustomBlocks();
     Object.keys(p.x).forEach(k=>{
       const d = p.x[k];
-      const block = { n:d.n||'Exercise', t:d.t||10, c: UX_COLOR, rpe:d.rpe||'–', why:d.why||'', fixed:true };
+      const grp = (d.g && CAT_COLOR[d.g]) ? d.g : null;
+      const block = { n:d.n||'Exercise', t:d.t||10, c: grp ? CAT_COLOR[grp] : UX_COLOR, rpe:d.rpe||'–', why:d.why||'', fixed:true };
+      if (grp) block.g = grp;
       if (d.links) block.links = d.links;
       BLOCKLIB[k] = block;
       store[k] = block;
     });
     saveCustomBlocks(store);
   }
-  const validKeys = p.k.filter(k=>BLOCKLIB[k]);
+  // keys filteren met behoud van de bijbehorende duur-indices (d is additief)
+  const validKeys = [], validDur = [];
+  p.k.forEach((k, i) => {
+    if (!BLOCKLIB[k]) return;
+    validKeys.push(k);
+    validDur.push(Array.isArray(p.d) && typeof p.d[i] === 'number' ? p.d[i] : null);
+  });
   if (!validKeys.length) return false;
   customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent:'Shared session · locked by its maker. Want something different? Make your own copy (⧉).' };
   customKeys = validKeys;
+  durationOverride['custom'] = {};
+  validDur.forEach((mv, i) => { if (mv != null) durationOverride['custom'][i] = mv; });
   activeSessionId = 'custom';
   sessionLocked = true;
   sessionOwned = false;
@@ -2264,9 +2340,12 @@ function renderPreview() {
   const total = blocks.reduce((sum,b)=>sum+b.t,0);
   const tape = blocks.map(b=>`<div class="ap-seg" style="width:${(b.t/total*100).toFixed(1)}%;background:${b.c};opacity:.8;"></div>`).join('');
   const rows = blocks.map(b=>`<div class="ap-row"><div class="ap-dot" style="background:${b.c};"></div><div class="ap-name" style="color:${b.c};opacity:.8;">${b.n}</div><div class="ap-t">${b.t}'</div></div>`).join('');
+  const fitP = _fitInfo[s.id];
+  const warnP = (fitP && fitP.conflict)
+    ? `<div class="fit-warning" style="margin:8px 12px 10px;">This combination needs at least ${fitP.need} min. Extend the session or remove a block.</div>` : '';
   document.getElementById('activePreview').innerHTML = `
     <div class="ap-tape" style="background:var(--carbon);">${tape}</div>
-    <div class="ap-body"><div class="ap-head"><div class="ap-title" style="color:${col.text};">${s.name}</div><div class="ap-meta">rpe ${s.rpe} · ${total}'</div></div><div class="ap-rows">${rows}</div></div>`;
+    <div class="ap-body"><div class="ap-head"><div class="ap-title" style="color:${col.text};">${s.name}</div><div class="ap-meta">rpe ${s.rpe} · ${total}'</div></div><div class="ap-rows">${rows}</div></div>${warnP}`;
   document.getElementById('footerSub').textContent = `${s.name.toLowerCase()} · ${total}'`;
 }
 
@@ -2302,7 +2381,7 @@ function applyRecentFold() {
 
 // tape-tooltip: welk blok en welke trainingscategorie zit achter deze kleur
 function blockGroupName(key) {
-  if (key && key.startsWith('ux_')) return 'Own';
+  if (key && key.startsWith('ux_')) return (BLOCKLIB[key] && BLOCKLIB[key].g) || 'Own';
   for (const g of BLOCK_GROUPS) { if (g.keys.includes(key)) return g.name; }
   return 'Other';
 }
@@ -2372,10 +2451,19 @@ function buildSlab() {
       </div>`;
     }
     const dragAttrs = sessionLocked ? '' : `ontouchstart="slabPressStart(event,this)" ontouchmove="slabPressMove(event)" ontouchend="slabPressEnd()" onmousedown="slabPressStart(event,this)"`;
+    // builder: duur per blok direct instelbaar binnen het duurmodel (min/max)
+    const bd = blockBounds(b);
+    const dur = (isCustom && !sessionLocked && bd.min !== bd.max)
+      ? `<div class="slab-stepper" onclick="event.stopPropagation()">
+          <button class="step-btn" onclick="adjustBlock('custom',${i},${b.t},-5)" aria-label="shorter">&minus;</button>
+          <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
+          <button class="step-btn" onclick="adjustBlock('custom',${i},${b.t},5)" aria-label="longer">+</button>
+        </div>`
+      : `<div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>`;
     return `<div class="slab-block slab-real" data-idx="${i}" style="background:color-mix(in srgb, ${b.c} 9%, transparent);" onclick="slabBlockTap(${i})" ${dragAttrs}>
       <div class="slab-accent" style="background:${nameColor(b.c)};"></div>
       <div class="slab-block-name" style="color:${nameColor(b.c)};">${b.n}${yoursBadge(b._key)}</div>
-      <div class="slab-ghost" style="color:${nameColor(b.c)};">${b.t}<span class="gu">'</span></div>
+      ${dur}
     </div>`;
   }).join('');
   const emptyHint = currentBlocks.length === 0
@@ -2391,7 +2479,11 @@ function buildSlab() {
     <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
       <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--disabled);">${sessionOwned ? 'locked · ✎ to edit' : 'shared session · ⧉ for your own copy'}</div>
     </div>` : '';
-  document.getElementById('slabBlocks').innerHTML = blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
+  // eerlijk conflict (alleen generate-pad): nooit stil knijpen
+  const fit = _fitInfo[activeSessionId];
+  const conflictRow = (fit && fit.conflict)
+    ? `<div class="fit-warning">This combination needs at least ${fit.need} min. Extend the session or remove a block.</div>` : '';
+  document.getElementById('slabBlocks').innerHTML = conflictRow + blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
 
   updateSlabProgress(0);
   if (typeof updateFavStar === 'function') updateFavStar();
@@ -3502,7 +3594,7 @@ function openNews(id) {
 }
 // ── BLOCK DETAIL: lezen → doen. Vanuit News en de bibliotheek (ⓘ); nooit een stille add. ──
 function blockGroupName(key) {
-  if (key.startsWith('ux_')) return 'Own';
+  if (key.startsWith('ux_')) return (BLOCKLIB[key] && BLOCKLIB[key].g) || 'Own';
   const g = BLOCK_GROUPS.find(g => g.keys.includes(key));
   return g ? g.name : 'Other';
 }
