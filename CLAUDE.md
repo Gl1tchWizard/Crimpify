@@ -25,8 +25,8 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v28`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v29`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v29`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v30`, enz.), anders zien bezoekers de oude versie.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
@@ -199,11 +199,40 @@ Header: groepskicker in de categoriekleur, bloknaam, metaregel met rpe-tekst
 als intensiteit (géén phalanx: pips = verwachte belasting, nooit rpe), basis-
 duur en vormhint (guided/counted/sets). Daaronder de volledige uitleg mét
 attributie en eventuele links. "Appears in" toont tikbare catalogus-kaarten
-van sessies die het blok bevatten; geen matches = sectie weg. Twee acties:
-TRY THIS NOW (acid, primair) genereert een minimale wrapper-sessie (Charlie
-warm-up + dit blok) en opent de slab startklaar; ADD TO SESSION voegt het blok
-toe aan de bestaande draft (of start een verse) en landt zichtbaar in de
-builder. Nooit een stille add.
+van sessies die het blok bevatten; geen matches = sectie weg. Eén actie:
+ADD TO SESSION (acid, primair) voegt het blok toe aan de bestaande draft (of
+start een verse) en landt zichtbaar in de builder. Nooit een stille add.
+TRY THIS NOW is vervallen (juli 2026): de wrapper-sessie was onzinnig; wie
+het blok in context wil doen gebruikt "Appears in".
+
+### Interactiemodel: blok-tik en de ladder (juli 2026)
+
+Een tik op een blok opent altijd blok-info, nooit de speler; de speler opent
+uitsluitend via START. Eén vastgelegde uitzondering: in een lopende sessie
+is de slab-tik navigatie/overslaan binnen de run (in-session flexibiliteit).
+Het info-paneel past zich aan de context aan: eigen bewerkbaar concept =
+info + duur-steppers (binnen min/max) + verwijderen; eigen gelockt =
+alleen-lezen met unlock-hint; gecureerd/gedeeld = alleen-lezen met
+remix-actie; de preview-rijen in Choose zijn tikbaar naar hetzelfde
+alleen-lezen paneel.
+
+De ladder: gecureerd/gedeeld → preview met alleen-lezen blokken, twee wegen
+eruit: START (doe hem zoals hij is; opent de slab, nooit blind starten) en
+REMIX (eigen bewerkbare kopie, het bestaande basedOn-mechanisme). Eigen
+concept → slab waar tikken bewerkt, dan LOCK IN, dan START, dan de speler.
+De preview-acties onder START zijn REMIX, SAVE (ster) en SHARE, volwaardige
+gelabelde knoppen; er is geen like. Blokken krijgen nooit een ster (dat zou
+een tweede verzameling naast opgeslagen sessies maken, eerder afgewezen);
+blok-acties zijn bekijken en toevoegen.
+
+BACK gaat overal precies één stap terug: in-app navigatiestack plus één
+history-sentinel zodat ook systeem-back (Android-gebaar) in-app teruggaat.
+De #s=-deel-links blijven daarbuiten; een deel-link opnieuw openen in
+dezelfde tab werkt via de hashchange-listener. Kop = som: getoonde
+sessieminuten zijn altijd de som van de blokduren (`sessionMins`), nooit
+een statisch veld. In Browse staat de "By Govert"-plank boven alle andere
+planken: echte coach-sessies eerst, de mock-catalogus als filler eronder,
+zonder badges (verified wacht op de backend, zie backlog).
 
 ### Bottom navigation (gepland, uitgesteld)
 De structurele oplossing voor navigatie is een vaste bottom-nav
@@ -453,7 +482,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.34) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.35) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
   sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
   en dot terugzien bij Mijn sessies.
