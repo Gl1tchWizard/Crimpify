@@ -86,7 +86,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body { height: 100%; background: var(--ink); }
+/* geen pull-to-refresh: er is geen server, er valt niets te verversen.
+   none op de root dooft de refresh-chain (Android Chrome, iOS Safari 16+);
+   contain op de scrollers stopt chaining zonder hun eigen bounce te raken */
+html, body { height: 100%; background: var(--ink); overscroll-behavior-y: none; }
 
 body {
   display: flex; justify-content: center;
@@ -119,6 +122,7 @@ body {
   flex: 1; overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  overscroll-behavior-y: contain;
 }
 .scroll-body::-webkit-scrollbar { display: none; }
 
