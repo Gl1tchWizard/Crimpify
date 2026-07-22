@@ -2296,16 +2296,18 @@ function isCurrentFav() {
 function updateFavStar() {
   const locked = sessionLocked;
   const el = id => document.getElementById(id);
-  // bewerken alleen op eigen sessies; kopie alleen op ontvangen sessies
-  if (el('editBtn')) el('editBtn').style.display = (locked && sessionOwned) ? 'flex' : 'none';
-  if (el('dupBtn')) el('dupBtn').style.display = (locked && !sessionOwned) ? 'flex' : 'none';
+  // actieladder (pv-actions, zelfde stijl als de preview) alleen op gelockte
+  // sessies; bewerken alleen op eigen sessies, remix alleen op ontvangen
+  if (el('slabActions')) el('slabActions').style.display = locked ? 'flex' : 'none';
+  if (el('editBtn')) el('editBtn').style.display = (locked && sessionOwned) ? '' : 'none';
+  if (el('dupBtn')) el('dupBtn').style.display = (locked && !sessionOwned) ? '' : 'none';
   if (el('favStarBtn')) {
-    el('favStarBtn').style.display = locked ? 'flex' : 'none';
+    el('favStarBtn').style.display = locked ? '' : 'none';
     const fav = isCurrentFav();
-    el('favStarBtn').textContent = fav ? '★' : '☆';
-    el('favStarBtn').style.color = fav ? 'var(--acid)' : 'var(--dust)';
+    el('favStarBtn').textContent = fav ? '★ Saved' : '☆ Save';
+    el('favStarBtn').classList.toggle('on', fav);
   }
-  if (el('shareBtn')) el('shareBtn').style.display = locked ? 'flex' : 'none';
+  if (el('shareBtn')) el('shareBtn').style.display = locked ? '' : 'none';
   if (el('saveBigBtn')) el('saveBigBtn').style.display = locked ? 'none' : '';
   if (el('startBtn')) el('startBtn').style.display = locked ? '' : 'none';
 }
@@ -2431,7 +2433,8 @@ function importFromHash() {
     validDur.push(Array.isArray(p.d) && typeof p.d[i] === 'number' ? p.d[i] : null);
   });
   if (!validKeys.length) return false;
-  customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent:'Shared session · locked by its maker. Want something different? Make your own copy (⧉).' };
+  // een remix-affordance: de knop in de actieladder; de banner blijft kort
+  customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent:'Shared session, locked by its maker.' };
   customKeys = validKeys;
   durationOverride['custom'] = {};
   validDur.forEach((mv, i) => { if (mv != null) durationOverride['custom'][i] = mv; });
@@ -2629,9 +2632,11 @@ function buildSlab() {
     <div class="slab-block" style="background:none;min-height:44px;justify-content:center;" onclick="toggleSlabEdit()">
       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid)':'var(--disabled)'};">${slabEditMode?'✓ done editing':'✎ edit'}</div>
     </div>`;
-  const lockedRow = sessionLocked ? `
+  // gedeelde sessies: geen regel onder de blokken meer, de REMIX-knop in de
+  // actieladder is de ene affordance (dedupe, juli 2026)
+  const lockedRow = (sessionLocked && sessionOwned) ? `
     <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
-      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--disabled);">${sessionOwned ? 'locked · ✎ to edit' : 'shared session · ⧉ for your own copy'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--disabled);">locked · ✎ to edit</div>
     </div>` : '';
   // eerlijk conflict (alleen generate-pad): nooit stil knijpen
   const fit = _fitInfo[activeSessionId];
