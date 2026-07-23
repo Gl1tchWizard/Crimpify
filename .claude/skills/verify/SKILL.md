@@ -32,7 +32,7 @@ de echte app driven in een headless browser en screenshots vastleggen.
 
 ## Reistests (verplicht na elke wijziging)
 
-Vier complete gebruikersreizen in `journeys.js` (deze map), te draaien in
+Vijf complete gebruikersreizen in `journeys.js` (deze map), te draaien in
 plaats van losse padchecks. Server op 8317, dan vanuit een map met
 playwright-core: `node <repo>\.claude\skills\verify\journeys.js`.
 
