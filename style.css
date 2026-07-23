@@ -551,8 +551,8 @@ body {
 /* preview-acties: save/customize als ghost-rij onder de content, Start session blijft de enige primaire CTA */
 /* actieladder onder START: remix, save, share — gelabeld en volwaardig,
    geen grijze mini-icoontjes; acid alleen voor de aan-staat (selectie) */
-.pv-actions { display:flex; gap:10px; }
-.pv-act { flex:1; padding:13px 0; border-radius:10px; border:1px solid var(--graphite); background:var(--carbon); color:var(--chalk); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.08em; text-transform:uppercase; }
+.pv-actions { display:flex; gap:8px; }
+.pv-act { flex:1; min-width:0; padding:13px 6px; border-radius:10px; border:1px solid var(--graphite); background:var(--carbon); color:var(--chalk); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pv-act:hover { border-color:var(--dust); }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
 /* context-hint in het blok-info-paneel */
