@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.43</div>
+    <div id="splashBy">by Glitch Labs · v0.44</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -233,17 +233,18 @@
     </div>
     <div class="slab-progress"><div class="slab-progress-fill" id="slabProgressFill" style="width:0%"></div></div>
     <div class="slab-blocks" id="slabBlocks"></div>
-    <div class="footer">
-      <div class="footer-meta" id="slabFooterMeta">–</div>
-      <div style="display:flex;gap:8px;align-items:center;">
-        <button id="editBtn" onclick="unlockEdit()" title="edit" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-size:15px;cursor:pointer;">✎</button>
-        <button id="dupBtn" onclick="duplicateSession()" title="make your own copy" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-size:15px;cursor:pointer;">⧉</button>
-        <button id="favStarBtn" onclick="toggleFavorite()" title="favourite" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-size:17px;cursor:pointer;">☆</button>
-        <button id="shareBtn" onclick="shareSession()" title="share session" style="display:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);cursor:pointer;align-items:center;justify-content:center;padding:0;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
-        </button>
+    <div class="footer" style="flex-direction:column;gap:10px;align-items:stretch;">
+      <div style="display:flex;gap:10px;align-items:center;justify-content:space-between;">
+        <div class="footer-meta" id="slabFooterMeta">–</div>
         <button id="saveBigBtn" class="start-btn" onclick="openSaveFav()" style="display:none;">Lock in →</button>
         <button id="startBtn" class="start-btn" onclick="startSession()">Start →</button>
+      </div>
+      <!-- actieladder, identiek aan de preview: gelabelde knoppen, acid alleen op START -->
+      <div class="pv-actions" id="slabActions" style="display:none;">
+        <button id="editBtn" class="pv-act" onclick="unlockEdit()" style="display:none;">✎ Edit</button>
+        <button id="dupBtn" class="pv-act" onclick="duplicateSession()" style="display:none;">⧉ Remix</button>
+        <button id="favStarBtn" class="pv-act" onclick="toggleFavorite()" style="display:none;">☆ Save</button>
+        <button id="shareBtn" class="pv-act" onclick="shareSession()" style="display:none;">↗ Share</button>
       </div>
     </div>
   </div>
@@ -444,9 +445,9 @@
             <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sig-red);">too much</span>
           </button>
         </div>
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px;">
-          <div onclick="signalSkip()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--disabled);cursor:pointer;">skip</div>
-          <div onclick="shareSummary()" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb, var(--acid) 55%, transparent);cursor:pointer;">share session</div>
+        <!-- delen komt pas na het loggen: het stoplicht is hier de primaire actie -->
+        <div style="display:flex;align-items:center;justify-content:center;margin-top:12px;">
+          <div onclick="signalSkip()" style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--disabled);cursor:pointer;padding:6px 14px;">skip</div>
         </div>
       </div>
       <div id="signalAdvice" style="display:none;margin-top:20px;padding:16px;border:1px solid var(--graphite);border-radius:12px;background:var(--ink);">
