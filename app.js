@@ -468,6 +468,10 @@ function logSessionDone(id, variant, time, sig, snap) {
   if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; }
   h.unshift(e);
   saveHistory(h);
+  if (sig) trackEvent('session-done-' + sig);
+  // piekmoment: eerste gelogde sessie → eenmalige installatie-uitnodiging,
+  // maar pas nadat de samenvatting gesloten is (anders ligt hij eronder)
+  if (sig && h.length === 1) _installOfferPending = true;
   if (typeof clearActive === 'function') clearActive();
   rebuildRecent();
   renderSignalCal();
@@ -700,6 +704,7 @@ function goBack() {
   const overlays = [
     ['blockEditDialog', closeBlockEdit],
     ['newExerciseDialog', closeNewExercise],
+    ['installSheet', closeInstallSheet],
     ['saveFavDialog', closeSaveFav],
     ['shareDialog', closeShareDialog],
     ['previewView', closeChoosePreview],
@@ -959,6 +964,8 @@ function closeSummary() {
   clearActive();
   recentFolded = false; applyRecentFold();
   goTo('v-browse');
+  // piekmoment: de samenvatting is dicht, nu mag de installatie-uitnodiging
+  if (_installOfferPending) { _installOfferPending = false; maybeOfferInstall(); }
 }
 
 // ── ONAFGEMAAKTE SESSIE (Continue-kaart) ──
@@ -1029,6 +1036,7 @@ function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  trackEvent('session-start');
   openBlock(0);
 }
 
@@ -2431,6 +2439,7 @@ function importFromHash() {
     validDur.push(Array.isArray(p.d) && typeof p.d[i] === 'number' ? p.d[i] : null);
   });
   if (!validKeys.length) return false;
+  trackEvent('shared-open-' + slugName(p.n));
   customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent:'Shared session · locked by its maker. Want something different? Make your own copy (⧉).' };
   customKeys = validKeys;
   durationOverride['custom'] = {};
@@ -3189,8 +3198,13 @@ function renderGreeting() {
   timeBtn.innerHTML = `<span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;">${timeLabel()}</span><span id="timeChev" style="font-size:11px;opacity:.5;color:var(--dust);">▾</span>`;
   line.appendChild(h); line.appendChild(timeBtn);
   el.appendChild(line);
+  // naamvraag pas als er iets te personaliseren valt: na de eerste
+  // afgeronde sessie. Wie via een link binnenkomt ziet eerst gewoon de app.
+  const hasHistory = loadHistory().length > 0;
   if (name) {
     h.textContent = 'Welcome back, ' + name;
+  } else if (!hasHistory) {
+    h.textContent = 'Welcome to Crimpify';
   } else {
     h.textContent = 'Welcome to Crimpify';
     const row = document.createElement('div');
@@ -3266,6 +3280,78 @@ document.addEventListener('visibilitychange', () => {
   if (_swReloadPending) swReloadWhenSafe();
 });
 window.addEventListener('pagehide', flushState);
+
+// ── GROEIVLIEGWIEL: aggregaat-events + installatie-uitnodiging ──
+// GoatCounter-events: cookieloos en geaggregeerd, nooit individuen
+// (productprincipe 1). We meten welke sessies reizen en waar de trechter
+// lekt: shared-open-<sessie>, session-start, session-done-<sig>,
+// install-prompt-shown, install-accepted.
+function trackEvent(name) {
+  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, event: true }); } catch {}
+}
+function slugName(n) { return (n || 'session').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+
+// installatie: Android/Chrome via beforeinstallprompt, iOS via instructies.
+// Actieve uitnodiging precies een keer, na de eerste gelogde sessie; de
+// passieve regel op de landing blijft altijd beschikbaar. Nooit zeuren.
+let _bipEvent = null;
+let _installOfferPending = false;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); _bipEvent = e; });
+window.addEventListener('appinstalled', () => {
+  try { localStorage.setItem('crimpify_install_prompt', 'accepted'); } catch {}
+  trackEvent('install-accepted');
+});
+const IS_IOS_DEVICE = /iP(hone|ad|od)/.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function isStandalone() {
+  try { return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true; } catch { return false; }
+}
+function maybeOfferInstall() {
+  if (isStandalone()) return;
+  try { if (localStorage.getItem('crimpify_install_prompt')) return; } catch {}
+  if (!_bipEvent && !IS_IOS_DEVICE) return;   // geen mechanisme = niet tonen, niet markeren
+  try { localStorage.setItem('crimpify_install_prompt', 'shown'); } catch {}
+  trackEvent('install-prompt-shown');
+  showInstallSheet('offer');
+}
+function showInstallSheet(source) {
+  const body = document.getElementById('installSheetBody');
+  if (!body) return;
+  const title = source === 'offer' ? 'Keep Crimpify' : 'This is the app';
+  const intro = source === 'offer'
+    ? 'Nice first session. Put Crimpify on your home screen so you never lose it: it works offline and needs no account.'
+    : 'Crimpify is a full app. Put it on your home screen: it works offline and needs no account.';
+  let action;
+  if (_bipEvent) {
+    action = `<button class="be-done" style="width:100%;" onclick="installViaPrompt()">Add to home screen</button>
+      <button class="be-secondary" style="width:100%;margin-top:8px;" onclick="closeInstallSheet()">Not now</button>`;
+  } else if (IS_IOS_DEVICE) {
+    action = `<div class="be-why" style="margin-top:2px;">1. Tap the share button in your browser.<br>2. Choose "Add to Home Screen".</div>
+      <button class="be-done" style="width:100%;margin-top:14px;" onclick="closeInstallSheet()">Got it</button>`;
+  } else {
+    action = `<div class="be-why" style="margin-top:2px;">Use your browser menu: "Install app" or "Add to home screen".</div>
+      <button class="be-done" style="width:100%;margin-top:14px;" onclick="closeInstallSheet()">Got it</button>`;
+  }
+  body.innerHTML = `
+    <div class="be-name" style="margin-bottom:6px;">${title}</div>
+    <div class="be-why" style="margin-top:0;">${intro}</div>
+    <div style="margin-top:14px;">${action}</div>`;
+  document.getElementById('installSheet').style.display = 'flex';
+}
+function closeInstallSheet() { document.getElementById('installSheet').style.display = 'none'; }
+function installViaPrompt() {
+  const e = _bipEvent;
+  closeInstallSheet();
+  if (!e) return;
+  e.prompt();
+  e.userChoice.then(r => {
+    if (r && r.outcome === 'accepted') {
+      try { localStorage.setItem('crimpify_install_prompt', 'accepted'); } catch {}
+      trackEvent('install-accepted');
+    }
+  }).catch(() => {});
+  _bipEvent = null;
+}
 
 // ── INIT ──
 ['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });

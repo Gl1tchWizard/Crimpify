@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.39</div>
+    <div id="splashBy">by Glitch Labs · v0.41</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -121,6 +121,8 @@
         <!-- DISCOVER: etalage naar de catalogus, blijft onderaan (inspiratie, geen navigatie) -->
         <div class="section-head" onclick="openChoose()" style="cursor:pointer;"><div class="section-title">Popular at Apex this week <span style="font-size:13px;opacity:.6;">→</span></div></div>
         <div class="ch-shelf" id="discoverShelf"></div>
+        <!-- passief app-antwoord: altijd vindbaar, nooit een pop-up (groeivliegwiel) -->
+        <div id="appLine" onclick="showInstallSheet('passive')" style="margin:14px 20px 4px;padding:11px 14px;border:1px dashed var(--graphite);border-radius:10px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);line-height:1.7;">This is the app. Add it to your home screen: it works offline, no account needed. →</div>
         <div style="height:16px;"></div>
       </div>
     </div>
@@ -503,6 +505,11 @@
   <!-- ══ BLOK-BEWERKPANEEL (builder, voor lock-in) ══ -->
   <div id="blockEditDialog" style="display:none;position:absolute;inset:0;z-index:58;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeBlockEdit()">
     <div id="blockEditBody" style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:85%;overflow-y:auto;"></div>
+  </div>
+
+  <!-- ══ INSTALL SHEET: eenmalige uitnodiging na de eerste gelogde sessie, plus passieve ingang ══ -->
+  <div id="installSheet" style="display:none;position:absolute;inset:0;z-index:59;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeInstallSheet()">
+    <div id="installSheetBody" style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;"></div>
   </div>
 
   <!-- ══ SHARE DIALOG ══ -->

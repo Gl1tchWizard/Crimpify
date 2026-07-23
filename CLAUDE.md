@@ -25,14 +25,30 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v33`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v34`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v35`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v36`, enz.), anders zien bezoekers de oude versie.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
   standaard niet mee, dus lokaal testen blijft schoon. Consistent met
   productprincipe 1: we tellen bezoeken, nooit individuen. Geen andere
-  analytics of tracking toevoegen.
+  analytics of tracking toevoegen. Naast paginabezoeken sturen we een vaste
+  set aggregaat-events (`trackEvent()` in app.js, no-op als count.js ontbreekt):
+  `shared-open-<sessienaam>` (welke sessies reizen het beste),
+  `session-start` en `session-done-<sig>` (waar de trechter lekt tussen
+  openen, starten en afronden), `install-prompt-shown` en
+  `install-accepted` (werkt het installatiemoment). Sessienamen zijn
+  content, geen persoonsgegevens; geen nieuwe events toevoegen zonder
+  dit lijstje bij te werken.
+- **PWA-uitnodiging (groeivliegwiel, juli 2026):** een passieve regel
+  onderaan de landing ("This is the app...", tikbaar naar het
+  install-sheet) plus een actieve uitnodiging die precies één keer
+  verschijnt, direct na de eerste gelogde sessie (het piekmoment):
+  Android/Chrome via `beforeinstallprompt`, iOS via korte instructies
+  (deelknop → Add to Home Screen), anders niet tonen. Keuze onthouden in
+  `crimpify_install_prompt`; nooit een pop-up bij binnenkomst. De
+  naamvraag op de landing verschijnt pas na de eerste afgeronde sessie:
+  wie via een deel-link binnenkomt ziet eerst gewoon de sessie.
 - **Tijdmodel (juli 2026):** elk blok heeft `t` (basis) plus optioneel
   `tMin`/`tMax`. In de builder (Design/self-assembled) is de som van de
   blokduren leidend; de tijd-slider geldt daar niet en er wordt nooit
@@ -59,6 +75,7 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 | `crimpify_name` | voornaam voor de begroeting |
 | `crimpify_active` | onafgemaakte training voor de Continue-kaart: `{keys, name, color, sessionId, idx, spent, ts}`; verloopt na 12 uur |
 | `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
+| `crimpify_install_prompt` | `'shown'` of `'accepted'`; de installatie-uitnodiging verschijnt daarna nooit meer |
 
 `basedOn` is optioneel en additief: `{title, coach}` op kopieën uit de
 catalogus; oude entries zonder basedOn blijven geldig. `d` (favs, dichte
@@ -509,10 +526,11 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.39) bij elke release ophogen, samen met de sw-cache.
-- Test na elke wijziging: splash met zichtbaar logo, naamvraag en herladen,
-  sessie genereren en starten, deel-link openen in incognito, stoplicht loggen
-  en dot terugzien bij Mijn sessies.
+- Versienummer op de splash (nu v0.41) bij elke release ophogen, samen met de sw-cache.
+- Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
+  starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
+  bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
+  en herladen.
 
 ## Werkregels voor Claude Code
 

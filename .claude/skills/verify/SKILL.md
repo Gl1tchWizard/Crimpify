@@ -49,6 +49,16 @@ playwright-core: `node <repo>\.claude\skills\verify\journeys.js`.
 - **D** Gedeelde link openen → gelockte slab → blok tikken (alleen-lezen,
   remix-hint) → START → systeem-back (één stap terug in-app) → dezelfde
   link opnieuw openen in dezelfde tab (hashchange-import) werkt.
+- **E** Verse bezoeker (geen naam vooraf) via deel-link → sessie meteen
+  zichtbaar, geen naamvraag → sessie doen → stoplicht loggen →
+  installatieprompt op het piekmoment (een keer, keuze onthouden) →
+  daarna pas de naamvraag op de landing. Asserteert ook de
+  GoatCounter-events (shared-open, session-start, session-done-sig,
+  install-prompt-shown) via een stub.
+
+Let op: de naamvraag verschijnt sinds v0.41 pas na de eerste gelogde
+sessie; `crimpify_name` vooraf zetten blijft de manier om hem in tests te
+omzeilen.
 
 Elke reis eindigt met: nul console/page-errors, en elke tik deed wat het
 interactiemodel zegt (CLAUDE.md, "Interactiemodel: blok-tik en de ladder").
