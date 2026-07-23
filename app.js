@@ -927,6 +927,8 @@ function showSessionSummary() {
   if (si) si.style.display = 'none';
   const sb = document.getElementById('summarySaveBtn');
   if (sb) sb.textContent = isCurrentFav() ? '★ Saved' : '☆ Save';
+  // eindkaart alvast renderen: delen blijft dan binnen de user activation
+  prerenderResultCard();
 }
 
 // ── STOPLICHT (sessie-autoregulatie, één tik) ──
@@ -940,6 +942,8 @@ function signalTap(sig) {
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, sig, _pendingLog.snap); _pendingLog = null; }
   // pas na resultaat en deel/bewaar-acties: subtiele install-regel (1x)
   if (_installOfferPending) { _installOfferPending = false; revealSummaryInstall(); }
+  // stoplicht staat nu op de kaart: opnieuw voorrenderen
+  prerenderResultCard();
   const a = SIGNAL_ADVICE[sig];
   document.getElementById('signalAsk').style.display = 'none';
   const box = document.getElementById('signalAdvice');
@@ -1104,6 +1108,13 @@ function resultCardFallback(file, url) {
   } catch {}
   openShareDialog(url);
 }
+// de kaart wordt vooraf gerenderd (bij openen summary en na het stoplicht)
+// zodat de share binnen de user activation blijft: een async render van
+// seconden laat navigator.share anders weigeren (NotAllowedError)
+let _cardPromise = null;
+function prerenderResultCard() {
+  try { _cardPromise = renderResultCard().catch(() => null); } catch { _cardPromise = null; }
+}
 function shareSummary() {
   if (!currentBlocks || !currentBlocks.length) return;
   // resultaat delen: het moment waarop een naam waarde heeft
@@ -1116,17 +1127,22 @@ function shareSummary() {
     const text = shareText(name) + '\n' + url;
     let file = null;
     try {
-      const blob = await renderResultCard();
+      const blob = await (_cardPromise || renderResultCard().catch(() => null));
       if (blob) file = new File([blob], 'crimpify-session.png', { type: 'image/png' });
     } catch {}
-    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-      navigator.share({ files: [file], title: 'Crimpify: ' + name, text }).catch(() => resultCardFallback(file, url));
-      return;
-    }
-    if (navigator.share) {
-      navigator.share({ title: 'Crimpify: ' + name, text, url }).catch(() => resultCardFallback(file, url));
-      return;
-    }
+    // activation verlopen (trage render of desktop-OS-sheet die stil faalt):
+    // dan direct de zichtbare fallback in plaats van een stille weigering
+    const activationOk = !navigator.userActivation || navigator.userActivation.isActive;
+    try {
+      if (activationOk && file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: 'Crimpify: ' + name, text }).catch(() => resultCardFallback(file, url));
+        return;
+      }
+      if (activationOk && navigator.share) {
+        navigator.share({ title: 'Crimpify: ' + name, text, url }).catch(() => resultCardFallback(file, url));
+        return;
+      }
+    } catch {}
     resultCardFallback(file, url);
   });
 }
