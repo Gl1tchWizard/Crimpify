@@ -25,8 +25,8 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v36`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v37`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v37`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v38`, enz.), anders zien bezoekers de oude versie.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
@@ -58,7 +58,14 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   `beforeinstallprompt`, iOS via deelknop-instructies, anders niet tonen;
   één keer, keuze in `crimpify_install_prompt`, onderbreekt het
   deelmoment nooit). Daarnaast een passieve, altijd vindbare regel
-  onderaan de landing die het install-sheet opent.
+  onderaan de landing die het install-sheet opent. Share result deelt de
+  **deelbare eindkaart** (canvas, 1080x1920 story): fingerprint als
+  beeldmerk, sessienaam, tijd en echte tellingen, stoplicht met korte
+  tekst (ook rood), de summary-quote, attributie bij remix/coach-sessie
+  en het mark klein; de deel-link reist altijd mee in de tekst (kaart =
+  bewijs, link = ingang). Bewust niet op de kaart: ACWR, ratio's,
+  waarschuwingen, coachanalyse of gewichten. Web Share API met
+  afbeelding, fallback download + linkdialog.
 - **Tijdmodel (juli 2026):** elk blok heeft `t` (basis) plus optioneel
   `tMin`/`tMax`. In de builder (Design/self-assembled) is de som van de
   blokduren leidend; de tijd-slider geldt daar niet en er wordt nooit
@@ -467,22 +474,19 @@ staan; de items hieronder verwijzen ernaar.
 
 ### Nu bouwbaar (in deze volgorde)
 
-1. **Deelbare eindkaart.** Canvas-gegenereerde afbeelding bij "Sessie klaar":
-   sessienaam, blokken, tijd, stoplicht, mark, en altijd de sessie-link (de
-   identiteitsloop moet terugvoeren naar de rekruteringsloop). Web Share API
-   met afbeelding, fallback download.
-2. **Klikbare historie.** History-items openen de recap-overlay; versterkt
-   punt 1 doordat delen ook achteraf kan, niet alleen direct na de sessie.
-3. **Export/backup.** Historie + favorieten naar bestand of link, met import;
+1. **Klikbare historie.** History-items openen de recap-overlay; versterkt
+   de deelbare eindkaart (gebouwd, juli 2026) doordat delen ook achteraf
+   kan, niet alleen direct na de sessie.
+2. **Export/backup.** Historie + favorieten naar bestand of link, met import;
    zelfde codeertruc als de deel-links. Derde verdedigingslinie voor
    dataverlies (naast `storage.persist()` en PWA-installatie, die er al zijn).
-4. **Light mode.** Alternatieve variabelenset achter `prefers-color-scheme`;
+3. **Light mode.** Alternatieve variabelenset achter `prefers-color-scheme`;
    de token-refactor (juli 2026) is al gedaan.
-5. **Lege-staat & microtypografie.** 10px-ondergrens en contrastfloor
+4. **Lege-staat & microtypografie.** 10px-ondergrens en contrastfloor
    doorvoeren (geen #4A4A46-tekst op #0A0A0A voor kleine labels).
-6. **Zoek als icoon op de landing.** Bibliotheek als eigen weergave; voor de
+5. **Zoek als icoon op de landing.** Bibliotheek als eigen weergave; voor de
    Choose-catalogus is dit al gedaan (juli 2026).
-7. **NL code-commentaren naar Engels.** Chore, bij gelegenheid, nooit ten
+6. **NL code-commentaren naar Engels.** Chore, bij gelegenheid, nooit ten
    koste van werkende code (zie Taalregel).
 
 ### Wacht op de eerste veldtest
@@ -536,7 +540,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.42) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.43) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)

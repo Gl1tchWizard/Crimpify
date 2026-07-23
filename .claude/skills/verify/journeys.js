@@ -197,6 +197,10 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
     Object.defineProperty(stub, 'counts', { get: () => counts });
     Object.defineProperty(stub, 'count', { get: () => fn, set: () => {} });
     Object.defineProperty(window, 'goatcounter', { get: () => stub, set: () => {} });
+    // native share vangen: kaart (files) en tekst met de link controleren
+    window.__shareCalls = [];
+    Object.defineProperty(navigator, 'share', { value: d => { window.__shareCalls.push({ text: d.text || '', files: (d.files || []).map(f => f.size) }); return Promise.resolve(); } });
+    Object.defineProperty(navigator, 'canShare', { value: () => true });
   });
   const E = await Ectx.newPage();
   const eErrors = [];
@@ -258,6 +262,21 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
   await sleep(200);
   assert(await E.evaluate(() => /Add to Home Screen/.test(document.getElementById('installSheetBody').textContent)), 'E iOS-instructies via de regel');
   await E.click('#installSheetBody .be-done');
+  // eindkaart: resultaat delen na het stoplicht → afbeelding + link reizen mee
+  await E.evaluate(() => shareSummary());   // naam is al gezet, geen nameSheet meer
+  await sleep(2500);                        // canvas + fonts + mark renderen
+  const card = await E.evaluate(() => window.__shareCalls[window.__shareCalls.length - 1] || null);
+  assert(card && card.files.length === 1 && card.files[0] > 20000, `E eindkaart als afbeelding mee (${card && card.files[0]} bytes)`);
+  assert(card && /#s=/.test(card.text), 'E de deel-link reist altijd mee in de tekst');
+  const cardLink = card ? (card.text.match(/#s=([^\s]+)/) || [])[1] : null;
+  const Fctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  await Fctx.addInitScript(() => localStorage.setItem('crimpify_name', 'Test'));
+  const F = await Fctx.newPage();
+  await F.goto(URL0 + '#s=' + cardLink, { waitUntil: 'load' });
+  await F.waitForSelector('#v-session.active', { timeout: 15000 });
+  const opened = await F.evaluate(() => ({ name: customSession && customSession.name, from: document.getElementById('slabIntent').textContent }));
+  assert(opened.name === 'Five by Five' && /Fresh sent you/.test(opened.from), `E meegestuurde link opent de sessie met afzender (${opened.name})`);
+  await Fctx.close();
   await E.evaluate(() => closeSummary());
   await sleep(300);
   assert(await E.evaluate(() => { revealSummaryInstall(); return document.getElementById('summaryInstall').style.display === 'none'; }), 'E aanbod verschijnt nooit een tweede keer');

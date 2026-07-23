@@ -954,16 +954,180 @@ function signalSkip() {
   closeSummary();
 }
 
+// ── DEELBARE EINDKAART: canvas, story-formaat (1080x1920). Bewijs en ingang:
+// de kaart gaat de groepsapp in, de deel-link reist ALTIJD mee in de tekst.
+// Bewust NIET op de kaart: ACWR, belastingsratio's, blessurewaarschuwingen,
+// coachanalyse, lichaamsgewicht of added weight — te privé of te technisch.
+function cssToken(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888888';
+}
+function resolveBlockColor(c) {
+  const m = /var\((--[a-z-]+)\)/.exec(c || '');
+  return m ? cssToken(m[1]) : (c || cssToken('--graphite'));
+}
+function cardWrap(ctx, text, maxW) {
+  const words = (text || '').split(/\s+/), lines = [];
+  let line = '';
+  words.forEach(w => {
+    const probe = line ? line + ' ' + w : w;
+    if (ctx.measureText(probe).width > maxW && line) { lines.push(line); line = w; }
+    else line = probe;
+  });
+  if (line) lines.push(line);
+  return lines;
+}
+const SIG_CARD = {
+  green:  'strong and in control',
+  orange: 'hard, but controlled',
+  red:    'too much today, logged honestly',   // rood mag: eerlijk is deelbaarder
+};
+async function renderResultCard() {
+  const W = 1080, H = 1920, M = 96;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const ink = cssToken('--ink'), chalk = cssToken('--chalk'), dust = cssToken('--dust'),
+        acid = cssToken('--acid'), disabled = cssToken('--disabled');
+  try {
+    await Promise.all([
+      document.fonts.load('900 130px "Barlow Condensed"'),
+      document.fonts.load('800 66px "Barlow Condensed"'),
+      document.fonts.load('400 30px "DM Mono"'),
+    ]);
+  } catch {}
+  // data: de echte run (sessionLog) of anders het plan
+  const s = getSession(activeSessionId);
+  const name = ((s && s.name) || 'Session').toUpperCase();
+  const logBlocks = Object.keys(sessionLog).map(k => sessionLog[k]);
+  const blocks = logBlocks.length ? logBlocks : currentBlocks.map(b => ({ name: b.n, spent: b.t * 60, color: b.c }));
+  const totalMin = Math.round(blocks.reduce((t, b) => t + (b.spent || 0), 0) / 60) || getTFinite();
+  const boulders = blocks.reduce((t, b) => t + (b.count || 0), 0);
+  const sig = _pendingLog ? null : ((loadHistory()[0] || {}).sig || null);
+  const quoteEl = document.getElementById('summaryQuote');
+  const quote = (quoteEl && quoteEl.textContent && quoteEl.textContent !== '–') ? quoteEl.textContent : '';
+  const basedOn = (activeSessionId === 'custom' && customSession && customSession.basedOn) ? customSession.basedOn
+    : ((customSession && customSession.madeBy) ? { title: (s && s.name) || '', coach: customSession.madeBy } : null);
+
+  ctx.fillStyle = ink; ctx.fillRect(0, 0, W, H);
+  try { ctx.letterSpacing = '5px'; } catch {}
+  ctx.fillStyle = disabled;
+  ctx.font = '400 30px "DM Mono", monospace';
+  ctx.fillText('CRIMPIFY · SESSION DONE', M, 190);
+  try { ctx.letterSpacing = '0px'; } catch {}
+  // sessienaam, groot (max 2 regels)
+  ctx.fillStyle = chalk;
+  ctx.font = '900 130px "Barlow Condensed", sans-serif';
+  let y = 330;
+  cardWrap(ctx, name, W - 2 * M).slice(0, 2).forEach(l => { ctx.fillText(l, M, y); y += 138; });
+  // fingerprint als beeldmerk: dikke afgeronde band, segmenten naar echte tijd
+  const bandY = y + 50, bandH = 150, bandW = W - 2 * M;
+  const sum = blocks.reduce((t, b) => t + (b.spent || 1), 0) || 1;
+  ctx.save();
+  ctx.beginPath();
+  ctx.roundRect(M, bandY, bandW, bandH, 32);
+  ctx.clip();
+  let x = M;
+  blocks.forEach(b => {
+    const w = ((b.spent || 1) / sum) * bandW;
+    ctx.fillStyle = resolveBlockColor(b.color);
+    ctx.fillRect(x, bandY, w + 1, bandH);
+    x += w;
+  });
+  ctx.restore();
+  // stats: tijd, en tellingen als de sessie die bijhield
+  const sy = bandY + bandH + 200;
+  ctx.fillStyle = chalk;
+  ctx.font = '900 170px "Barlow Condensed", sans-serif';
+  ctx.fillText(String(totalMin), M, sy);
+  const minW = ctx.measureText(String(totalMin)).width;
+  ctx.fillStyle = dust;
+  ctx.font = '400 30px "DM Mono", monospace';
+  ctx.fillText('MIN', M + minW + 24, sy);
+  if (boulders > 0) {
+    const bx = Math.max(M + minW + 220, 500);
+    ctx.fillStyle = chalk;
+    ctx.font = '900 170px "Barlow Condensed", sans-serif';
+    ctx.fillText(String(boulders), bx, sy);
+    const bW = ctx.measureText(String(boulders)).width;
+    ctx.fillStyle = dust;
+    ctx.font = '400 30px "DM Mono", monospace';
+    ctx.fillText('BOULDERS', bx + bW + 24, sy);
+  }
+  // stoplicht: kleur plus korte tekst; alleen als er gelogd is, rood mag
+  let qy = sy + 160;
+  if (sig && SIG_CARD[sig]) {
+    ctx.beginPath();
+    ctx.arc(M + 26, qy - 16, 26, 0, Math.PI * 2);
+    ctx.fillStyle = cssToken('--sig-' + sig);
+    ctx.fill();
+    ctx.fillStyle = chalk;
+    ctx.font = '800 54px "Barlow Condensed", sans-serif';
+    ctx.fillText(SIG_CARD[sig], M + 84, qy);
+    qy += 170;
+  }
+  // quote van de summary: past al bij het sessietype (gym-filter)
+  if (quote) {
+    ctx.fillStyle = acid;
+    ctx.font = '800 66px "Barlow Condensed", sans-serif';
+    cardWrap(ctx, quote.toUpperCase(), W - 2 * M).slice(0, 3).forEach(l => { ctx.fillText(l, M, qy); qy += 80; });
+  }
+  // attributie: remix of coach-sessie
+  if (basedOn && basedOn.coach) {
+    ctx.fillStyle = dust;
+    ctx.font = '400 30px "DM Mono", monospace';
+    ctx.fillText(`based on ${basedOn.title} by ${basedOn.coach}`, M, H - 300);
+  }
+  // mark klein, plat (logo-regel: geen glow), plus de ingang
+  try {
+    const svg = await (await fetch('crimpify-mono.svg')).text();
+    const blobUrl = URL.createObjectURL(new Blob([svg.replace(/currentColor/g, acid)], { type: 'image/svg+xml' }));
+    const img = new Image();
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; img.src = blobUrl; });
+    ctx.drawImage(img, W / 2 - 44, H - 244, 88, 100);
+    URL.revokeObjectURL(blobUrl);
+  } catch {}
+  ctx.fillStyle = disabled;
+  ctx.font = '400 30px "DM Mono", monospace';
+  const site = 'crimpify.com';
+  ctx.fillText(site, W / 2 - ctx.measureText(site).width / 2, H - 96);
+  return new Promise(res => cv.toBlob(res, 'image/png'));
+}
+function resultCardFallback(file, url) {
+  // geen native share: kaart downloaden en de link tonen om te kopiëren
+  try {
+    if (file) {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(file);
+      a.download = 'crimpify-session.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => { try { URL.revokeObjectURL(a.href); } catch {} }, 5000);
+    }
+  } catch {}
+  openShareDialog(url);
+}
 function shareSummary() {
   if (!currentBlocks || !currentBlocks.length) return;
   // resultaat delen: het moment waarop een naam waarde heeft
-  askNameThen(() => {
+  askNameThen(async () => {
     const s = getSession(activeSessionId);
     const url = location.origin + location.pathname + '#s=' + encodeSession();
     const name = s ? s.name : 'Session';
     trackEvent('result_shared');
-    if (navigator.share) { navigator.share({ title: 'Crimpify: ' + name, text: shareText(name), url }).catch(()=>{ openShareDialog(url); }); }
-    else { openShareDialog(url); }
+    // kaart = bewijs, link = ingang: de link gaat ALTIJD mee in de tekst
+    const text = shareText(name) + '\n' + url;
+    let file = null;
+    try {
+      const blob = await renderResultCard();
+      if (blob) file = new File([blob], 'crimpify-session.png', { type: 'image/png' });
+    } catch {}
+    if (file && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+      navigator.share({ files: [file], title: 'Crimpify: ' + name, text }).catch(() => resultCardFallback(file, url));
+      return;
+    }
+    if (navigator.share) {
+      navigator.share({ title: 'Crimpify: ' + name, text, url }).catch(() => resultCardFallback(file, url));
+      return;
+    }
+    resultCardFallback(file, url);
   });
 }
 function summarySave() {
@@ -1069,6 +1233,9 @@ function nextBlock() {
       sessionLog[currentBlockIdx] = { name: b.n, planned: b.t*60, spent: realSpent, color: b.c };
     }
   }
+  // telblokken: de echte telling bewaren voor de eindkaart
+  const cb = currentBlocks[currentBlockIdx];
+  if (cb && cb.checklist && sessionLog[currentBlockIdx]) sessionLog[currentBlockIdx].count = checkCount;
   currentBlockIdx++;
   if (currentBlockIdx >= currentBlocks.length) {
     showSessionSummary();

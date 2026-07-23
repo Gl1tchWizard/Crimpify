@@ -49,12 +49,14 @@ playwright-core: `node <repo>\.claude\skills\verify\journeys.js`.
 - **D** Gedeelde link openen → gelockte slab → blok tikken (alleen-lezen,
   remix-hint) → START → systeem-back (één stap terug in-app) → dezelfde
   link opnieuw openen in dezelfde tab (hashchange-import) werkt.
-- **E** Verse bezoeker (geen naam vooraf) via deel-link → sessie meteen
-  zichtbaar, geen naamvraag → sessie doen → stoplicht loggen →
-  installatieprompt op het piekmoment (een keer, keuze onthouden) →
-  daarna pas de naamvraag op de landing. Asserteert ook de
-  GoatCounter-events (shared-open, session-start, session-done-sig,
-  install-prompt-shown) via een stub.
+- **E** Verse bezoeker (geen naam vooraf) via deel-link → afzendernaam op
+  de share-landing → sessie doen → deelmoment (naamvraag via nameSheet) →
+  stoplicht loggen → subtiele install-regel in de summary (een keer,
+  keuze onthouden) → eindkaart delen (afbeelding mee, deel-link in de
+  tekst; de link opent de sessie in een verse context) → daarna pas de
+  naamvraag op de landing. Asserteert de GoatCounter-events
+  (share_opened, session_started, session_completed, result_shared,
+  install_prompt_shown) via een stub, plus navigator.share via een stub.
 
 Let op: de naamvraag verschijnt sinds v0.41 pas na de eerste gelogde
 sessie; `crimpify_name` vooraf zetten blijft de manier om hem in tests te
