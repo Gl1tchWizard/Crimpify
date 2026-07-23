@@ -173,7 +173,8 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
   assert(D.errors.length === 0, 'D nul errors' + (D.errors.length ? ': ' + D.errors.join(' | ') : ''));
   await D.ctx.close();
 
-  // ── REIS E: verse bezoeker via deel-link → sessie doen → stoplicht → installatieprompt ──
+  // ── REIS E: verse bezoeker via deel-link met afzender → sessie → stoplicht →
+  // deelmoment → daarna pas het subtiele installatie-aanbod ──
   console.log('REIS E');
   const E0ctx = await browser.newContext({ viewport: { width: 390, height: 844 } });
   await E0ctx.addInitScript(() => localStorage.setItem('crimpify_name', 'Test'));
@@ -183,15 +184,13 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
   const eLink = await E0.evaluate(() => {
     const i = MOCK_CHOOSE.findIndex(s => s.name === 'Five by Five');
     const keys = MOCK_CHOOSE[i].keys.filter(k => BLOCKLIB[k]);
-    return encodePayload(MOCK_CHOOSE[i].name, keys, sessionMins(MOCK_CHOOSE[i]), MOCK_CHOOSE[i].color, keys.map(k => BLOCKLIB[k].t));
+    return encodePayload(MOCK_CHOOSE[i].name, keys, sessionMins(MOCK_CHOOSE[i]), MOCK_CHOOSE[i].color, keys.map(k => BLOCKLIB[k].t), { f: 'Test', m: MOCK_CHOOSE[i].coach });
   });
   await E0ctx.close();
   // verse bezoeker: GEEN naam vooraf, iPhone-UA (instructie-variant), GoatCounter-stub
   const Ectx = await browser.newContext({ viewport: { width: 390, height: 844 },
     userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Mobile/15E148 Safari/604.1' });
   await Ectx.addInitScript(() => {
-    // stub die het echte count.js niet kan overschrijven of patchen:
-    // object en count-methode achter accessors, assignments stil negeren
     const counts = [];
     const fn = o => counts.push((o && o.path) || 'pageview');
     const stub = {};
@@ -205,41 +204,64 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
   E.on('console', m => { const t = m.text(); if (m.type() === 'error' && !/goatcounter|gc\.zgo\.at|count\.js/i.test(t)) eErrors.push('console: ' + t); });
   await E.goto(URL0 + '#s=' + eLink, { waitUntil: 'load' });
   await E.waitForSelector('#v-session.active', { timeout: 15000 });
-  assert(await E.evaluate(() => activeView() === 'v-session'), 'E verse bezoeker ziet meteen de sessie, geen naamvraag ervoor');
-  assert(await E.evaluate(() => window.goatcounter.counts.includes('shared-open-five-by-five')), 'E event: shared-open met sessienaam');
-  // landing tonen: nog geen naamvraag (niets te personaliseren)
+  // share-landing: afzender, meta, acties, reassurance; geen prompts vooraf
+  const landing = await E.evaluate(() => ({
+    banner: document.getElementById('slabIntent').textContent,
+    meta: document.getElementById('slabMeta').textContent,
+    remix: document.getElementById('dupBtn').style.display !== 'none',
+    save: document.getElementById('favStarBtn').style.display !== 'none',
+    sheets: ['installSheet','nameSheet'].every(id => document.getElementById(id).style.display !== 'flex')
+  }));
+  assert(/Test sent you "Five by Five"/.test(landing.banner), `E afzendernaam zichtbaar (${landing.banner.slice(0,50)})`);
+  assert(/works without an account/i.test(landing.banner), 'E reassurance-regel onder de banner');
+  assert(/min ·/.test(landing.meta) && /by Guru/.test(landing.meta), `E meta met duur, materiaal en maker (${landing.meta})`);
+  assert(landing.remix && landing.save && landing.sheets, 'E acties START/REMIX/SAVE, geen prompts bij binnenkomst');
+  assert(await E.evaluate(() => window.goatcounter.counts.includes('share_opened-five-by-five')), 'E event: share_opened met sessienaam');
+  // landing zonder naamvraag, passieve app-regel aanwezig
   await E.evaluate(() => goTo('v-browse'));
-  assert(await E.evaluate(() => !document.querySelector('#greetEl input')), 'E landing zonder naamvraag voor de eerste sessie');
-  assert(await E.evaluate(() => /This is the app/.test((document.getElementById('appLine') || {}).textContent || '')), 'E passieve app-regel staat laag op de landing');
-  // sessie doen: start, samenvatting, stoplicht groen
-  await E.evaluate(() => { goTo('v-session'); });
+  assert(await E.evaluate(() => !document.querySelector('#greetEl input')), 'E geen naamvraag voor de eerste sessie');
+  assert(await E.evaluate(() => /This is the app/.test((document.getElementById('appLine') || {}).textContent || '')), 'E passieve app-regel op de landing');
+  // sessie starten en afronden
+  await E.evaluate(() => goTo('v-session'));
   await E.click('#startBtn');
   await sleep(400);
-  assert(await E.evaluate(() => window.goatcounter.counts.includes('session-start')), 'E event: session-start');
+  assert(await E.evaluate(() => window.goatcounter.counts.includes('session_started')), 'E event: session_started');
   await E.evaluate(() => { goTo('v-session'); showSessionSummary(); });
-  await E.click('#signalAsk button:first-child');   // groen
-  await sleep(400);
-  assert(await E.evaluate(() => window.goatcounter.counts.includes('session-done-green')), 'E event: session-done-green');
-  // de prompt komt pas na het sluiten van de samenvatting, niet eronder
-  assert(await E.evaluate(() => document.getElementById('installSheet').style.display !== 'flex'), 'E prompt wacht tot de samenvatting dicht is');
-  await E.evaluate(() => closeSummary());
+  // deelmoment: primaire acties zichtbaar; naam heeft nu waarde
+  assert(await E.evaluate(() => !!document.querySelector('#signalAdvice .pv-act')), 'E delen/bewaren als primaire acties op het resultaat');
+  await E.evaluate(() => shareSummary());
+  await sleep(200);
+  assert(await E.evaluate(() => document.getElementById('nameSheet').style.display === 'flex'), 'E naamvraag op het deelmoment (nameSheet)');
+  await E.evaluate(() => { document.getElementById('nameSheetInput').value = 'Fresh'; nameSheetGo(true); });
   await sleep(300);
-  // piekmoment: installatieprompt, een keer, iOS-instructies
-  const sheet = await E.evaluate(() => ({
-    open: document.getElementById('installSheet').style.display === 'flex',
-    ios: /Add to Home Screen/.test(document.getElementById('installSheetBody').textContent),
-    tracked: window.goatcounter.counts.includes('install-prompt-shown'),
+  const shared = await E.evaluate(() => {
+    const dec = decodeSession(encodeSession());
+    return { tracked: window.goatcounter.counts.includes('result_shared'), f: dec && dec.f };
+  });
+  assert(shared.tracked && shared.f === 'Fresh', `E result_shared + afzender in de nieuwe link (${shared.f})`);
+  await E.evaluate(() => closeShareDialog());
+  // stoplicht loggen; PAS DAARNA het subtiele installatie-aanbod, in de summary
+  assert(await E.evaluate(() => document.getElementById('summaryInstall').style.display === 'none'), 'E install-regel nog verborgen voor het stoplicht');
+  await E.click('#signalAsk button:first-child');
+  await sleep(400);
+  const inst = await E.evaluate(() => ({
+    done: window.goatcounter.counts.includes('session_completed'),
+    row: document.getElementById('summaryInstall').style.display !== 'none',
+    modal: document.getElementById('installSheet').style.display !== 'flex',
+    tracked: window.goatcounter.counts.includes('install_prompt_shown'),
     flag: localStorage.getItem('crimpify_install_prompt')
   }));
-  assert(sheet.open && sheet.ios, 'E installatieprompt met iOS-instructies op het piekmoment');
-  assert(sheet.tracked && sheet.flag === 'shown', 'E event + keuze onthouden in localStorage');
+  assert(inst.done, 'E event: session_completed');
+  assert(inst.row && inst.modal, 'E subtiele install-regel in de summary, geen modal die het deelmoment onderbreekt');
+  assert(inst.tracked && inst.flag === 'shown', 'E install_prompt_shown + keuze onthouden');
+  await E.click('#summaryInstall');
+  await sleep(200);
+  assert(await E.evaluate(() => /Add to Home Screen/.test(document.getElementById('installSheetBody').textContent)), 'E iOS-instructies via de regel');
   await E.click('#installSheetBody .be-done');
-  assert(await E.evaluate(() => { maybeOfferInstall(); return document.getElementById('installSheet').style.display !== 'flex'; }), 'E prompt verschijnt nooit een tweede keer');
-  // na de eerste sessie is er iets te personaliseren: naamvraag verschijnt
-  await E.evaluate(() => { goTo('v-browse'); renderGreeting(); });
-  assert(await E.evaluate(() => !!document.querySelector('#greetEl input')), 'E naamvraag verschijnt na de eerste gelogde sessie');
-  await E.evaluate(() => { const i = document.querySelector('#greetEl input'); i.value = 'Fresh'; i.nextSibling.click(); });
-  assert(await E.evaluate(() => /Fresh/.test(document.getElementById('greetEl').textContent)), 'E naam gezet, begroeting gepersonaliseerd');
+  await E.evaluate(() => closeSummary());
+  await sleep(300);
+  assert(await E.evaluate(() => { revealSummaryInstall(); return document.getElementById('summaryInstall').style.display === 'none'; }), 'E aanbod verschijnt nooit een tweede keer');
+  assert(await E.evaluate(() => /Fresh/.test(document.getElementById('greetEl').textContent)), 'E begroeting gepersonaliseerd met de deelnaam');
   assert(eErrors.length === 0, 'E nul errors' + (eErrors.length ? ': ' + eErrors.join(' | ') : ''));
   await Ectx.close();
 

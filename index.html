@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.41</div>
+    <div id="splashBy">by Glitch Labs · v0.42</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -452,11 +452,15 @@
       <div id="signalAdvice" style="display:none;margin-top:20px;padding:16px;border:1px solid var(--graphite);border-radius:12px;background:var(--ink);">
         <div id="signalAdviceTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.04em;">–</div>
         <div id="signalAdviceTxt" style="font-family:'Barlow',sans-serif;font-size:13px;line-height:1.55;color:var(--dust);margin-top:6px;">–</div>
+        <!-- delen en bewaren als primaire acties op het resultaat -->
         <div style="display:flex;gap:8px;margin-top:14px;">
-          <button onclick="shareSummary()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.04em;text-transform:uppercase;cursor:pointer;">Share session</button>
-          <button onclick="closeSummary()" style="flex:1;padding:13px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Done</button>
+          <button onclick="shareSummary()" class="pv-act">↗ Share result</button>
+          <button id="summarySaveBtn" onclick="summarySave()" class="pv-act">☆ Save</button>
         </div>
+        <button onclick="closeSummary()" style="width:100%;margin-top:8px;padding:13px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;">Done</button>
       </div>
+      <!-- subtiel, pas na resultaat en deelmoment: historie bewaren (1x) -->
+      <div id="summaryInstall" style="display:none;margin-top:14px;padding:12px 14px;border:1px dashed var(--graphite);border-radius:10px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dust);line-height:1.7;" onclick="summaryInstallTap()">Keep your history: this is an app. Add it to your home screen · works offline · no account →</div>
     </div>
   </div>
 
@@ -507,8 +511,21 @@
     <div id="blockEditBody" style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;max-height:85%;overflow-y:auto;"></div>
   </div>
 
+  <!-- ══ NAME SHEET: naam op het deelmoment, nooit blokkerend ══ -->
+  <div id="nameSheet" style="display:none;position:absolute;inset:0;z-index:61;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeNameSheet()">
+    <div style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;">
+      <div class="be-name" style="margin-bottom:6px;">Put your name on it</div>
+      <div class="be-why" style="margin-top:0;">Your name travels with the link so friends see who sent it. It stays on this device, no account.</div>
+      <input id="nameSheetInput" type="text" placeholder="What should we call you?" maxlength="24" style="margin-top:12px;width:100%;padding:11px;border-radius:8px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow',sans-serif;font-size:14px;outline:none;">
+      <div style="display:flex;gap:10px;margin-top:14px;">
+        <button class="be-secondary" onclick="nameSheetGo(false)">Skip</button>
+        <button class="be-done" onclick="nameSheetGo(true)">Share</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ══ INSTALL SHEET: eenmalige uitnodiging na de eerste gelogde sessie, plus passieve ingang ══ -->
-  <div id="installSheet" style="display:none;position:absolute;inset:0;z-index:59;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeInstallSheet()">
+  <div id="installSheet" style="display:none;position:absolute;inset:0;z-index:62;background:color-mix(in srgb, var(--ink) 92%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:24px;" onclick="if(event.target===this)closeInstallSheet()">
     <div id="installSheetBody" style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:22px;width:100%;max-width:320px;"></div>
   </div>
 
