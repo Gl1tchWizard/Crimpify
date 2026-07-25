@@ -1217,9 +1217,10 @@ function closeSummary() {
   goTo('v-browse');
 }
 
-// ── ONAFGEMAAKTE SESSIE (Continue-kaart) ──
-// crimpify_active bewaart de lopende training per blokgrens; hervatten kan na
-// reload of app-sluiting. Lopende timers overleven dat niet, blokvoortgang wel.
+// ── ONAFGEMAAKTE SESSIE (Continue-kaart + sessieherstel) ──
+// crimpify_active bewaart de lopende training met absolute klokken (st/bs)
+// en de volledige bloklog; een heartbeat schrijft elke 5 sec. Hervatten na
+// reload of app-sluiting zet de klokken terug: gemeten tijd loopt door.
 function saveActive() {
   if (!sessionStartTime) return;  // alleen echt gestarte sessies
   try {

@@ -25,8 +25,13 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v38`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v39`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v39`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v40`, enz.), anders zien bezoekers de oude versie.
+  Updates via prompt (sinds v0.45): een nieuwe sw wacht (geen skipWaiting bij
+  install, alleen op een `SKIP_WAITING`-bericht); de app toont buiten lopende
+  sessies een update-balk (Refresh/Later) en herlaadt pas na die tik, één
+  keer, via controllerchange. Nooit een stille reload tijdens een sessie —
+  een lopende sessie is lopend, ongeacht de view.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
@@ -84,13 +89,13 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 
 | key | inhoud |
 |---|---|
-| `crimpify_history` | array, nieuwste eerst, max 50: `{id, variant, time, ts, sig, load}` |
+| `crimpify_history` | array, nieuwste eerst, max 50: `{id, variant, time, ts, sig, load}` plus additief (v0.45) `wall?` (wall clock in minuten, eerste start tot einde; `time` blijft de actieve bloktijd en voedt de load) en per blok in `blocks` een optionele `status` (`'skipped'` met `skipReason: 'time'\|'energy'`, of `'planned'` = niet gestart; zonder status = done); tijden achteraf corrigeerbaar via Adjust times in de recap (load rekent mee) |
 | `crimpify_favs` | max 12: `{name, keys, color, rpe, intent, time, d?, basedOn?}` |
 | `crimpify_draft` | `{keys, name, color, rpe, intent, locked, owned, ov?, basedOn?}` |
 | `crimpify_custom_blocks` | eigen oefeningen, keys met `ux_`-prefix |
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
-| `crimpify_active` | onafgemaakte training voor de Continue-kaart: `{keys, name, color, sessionId, idx, spent, ts}`; verloopt na 12 uur |
+| `crimpify_active` | onafgemaakte training voor de Continue-kaart en sessieherstel: `{keys, name, color, sessionId, idx, spent, ts}` plus additief (v0.45) `st` (absolute sessiestart), `bs` (blokstart), `log` (volledige bloklog incl. skips), `dt` (actuele blokduren), `cc` (boulderteller lopend telblok); heartbeat elke 5 s tijdens een lopende sessie; verloopt na 12 uur |
 | `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 | `crimpify_install_prompt` | `'shown'` of `'accepted'`; de installatie-uitnodiging verschijnt daarna nooit meer |
 
@@ -200,8 +205,10 @@ warm-up" (inside joke, bewust).
    De oude losse monospace-links zijn weg (lazen als metadata, niet als route).
 5. **Continue** (alleen bij onafgemaakte training): eigen kaart boven Saved,
    "Block X of N · ~M min remaining", Resume hervat op blokgrens.
-   Persistentie in `crimpify_active` (verloopt na 12 uur); lopende timers
-   overleven een reload niet, blokvoortgang wel.
+   Persistentie in `crimpify_active` (verloopt na 12 uur); sinds v0.45
+   overleven ook de klokken een reload: bloktijd is wall-clock op absolute
+   timestamps, herstel zet de sessie terug waar hij was (met toast) en de
+   gemeten tijd loopt gewoon door.
 6. **Saved** (hernoemd van My sessions): alleen draft + favorieten, compacte
    rij, stoplicht-dot van de jongste gelijknamige sessie, geen
    history-kaarten meer (recaps lopen via de strip).
@@ -345,11 +352,16 @@ vermoeidheid meepraat); autoregulatie (RPE-gestuurd trainen, stopregels)
 past de dosering aan de vorm van de dag aan. De synthese: flexibiliteit in
 dosering, discipline in structuur.
 
-Huidige staat: blokken overslaan, niet-dwingende timers, het stoplicht en de
-exit-guard geven samen al minimaal levensvatbare flexibiliteit voor de
-veldtest. Wat ontbreekt (inkorten/wisselen/trimmen midden in de sessie)
-wacht op veldtest-bewijs: slaan testers echt blokken over of breken ze
-sessies af, en waar?
+Huidige staat: sinds v0.45 heeft elk blok naast Finish een Skip-actie
+(voor en tijdens het blok) die om een reden vraagt: te weinig tijd of te
+weinig energie, twee opties, een tik. Skip wegens tijd biedt aan de
+resterende blokken naar hun minimum te schalen (base/min/max-model); de
+gebruiker kiest. Een geskipt blok is niet done (summary en recap tonen
+done / skipped met reden / not started), behoudt wel al gemeten tijd, en
+skips reizen mee de historie in — elke afwijking is data. Samen met de
+niet-dwingende timers, het stoplicht en de exit-guard is dat de
+flexibiliteit voor de veldtest. Wat nog ontbreekt (blok inkorten of
+wisselen midden in de sessie) wacht op veldtest-bewijs.
 
 ### Credibility and coach model (deferred, needs backend and real coaches)
 
@@ -540,7 +552,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.44) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.45) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
