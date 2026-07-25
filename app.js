@@ -465,7 +465,7 @@ function sessionLoad(id, minutes) {
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
   const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
-  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; }
+  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; if (snap.wall != null) e.wall = snap.wall; }
   h.unshift(e);
   saveHistory(h);
   if (sig) trackEvent('session_completed');
@@ -867,6 +867,10 @@ function fmtMin(sec){
   const m = Math.round(sec/60);
   return m + ' min';
 }
+// wall clock netjes: 105 -> "1 h 45", 45 -> "45 min"
+function fmtWall(min){
+  return min >= 60 ? Math.floor(min/60) + ' h ' + String(min % 60).padStart(2, '0') : min + ' min';
+}
 
 function showSessionSummary() {
   clearActive();  // sessie afgerond — geen Continue-kaart meer
@@ -875,10 +879,19 @@ function showSessionSummary() {
   const totalPlanned = blocks.reduce((s,b)=>s+(b.planned||0),0);
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
+  // twee cijfers: actieve bloktijd (som van de blokken) en wall clock
+  // (eerste start tot nu, loopt door reloads heen dankzij crimpify_active)
+  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((Date.now() - sessionStartTime) / 60000)) : spentMin;
 
   document.getElementById('summaryTotal').textContent = `${blocks.length} block${blocks.length === 1 ? '' : 's'} done`;
   document.getElementById('summarySpentBig').textContent = spentMin;
   document.getElementById('summaryPlannedBig').textContent = plannedMin;
+  const wallEl = document.getElementById('summaryWall');
+  if (wallEl) {
+    const showWall = wallMin > spentMin + 1;
+    wallEl.style.display = showWall ? '' : 'none';
+    if (showWall) wallEl.textContent = fmtWall(wallMin) + ' from first start to finish';
+  }
 
   // verschil-regel
   const totDiff = spentMin - plannedMin;
@@ -922,6 +935,7 @@ function showSessionSummary() {
     keys: currentBlocks.map(b => b._key),
     name: s.name,
     color: s.color || 'lime',
+    wall: wallMin,
     blocks: blocks.map(b => ({ name: b.name, spent: b.spent||0, color: b.color || 'var(--prepare)' }))
   } } : null;
   // stoplicht-UI terugzetten naar beginstand
@@ -1994,7 +2008,11 @@ function openRecap(ts) {
   el('recapName').textContent = name;
   const d = new Date(e.ts);
   const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
-  el('recapMeta').textContent = nlDate(d) + ' · ' + (e.time || 0) + ' min · ' + sigTxt;
+  // wall clock apart van actieve bloktijd, als beide bekend zijn
+  const timeTxt = (e.wall && e.wall > (e.time || 0) + 1)
+    ? (e.time || 0) + ' min active · ' + fmtWall(e.wall) + ' total'
+    : (e.time || 0) + ' min';
+  el('recapMeta').textContent = nlDate(d) + ' · ' + timeTxt + ' · ' + sigTxt;
   el('recapDot').style.background = SIG_COL[e.sig] || 'var(--graphite)';
   el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px color-mix(in srgb, ' + SIG_COL[e.sig] + ' 50%, transparent)' : 'none';
 
