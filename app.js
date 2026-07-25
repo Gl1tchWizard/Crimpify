@@ -1178,13 +1178,25 @@ function saveActive() {
     if (!s || !currentBlocks.length) return;
     const spent = {};
     Object.keys(sessionLog).forEach(k => { spent[k] = sessionLog[k].spent || 0; });
+    const cb = currentBlocks[currentBlockIdx];
     localStorage.setItem('crimpify_active', JSON.stringify({
       keys: currentBlocks.map(b => b._key), name: s.name, color: s.color || 'lime',
       sessionId: s.id, idx: currentBlockIdx, spent, ts: Date.now(),
+      // additief (v0.45): absolute klokken en de volledige bloklog, zodat een
+      // reload of tab-discard midden in een blok geen gemeten tijd meer kost
+      st: sessionStartTime, bs: blockClockStart, log: sessionLog,
+      dt: currentBlocks.map(b => b.t),
+      ...(cb && cb.checklist ? { cc: checkCount } : {}),
     }));
   } catch {}
 }
+// hartslag: elke 5 sec de lopende sessie wegschrijven; een crash of reload
+// kost dan hoogstens seconden in plaats van het hele blok
+let _hbInterval = null;
+function startHeartbeat() { clearInterval(_hbInterval); _hbInterval = setInterval(saveActive, 5000); }
+function stopHeartbeat() { clearInterval(_hbInterval); _hbInterval = null; }
 function clearActive() {
+  stopHeartbeat();
   try { localStorage.removeItem('crimpify_active'); } catch {}
   if (typeof renderContinue === 'function') renderContinue();
 }
@@ -1214,7 +1226,7 @@ function renderContinue() {
     <button class="pick-btn" onclick="event.stopPropagation();resumeActive()">Resume →</button>
   </div>`;
 }
-function resumeActive() {
+function resumeActive(fromReload) {
   const a = loadActive();
   if (!a) return;
   customSession = { id:'custom', cat:'again', name: a.name, desc:'', color: a.color || 'lime', rpe:'–', intent:'Picked up where you left off.' };
@@ -1223,19 +1235,34 @@ function resumeActive() {
   sessionLocked = true;
   sessionOwned = true;
   buildSlab();
+  // additief: tijdens de sessie aangepaste duren (bv. ingekort na een skip)
+  if (Array.isArray(a.dt)) currentBlocks.forEach((b, i) => { if (a.dt[i] != null) b.t = a.dt[i]; });
   sessionLog = {};
-  Object.keys(a.spent || {}).forEach(k => {
-    const i = parseInt(k), b = currentBlocks[i];
-    if (b) sessionLog[i] = { name: b.n, planned: b.t * 60, spent: a.spent[k], color: b.c };
-  });
-  sessionStartTime = Date.now();
-  openBlock(Math.min(a.idx, currentBlocks.length - 1));
+  if (a.log) {
+    Object.keys(a.log).forEach(k => { sessionLog[k] = a.log[k]; });
+  } else {
+    Object.keys(a.spent || {}).forEach(k => {
+      const i = parseInt(k), b = currentBlocks[i];
+      if (b) sessionLog[i] = { name: b.n, planned: b.t * 60, spent: a.spent[k], color: b.c };
+    });
+  }
+  // absolute klokken herstellen: sessie- en blokstart lopen door een reload
+  // heen gewoon door (wall clock), in plaats van op nul te beginnen
+  sessionStartTime = a.st || Date.now();
+  startHeartbeat();
+  const idx = Math.min(a.idx, currentBlocks.length - 1);
+  openBlock(idx);
+  if (a.bs) { blockClockStart = a.bs; saveActive(); }
+  const cb = currentBlocks[idx];
+  if (a.cc != null && cb && cb.checklist) { checkCount = a.cc; renderCheck(); }
+  if (fromReload) showToast('Session restored where you left off');
 }
 
 function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  startHeartbeat();
   trackEvent('session_started');
   openBlock(0);
 }
@@ -1641,12 +1668,14 @@ function startChecklist(blockIdx) {
   const sub = document.getElementById('checkSuccessSub');
   if (sub) sub.textContent = `${parseInt(parts[0]) || 25}+ boulders, everything after is bonus`;
   renderCheck();
+  saveActive();  // verse teller direct persisteren (overschrijft stale cc)
   goTo('v-check');
 }
 function checkAdjust(d) {
   const prev = checkCount;
   checkCount = Math.max(0, checkCount + d);
   renderCheck();
+  saveActive();  // elke boulder telt: teller overleeft reload
   // succes-popup: precies bij het bereiken van de ondergrens (omhoog)
   const minR = checkTargetMin();
   if (d > 0 && prev < minR && checkCount >= minR) showCheckSuccess();
@@ -1684,6 +1713,7 @@ function checkSetTo(n) {
   const prev = checkCount;
   checkCount = (checkCount === n) ? n-1 : n;
   renderCheck();
+  saveActive();
   const minR = checkTargetMin();
   if (prev < minR && checkCount >= minR) showCheckSuccess();
 }
@@ -3630,7 +3660,7 @@ if (!importedShare) {
     const rm = JSON.parse(localStorage.getItem('crimpify_resume') || 'null');
     localStorage.removeItem('crimpify_resume');
     if (rm && Date.now() - rm.ts <= RESUME_WINDOW_MS) {
-      if (rm.mode === 'run' && loadActive()) resumeActive();
+      if (rm.mode === 'run' && loadActive()) resumeActive(true);
       else if (rm.mode === 'build' && loadDraft()) openDraft();
     }
   } catch {}
@@ -3662,8 +3692,14 @@ enableWheelScroll('#recentRow');
 })();
 
 // ── bescherming tegen per ongeluk weg-swipen / tab sluiten ──
+// waarschuwt tijdens elke lopende sessie (niet alleen een lopend blok),
+// en op de summary zolang het stoplicht nog niet gelogd is
 window.addEventListener('beforeunload', e => {
-  if (typeof hasLiveProgress === 'function' && hasLiveProgress()) {
+  const sm = document.getElementById('sessionSummary');
+  const summaryOpen = !!sm && sm.style.display === 'flex';
+  const running = !!sessionStartTime && currentBlocks.length > 0 && !summaryOpen;
+  const unlogged = summaryOpen && !!_pendingLog;
+  if ((typeof hasLiveProgress === 'function' && hasLiveProgress()) || running || unlogged) {
     e.preventDefault();
     e.returnValue = ''; // toont de browser-standaard "weet je het zeker?"
     return '';
