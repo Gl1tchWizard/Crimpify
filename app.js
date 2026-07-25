@@ -735,8 +735,8 @@ function goTo(viewId) {
   if (viewId !== 'v-guided') { gRunning = false; clearInterval(gInterval); }
   if (viewId !== 'v-drills' && typeof dpIntervals !== 'undefined') { dpIntervals.forEach((iv,i)=>{ if(iv) clearInterval(iv); dpIntervals[i]=null; }); }
   if (viewId !== 'v-drillfocus' && typeof dfInterval !== 'undefined') { clearInterval(dfInterval); dfRunning = false; }
-  // uitgestelde sw-update-reload: het volgende veilige moment is een navigatie
-  if (_swReloadPending) swReloadWhenSafe();
+  // uitgestelde update-balk: het volgende veilige moment is een navigatie
+  maybeShowSwUpdate();
 }
 
 // ── SESSIE-BEWAKING ──
@@ -771,28 +771,32 @@ function hasLiveProgress() {
   return false;
 }
 
-// ── SW-UPDATE-RELOAD: nooit oude app.js naast een verse index ──
-// Een nieuwe service worker neemt via skipWaiting+claim stil de controle
-// over; zonder reload draait de pagina dan een hele sessie verouderde code.
-// Herladen mag alleen buiten een lopende training of build-draft, en
-// hoogstens één keer per paginaleven (geen reload-lussen).
-let _swReloaded = false;       // er is al herladen voor deze update
-let _swReloadPending = false;  // update kwam op een onveilig moment
-function swReloadSafe() {
-  // zelfde running/building-definities als saveResumeMarker: wie op de
-  // landing staat (ook met een onafgemaakte sessie) mag veilig verversen
-  const v = activeView();
-  const inFlow = ['v-session','v-detail','v-guided','v-drills','v-drillfocus','v-check'].includes(v);
-  const running = inFlow && !!sessionStartTime && currentBlocks.length > 0;
-  const building = inFlow && !running && v === 'v-session' && activeSessionId === 'custom' && !!customKeys;
-  return !running && !building && !hasLiveProgress();
+// ── SW-UPDATE: prompt in plaats van stille overname ──
+// Een nieuwe service worker wacht (geen skipWaiting bij install); de app
+// toont buiten lopende sessies een update-balk. Pas na de tik op Refresh
+// neemt de nieuwe versie over (SKIP_WAITING) en herlaadt de pagina één
+// keer via controllerchange. Nooit een reload tijdens een sessie: een
+// lopende sessie is lopend, ongeacht in welke view de gebruiker staat
+// (de oude view-gebaseerde guard zag de landing als veilig moment en
+// herlaadde daar midden in een training).
+let _swReloaded = false;    // er is al herladen voor deze update
+let _swWaiting = null;      // wachtende nieuwe service worker
+let _swDismissed = false;   // Later getikt: dit paginaleven niet meer tonen
+function swSessionActive() {
+  return (!!sessionStartTime && currentBlocks.length > 0) || hasLiveProgress();
 }
-function swReloadWhenSafe() {
-  if (_swReloaded) return;
-  if (!swReloadSafe()) { _swReloadPending = true; return; }
-  _swReloaded = true;
-  location.reload();
+function offerSwUpdate(worker) { _swWaiting = worker; maybeShowSwUpdate(); }
+function maybeShowSwUpdate() {
+  const bar = document.getElementById('swUpdateBar');
+  if (!bar) return;
+  bar.style.display = (_swWaiting && !_swDismissed && !swSessionActive()) ? 'flex' : 'none';
 }
+function applySwUpdate() {
+  if (_swWaiting) { try { _swWaiting.postMessage({ type: 'SKIP_WAITING' }); } catch {} }
+  _swWaiting = null;
+  maybeShowSwUpdate();
+}
+function dismissSwUpdate() { _swDismissed = true; maybeShowSwUpdate(); }
 
 let _pendingExit = null;
 function guardedExit(fn) {
@@ -3561,8 +3565,8 @@ function flushState() {
 }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') { flushState(); return; }
-  // terug in beeld: uitgestelde sw-update-reload alsnog proberen
-  if (_swReloadPending) swReloadWhenSafe();
+  // terug in beeld: uitgestelde update-balk alsnog tonen
+  maybeShowSwUpdate();
 });
 window.addEventListener('pagehide', flushState);
 
@@ -3722,23 +3726,31 @@ window.addEventListener('hashchange', () => {
   if (location.hash.startsWith('#s=')) importFromHash();
 });
 
-// ── PWA: register external service worker (auto-updating) ──
+// ── PWA: register external service worker (update via prompt) ──
 if ('serviceWorker' in navigator) {
-  // controllerchange is hét signaal dat een nieuwe sw de controle pakt
-  // (skipWaiting+claim), ongeacht wie de update ontdekte — dekt ook updates
-  // die de browser zelf al bij de navigatie vond, waar updatefound niet
-  // voor vuurt. Op het allereerste bezoek vuurt claim() dit ook; die eerste
-  // claim op een onbestuurde pagina is geen takeover en hoort niet te
-  // herladen — maar een látere wissel op diezelfde pagina wel.
+  // controllerchange vuurt nadat de gebruiker Refresh tikte (SKIP_WAITING)
+  // of wanneer een andere tab de wissel deed. Eén reload, nooit tijdens
+  // een sessie. De eerste claim op een onbestuurde pagina is geen takeover.
   let hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!hadController) { hadController = true; return; }
-    swReloadWhenSafe();
+    if (_swReloaded || swSessionActive()) return;
+    _swReloaded = true;
+    location.reload();
   });
   navigator.serviceWorker.register('sw.js').then(reg => {
     // check meteen en periodiek op een nieuwe versie
     reg.update();
     setInterval(() => reg.update(), 60 * 60 * 1000);
+    // wachtende nieuwe versie: balk aanbieden (nooit stil overnemen)
+    if (reg.waiting && navigator.serviceWorker.controller) offerSwUpdate(reg.waiting);
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) offerSwUpdate(nw);
+      });
+    });
   }).catch(()=>{ /* offline cache optioneel */ });
 }
 
