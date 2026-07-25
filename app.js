@@ -702,6 +702,8 @@ let _navSuppress = false;
 function goBack() {
   // overlays eerst, bovenste laag sluit; de DOM is de waarheid (geen desync)
   const overlays = [
+    ['skipSheet', closeSkipSheet],
+    ['shortenSheet', () => shortenRest(false)],   // terug = plan houden, wel door
     ['blockEditDialog', closeBlockEdit],
     ['newExerciseDialog', closeNewExercise],
     ['nameSheet', closeNameSheet],
@@ -874,16 +876,24 @@ function fmtWall(min){
 
 function showSessionSummary() {
   clearActive();  // sessie afgerond — geen Continue-kaart meer
-  const blocks = Object.keys(sessionLog).map(k=>sessionLog[k]);
+  // drie categorieën per gepland blok: done, skipped (met reden), niet gestart
+  const entries = currentBlocks.map((b, i) => sessionLog[i] || null);
+  const blocks = entries.filter(Boolean);
+  const doneN = blocks.filter(e => e.status !== 'skipped').length;
+  const skippedN = blocks.length - doneN;
+  const notStartedN = currentBlocks.length - blocks.length;
   const totalSpent = blocks.reduce((s,b)=>s+(b.spent||0),0);
-  const totalPlanned = blocks.reduce((s,b)=>s+(b.planned||0),0);
+  const totalPlanned = currentBlocks.reduce((s,b)=>s+(b.t*60),0);
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
   // twee cijfers: actieve bloktijd (som van de blokken) en wall clock
   // (eerste start tot nu, loopt door reloads heen dankzij crimpify_active)
   const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((Date.now() - sessionStartTime) / 60000)) : spentMin;
 
-  document.getElementById('summaryTotal').textContent = `${blocks.length} block${blocks.length === 1 ? '' : 's'} done`;
+  document.getElementById('summaryTotal').textContent =
+    `${doneN} of ${currentBlocks.length} block${currentBlocks.length === 1 ? '' : 's'} done`
+    + (skippedN ? ` · ${skippedN} skipped` : '')
+    + (notStartedN ? ` · ${notStartedN} not started` : '');
   document.getElementById('summarySpentBig').textContent = spentMin;
   document.getElementById('summaryPlannedBig').textContent = plannedMin;
   const wallEl = document.getElementById('summaryWall');
@@ -907,15 +917,28 @@ function showSessionSummary() {
     return `<div title="${b.name}" style="width:${pct}%;background:${b.color||'var(--prepare)'};"></div>`;
   }).join('');
 
-  document.getElementById('summaryBlocks').innerHTML = blocks.map(b=>{
-    const planned = b.planned||0, spent = b.spent||0;
-    const diff = spent - planned;
-    const diffTxt = Math.abs(diff) < 30 ? 'on time' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
-    const diffCol = 'var(--dust)';  // tijd-cues neutraal: geen kleursignaal op over/onder schema
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.color||'var(--prepare)'};">
-      <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${b.name}</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:${b.color||'var(--chalk)'};">${fmtMin(spent)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:${diffCol};min-width:48px;text-align:right;">${diffTxt}</div>
+  document.getElementById('summaryBlocks').innerHTML = currentBlocks.map((cb, i)=>{
+    const e = entries[i];
+    const color = e ? (e.color || 'var(--prepare)') : cb.c;
+    const dim = !e || e.status === 'skipped';
+    let valTxt, valCol = color, lblTxt, lblCol = 'var(--dust)';
+    if (!e) {
+      valTxt = '–'; valCol = 'var(--disabled)'; lblTxt = 'not started'; lblCol = 'var(--disabled)';
+    } else if (e.status === 'skipped') {
+      // gestart-en-geskipt behoudt de gemeten tijd; tijd-cues blijven neutraal
+      valTxt = fmtMin(e.spent || 0);
+      if ((e.spent || 0) < 30) valCol = 'var(--disabled)';
+      lblTxt = 'skipped · ' + (e.skipReason === 'time' ? 'out of time' : 'low energy');
+    } else {
+      const planned = e.planned || 0, spent = e.spent || 0;
+      const diff = spent - planned;
+      valTxt = fmtMin(spent);
+      lblTxt = Math.abs(diff) < 30 ? 'on time' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
+    }
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${color};${dim ? 'opacity:.75;' : ''}">
+      <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${e ? e.name : cb.n}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:${valCol};">${valTxt}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:${lblCol};text-align:right;">${lblTxt}</div>
     </div>`;
   }).join('');
   // gym-quotes alleen in de gym-sessie; anders uitsluiten
@@ -929,14 +952,22 @@ function showSessionSummary() {
   // logging gebeurt pas bij de stoplicht-tik (of overslaan)
   const s = getSession(activeSessionId);
   const totalMin = spentMin || (s ? getTFinite() : 60);
-  const coreBlock = blocks.filter((b,i)=>i>0).sort((a,b)=>b.spent-a.spent)[0];
+  const coreBlock = entries.slice(1).filter(e => e && e.status !== 'skipped').sort((a,b)=>(b.spent||0)-(a.spent||0))[0];
   const variant = coreBlock ? coreBlock.name : (s ? s.name : '');
   _pendingLog = s ? { id: s.id, variant, time: totalMin, snap: {
     keys: currentBlocks.map(b => b._key),
     name: s.name,
     color: s.color || 'lime',
     wall: wallMin,
-    blocks: blocks.map(b => ({ name: b.name, spent: b.spent||0, color: b.color || 'var(--prepare)' }))
+    // alle geplande blokken, met status: skips en niet-gestart reizen mee
+    // de historie in, zodat het patroon later terug te zien is
+    blocks: currentBlocks.map((cb, i) => {
+      const e = entries[i];
+      if (!e) return { name: cb.n, spent: 0, color: cb.c, status: 'planned' };
+      const o = { name: e.name, spent: e.spent || 0, color: e.color || 'var(--prepare)' };
+      if (e.status === 'skipped') { o.status = 'skipped'; o.skipReason = e.skipReason; }
+      return o;
+    })
   } } : null;
   // stoplicht-UI terugzetten naar beginstand
   document.getElementById('signalAsk').style.display = '';
@@ -1303,6 +1334,47 @@ function nextBlock() {
     return;
   }
   openBlock(currentBlockIdx);
+}
+
+// ── BLOK SKIPPEN (autoregulatie): verder kunnen zonder de sessie af te
+// breken. Skip vraagt een reden, een tik: te weinig tijd of te weinig
+// energie. Een gestart blok behoudt de al gemeten tijd; een niet-gestart
+// blok logt 0. Bij tijdsgebrek bieden we aan de resterende blokken naar
+// hun minimum te schalen; de gebruiker kiest, er gebeurt niets vanzelf.
+function openSkipSheet() { document.getElementById('skipSheet').style.display = 'flex'; }
+function closeSkipSheet() { document.getElementById('skipSheet').style.display = 'none'; }
+function skipBlock(reason) {
+  closeSkipSheet();
+  const idx = currentBlockIdx, b = currentBlocks[idx];
+  if (!b) return;
+  const started = hasLiveProgress();
+  sessionLog[idx] = { name: b.n, planned: b.t * 60, spent: started ? blockClockElapsed() : 0,
+    color: b.c, status: 'skipped', skipReason: reason };
+  if (b.checklist && checkCount > 0) sessionLog[idx].count = checkCount;
+  saveActive();
+  if (reason === 'time') {
+    const rest = currentBlocks.slice(idx + 1);
+    const winst = rest.reduce((s, bb) => s + Math.max(0, bb.t - blockBounds(bb).min), 0);
+    if (winst >= 1) {
+      const nu = rest.reduce((s, bb) => s + bb.t, 0);
+      document.getElementById('shortenMsg').textContent =
+        `The remaining blocks add up to ${nu} min. Shortened to their minimum they take ${nu - winst} min.`;
+      document.getElementById('shortenSheet').style.display = 'flex';
+      return;  // verder gaan gebeurt vanuit de sheet-knoppen
+    }
+  }
+  nextBlock();
+}
+function shortenRest(doIt) {
+  document.getElementById('shortenSheet').style.display = 'none';
+  if (doIt) {
+    for (let i = currentBlockIdx + 1; i < currentBlocks.length; i++) {
+      currentBlocks[i].t = blockBounds(currentBlocks[i]).min;
+    }
+    saveActive();
+    showToast('Remaining blocks set to their minimum');
+  }
+  nextBlock();
 }
 
 function openBlock(idx) {
@@ -2020,11 +2092,18 @@ function openRecap(ts) {
   const total = blocks.reduce((sum,b)=>sum+(b.spent||0),0) || 1;
   el('recapBar').innerHTML = blocks.map(b => '<div style="width:' + ((b.spent||0)/total*100).toFixed(1) + '%;background:' + (b.color||'var(--prepare)') + ';"></div>').join('');
   el('recapBar').style.display = blocks.length ? 'flex' : 'none';
-  el('recapBlocks').innerHTML = blocks.map(b =>
-    '<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ' + (b.color||'var(--prepare)') + ';">' +
+  el('recapBlocks').innerHTML = blocks.map(b => {
+    const skipped = b.status === 'skipped';
+    const planned = b.status === 'planned';
+    const lbl = skipped ? ('skipped · ' + (b.skipReason === 'time' ? 'out of time' : 'low energy'))
+      : planned ? 'not started' : '';
+    const dim = skipped || planned;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ' + (b.color||'var(--prepare)') + ';' + (dim ? 'opacity:.75;' : '') + '">' +
       '<div style="flex:1;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">' + b.name + '</div>' +
-      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:18px;color:' + (b.color||'var(--chalk)') + ';">' + Math.round((b.spent||0)/60) + ' min</div>' +
-    '</div>').join('');
+      (lbl ? '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--disabled);">' + lbl + '</div>' : '') +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:18px;color:' + (planned ? 'var(--disabled)' : (b.color||'var(--chalk)')) + ';">' + (planned ? '–' : Math.round((b.spent||0)/60) + ' min') + '</div>' +
+    '</div>';
+  }).join('');
 
   const canShare = Array.isArray(e.keys) && e.keys.length;
   el('recapShareBtn').style.display = canShare ? '' : 'none';

@@ -555,6 +555,9 @@ body {
 .pv-act { flex:1; min-width:0; padding:13px 6px; border-radius:10px; border:1px solid var(--graphite); background:var(--carbon); color:var(--chalk); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pv-act:hover { border-color:var(--dust); }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
+/* skip: autoregulatie-actie in elke speler; rustig maar altijd vindbaar */
+.skip-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); background:none; border:1px solid var(--graphite); border-radius:8px; padding:9px 12px; cursor:pointer; flex-shrink:0; }
+.skip-btn:hover { border-color:var(--dust); }
 /* context-hint in het blok-info-paneel */
 .be-hint { margin-top:12px; padding:10px 12px; border:1px dashed var(--graphite); border-radius:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); line-height:1.6; }
 

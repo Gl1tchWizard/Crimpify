@@ -281,6 +281,7 @@
     </div>
     <div class="footer">
       <div class="footer-meta" id="detailFooter">–</div>
+      <button class="skip-btn" onclick="openSkipSheet()">Skip block</button>
     </div>
   </div>
 
@@ -303,6 +304,7 @@
     <div class="footer">
       <div class="footer-meta" id="guidedFooter">–</div>
       <div style="display:flex;gap:8px;">
+        <button class="skip-btn" onclick="openSkipSheet()">Skip</button>
         <button class="timer-btn secondary" id="guidedPauseBtn" onclick="guidedToggle()" style="padding:10px 16px;">Pause</button>
         <button class="start-btn" onclick="guidedNext()">Next →</button>
       </div>
@@ -323,7 +325,10 @@
     <div class="scroll-body" id="drillStack" style="padding:10px 16px;"></div>
     <div class="footer">
       <div class="footer-meta" id="drillFooter">–</div>
-      <button class="start-btn" onclick="drillDone()">Done →</button>
+      <div style="display:flex;gap:8px;">
+        <button class="skip-btn" onclick="openSkipSheet()">Skip</button>
+        <button class="start-btn" onclick="drillDone()">Done →</button>
+      </div>
     </div>
   </div>
 
@@ -359,7 +364,10 @@
     </div>
     <div class="footer">
       <div class="footer-meta" id="checkFooter">–</div>
-      <button class="start-btn" onclick="nextBlock()">Done →</button>
+      <div style="display:flex;gap:8px;">
+        <button class="skip-btn" onclick="openSkipSheet()">Skip</button>
+        <button class="start-btn" onclick="nextBlock()">Done →</button>
+      </div>
     </div>
   </div>
 
@@ -393,6 +401,7 @@
     </div>
     <div class="footer">
       <button class="timer-btn secondary" onclick="dfBack()" style="padding:11px 18px;">← Previous</button>
+      <button class="skip-btn" onclick="openSkipSheet()">Skip</button>
       <button class="start-btn" onclick="dfNext()">Next →</button>
     </div>
   </div>
@@ -573,6 +582,31 @@
     <div style="display:flex;gap:8px;">
       <button onclick="dismissSwUpdate()" style="padding:9px 12px;border-radius:8px;border:1px solid var(--graphite);background:none;color:var(--dust);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;">Later</button>
       <button onclick="applySwUpdate()" style="padding:9px 14px;border-radius:8px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:13px;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;">Refresh</button>
+    </div>
+  </div>
+
+  <!-- ══ SKIP-SHEET: reden in een tik, geen oordeel, geen vrij tekstveld ══ -->
+  <div id="skipSheet" style="display:none;position:absolute;inset:0;z-index:70;background:color-mix(in srgb, var(--ink) 85%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
+    <div style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:24px 22px;max-width:300px;width:100%;text-align:center;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">Skip this block?</div>
+      <div style="font-family:'Barlow',sans-serif;font-size:13px;color:var(--dust);line-height:1.5;margin-top:8px;">Skipping is not failing. Your reason is logged so the pattern stays visible.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:18px;">
+        <button onclick="skipBlock('time')" style="padding:13px;border-radius:10px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Not enough time</button>
+        <button onclick="skipBlock('energy')" style="padding:13px;border-radius:10px;border:1px solid var(--graphite);background:var(--ink);color:var(--chalk);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Low energy</button>
+        <button onclick="closeSkipSheet()" style="padding:11px;border-radius:10px;border:none;background:none;color:var(--dust);font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ INKORTEN NA SKIP WEGENS TIJD: aanbod, geen automatisme ══ -->
+  <div id="shortenSheet" style="display:none;position:absolute;inset:0;z-index:70;background:color-mix(in srgb, var(--ink) 85%, transparent);backdrop-filter:blur(3px);align-items:center;justify-content:center;padding:30px;">
+    <div style="background:var(--carbon);border:1px solid var(--graphite);border-radius:16px;padding:24px 22px;max-width:300px;width:100%;text-align:center;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:22px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">Short on time</div>
+      <div id="shortenMsg" style="font-family:'Barlow',sans-serif;font-size:13px;color:var(--dust);line-height:1.5;margin-top:8px;">–</div>
+      <div style="display:flex;gap:10px;margin-top:18px;">
+        <button onclick="shortenRest(false)" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;">Keep as planned</button>
+        <button onclick="shortenRest(true)" style="flex:1;padding:13px;border-radius:10px;border:none;background:var(--acid);color:var(--acid-text);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.03em;cursor:pointer;">Shorten</button>
+      </div>
     </div>
   </div>
 
