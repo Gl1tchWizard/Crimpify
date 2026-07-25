@@ -2074,6 +2074,9 @@ function openRecap(ts) {
   const e = loadHistory().find(x => x.ts === ts);
   if (!e) return;
   _recapEntry = e;
+  _recapEdit = false; _recapDraft = null;
+  const eb = document.getElementById('recapEditBtn');
+  if (eb) eb.textContent = '✎ Adjust times';
   const s = getSession(e.id);
   const name = e.name || (s ? s.name : 'Session');
   const el = id => document.getElementById(id);
@@ -2115,7 +2118,91 @@ function openRecap(ts) {
   } else { note.style.display = 'none'; }
   el('recapView').style.display = 'flex';
 }
-function closeRecap() { document.getElementById('recapView').style.display = 'none'; _recapEntry = null; }
+function closeRecap() {
+  document.getElementById('recapView').style.display = 'none';
+  _recapEntry = null;
+  _recapEdit = false; _recapDraft = null;
+  recapHoldEnd();
+}
+
+// ── REPARATIEPAD: tijden in de recap handmatig corrigeren ──
+// Voor als de meting toch ooit mis was (of een sessie deels buiten de app
+// liep): per blok bijstellen, de sessieduur is de som, de load rekent mee.
+let _recapEdit = false;
+let _recapDraft = null;   // { time (min), blocks: [spent in sec] }
+function recapToggleEdit() {
+  const e = _recapEntry;
+  if (!e) return;
+  if (!_recapEdit) {
+    _recapEdit = true;
+    _recapDraft = { time: e.time || 0, blocks: (e.blocks || []).map(b => b.spent || 0) };
+    renderRecapEdit();
+    return;
+  }
+  // opslaan: blokken zijn de waarheid, sessieduur = som, load herberekend
+  const h = loadHistory();
+  const idx = h.findIndex(x => x.ts === e.ts);
+  if (idx >= 0) {
+    const t = h[idx];
+    if (t.blocks && t.blocks.length) {
+      t.blocks.forEach((b, i) => {
+        if (_recapDraft.blocks[i] != null) b.spent = _recapDraft.blocks[i];
+        // een niet-gestart blok dat alsnog tijd krijgt, telt weer als done
+        if (b.status === 'planned' && (b.spent || 0) > 0) delete b.status;
+      });
+      t.time = Math.round(t.blocks.reduce((s, b) => s + (b.spent || 0), 0) / 60);
+    } else {
+      t.time = _recapDraft.time;
+    }
+    t.load = sessionLoad(t.id, t.time);
+    saveHistory(h);
+    rebuildRecent(); renderSignalCal();
+    if (typeof renderTodaysPick === 'function') renderTodaysPick();
+    if (typeof renderStreakLine === 'function') renderStreakLine();
+    showToast('Times corrected');
+  }
+  _recapEdit = false; _recapDraft = null;
+  openRecap(e.ts);
+}
+function recapAdjust(i, d) {
+  if (!_recapDraft) return;
+  if (i < 0) _recapDraft.time = Math.max(0, _recapDraft.time + d);
+  else _recapDraft.blocks[i] = Math.max(0, (_recapDraft.blocks[i] || 0) + d * 60);
+  renderRecapEdit();
+}
+// vasthouden = herhalen, voor grote correcties zonder tikwerk
+let _recapHoldT = null, _recapHoldI = null;
+function recapHoldStart(i, d) {
+  recapAdjust(i, d);
+  recapHoldEnd();
+  _recapHoldT = setTimeout(() => { _recapHoldI = setInterval(() => recapAdjust(i, d), 110); }, 420);
+}
+function recapHoldEnd() {
+  clearTimeout(_recapHoldT); clearInterval(_recapHoldI);
+  _recapHoldT = _recapHoldI = null;
+}
+function renderRecapEdit() {
+  const e = _recapEntry;
+  if (!e || !_recapDraft) return;
+  const el = id => document.getElementById(id);
+  const stepBtn = (i, d, ch) => `<button onpointerdown="recapHoldStart(${i},${d})" onpointerup="recapHoldEnd()" onpointerleave="recapHoldEnd()" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--graphite);background:none;color:var(--chalk);font-size:17px;line-height:1;cursor:pointer;touch-action:manipulation;user-select:none;">${ch}</button>`;
+  const stepper = (i, valTxt) => `<div style="display:flex;align-items:center;gap:8px;">${stepBtn(i,-1,'−')}<div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:var(--chalk);min-width:56px;text-align:center;">${valTxt}</div>${stepBtn(i,1,'+')}</div>`;
+  if (e.blocks && e.blocks.length) {
+    el('recapBlocks').innerHTML = e.blocks.map((b, i) =>
+      `<div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.color || 'var(--prepare)'};">
+        <div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${b.name}</div>
+        ${stepper(i, Math.round((_recapDraft.blocks[i] || 0) / 60) + ' min')}
+      </div>`).join('') +
+      `<div style="text-align:right;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--dust);padding:4px 12px 0;">total ${Math.round(_recapDraft.blocks.reduce((s, v) => s + (v || 0), 0) / 60)} min</div>`;
+  } else {
+    el('recapBlocks').innerHTML =
+      `<div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--carbon);border-radius:8px;">
+        <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">Session time</div>
+        ${stepper(-1, _recapDraft.time + ' min')}
+      </div>`;
+  }
+  el('recapEditBtn').textContent = 'Save times';
+}
 function recapShare() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;

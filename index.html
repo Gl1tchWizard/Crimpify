@@ -565,6 +565,8 @@
       </div>
       <div id="recapBar" style="display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--carbon);margin-top:18px;"></div>
       <div id="recapBlocks" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>
+      <!-- reparatiepad: gemeten tijden handmatig corrigeren -->
+      <button id="recapEditBtn" onclick="recapToggleEdit()" style="width:100%;margin-top:10px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dust);background:none;border:1px dashed var(--graphite);border-radius:8px;padding:8px 12px;cursor:pointer;">✎ Adjust times</button>
       <div id="recapNote" style="display:none;font-family:'Barlow',sans-serif;font-size:12px;line-height:1.5;color:var(--dust);margin-top:14px;"></div>
       <div style="display:flex;gap:8px;margin-top:20px;">
         <button onclick="closeRecap()" style="flex:1;padding:13px;border-radius:10px;border:1px solid var(--graphite);background:none;color:var(--dust);font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;">Close</button>
