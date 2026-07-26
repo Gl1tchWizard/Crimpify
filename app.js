@@ -466,7 +466,12 @@ function sessionLoad(id, minutes) {
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
   const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
-  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; if (snap.wall != null) e.wall = snap.wall; }
+  if (snap) {
+    e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks;
+    if (snap.wall != null) e.wall = snap.wall;
+    if (snap.end != null) e.end = snap.end;   // einde laatste blok, absoluut (ts = logmoment)
+    if (snap.paused) e.paused = true;         // uitschieter: lange pauze, kalibratie negeert hem
+  }
   h.unshift(e);
   saveHistory(h);
   if (sig) trackEvent('session_completed');
@@ -531,6 +536,17 @@ let sessionStartTime = null;
 // centrale blok-stopwatch: meet echte tijd voor ELK bloktype
 let blockClockStart = null;    // timestamp waarop het huidige blok geopend werd
 function blockClockElapsed() { return blockClockStart ? Math.round((Date.now() - blockClockStart) / 1000) : 0; }
+// pauzedrempel: langer dan dit aaneengesloten weg (tab verborgen of app
+// gedood) tijdens een lopende sessie = de sessie wordt als uitschieter
+// gemarkeerd (entry-veld paused). Keuze 15 min: normale rust tussen zware
+// pogingen is 3-5 min en tijdens een lang klimblok kan de telefoon 10+ min
+// op slot liggen; 15 min aaneengesloten is vrijwel zeker geen haltijd.
+// De wall clock loopt gewoon door; de markering sluit de sessie alleen uit
+// van de overhead-kalibratie. Een vals positief kost dus kalibratiedata,
+// nooit load of historie.
+const PAUSE_OUTLIER_MS = 15 * 60000;
+let _sessionPaused = false;    // uitschieter-markering, reist mee naar de entry
+let _hiddenAt = null;          // wanneer de tab verborgen raakte
 
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
@@ -880,9 +896,13 @@ function showSessionSummary() {
   const totalPlanned = currentBlocks.reduce((s,b)=>s+(b.t*60),0);
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
-  // twee cijfers: actieve bloktijd (som van de blokken) en wall clock
-  // (eerste start tot nu, loopt door reloads heen dankzij crimpify_active)
-  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((Date.now() - sessionStartTime) / 60000)) : spentMin;
+  // twee cijfers, strikt gescheiden: actieve bloktijd (belastingdata) en
+  // wall clock (planningsdata, hal-in tot hal-uit). De wall clock eindigt
+  // hier, bij het einde van het laatste blok: deze functie draait synchroon
+  // met de laatste nextBlock. Nooit tot het logmoment (het stoplicht kan
+  // een half uur later thuis getikt worden).
+  const sessionEndTime = Date.now();
+  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((sessionEndTime - sessionStartTime) / 60000)) : spentMin;
 
   document.getElementById('summaryTotal').textContent =
     `${doneN} of ${currentBlocks.length} block${currentBlocks.length === 1 ? '' : 's'} done`
@@ -953,6 +973,8 @@ function showSessionSummary() {
     name: s.name,
     color: s.color || 'lime',
     wall: wallMin,
+    end: sessionEndTime,
+    ...(_sessionPaused ? { paused: true } : {}),
     // alle geplande blokken, met status: skips en niet-gestart reizen mee
     // de historie in, zodat het patroon later terug te zien is
     blocks: currentBlocks.map((cb, i) => {
@@ -1231,6 +1253,7 @@ function saveActive() {
       st: sessionStartTime, bs: blockClockStart, log: sessionLog,
       dt: currentBlocks.map(b => b.t),
       ...(cb && cb.checklist ? { cc: checkCount } : {}),
+      ...(_sessionPaused ? { pz: 1 } : {}),
     }));
   } catch {}
 }
@@ -1293,6 +1316,10 @@ function resumeActive(fromReload) {
   // absolute klokken herstellen: sessie- en blokstart lopen door een reload
   // heen gewoon door (wall clock), in plaats van op nul te beginnen
   sessionStartTime = a.st || Date.now();
+  // uitschieter-markering herstellen; een gat sinds de laatste heartbeat
+  // groter dan de pauzedrempel (app gedood, later hervat) telt ook
+  _sessionPaused = !!a.pz || (Date.now() - a.ts > PAUSE_OUTLIER_MS);
+  _hiddenAt = null;
   startHeartbeat();
   const idx = Math.min(a.idx, currentBlocks.length - 1);
   openBlock(idx);
@@ -1306,6 +1333,7 @@ function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  _sessionPaused = false; _hiddenAt = null;
   startHeartbeat();
   trackEvent('session_started');
   openBlock(0);
@@ -3743,8 +3771,14 @@ function flushState() {
   saveResumeMarker();
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') { flushState(); return; }
-  // terug in beeld: uitgestelde sw-update-reload alsnog proberen
+  if (document.visibilityState === 'hidden') { _hiddenAt = Date.now(); flushState(); return; }
+  // terug in beeld: lange afwezigheid tijdens een lopende sessie markeren
+  if (_hiddenAt && sessionStartTime && Date.now() - _hiddenAt > PAUSE_OUTLIER_MS) {
+    _sessionPaused = true;
+    saveActive();
+  }
+  _hiddenAt = null;
+  // uitgestelde sw-update-reload alsnog proberen
   if (_swReloadPending) swReloadWhenSafe();
 });
 window.addEventListener('pagehide', flushState);
