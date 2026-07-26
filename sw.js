@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v39';
+const CACHE = 'crimpify-v40';
 const CORE = [
   './',
   'index.html',
@@ -18,14 +18,14 @@ self.addEventListener('install', e => {
   // cache:'reload' dwingt verse bytes van het netwerk af; zonder dit mag de
   // browser-HTTP-cache een oude app.js in de nieuwe named cache stoppen en
   // blijft een bezoeker op verouderde code hangen tot die cache verloopt
+  // skipWaiting hoort hier: zonder blijft een nieuwe sw eeuwig wachten bij
+  // clients met oude app.js (die kennen geen update-balk of bericht), en
+  // krijgen die intussen wel een verse index (network-first) naast hun
+  // gecachte oude app.js en css. Die versie-skew was de dode Skip-knop in
+  // v0.45. Reload-timing regelt de app zelf: nooit tijdens een sessie.
   e.waitUntil(caches.open(CACHE)
-    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' })))));
-});
-
-// geen skipWaiting bij install: een nieuwe versie wacht tot de app erom
-// vraagt (update-balk, buiten lopende sessies) of tot alle tabs dicht zijn
-self.addEventListener('message', e => {
-  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' }))))
+    .then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {

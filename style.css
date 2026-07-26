@@ -398,7 +398,9 @@ body {
 .dp-tbtn { flex:1; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:9px; border-radius:6px; border:1px solid color-mix(in srgb, var(--skill) 27%, transparent); background:color-mix(in srgb, var(--skill) 8%, transparent); color:color-mix(in srgb, var(--skill) 55%, var(--chalk)); cursor:pointer; }
 .dp-tbtn.done-btn { border-color:var(--graphite); background:none; color:var(--success); }
 
-.timer-controls { display:flex; gap:10px; justify-content:center; }
+.timer-controls { display:flex; gap:8px; justify-content:center; }
+/* gelijke breedtes (zelfde idioom als .pv-act): vier knoppen passen op 360px */
+.timer-controls .timer-btn { flex:1 1 0; min-width:0; padding:11px 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .timer-btn { font-size:13px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; border:none; cursor:pointer; padding:11px 22px; border-radius:4px; transition:all .15s; }
 .timer-btn.primary { background:var(--acid); color:var(--acid-text); box-shadow:0 0 14px color-mix(in srgb, var(--acid) 18%, transparent); }
 .timer-btn.secondary { background:var(--carbon); color:var(--disabled); border:1px solid var(--graphite); }
@@ -555,9 +557,6 @@ body {
 .pv-act { flex:1; min-width:0; padding:13px 6px; border-radius:10px; border:1px solid var(--graphite); background:var(--carbon); color:var(--chalk); cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:13px; letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .pv-act:hover { border-color:var(--dust); }
 .pv-act.on { color:var(--acid); border-color:color-mix(in srgb, var(--acid) 30%, transparent); }
-/* skip: autoregulatie-actie in elke speler; rustig maar altijd vindbaar */
-.skip-btn { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); background:none; border:1px solid var(--graphite); border-radius:8px; padding:9px 12px; cursor:pointer; flex-shrink:0; }
-.skip-btn:hover { border-color:var(--dust); }
 /* context-hint in het blok-info-paneel */
 .be-hint { margin-top:12px; padding:10px 12px; border:1px dashed var(--graphite); border-radius:8px; font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); line-height:1.6; }
 
