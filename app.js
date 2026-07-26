@@ -920,7 +920,7 @@ function showSessionSummary() {
   // verschil-regel
   const totDiff = spentMin - plannedMin;
   const diffEl = document.getElementById('summaryDiff');
-  if (Math.abs(totDiff) < 1) { diffEl.textContent = 'precies op schema'; diffEl.style.color = 'var(--dust)'; }
+  if (Math.abs(totDiff) < 1) { diffEl.textContent = 'right on schedule'; diffEl.style.color = 'var(--dust)'; }
   else if (totDiff > 0) { diffEl.textContent = `${totDiff} min longer than planned`; diffEl.style.color = 'var(--dust)'; }
   else { diffEl.textContent = `${Math.abs(totDiff)} min shorter than planned`; diffEl.style.color = 'var(--dust)'; }
 
