@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v38';
+const CACHE = 'crimpify-v39';
 const CORE = [
   './',
   'index.html',
@@ -19,8 +19,13 @@ self.addEventListener('install', e => {
   // browser-HTTP-cache een oude app.js in de nieuwe named cache stoppen en
   // blijft een bezoeker op verouderde code hangen tot die cache verloopt
   e.waitUntil(caches.open(CACHE)
-    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' }))))
-    .then(() => self.skipWaiting()));
+    .then(c => c.addAll(CORE.map(u => new Request(u, { cache: 'reload' })))));
+});
+
+// geen skipWaiting bij install: een nieuwe versie wacht tot de app erom
+// vraagt (update-balk, buiten lopende sessies) of tot alle tabs dicht zijn
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {

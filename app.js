@@ -465,7 +465,7 @@ function sessionLoad(id, minutes) {
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
   const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
-  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; }
+  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; if (snap.wall != null) e.wall = snap.wall; }
   h.unshift(e);
   saveHistory(h);
   if (sig) trackEvent('session_completed');
@@ -702,6 +702,8 @@ let _navSuppress = false;
 function goBack() {
   // overlays eerst, bovenste laag sluit; de DOM is de waarheid (geen desync)
   const overlays = [
+    ['skipSheet', closeSkipSheet],
+    ['shortenSheet', () => shortenRest(false)],   // terug = plan houden, wel door
     ['blockEditDialog', closeBlockEdit],
     ['newExerciseDialog', closeNewExercise],
     ['nameSheet', closeNameSheet],
@@ -735,8 +737,8 @@ function goTo(viewId) {
   if (viewId !== 'v-guided') { gRunning = false; clearInterval(gInterval); }
   if (viewId !== 'v-drills' && typeof dpIntervals !== 'undefined') { dpIntervals.forEach((iv,i)=>{ if(iv) clearInterval(iv); dpIntervals[i]=null; }); }
   if (viewId !== 'v-drillfocus' && typeof dfInterval !== 'undefined') { clearInterval(dfInterval); dfRunning = false; }
-  // uitgestelde sw-update-reload: het volgende veilige moment is een navigatie
-  if (_swReloadPending) swReloadWhenSafe();
+  // uitgestelde update-balk: het volgende veilige moment is een navigatie
+  maybeShowSwUpdate();
 }
 
 // ── SESSIE-BEWAKING ──
@@ -771,28 +773,32 @@ function hasLiveProgress() {
   return false;
 }
 
-// ── SW-UPDATE-RELOAD: nooit oude app.js naast een verse index ──
-// Een nieuwe service worker neemt via skipWaiting+claim stil de controle
-// over; zonder reload draait de pagina dan een hele sessie verouderde code.
-// Herladen mag alleen buiten een lopende training of build-draft, en
-// hoogstens één keer per paginaleven (geen reload-lussen).
-let _swReloaded = false;       // er is al herladen voor deze update
-let _swReloadPending = false;  // update kwam op een onveilig moment
-function swReloadSafe() {
-  // zelfde running/building-definities als saveResumeMarker: wie op de
-  // landing staat (ook met een onafgemaakte sessie) mag veilig verversen
-  const v = activeView();
-  const inFlow = ['v-session','v-detail','v-guided','v-drills','v-drillfocus','v-check'].includes(v);
-  const running = inFlow && !!sessionStartTime && currentBlocks.length > 0;
-  const building = inFlow && !running && v === 'v-session' && activeSessionId === 'custom' && !!customKeys;
-  return !running && !building && !hasLiveProgress();
+// ── SW-UPDATE: prompt in plaats van stille overname ──
+// Een nieuwe service worker wacht (geen skipWaiting bij install); de app
+// toont buiten lopende sessies een update-balk. Pas na de tik op Refresh
+// neemt de nieuwe versie over (SKIP_WAITING) en herlaadt de pagina één
+// keer via controllerchange. Nooit een reload tijdens een sessie: een
+// lopende sessie is lopend, ongeacht in welke view de gebruiker staat
+// (de oude view-gebaseerde guard zag de landing als veilig moment en
+// herlaadde daar midden in een training).
+let _swReloaded = false;    // er is al herladen voor deze update
+let _swWaiting = null;      // wachtende nieuwe service worker
+let _swDismissed = false;   // Later getikt: dit paginaleven niet meer tonen
+function swSessionActive() {
+  return (!!sessionStartTime && currentBlocks.length > 0) || hasLiveProgress();
 }
-function swReloadWhenSafe() {
-  if (_swReloaded) return;
-  if (!swReloadSafe()) { _swReloadPending = true; return; }
-  _swReloaded = true;
-  location.reload();
+function offerSwUpdate(worker) { _swWaiting = worker; maybeShowSwUpdate(); }
+function maybeShowSwUpdate() {
+  const bar = document.getElementById('swUpdateBar');
+  if (!bar) return;
+  bar.style.display = (_swWaiting && !_swDismissed && !swSessionActive()) ? 'flex' : 'none';
 }
+function applySwUpdate() {
+  if (_swWaiting) { try { _swWaiting.postMessage({ type: 'SKIP_WAITING' }); } catch {} }
+  _swWaiting = null;
+  maybeShowSwUpdate();
+}
+function dismissSwUpdate() { _swDismissed = true; maybeShowSwUpdate(); }
 
 let _pendingExit = null;
 function guardedExit(fn) {
@@ -863,18 +869,39 @@ function fmtMin(sec){
   const m = Math.round(sec/60);
   return m + ' min';
 }
+// wall clock netjes: 105 -> "1 h 45", 45 -> "45 min"
+function fmtWall(min){
+  return min >= 60 ? Math.floor(min/60) + ' h ' + String(min % 60).padStart(2, '0') : min + ' min';
+}
 
 function showSessionSummary() {
   clearActive();  // sessie afgerond — geen Continue-kaart meer
-  const blocks = Object.keys(sessionLog).map(k=>sessionLog[k]);
+  // drie categorieën per gepland blok: done, skipped (met reden), niet gestart
+  const entries = currentBlocks.map((b, i) => sessionLog[i] || null);
+  const blocks = entries.filter(Boolean);
+  const doneN = blocks.filter(e => e.status !== 'skipped').length;
+  const skippedN = blocks.length - doneN;
+  const notStartedN = currentBlocks.length - blocks.length;
   const totalSpent = blocks.reduce((s,b)=>s+(b.spent||0),0);
-  const totalPlanned = blocks.reduce((s,b)=>s+(b.planned||0),0);
+  const totalPlanned = currentBlocks.reduce((s,b)=>s+(b.t*60),0);
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
+  // twee cijfers: actieve bloktijd (som van de blokken) en wall clock
+  // (eerste start tot nu, loopt door reloads heen dankzij crimpify_active)
+  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((Date.now() - sessionStartTime) / 60000)) : spentMin;
 
-  document.getElementById('summaryTotal').textContent = `${blocks.length} block${blocks.length === 1 ? '' : 's'} done`;
+  document.getElementById('summaryTotal').textContent =
+    `${doneN} of ${currentBlocks.length} block${currentBlocks.length === 1 ? '' : 's'} done`
+    + (skippedN ? ` · ${skippedN} skipped` : '')
+    + (notStartedN ? ` · ${notStartedN} not started` : '');
   document.getElementById('summarySpentBig').textContent = spentMin;
   document.getElementById('summaryPlannedBig').textContent = plannedMin;
+  const wallEl = document.getElementById('summaryWall');
+  if (wallEl) {
+    const showWall = wallMin > spentMin + 1;
+    wallEl.style.display = showWall ? '' : 'none';
+    if (showWall) wallEl.textContent = fmtWall(wallMin) + ' from first start to finish';
+  }
 
   // verschil-regel
   const totDiff = spentMin - plannedMin;
@@ -890,15 +917,28 @@ function showSessionSummary() {
     return `<div title="${b.name}" style="width:${pct}%;background:${b.color||'var(--prepare)'};"></div>`;
   }).join('');
 
-  document.getElementById('summaryBlocks').innerHTML = blocks.map(b=>{
-    const planned = b.planned||0, spent = b.spent||0;
-    const diff = spent - planned;
-    const diffTxt = Math.abs(diff) < 30 ? 'on time' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
-    const diffCol = 'var(--dust)';  // tijd-cues neutraal: geen kleursignaal op over/onder schema
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.color||'var(--prepare)'};">
-      <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${b.name}</div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:${b.color||'var(--chalk)'};">${fmtMin(spent)}</div>
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:${diffCol};min-width:48px;text-align:right;">${diffTxt}</div>
+  document.getElementById('summaryBlocks').innerHTML = currentBlocks.map((cb, i)=>{
+    const e = entries[i];
+    const color = e ? (e.color || 'var(--prepare)') : cb.c;
+    const dim = !e || e.status === 'skipped';
+    let valTxt, valCol = color, lblTxt, lblCol = 'var(--dust)';
+    if (!e) {
+      valTxt = '–'; valCol = 'var(--disabled)'; lblTxt = 'not started'; lblCol = 'var(--disabled)';
+    } else if (e.status === 'skipped') {
+      // gestart-en-geskipt behoudt de gemeten tijd; tijd-cues blijven neutraal
+      valTxt = fmtMin(e.spent || 0);
+      if ((e.spent || 0) < 30) valCol = 'var(--disabled)';
+      lblTxt = 'skipped · ' + (e.skipReason === 'time' ? 'out of time' : 'low energy');
+    } else {
+      const planned = e.planned || 0, spent = e.spent || 0;
+      const diff = spent - planned;
+      valTxt = fmtMin(spent);
+      lblTxt = Math.abs(diff) < 30 ? 'on time' : (diff > 0 ? `+${fmtMin(Math.abs(diff))}` : `−${fmtMin(Math.abs(diff))}`);
+    }
+    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${color};${dim ? 'opacity:.75;' : ''}">
+      <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${e ? e.name : cb.n}</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:${valCol};">${valTxt}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:${lblCol};text-align:right;">${lblTxt}</div>
     </div>`;
   }).join('');
   // gym-quotes alleen in de gym-sessie; anders uitsluiten
@@ -912,13 +952,22 @@ function showSessionSummary() {
   // logging gebeurt pas bij de stoplicht-tik (of overslaan)
   const s = getSession(activeSessionId);
   const totalMin = spentMin || (s ? getTFinite() : 60);
-  const coreBlock = blocks.filter((b,i)=>i>0).sort((a,b)=>b.spent-a.spent)[0];
+  const coreBlock = entries.slice(1).filter(e => e && e.status !== 'skipped').sort((a,b)=>(b.spent||0)-(a.spent||0))[0];
   const variant = coreBlock ? coreBlock.name : (s ? s.name : '');
   _pendingLog = s ? { id: s.id, variant, time: totalMin, snap: {
     keys: currentBlocks.map(b => b._key),
     name: s.name,
     color: s.color || 'lime',
-    blocks: blocks.map(b => ({ name: b.name, spent: b.spent||0, color: b.color || 'var(--prepare)' }))
+    wall: wallMin,
+    // alle geplande blokken, met status: skips en niet-gestart reizen mee
+    // de historie in, zodat het patroon later terug te zien is
+    blocks: currentBlocks.map((cb, i) => {
+      const e = entries[i];
+      if (!e) return { name: cb.n, spent: 0, color: cb.c, status: 'planned' };
+      const o = { name: e.name, spent: e.spent || 0, color: e.color || 'var(--prepare)' };
+      if (e.status === 'skipped') { o.status = 'skipped'; o.skipReason = e.skipReason; }
+      return o;
+    })
   } } : null;
   // stoplicht-UI terugzetten naar beginstand
   document.getElementById('signalAsk').style.display = '';
@@ -1168,9 +1217,10 @@ function closeSummary() {
   goTo('v-browse');
 }
 
-// ── ONAFGEMAAKTE SESSIE (Continue-kaart) ──
-// crimpify_active bewaart de lopende training per blokgrens; hervatten kan na
-// reload of app-sluiting. Lopende timers overleven dat niet, blokvoortgang wel.
+// ── ONAFGEMAAKTE SESSIE (Continue-kaart + sessieherstel) ──
+// crimpify_active bewaart de lopende training met absolute klokken (st/bs)
+// en de volledige bloklog; een heartbeat schrijft elke 5 sec. Hervatten na
+// reload of app-sluiting zet de klokken terug: gemeten tijd loopt door.
 function saveActive() {
   if (!sessionStartTime) return;  // alleen echt gestarte sessies
   try {
@@ -1178,13 +1228,25 @@ function saveActive() {
     if (!s || !currentBlocks.length) return;
     const spent = {};
     Object.keys(sessionLog).forEach(k => { spent[k] = sessionLog[k].spent || 0; });
+    const cb = currentBlocks[currentBlockIdx];
     localStorage.setItem('crimpify_active', JSON.stringify({
       keys: currentBlocks.map(b => b._key), name: s.name, color: s.color || 'lime',
       sessionId: s.id, idx: currentBlockIdx, spent, ts: Date.now(),
+      // additief (v0.45): absolute klokken en de volledige bloklog, zodat een
+      // reload of tab-discard midden in een blok geen gemeten tijd meer kost
+      st: sessionStartTime, bs: blockClockStart, log: sessionLog,
+      dt: currentBlocks.map(b => b.t),
+      ...(cb && cb.checklist ? { cc: checkCount } : {}),
     }));
   } catch {}
 }
+// hartslag: elke 5 sec de lopende sessie wegschrijven; een crash of reload
+// kost dan hoogstens seconden in plaats van het hele blok
+let _hbInterval = null;
+function startHeartbeat() { clearInterval(_hbInterval); _hbInterval = setInterval(saveActive, 5000); }
+function stopHeartbeat() { clearInterval(_hbInterval); _hbInterval = null; }
 function clearActive() {
+  stopHeartbeat();
   try { localStorage.removeItem('crimpify_active'); } catch {}
   if (typeof renderContinue === 'function') renderContinue();
 }
@@ -1214,7 +1276,7 @@ function renderContinue() {
     <button class="pick-btn" onclick="event.stopPropagation();resumeActive()">Resume →</button>
   </div>`;
 }
-function resumeActive() {
+function resumeActive(fromReload) {
   const a = loadActive();
   if (!a) return;
   customSession = { id:'custom', cat:'again', name: a.name, desc:'', color: a.color || 'lime', rpe:'–', intent:'Picked up where you left off.' };
@@ -1223,19 +1285,34 @@ function resumeActive() {
   sessionLocked = true;
   sessionOwned = true;
   buildSlab();
+  // additief: tijdens de sessie aangepaste duren (bv. ingekort na een skip)
+  if (Array.isArray(a.dt)) currentBlocks.forEach((b, i) => { if (a.dt[i] != null) b.t = a.dt[i]; });
   sessionLog = {};
-  Object.keys(a.spent || {}).forEach(k => {
-    const i = parseInt(k), b = currentBlocks[i];
-    if (b) sessionLog[i] = { name: b.n, planned: b.t * 60, spent: a.spent[k], color: b.c };
-  });
-  sessionStartTime = Date.now();
-  openBlock(Math.min(a.idx, currentBlocks.length - 1));
+  if (a.log) {
+    Object.keys(a.log).forEach(k => { sessionLog[k] = a.log[k]; });
+  } else {
+    Object.keys(a.spent || {}).forEach(k => {
+      const i = parseInt(k), b = currentBlocks[i];
+      if (b) sessionLog[i] = { name: b.n, planned: b.t * 60, spent: a.spent[k], color: b.c };
+    });
+  }
+  // absolute klokken herstellen: sessie- en blokstart lopen door een reload
+  // heen gewoon door (wall clock), in plaats van op nul te beginnen
+  sessionStartTime = a.st || Date.now();
+  startHeartbeat();
+  const idx = Math.min(a.idx, currentBlocks.length - 1);
+  openBlock(idx);
+  if (a.bs) { blockClockStart = a.bs; saveActive(); }
+  const cb = currentBlocks[idx];
+  if (a.cc != null && cb && cb.checklist) { checkCount = a.cc; renderCheck(); }
+  if (fromReload) showToast('Session restored where you left off');
 }
 
 function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  startHeartbeat();
   trackEvent('session_started');
   openBlock(0);
 }
@@ -1258,6 +1335,47 @@ function nextBlock() {
     return;
   }
   openBlock(currentBlockIdx);
+}
+
+// ── BLOK SKIPPEN (autoregulatie): verder kunnen zonder de sessie af te
+// breken. Skip vraagt een reden, een tik: te weinig tijd of te weinig
+// energie. Een gestart blok behoudt de al gemeten tijd; een niet-gestart
+// blok logt 0. Bij tijdsgebrek bieden we aan de resterende blokken naar
+// hun minimum te schalen; de gebruiker kiest, er gebeurt niets vanzelf.
+function openSkipSheet() { document.getElementById('skipSheet').style.display = 'flex'; }
+function closeSkipSheet() { document.getElementById('skipSheet').style.display = 'none'; }
+function skipBlock(reason) {
+  closeSkipSheet();
+  const idx = currentBlockIdx, b = currentBlocks[idx];
+  if (!b) return;
+  const started = hasLiveProgress();
+  sessionLog[idx] = { name: b.n, planned: b.t * 60, spent: started ? blockClockElapsed() : 0,
+    color: b.c, status: 'skipped', skipReason: reason };
+  if (b.checklist && checkCount > 0) sessionLog[idx].count = checkCount;
+  saveActive();
+  if (reason === 'time') {
+    const rest = currentBlocks.slice(idx + 1);
+    const winst = rest.reduce((s, bb) => s + Math.max(0, bb.t - blockBounds(bb).min), 0);
+    if (winst >= 1) {
+      const nu = rest.reduce((s, bb) => s + bb.t, 0);
+      document.getElementById('shortenMsg').textContent =
+        `The remaining blocks add up to ${nu} min. Shortened to their minimum they take ${nu - winst} min.`;
+      document.getElementById('shortenSheet').style.display = 'flex';
+      return;  // verder gaan gebeurt vanuit de sheet-knoppen
+    }
+  }
+  nextBlock();
+}
+function shortenRest(doIt) {
+  document.getElementById('shortenSheet').style.display = 'none';
+  if (doIt) {
+    for (let i = currentBlockIdx + 1; i < currentBlocks.length; i++) {
+      currentBlocks[i].t = blockBounds(currentBlocks[i]).min;
+    }
+    saveActive();
+    showToast('Remaining blocks set to their minimum');
+  }
+  nextBlock();
 }
 
 function openBlock(idx) {
@@ -1641,12 +1759,14 @@ function startChecklist(blockIdx) {
   const sub = document.getElementById('checkSuccessSub');
   if (sub) sub.textContent = `${parseInt(parts[0]) || 25}+ boulders, everything after is bonus`;
   renderCheck();
+  saveActive();  // verse teller direct persisteren (overschrijft stale cc)
   goTo('v-check');
 }
 function checkAdjust(d) {
   const prev = checkCount;
   checkCount = Math.max(0, checkCount + d);
   renderCheck();
+  saveActive();  // elke boulder telt: teller overleeft reload
   // succes-popup: precies bij het bereiken van de ondergrens (omhoog)
   const minR = checkTargetMin();
   if (d > 0 && prev < minR && checkCount >= minR) showCheckSuccess();
@@ -1684,6 +1804,7 @@ function checkSetTo(n) {
   const prev = checkCount;
   checkCount = (checkCount === n) ? n-1 : n;
   renderCheck();
+  saveActive();
   const minR = checkTargetMin();
   if (prev < minR && checkCount >= minR) showCheckSuccess();
 }
@@ -1954,13 +2075,20 @@ function openRecap(ts) {
   const e = loadHistory().find(x => x.ts === ts);
   if (!e) return;
   _recapEntry = e;
+  _recapEdit = false; _recapDraft = null;
+  const eb = document.getElementById('recapEditBtn');
+  if (eb) eb.textContent = '✎ Adjust times';
   const s = getSession(e.id);
   const name = e.name || (s ? s.name : 'Session');
   const el = id => document.getElementById(id);
   el('recapName').textContent = name;
   const d = new Date(e.ts);
   const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
-  el('recapMeta').textContent = nlDate(d) + ' · ' + (e.time || 0) + ' min · ' + sigTxt;
+  // wall clock apart van actieve bloktijd, als beide bekend zijn
+  const timeTxt = (e.wall && e.wall > (e.time || 0) + 1)
+    ? (e.time || 0) + ' min active · ' + fmtWall(e.wall) + ' total'
+    : (e.time || 0) + ' min';
+  el('recapMeta').textContent = nlDate(d) + ' · ' + timeTxt + ' · ' + sigTxt;
   el('recapDot').style.background = SIG_COL[e.sig] || 'var(--graphite)';
   el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px color-mix(in srgb, ' + SIG_COL[e.sig] + ' 50%, transparent)' : 'none';
 
@@ -1968,11 +2096,18 @@ function openRecap(ts) {
   const total = blocks.reduce((sum,b)=>sum+(b.spent||0),0) || 1;
   el('recapBar').innerHTML = blocks.map(b => '<div style="width:' + ((b.spent||0)/total*100).toFixed(1) + '%;background:' + (b.color||'var(--prepare)') + ';"></div>').join('');
   el('recapBar').style.display = blocks.length ? 'flex' : 'none';
-  el('recapBlocks').innerHTML = blocks.map(b =>
-    '<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ' + (b.color||'var(--prepare)') + ';">' +
+  el('recapBlocks').innerHTML = blocks.map(b => {
+    const skipped = b.status === 'skipped';
+    const planned = b.status === 'planned';
+    const lbl = skipped ? ('skipped · ' + (b.skipReason === 'time' ? 'out of time' : 'low energy'))
+      : planned ? 'not started' : '';
+    const dim = skipped || planned;
+    return '<div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ' + (b.color||'var(--prepare)') + ';' + (dim ? 'opacity:.75;' : '') + '">' +
       '<div style="flex:1;font-family:\'Barlow Condensed\',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">' + b.name + '</div>' +
-      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:18px;color:' + (b.color||'var(--chalk)') + ';">' + Math.round((b.spent||0)/60) + ' min</div>' +
-    '</div>').join('');
+      (lbl ? '<div style="font-family:\'DM Mono\',monospace;font-size:10px;color:var(--disabled);">' + lbl + '</div>' : '') +
+      '<div style="font-family:\'Barlow Condensed\',sans-serif;font-weight:900;font-size:18px;color:' + (planned ? 'var(--disabled)' : (b.color||'var(--chalk)')) + ';">' + (planned ? '–' : Math.round((b.spent||0)/60) + ' min') + '</div>' +
+    '</div>';
+  }).join('');
 
   const canShare = Array.isArray(e.keys) && e.keys.length;
   el('recapShareBtn').style.display = canShare ? '' : 'none';
@@ -1984,7 +2119,91 @@ function openRecap(ts) {
   } else { note.style.display = 'none'; }
   el('recapView').style.display = 'flex';
 }
-function closeRecap() { document.getElementById('recapView').style.display = 'none'; _recapEntry = null; }
+function closeRecap() {
+  document.getElementById('recapView').style.display = 'none';
+  _recapEntry = null;
+  _recapEdit = false; _recapDraft = null;
+  recapHoldEnd();
+}
+
+// ── REPARATIEPAD: tijden in de recap handmatig corrigeren ──
+// Voor als de meting toch ooit mis was (of een sessie deels buiten de app
+// liep): per blok bijstellen, de sessieduur is de som, de load rekent mee.
+let _recapEdit = false;
+let _recapDraft = null;   // { time (min), blocks: [spent in sec] }
+function recapToggleEdit() {
+  const e = _recapEntry;
+  if (!e) return;
+  if (!_recapEdit) {
+    _recapEdit = true;
+    _recapDraft = { time: e.time || 0, blocks: (e.blocks || []).map(b => b.spent || 0) };
+    renderRecapEdit();
+    return;
+  }
+  // opslaan: blokken zijn de waarheid, sessieduur = som, load herberekend
+  const h = loadHistory();
+  const idx = h.findIndex(x => x.ts === e.ts);
+  if (idx >= 0) {
+    const t = h[idx];
+    if (t.blocks && t.blocks.length) {
+      t.blocks.forEach((b, i) => {
+        if (_recapDraft.blocks[i] != null) b.spent = _recapDraft.blocks[i];
+        // een niet-gestart blok dat alsnog tijd krijgt, telt weer als done
+        if (b.status === 'planned' && (b.spent || 0) > 0) delete b.status;
+      });
+      t.time = Math.round(t.blocks.reduce((s, b) => s + (b.spent || 0), 0) / 60);
+    } else {
+      t.time = _recapDraft.time;
+    }
+    t.load = sessionLoad(t.id, t.time);
+    saveHistory(h);
+    rebuildRecent(); renderSignalCal();
+    if (typeof renderTodaysPick === 'function') renderTodaysPick();
+    if (typeof renderStreakLine === 'function') renderStreakLine();
+    showToast('Times corrected');
+  }
+  _recapEdit = false; _recapDraft = null;
+  openRecap(e.ts);
+}
+function recapAdjust(i, d) {
+  if (!_recapDraft) return;
+  if (i < 0) _recapDraft.time = Math.max(0, _recapDraft.time + d);
+  else _recapDraft.blocks[i] = Math.max(0, (_recapDraft.blocks[i] || 0) + d * 60);
+  renderRecapEdit();
+}
+// vasthouden = herhalen, voor grote correcties zonder tikwerk
+let _recapHoldT = null, _recapHoldI = null;
+function recapHoldStart(i, d) {
+  recapAdjust(i, d);
+  recapHoldEnd();
+  _recapHoldT = setTimeout(() => { _recapHoldI = setInterval(() => recapAdjust(i, d), 110); }, 420);
+}
+function recapHoldEnd() {
+  clearTimeout(_recapHoldT); clearInterval(_recapHoldI);
+  _recapHoldT = _recapHoldI = null;
+}
+function renderRecapEdit() {
+  const e = _recapEntry;
+  if (!e || !_recapDraft) return;
+  const el = id => document.getElementById(id);
+  const stepBtn = (i, d, ch) => `<button onpointerdown="recapHoldStart(${i},${d})" onpointerup="recapHoldEnd()" onpointerleave="recapHoldEnd()" style="width:34px;height:34px;border-radius:8px;border:1px solid var(--graphite);background:none;color:var(--chalk);font-size:17px;line-height:1;cursor:pointer;touch-action:manipulation;user-select:none;">${ch}</button>`;
+  const stepper = (i, valTxt) => `<div style="display:flex;align-items:center;gap:8px;">${stepBtn(i,-1,'−')}<div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;color:var(--chalk);min-width:56px;text-align:center;">${valTxt}</div>${stepBtn(i,1,'+')}</div>`;
+  if (e.blocks && e.blocks.length) {
+    el('recapBlocks').innerHTML = e.blocks.map((b, i) =>
+      `<div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--carbon);border-radius:8px;border-left:3px solid ${b.color || 'var(--prepare)'};">
+        <div style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">${b.name}</div>
+        ${stepper(i, Math.round((_recapDraft.blocks[i] || 0) / 60) + ' min')}
+      </div>`).join('') +
+      `<div style="text-align:right;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--dust);padding:4px 12px 0;">total ${Math.round(_recapDraft.blocks.reduce((s, v) => s + (v || 0), 0) / 60)} min</div>`;
+  } else {
+    el('recapBlocks').innerHTML =
+      `<div style="display:flex;align-items:center;gap:12px;padding:8px 12px;background:var(--carbon);border-radius:8px;">
+        <div style="flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);">Session time</div>
+        ${stepper(-1, _recapDraft.time + ' min')}
+      </div>`;
+  }
+  el('recapEditBtn').textContent = 'Save times';
+}
 function recapShare() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
@@ -3531,8 +3750,8 @@ function flushState() {
 }
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') { flushState(); return; }
-  // terug in beeld: uitgestelde sw-update-reload alsnog proberen
-  if (_swReloadPending) swReloadWhenSafe();
+  // terug in beeld: uitgestelde update-balk alsnog tonen
+  maybeShowSwUpdate();
 });
 window.addEventListener('pagehide', flushState);
 
@@ -3630,7 +3849,7 @@ if (!importedShare) {
     const rm = JSON.parse(localStorage.getItem('crimpify_resume') || 'null');
     localStorage.removeItem('crimpify_resume');
     if (rm && Date.now() - rm.ts <= RESUME_WINDOW_MS) {
-      if (rm.mode === 'run' && loadActive()) resumeActive();
+      if (rm.mode === 'run' && loadActive()) resumeActive(true);
       else if (rm.mode === 'build' && loadDraft()) openDraft();
     }
   } catch {}
@@ -3662,8 +3881,14 @@ enableWheelScroll('#recentRow');
 })();
 
 // ── bescherming tegen per ongeluk weg-swipen / tab sluiten ──
+// waarschuwt tijdens elke lopende sessie (niet alleen een lopend blok),
+// en op de summary zolang het stoplicht nog niet gelogd is
 window.addEventListener('beforeunload', e => {
-  if (typeof hasLiveProgress === 'function' && hasLiveProgress()) {
+  const sm = document.getElementById('sessionSummary');
+  const summaryOpen = !!sm && sm.style.display === 'flex';
+  const running = !!sessionStartTime && currentBlocks.length > 0 && !summaryOpen;
+  const unlogged = summaryOpen && !!_pendingLog;
+  if ((typeof hasLiveProgress === 'function' && hasLiveProgress()) || running || unlogged) {
     e.preventDefault();
     e.returnValue = ''; // toont de browser-standaard "weet je het zeker?"
     return '';
@@ -3686,23 +3911,31 @@ window.addEventListener('hashchange', () => {
   if (location.hash.startsWith('#s=')) importFromHash();
 });
 
-// ── PWA: register external service worker (auto-updating) ──
+// ── PWA: register external service worker (update via prompt) ──
 if ('serviceWorker' in navigator) {
-  // controllerchange is hét signaal dat een nieuwe sw de controle pakt
-  // (skipWaiting+claim), ongeacht wie de update ontdekte — dekt ook updates
-  // die de browser zelf al bij de navigatie vond, waar updatefound niet
-  // voor vuurt. Op het allereerste bezoek vuurt claim() dit ook; die eerste
-  // claim op een onbestuurde pagina is geen takeover en hoort niet te
-  // herladen — maar een látere wissel op diezelfde pagina wel.
+  // controllerchange vuurt nadat de gebruiker Refresh tikte (SKIP_WAITING)
+  // of wanneer een andere tab de wissel deed. Eén reload, nooit tijdens
+  // een sessie. De eerste claim op een onbestuurde pagina is geen takeover.
   let hadController = !!navigator.serviceWorker.controller;
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (!hadController) { hadController = true; return; }
-    swReloadWhenSafe();
+    if (_swReloaded || swSessionActive()) return;
+    _swReloaded = true;
+    location.reload();
   });
   navigator.serviceWorker.register('sw.js').then(reg => {
     // check meteen en periodiek op een nieuwe versie
     reg.update();
     setInterval(() => reg.update(), 60 * 60 * 1000);
+    // wachtende nieuwe versie: balk aanbieden (nooit stil overnemen)
+    if (reg.waiting && navigator.serviceWorker.controller) offerSwUpdate(reg.waiting);
+    reg.addEventListener('updatefound', () => {
+      const nw = reg.installing;
+      if (!nw) return;
+      nw.addEventListener('statechange', () => {
+        if (nw.state === 'installed' && navigator.serviceWorker.controller) offerSwUpdate(nw);
+      });
+    });
   }).catch(()=>{ /* offline cache optioneel */ });
 }
 
