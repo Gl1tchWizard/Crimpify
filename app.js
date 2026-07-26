@@ -1,6 +1,7 @@
 // ══ DATA ══
 // Sessiekleuren: namen blijven bestaan (localStorage, favs en deel-links slaan
 // namen op), waarden wijzen naar de vier fingerprint-tokens.
+// Copyright (C) 2026 Govert Schoof. Licensed under AGPL-3.0.
 const FP = t => ({
   color: 'var(--' + t + ')',
   text:  'color-mix(in srgb, var(--' + t + ') 55%, var(--chalk))',
