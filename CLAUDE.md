@@ -525,6 +525,16 @@ verwijzen ernaar.
     bovenaan app.js. Plus een zichtbare link naar de repo in de app: bij
     een PWA is de broncode al geleverd, maar een expliciete link is de
     schone manier om aan AGPL artikel 13 te voldoen.
+25. **Recap-correctie aanbieden bij paused-sessies.** Een gat midden in
+    een blok loopt de actieve tijd in en dus de load. Paused-markering
+    sluit zulke sessies uit van de kalibratie, maar niet van load of
+    ACWR. Als een sessie paused is, moet de recap actief vragen of de
+    bloktijd klopt in plaats van te wachten tot de gebruiker het zelf
+    ziet.
+26. **OVERHEAD_DEFAULT_MIN herijken.** Staat op 10 min. Eerste echte
+    metingen wijzen op aanzienlijk meer. Herzien zodra er vijf bruikbare
+    sessies met wall zijn; te hoog maakt sessies te dun, dus alleen op
+    basis van data.
 
 ### Wacht op de eerste veldtest
 
