@@ -3495,7 +3495,7 @@ function toggleTimer() {
 
 function runTimer() {
   timerRunning = true;
-  document.getElementById('timerStartBtn').textContent = 'Pauzeer';
+  document.getElementById('timerStartBtn').textContent = 'Pause';
   document.getElementById('timerLabel').textContent = 'running';
   // Reset + Finish beschikbaar zodra je gestart bent
   const rb = document.getElementById('timerResetBtn');
