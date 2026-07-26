@@ -556,6 +556,23 @@ verwijzen ernaar.
     metingen wijzen op aanzienlijk meer. Herzien zodra er vijf bruikbare
     sessies met wall zijn; te hoog maakt sessies te dun, dus alleen op
     basis van data.
+27. **res.ok-check in de sw-navigatietak.** De navigatietak cachet
+    responses zonder statuscheck, dus een 404 blijft hangen. Bijt zodra
+    er nieuwe paden bij komen (/why).
+28. **Mock en echt onderscheiden in de catalogus.** De vier ontworpen
+    sessies leven tussen veertien MOCK_CHOOSE-entries zonder
+    onderscheidend veld, en de hero is hardcoded MOCK_CHOOSE[0] (Crimp
+    Factory, verzonnen). Hero moet een echte sessie zijn en mock moet
+    herkenbaar of weg. Blokkeert het uitnodigen van coaches.
+29. **Vaste plank voor coach-sessies.** Four Shots en Summer Capacity
+    staan op geen enkele vaste plank en zijn alleen via zoeken te
+    vinden.
+30. **Groepslabel op de pickerrij.** 68 blokken in acht groepen van 2
+    tot 14, plus vijf Minimal Dose-blokken buiten elke groep. Een rij
+    toont alleen naam, rpe en basisduur, geen groep en geen verwachte
+    belasting. Dat is de oorzaak van "onduidelijk waar het op slaat".
+    Splitsen of terugbrengen naar vijf per groep is een aparte, grotere
+    beslissing.
 
 ### Wacht op de eerste veldtest
 
