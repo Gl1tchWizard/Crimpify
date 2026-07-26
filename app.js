@@ -618,10 +618,38 @@ function composeFromKeys(keys) {
   }), 'custom');
 }
 
+// ── VERWACHTE OVERHEAD (transfers, bidon vullen, boulder uitzoeken) ──
+// De tijdskeuze op de landing is beschikbare tijd in de hal, geen budget
+// aan blokken. Generate reserveert daarom verwachte overhead: de mediaan
+// van (wall min actieve tijd) over de laatste sessies met een wall-veld,
+// uitschieters met een lange pauze (paused) uitgesloten. Mediaan, geen
+// gemiddelde: een vergeten uitschieter mag de schatting niet meetrekken.
+// Pre-v0.45-entries hebben geen wall en tellen niet mee (nooit nul
+// aannemen). Onder het minimumaantal sessies geldt de standaardwaarde.
+// Beide constanten zijn bewust tunebaar na de veldtest.
+const OVERHEAD_DEFAULT_MIN = 10;    // startwaarde zonder persoonlijke data
+const OVERHEAD_MIN_SESSIONS = 5;    // vanaf hier de persoonlijke mediaan
+const OVERHEAD_WINDOW = 10;         // over de laatste N bruikbare sessies
+function expectedOverheadMin() {
+  const xs = loadHistory()
+    .filter(e => e.wall != null && e.time != null && !e.paused)
+    .slice(0, OVERHEAD_WINDOW)
+    .map(e => Math.max(0, e.wall - e.time));
+  if (xs.length < OVERHEAD_MIN_SESSIONS) return OVERHEAD_DEFAULT_MIN;
+  xs.sort((a, b) => a - b);
+  const m = xs.length >> 1;
+  return xs.length % 2 ? xs[m] : Math.round((xs[m - 1] + xs[m]) / 2);
+}
+
 // GENERATE: tijd is leidend. Water-filling binnen [tMin, tMax]; past het niet
 // eerlijk, dan alles op zijn minimum plus een conflictmelding (nooit stil
 // knijpen). _fitInfo voedt de banner in slab en preview.
-const _fitInfo = {};   // per sessie-id: { need, conflict } of null
+const _fitInfo = {};   // per sessie-id: { need, conflict, avail, reserved } of null
+function fitConflictText(fit) {
+  return fit.reserved > 0
+    ? `This combination needs at least ${fit.need} min of blocks plus ${fit.reserved} min for transfers. Extend the session or remove a block.`
+    : `This combination needs at least ${fit.need} min. Extend the session or remove a block.`;
+}
 function fitToBudget(base, id) {
   const ovs = durationOverride[id] || {};
   const items = base.map(b => {
@@ -633,9 +661,15 @@ function fitToBudget(base, id) {
   const fixedTotal = items.filter(x=>x.fixed).reduce((s,x)=>s+x.t,0);
   const flex = items.filter(x=>!x.fixed);
   const minNeeded = fixedTotal + flex.reduce((s,x)=>s+blockBounds(x.b).min,0);
-  const budget = getT();
+  // blokken vullen tot beschikbare tijd min verwachte overhead, gecapt op
+  // een derde van de beschikbare tijd (vangnet tegen een extreme
+  // persoonlijke mediaan). Het base/min/max-model blijft ongemoeid; alleen
+  // het budget waarbinnen gevuld wordt verandert.
+  const avail = getT();
+  const reserved = isFinite(avail) ? Math.min(expectedOverheadMin(), Math.round(avail / 3)) : 0;
+  const budget = isFinite(avail) ? avail - reserved : avail;
   const conflict = isFinite(budget) && budget < minNeeded;
-  _fitInfo[id] = { need: minNeeded, conflict };
+  _fitInfo[id] = { need: minNeeded, conflict, avail: isFinite(avail) ? avail : null, reserved };
   if (flex.length && isFinite(budget)) {
     if (conflict) {
       // eerlijke vloer: niets wordt korter dan zijn minimum
@@ -3010,7 +3044,7 @@ function renderPreview() {
   const rows = blocks.map(b=>`<div class="ap-row"><div class="ap-dot" style="background:${b.c};"></div><div class="ap-name" style="color:${b.c};opacity:.8;">${b.n}</div><div class="ap-t">${b.t}'</div></div>`).join('');
   const fitP = _fitInfo[s.id];
   const warnP = (fitP && fitP.conflict)
-    ? `<div class="fit-warning" style="margin:8px 12px 10px;">This combination needs at least ${fitP.need} min. Extend the session or remove a block.</div>` : '';
+    ? `<div class="fit-warning" style="margin:8px 12px 10px;">${fitConflictText(fitP)}</div>` : '';
   document.getElementById('activePreview').innerHTML = `
     <div class="ap-tape" style="background:var(--carbon);">${tape}</div>
     <div class="ap-body"><div class="ap-head"><div class="ap-title" style="color:${col.text};">${s.name}</div><div class="ap-meta">rpe ${s.rpe} · ${total}'</div></div><div class="ap-rows">${rows}</div></div>${warnP}`;
@@ -3152,11 +3186,15 @@ function buildSlab() {
     <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
       <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--disabled);">locked · ✎ to edit</div>
     </div>` : '';
-  // eerlijk conflict (alleen generate-pad): nooit stil knijpen
+  // eerlijk conflict (alleen generate-pad): nooit stil knijpen. En eerlijk
+  // over de reservering: als er overhead is gereserveerd, staat dat er in
+  // één regel bij (de tijdskeuze is haltijd, geen bloktijd).
   const fit = _fitInfo[activeSessionId];
   const conflictRow = (fit && fit.conflict)
-    ? `<div class="fit-warning">This combination needs at least ${fit.need} min. Extend the session or remove a block.</div>` : '';
-  document.getElementById('slabBlocks').innerHTML = conflictRow + blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
+    ? `<div class="fit-warning">${fitConflictText(fit)}</div>` : '';
+  const reserveRow = (fit && !fit.conflict && fit.reserved > 0 && fit.avail)
+    ? `<div style="padding:6px 14px 2px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--dust);">${fit.avail} min available · ${fit.reserved} min reserved for transfers</div>` : '';
+  document.getElementById('slabBlocks').innerHTML = conflictRow + reserveRow + blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
 
   updateSlabProgress(0);
   if (typeof updateFavStar === 'function') updateFavStar();
@@ -4532,7 +4570,7 @@ function renderGenFlow() {
     const band = blocks.map(b => `<div style="flex:${b.t};background:${b.c};"></div>`).join('');
     const reason = ((s && s.intent ? s.intent.split('.')[0] + '.' : '') + (pick.reason || '')).trim();
     const warn = (fit && fit.conflict)
-      ? `<div class="fit-warning" style="margin-top:10px;">This combination needs at least ${fit.need} min. Extend the session or remove a block.</div>` : '';
+      ? `<div class="fit-warning" style="margin-top:10px;">${fitConflictText(fit)}</div>` : '';
     html = `<div class="gen-q">Today's proposal</div>
       <div class="gen-prop">
         <div class="gen-prop-title">${s ? s.name : ''}</div>
