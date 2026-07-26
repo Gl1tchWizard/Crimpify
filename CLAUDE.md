@@ -25,8 +25,8 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v40`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v41`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v41`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v42`, enz.), anders zien bezoekers de oude versie.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
   die wordt uitgesteld zolang een sessie loopt (guard op `sessionStartTime`,
   niet op de view). De v0.45-poging met een wachtende sw plus update-balk is
@@ -83,6 +83,27 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   blokken binnen [tMin, tMax] (water-filling) en meldt een eerlijk conflict
   als het minimum niet in het budget past, in plaats van stil te knijpen.
   Vaste blokken (`fixed:true`) schalen nooit.
+- **Sessietijd (vastgelegde beslissing, juli 2026):** een sessie is de tijd
+  van hal in tot hal uit. Tijd tussen blokken (bidon, transfer, boulder
+  uitzoeken, praten) is sessietijd, geen trainingstijd. Wall clock is
+  planningsdata, actieve bloktijd is belastingdata; strikt gescheiden. De
+  wall clock loopt van sessiestart tot het einde van het laatste afgeronde
+  of geskipte blok (absoluut opgeslagen als `end` in de entry), nooit tot
+  het logmoment. Pauzes langer dan 15 min aaneengesloten weg (drempel
+  `PAUSE_OUTLIER_MS`; rust tussen zware pogingen is 3-5 min, telefoon op
+  slot tijdens een lang klimblok 10+ min, 15 min is vrijwel zeker geen
+  haltijd) markeren de entry met `paused`: de wall clock loopt door, alleen
+  de kalibratie negeert de sessie. Overhead wordt afgeleid (wall min som
+  van de blokken), nooit gemeten: geen transitietimer, geen extra UI. De
+  recap toont wall als kop, actieve tijd en overhead (neutraal, "between
+  blocks") eronder. Generate vult tot beschikbare tijd min verwachte
+  overhead: mediaan over de laatste 10 bruikbare sessies (wall aanwezig,
+  niet paused), pas vanaf 5 sessies persoonlijk, daarvoor de constante
+  `OVERHEAD_DEFAULT_MIN` (10 min, tunebaar), gecapt op een derde van de
+  beschikbare tijd; één eerlijke regel op de slab meldt de reservering.
+  Load/ACWR blijft altijd actieve tijd × intensiteit; wall komt daar
+  nergens in. Entries zonder `wall` (pre-v0.45) zijn overal uitgesloten,
+  nooit als nul geteld.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
@@ -93,13 +114,13 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
 
 | key | inhoud |
 |---|---|
-| `crimpify_history` | array, nieuwste eerst, max 50: `{id, variant, time, ts, sig, load}` plus additief (v0.45) `wall?` (wall clock in minuten, eerste start tot einde; `time` blijft de actieve bloktijd en voedt de load) en per blok in `blocks` een optionele `status` (`'skipped'` met `skipReason: 'time'\|'energy'`, of `'planned'` = niet gestart; zonder status = done); tijden achteraf corrigeerbaar via Adjust times in de recap (load rekent mee) |
+| `crimpify_history` | array, nieuwste eerst, max 50: `{id, variant, time, ts, sig, load}` plus additief (v0.45) `wall?` (wall clock in minuten, sessiestart tot einde laatste blok; `time` blijft de actieve bloktijd en voedt de load) en per blok in `blocks` een optionele `status` (`'skipped'` met `skipReason: 'time'\|'energy'`, of `'planned'` = niet gestart; zonder status = done), plus additief (v0.47) `end?` (absolute timestamp einde laatste blok; `ts` is het logmoment) en `paused?` (lange-pauze-uitschieter, alleen voor kalibratie); tijden achteraf corrigeerbaar via Adjust times in de recap (load rekent mee) |
 | `crimpify_favs` | max 12: `{name, keys, color, rpe, intent, time, d?, basedOn?}` |
 | `crimpify_draft` | `{keys, name, color, rpe, intent, locked, owned, ov?, basedOn?}` |
 | `crimpify_custom_blocks` | eigen oefeningen, keys met `ux_`-prefix |
 | `crimpify_hidden_blocks` | verborgen blokken |
 | `crimpify_name` | voornaam voor de begroeting |
-| `crimpify_active` | onafgemaakte training voor de Continue-kaart en sessieherstel: `{keys, name, color, sessionId, idx, spent, ts}` plus additief (v0.45) `st` (absolute sessiestart), `bs` (blokstart), `log` (volledige bloklog incl. skips), `dt` (actuele blokduren), `cc` (boulderteller lopend telblok); heartbeat elke 5 s tijdens een lopende sessie; verloopt na 12 uur |
+| `crimpify_active` | onafgemaakte training voor de Continue-kaart en sessieherstel: `{keys, name, color, sessionId, idx, spent, ts}` plus additief (v0.45) `st` (absolute sessiestart), `bs` (blokstart), `log` (volledige bloklog incl. skips), `dt` (actuele blokduren), `cc` (boulderteller lopend telblok), `pz` (v0.47: lange-pauze-markering); heartbeat elke 5 s tijdens een lopende sessie; verloopt na 12 uur |
 | `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 | `crimpify_install_prompt` | `'shown'` of `'accepted'`; de installatie-uitnodiging verschijnt daarna nooit meer |
 
@@ -615,7 +636,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.46) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.47) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)

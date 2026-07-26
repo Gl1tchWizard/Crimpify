@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.46</div>
+    <div id="splashBy">by Glitch Labs · v0.47</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -562,6 +562,13 @@
         <div id="recapDot" style="width:16px;height:16px;border-radius:50%;margin:0 auto 10px;background:var(--graphite);"></div>
         <div id="recapName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);line-height:1.1;">–</div>
         <div id="recapMeta" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--dust);margin-top:6px;">–</div>
+        <!-- wall clock als kop (wat de sessie echt duurde); actief en overhead eronder, neutraal -->
+        <div id="recapTimes" style="display:none;margin-top:14px;">
+          <div id="recapWallBig" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:42px;line-height:1;color:var(--chalk);"></div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust);margin-top:3px;">session</div>
+          <div id="recapActiveLine" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--chalk);margin-top:8px;">–</div>
+          <div id="recapOverheadLine" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--dust);margin-top:2px;">–</div>
+        </div>
       </div>
       <div id="recapBar" style="display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--carbon);margin-top:18px;"></div>
       <div id="recapBlocks" style="margin-top:14px;display:flex;flex-direction:column;gap:8px;"></div>

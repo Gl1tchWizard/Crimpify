@@ -466,7 +466,12 @@ function sessionLoad(id, minutes) {
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
   const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
-  if (snap) { e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks; if (snap.wall != null) e.wall = snap.wall; }
+  if (snap) {
+    e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks;
+    if (snap.wall != null) e.wall = snap.wall;
+    if (snap.end != null) e.end = snap.end;   // einde laatste blok, absoluut (ts = logmoment)
+    if (snap.paused) e.paused = true;         // uitschieter: lange pauze, kalibratie negeert hem
+  }
   h.unshift(e);
   saveHistory(h);
   if (sig) trackEvent('session_completed');
@@ -531,6 +536,17 @@ let sessionStartTime = null;
 // centrale blok-stopwatch: meet echte tijd voor ELK bloktype
 let blockClockStart = null;    // timestamp waarop het huidige blok geopend werd
 function blockClockElapsed() { return blockClockStart ? Math.round((Date.now() - blockClockStart) / 1000) : 0; }
+// pauzedrempel: langer dan dit aaneengesloten weg (tab verborgen of app
+// gedood) tijdens een lopende sessie = de sessie wordt als uitschieter
+// gemarkeerd (entry-veld paused). Keuze 15 min: normale rust tussen zware
+// pogingen is 3-5 min en tijdens een lang klimblok kan de telefoon 10+ min
+// op slot liggen; 15 min aaneengesloten is vrijwel zeker geen haltijd.
+// De wall clock loopt gewoon door; de markering sluit de sessie alleen uit
+// van de overhead-kalibratie. Een vals positief kost dus kalibratiedata,
+// nooit load of historie.
+const PAUSE_OUTLIER_MS = 15 * 60000;
+let _sessionPaused = false;    // uitschieter-markering, reist mee naar de entry
+let _hiddenAt = null;          // wanneer de tab verborgen raakte
 
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
@@ -602,10 +618,38 @@ function composeFromKeys(keys) {
   }), 'custom');
 }
 
+// ── VERWACHTE OVERHEAD (transfers, bidon vullen, boulder uitzoeken) ──
+// De tijdskeuze op de landing is beschikbare tijd in de hal, geen budget
+// aan blokken. Generate reserveert daarom verwachte overhead: de mediaan
+// van (wall min actieve tijd) over de laatste sessies met een wall-veld,
+// uitschieters met een lange pauze (paused) uitgesloten. Mediaan, geen
+// gemiddelde: een vergeten uitschieter mag de schatting niet meetrekken.
+// Pre-v0.45-entries hebben geen wall en tellen niet mee (nooit nul
+// aannemen). Onder het minimumaantal sessies geldt de standaardwaarde.
+// Beide constanten zijn bewust tunebaar na de veldtest.
+const OVERHEAD_DEFAULT_MIN = 10;    // startwaarde zonder persoonlijke data
+const OVERHEAD_MIN_SESSIONS = 5;    // vanaf hier de persoonlijke mediaan
+const OVERHEAD_WINDOW = 10;         // over de laatste N bruikbare sessies
+function expectedOverheadMin() {
+  const xs = loadHistory()
+    .filter(e => e.wall != null && e.time != null && !e.paused)
+    .slice(0, OVERHEAD_WINDOW)
+    .map(e => Math.max(0, e.wall - e.time));
+  if (xs.length < OVERHEAD_MIN_SESSIONS) return OVERHEAD_DEFAULT_MIN;
+  xs.sort((a, b) => a - b);
+  const m = xs.length >> 1;
+  return xs.length % 2 ? xs[m] : Math.round((xs[m - 1] + xs[m]) / 2);
+}
+
 // GENERATE: tijd is leidend. Water-filling binnen [tMin, tMax]; past het niet
 // eerlijk, dan alles op zijn minimum plus een conflictmelding (nooit stil
 // knijpen). _fitInfo voedt de banner in slab en preview.
-const _fitInfo = {};   // per sessie-id: { need, conflict } of null
+const _fitInfo = {};   // per sessie-id: { need, conflict, avail, reserved } of null
+function fitConflictText(fit) {
+  return fit.reserved > 0
+    ? `This combination needs at least ${fit.need} min of blocks plus ${fit.reserved} min for transfers. Extend the session or remove a block.`
+    : `This combination needs at least ${fit.need} min. Extend the session or remove a block.`;
+}
 function fitToBudget(base, id) {
   const ovs = durationOverride[id] || {};
   const items = base.map(b => {
@@ -617,9 +661,15 @@ function fitToBudget(base, id) {
   const fixedTotal = items.filter(x=>x.fixed).reduce((s,x)=>s+x.t,0);
   const flex = items.filter(x=>!x.fixed);
   const minNeeded = fixedTotal + flex.reduce((s,x)=>s+blockBounds(x.b).min,0);
-  const budget = getT();
+  // blokken vullen tot beschikbare tijd min verwachte overhead, gecapt op
+  // een derde van de beschikbare tijd (vangnet tegen een extreme
+  // persoonlijke mediaan). Het base/min/max-model blijft ongemoeid; alleen
+  // het budget waarbinnen gevuld wordt verandert.
+  const avail = getT();
+  const reserved = isFinite(avail) ? Math.min(expectedOverheadMin(), Math.round(avail / 3)) : 0;
+  const budget = isFinite(avail) ? avail - reserved : avail;
   const conflict = isFinite(budget) && budget < minNeeded;
-  _fitInfo[id] = { need: minNeeded, conflict };
+  _fitInfo[id] = { need: minNeeded, conflict, avail: isFinite(avail) ? avail : null, reserved };
   if (flex.length && isFinite(budget)) {
     if (conflict) {
       // eerlijke vloer: niets wordt korter dan zijn minimum
@@ -880,9 +930,13 @@ function showSessionSummary() {
   const totalPlanned = currentBlocks.reduce((s,b)=>s+(b.t*60),0);
   const spentMin = Math.round(totalSpent/60);
   const plannedMin = Math.round(totalPlanned/60);
-  // twee cijfers: actieve bloktijd (som van de blokken) en wall clock
-  // (eerste start tot nu, loopt door reloads heen dankzij crimpify_active)
-  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((Date.now() - sessionStartTime) / 60000)) : spentMin;
+  // twee cijfers, strikt gescheiden: actieve bloktijd (belastingdata) en
+  // wall clock (planningsdata, hal-in tot hal-uit). De wall clock eindigt
+  // hier, bij het einde van het laatste blok: deze functie draait synchroon
+  // met de laatste nextBlock. Nooit tot het logmoment (het stoplicht kan
+  // een half uur later thuis getikt worden).
+  const sessionEndTime = Date.now();
+  const wallMin = sessionStartTime ? Math.max(spentMin, Math.round((sessionEndTime - sessionStartTime) / 60000)) : spentMin;
 
   document.getElementById('summaryTotal').textContent =
     `${doneN} of ${currentBlocks.length} block${currentBlocks.length === 1 ? '' : 's'} done`
@@ -900,7 +954,7 @@ function showSessionSummary() {
   // verschil-regel
   const totDiff = spentMin - plannedMin;
   const diffEl = document.getElementById('summaryDiff');
-  if (Math.abs(totDiff) < 1) { diffEl.textContent = 'precies op schema'; diffEl.style.color = 'var(--dust)'; }
+  if (Math.abs(totDiff) < 1) { diffEl.textContent = 'right on schedule'; diffEl.style.color = 'var(--dust)'; }
   else if (totDiff > 0) { diffEl.textContent = `${totDiff} min longer than planned`; diffEl.style.color = 'var(--dust)'; }
   else { diffEl.textContent = `${Math.abs(totDiff)} min shorter than planned`; diffEl.style.color = 'var(--dust)'; }
 
@@ -953,6 +1007,8 @@ function showSessionSummary() {
     name: s.name,
     color: s.color || 'lime',
     wall: wallMin,
+    end: sessionEndTime,
+    ...(_sessionPaused ? { paused: true } : {}),
     // alle geplande blokken, met status: skips en niet-gestart reizen mee
     // de historie in, zodat het patroon later terug te zien is
     blocks: currentBlocks.map((cb, i) => {
@@ -1231,6 +1287,7 @@ function saveActive() {
       st: sessionStartTime, bs: blockClockStart, log: sessionLog,
       dt: currentBlocks.map(b => b.t),
       ...(cb && cb.checklist ? { cc: checkCount } : {}),
+      ...(_sessionPaused ? { pz: 1 } : {}),
     }));
   } catch {}
 }
@@ -1293,6 +1350,10 @@ function resumeActive(fromReload) {
   // absolute klokken herstellen: sessie- en blokstart lopen door een reload
   // heen gewoon door (wall clock), in plaats van op nul te beginnen
   sessionStartTime = a.st || Date.now();
+  // uitschieter-markering herstellen; een gat sinds de laatste heartbeat
+  // groter dan de pauzedrempel (app gedood, later hervat) telt ook
+  _sessionPaused = !!a.pz || (Date.now() - a.ts > PAUSE_OUTLIER_MS);
+  _hiddenAt = null;
   startHeartbeat();
   const idx = Math.min(a.idx, currentBlocks.length - 1);
   openBlock(idx);
@@ -1306,6 +1367,7 @@ function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  _sessionPaused = false; _hiddenAt = null;
   startHeartbeat();
   trackEvent('session_started');
   openBlock(0);
@@ -2078,11 +2140,25 @@ function openRecap(ts) {
   el('recapName').textContent = name;
   const d = new Date(e.ts);
   const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
-  // wall clock apart van actieve bloktijd, als beide bekend zijn
-  const timeTxt = (e.wall && e.wall > (e.time || 0) + 1)
-    ? (e.time || 0) + ' min active · ' + fmtWall(e.wall) + ' total'
-    : (e.time || 0) + ' min';
-  el('recapMeta').textContent = nlDate(d) + ' · ' + timeTxt + ' · ' + sigTxt;
+  // wall clock is de kop: dat is wat de gebruiker heeft ervaren. Actieve
+  // bloktijd als tweede getal, overhead (afgeleid, nooit gemeten) als
+  // neutrale derde regel. Entries zonder wall (pre-v0.45) houden de oude
+  // compacte regel en doen nergens in de overheadrekenarij mee.
+  const hasWall = e.wall != null;
+  el('recapMeta').textContent = nlDate(d)
+    + (hasWall ? '' : ' · ' + (e.time || 0) + ' min')
+    + ' · ' + sigTxt
+    + (e.paused ? ' · long break' : '');
+  const tw = el('recapTimes');
+  if (hasWall) {
+    const overhead = Math.max(0, (e.wall || 0) - (e.time || 0));
+    el('recapWallBig').textContent = fmtWall(e.wall);
+    el('recapActiveLine').textContent = (e.time || 0) + ' min active training';
+    el('recapOverheadLine').textContent = overhead + ' min between blocks';
+    tw.style.display = '';
+  } else {
+    tw.style.display = 'none';
+  }
   el('recapDot').style.background = SIG_COL[e.sig] || 'var(--graphite)';
   el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px color-mix(in srgb, ' + SIG_COL[e.sig] + ' 50%, transparent)' : 'none';
 
@@ -2968,7 +3044,7 @@ function renderPreview() {
   const rows = blocks.map(b=>`<div class="ap-row"><div class="ap-dot" style="background:${b.c};"></div><div class="ap-name" style="color:${b.c};opacity:.8;">${b.n}</div><div class="ap-t">${b.t}'</div></div>`).join('');
   const fitP = _fitInfo[s.id];
   const warnP = (fitP && fitP.conflict)
-    ? `<div class="fit-warning" style="margin:8px 12px 10px;">This combination needs at least ${fitP.need} min. Extend the session or remove a block.</div>` : '';
+    ? `<div class="fit-warning" style="margin:8px 12px 10px;">${fitConflictText(fitP)}</div>` : '';
   document.getElementById('activePreview').innerHTML = `
     <div class="ap-tape" style="background:var(--carbon);">${tape}</div>
     <div class="ap-body"><div class="ap-head"><div class="ap-title" style="color:${col.text};">${s.name}</div><div class="ap-meta">rpe ${s.rpe} · ${total}'</div></div><div class="ap-rows">${rows}</div></div>${warnP}`;
@@ -3110,11 +3186,15 @@ function buildSlab() {
     <div class="slab-block" style="background:none;min-height:40px;justify-content:center;pointer-events:none;">
       <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.14em;text-transform:uppercase;color:var(--disabled);">locked · ✎ to edit</div>
     </div>` : '';
-  // eerlijk conflict (alleen generate-pad): nooit stil knijpen
+  // eerlijk conflict (alleen generate-pad): nooit stil knijpen. En eerlijk
+  // over de reservering: als er overhead is gereserveerd, staat dat er in
+  // één regel bij (de tijdskeuze is haltijd, geen bloktijd).
   const fit = _fitInfo[activeSessionId];
   const conflictRow = (fit && fit.conflict)
-    ? `<div class="fit-warning">This combination needs at least ${fit.need} min. Extend the session or remove a block.</div>` : '';
-  document.getElementById('slabBlocks').innerHTML = conflictRow + blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
+    ? `<div class="fit-warning">${fitConflictText(fit)}</div>` : '';
+  const reserveRow = (fit && !fit.conflict && fit.reserved > 0 && fit.avail)
+    ? `<div style="padding:6px 14px 2px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;color:var(--dust);">${fit.avail} min available · ${fit.reserved} min reserved for transfers</div>` : '';
+  document.getElementById('slabBlocks').innerHTML = conflictRow + reserveRow + blocksHTML + emptyHint + (sessionLocked ? lockedRow : addRow);
 
   updateSlabProgress(0);
   if (typeof updateFavStar === 'function') updateFavStar();
@@ -3743,8 +3823,14 @@ function flushState() {
   saveResumeMarker();
 }
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') { flushState(); return; }
-  // terug in beeld: uitgestelde sw-update-reload alsnog proberen
+  if (document.visibilityState === 'hidden') { _hiddenAt = Date.now(); flushState(); return; }
+  // terug in beeld: lange afwezigheid tijdens een lopende sessie markeren
+  if (_hiddenAt && sessionStartTime && Date.now() - _hiddenAt > PAUSE_OUTLIER_MS) {
+    _sessionPaused = true;
+    saveActive();
+  }
+  _hiddenAt = null;
+  // uitgestelde sw-update-reload alsnog proberen
   if (_swReloadPending) swReloadWhenSafe();
 });
 window.addEventListener('pagehide', flushState);
@@ -4484,7 +4570,7 @@ function renderGenFlow() {
     const band = blocks.map(b => `<div style="flex:${b.t};background:${b.c};"></div>`).join('');
     const reason = ((s && s.intent ? s.intent.split('.')[0] + '.' : '') + (pick.reason || '')).trim();
     const warn = (fit && fit.conflict)
-      ? `<div class="fit-warning" style="margin-top:10px;">This combination needs at least ${fit.need} min. Extend the session or remove a block.</div>` : '';
+      ? `<div class="fit-warning" style="margin-top:10px;">${fitConflictText(fit)}</div>` : '';
     html = `<div class="gen-q">Today's proposal</div>
       <div class="gen-prop">
         <div class="gen-prop-title">${s ? s.name : ''}</div>
