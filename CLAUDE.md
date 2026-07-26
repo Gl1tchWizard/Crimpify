@@ -25,13 +25,17 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v39`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v40`, enz.), anders zien bezoekers de oude versie.
-  Updates via prompt (sinds v0.45): een nieuwe sw wacht (geen skipWaiting bij
-  install, alleen op een `SKIP_WAITING`-bericht); de app toont buiten lopende
-  sessies een update-balk (Refresh/Later) en herlaadt pas na die tik, één
-  keer, via controllerchange. Nooit een stille reload tijdens een sessie —
-  een lopende sessie is lopend, ongeacht de view.
+- **Service worker:** cachenaam is `crimpify-v40`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v41`, enz.), anders zien bezoekers de oude versie.
+  Updates: skipWaiting+claim bij install, met één reload via controllerchange
+  die wordt uitgesteld zolang een sessie loopt (guard op `sessionStartTime`,
+  niet op de view). De v0.45-poging met een wachtende sw plus update-balk is
+  bewust teruggedraaid (v0.46): een wachtende sw strandt clients met oude
+  app.js (die kennen het wek-bericht niet) terwijl de verse index wel al
+  binnenkomt naast hun gecachte oude app.js — dat was de dode Skip-knop.
+  Sinds het sessieherstel kost een reload geen gemeten tijd meer, dus de
+  balk loste niets meer op. Niet opnieuw voorstellen zonder oplossing voor
+  bestaande clients.
 - **Analytics: GoatCounter** (FOSS, cookieloos, geen persoonsgegevens,
   aggregaat-only, geen accounts) — async snippet onderaan index.html, dashboard
   op https://crimpify.goatcounter.com. count.js telt localhost/privé-IP's
@@ -552,7 +556,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.45) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.46) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
