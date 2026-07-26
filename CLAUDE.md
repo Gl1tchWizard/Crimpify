@@ -508,7 +508,7 @@ verwijzen ernaar.
 
 ### Nu bouwbaar (toegevoegd 26 juli)
 
-19. **Cachestrategie gelijktrekken.** Structurele oorzaak van de
+19. **Cachestrategie gelijktrekken.** [PERSISTENTIE] Structurele oorzaak van de
     versie-skew van v0.45: index.html is network-first, app.js en
     style.css zijn cache-first. Zolang die uit elkaar lopen blijft een
     gemengde versie mogelijk. Oplossing: één strategie voor alle drie, of
@@ -564,7 +564,7 @@ verwijzen ernaar.
 
 ### Wacht op een backend (toegevoegd 26 juli)
 
-23. **Historie-cap van 50 entries verhogen.** Nu ruim, maar een
+23. **Historie-cap van 50 entries verhogen.** [PERSISTENTIE] Nu ruim, maar een
     twaalfwekenplan met drie sessies per week is 36 entries. Bij cycles
     verliest een gebruiker zijn eerste plan uit de historie. Beslis dit
     samen met de servermigratie, niet ervoor.
