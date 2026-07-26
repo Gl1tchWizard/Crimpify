@@ -484,9 +484,10 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
 
 ## Backlog
 
-Eén lijst, vier statusgroepen. De grote ontwerpsecties (bottom-nav, climb
-with intent, in-session flexibility, Choose-flow) blijven staan waar ze
-staan; de items hieronder verwijzen ernaar.
+Eén lijst, vier statusgroepen plus vastgelegde beslissingen onderaan. De
+grote ontwerpsecties (bottom-nav, climb with intent, in-session
+flexibility, Choose-flow) blijven staan waar ze staan; de items hieronder
+verwijzen ernaar.
 
 ### Nu bouwbaar (in deze volgorde)
 
@@ -504,6 +505,36 @@ staan; de items hieronder verwijzen ernaar.
    Choose-catalogus is dit al gedaan (juli 2026).
 6. **NL code-commentaren naar Engels.** Chore, bij gelegenheid, nooit ten
    koste van werkende code (zie Taalregel).
+
+### Nu bouwbaar (toegevoegd 26 juli)
+
+19. **Cachestrategie gelijktrekken.** [PERSISTENTIE] Structurele oorzaak van de
+    versie-skew van v0.45: index.html is network-first, app.js en
+    style.css zijn cache-first. Zolang die uit elkaar lopen blijft een
+    gemengde versie mogelijk. Oplossing: één strategie voor alle drie, of
+    gehashte bestandsnamen.
+20. **Dev-server bereikbaar op het LAN.** Server bindt op 127.0.0.1 en/of
+    Windows-firewall blokkeert poort 8317. Bind op 0.0.0.0 en maak één
+    firewallregel. Zonder dit is testen op een echt toestel niet mogelijk
+    en moet elke check via een merge.
+21. **Nederlandse strings opruimen.** "Timer resetten?" en "precies op
+    schema" staan nog in de UI; taalregel is Engels. ("precies op schema"
+    is inmiddels gefixt in de openstaande wall-clock-branch; "Timer
+    resetten?" resteert.)
+22. **Licentieclaim zichtbaar maken.** Copyrightregel in README en
+    bovenaan app.js. Plus een zichtbare link naar de repo in de app: bij
+    een PWA is de broncode al geleverd, maar een expliciete link is de
+    schone manier om aan AGPL artikel 13 te voldoen.
+25. **Recap-correctie aanbieden bij paused-sessies.** Een gat midden in
+    een blok loopt de actieve tijd in en dus de load. Paused-markering
+    sluit zulke sessies uit van de kalibratie, maar niet van load of
+    ACWR. Als een sessie paused is, moet de recap actief vragen of de
+    bloktijd klopt in plaats van te wachten tot de gebruiker het zelf
+    ziet.
+26. **OVERHEAD_DEFAULT_MIN herijken.** Staat op 10 min. Eerste echte
+    metingen wijzen op aanzienlijk meer. Herzien zodra er vijf bruikbare
+    sessies met wall zijn; te hoog maakt sessies te dun, dus alleen op
+    basis van data.
 
 ### Wacht op de eerste veldtest
 
@@ -541,6 +572,17 @@ staan; de items hieronder verwijzen ernaar.
     Approved-badges, drie maker-lagen en ranking tegen het meuk-probleem;
     ontwerp in de eigen sectie. Vraagt een backend én echte coaches.
 
+### Wacht op een backend (toegevoegd 26 juli)
+
+23. **Historie-cap van 50 entries verhogen.** [PERSISTENTIE] Nu ruim, maar een
+    twaalfwekenplan met drie sessies per week is 36 entries. Bij cycles
+    verliest een gebruiker zijn eerste plan uit de historie. Beslis dit
+    samen met de servermigratie, niet ervoor.
+24. **Sessiemetadata voor cycle-readiness.** Vier velden, niet meer:
+    primaire prikkel, verwachte belasting, minimale rust in uren, hoge
+    vingerbelasting. Genoeg om een week te plannen. De rest pas als
+    blijkt wat er mist.
+
 ### Ideeën (kans, geen verplichting)
 
 17. **Signatuur-motief.** Phalanx als voortgangsindicator, hexagon-C als
@@ -551,6 +593,23 @@ staan; de items hieronder verwijzen ernaar.
 Afgewezen uit de concept-mocks, niet opnieuw voorstellen: avatar,
 notificatiebel, voltooiingspercentages, derde bouw-ingang,
 Engels/Nederlands-mix.
+
+### Vastgelegde beslissingen (toegevoegd 26 juli)
+
+- Service worker: elke wijziging aan de sw of het update-mechanisme moet
+  werken met de app.js van de vorige release. Een nieuw mechanisme dat
+  afhankelijk is van nieuwe app.js strandt alle bestaande clients.
+  Beoordeel elk sw-voorstel expliciet tegen deze regel.
+- ACWR en load zijn een contextsignaal, nooit een poortwachter. Geen
+  sessie wordt geblokkeerd, geen risicodiagnose in de UI. De relatie
+  tussen ACWR en blessurerisico is methodologisch omstreden.
+- Cycles (periodisering) komen na 0.9. De eerste stap is een deelbare
+  week, niet een hiërarchie van week, phase en plan. Tot die tijd wordt
+  er geen lokale planarchitectuur gebouwd die later gemigreerd moet
+  worden.
+- "De link is de data" blijft het standaardmodel voor delen. Een canoniek
+  sessie-id komt ernaast, niet in de plaats. De payload-link werkt zonder
+  server, zonder account en zonder netwerk, en dat is de groeimotor.
 
 ## Werkafspraken
 
