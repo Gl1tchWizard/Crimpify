@@ -2106,11 +2106,25 @@ function openRecap(ts) {
   el('recapName').textContent = name;
   const d = new Date(e.ts);
   const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
-  // wall clock apart van actieve bloktijd, als beide bekend zijn
-  const timeTxt = (e.wall && e.wall > (e.time || 0) + 1)
-    ? (e.time || 0) + ' min active · ' + fmtWall(e.wall) + ' total'
-    : (e.time || 0) + ' min';
-  el('recapMeta').textContent = nlDate(d) + ' · ' + timeTxt + ' · ' + sigTxt;
+  // wall clock is de kop: dat is wat de gebruiker heeft ervaren. Actieve
+  // bloktijd als tweede getal, overhead (afgeleid, nooit gemeten) als
+  // neutrale derde regel. Entries zonder wall (pre-v0.45) houden de oude
+  // compacte regel en doen nergens in de overheadrekenarij mee.
+  const hasWall = e.wall != null;
+  el('recapMeta').textContent = nlDate(d)
+    + (hasWall ? '' : ' · ' + (e.time || 0) + ' min')
+    + ' · ' + sigTxt
+    + (e.paused ? ' · long break' : '');
+  const tw = el('recapTimes');
+  if (hasWall) {
+    const overhead = Math.max(0, (e.wall || 0) - (e.time || 0));
+    el('recapWallBig').textContent = fmtWall(e.wall);
+    el('recapActiveLine').textContent = (e.time || 0) + ' min active training';
+    el('recapOverheadLine').textContent = overhead + ' min between blocks';
+    tw.style.display = '';
+  } else {
+    tw.style.display = 'none';
+  }
   el('recapDot').style.background = SIG_COL[e.sig] || 'var(--graphite)';
   el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px color-mix(in srgb, ' + SIG_COL[e.sig] + ' 50%, transparent)' : 'none';
 
