@@ -95,3 +95,67 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 @media (max-width:1180px){
   .hero-copy { max-width:52%; }
 }
+
+/* ── mobiel (fase 2): eigen compositie, geen gestapelde desktop ──
+   Copy op inkt, daaronder een fotoband van 500px met een vaste
+   beeldschaal (background-size:auto 500px): de klimmer is op elke
+   mobiele breedte even groot en staat verankerd op 45vw. De kaart is
+   aan dezelfde 45vw verankerd en hangt over de onderrand van de foto;
+   de schenen/schoenen van de klimmer kruisen de fingerprint-zone
+   (cut-through, lichter dan desktop). */
+.m-nav { display:none; }
+@media (max-width:768px){
+  .wrap { padding:0 20px; }
+
+  /* header: compact, logo + OPEN THE APP + menuknop */
+  .site-bar { padding:12px 20px; gap:14px; }
+  .brand-sub { display:none; }
+  .brand b { font-size:24px; }
+  .mark { width:26px; height:30px; }
+  nav.main { display:none; }
+  header.site .btn { margin-left:auto; padding:12px 16px; font-size:13px; }
+  .m-nav { display:block; position:relative; }
+  .m-nav summary { list-style:none; cursor:pointer; width:44px; height:44px; border:1px solid var(--graphite); border-radius:6px; display:flex; flex-direction:column; gap:6px; align-items:center; justify-content:center; }
+  .m-nav summary::-webkit-details-marker { display:none; }
+  .m-nav summary i { width:16px; height:2px; background:var(--chalk); }
+  .m-nav[open] summary { border-color:var(--chalk); }
+  .m-panel { position:absolute; right:0; top:calc(100% + 10px); z-index:30; min-width:220px; display:flex; flex-direction:column; background:var(--carbon); border:1px solid var(--graphite); border-radius:10px; padding:8px 0; box-shadow:0 18px 44px rgba(0,0,0,.5); }
+  .m-panel a { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:12px 18px; }
+  .m-panel a:hover { color:var(--chalk); }
+
+  /* hero: copy boven, fotoband (500px) onder; kaart hangt over de
+     onderrand van de band (bottom 80 < bandvoet 120) */
+  .hero { min-height:0; display:block; padding-bottom:580px; }
+  .hero-photo, .hero-shade, .hero-climber { inset:auto 0 120px 0; height:500px; }
+  .hero-photo, .hero-climber { background-size:auto 500px; background-position:calc(45vw - 572px) 0; }
+  .hero-shade { background:linear-gradient(180deg, var(--ink) 0%, rgba(11,12,10,.45) 16%, rgba(11,12,10,0) 42%); }
+  .hero-grid { display:block; padding:40px 20px 0; }
+  .hero-copy { max-width:none; }
+  .eyebrow { font-size:11px; letter-spacing:.18em; }
+  .hero h1 { font-size:clamp(56px,16.5vw,68px); margin:16px 0 20px; }
+  .hero p.lede { font-size:17px; max-width:34ch; }
+  .hero-ctas { flex-direction:column; gap:12px; margin:26px 0 18px; }
+  .hero-ctas .btn { display:block; text-align:center; padding:17px 20px; }
+  .trust { font-size:11px; letter-spacing:.12em; }
+
+  /* compacte Power Hour-kaart: kicker, fingerprint, titel, één
+     metaregel, maker, VIEW SESSION; intent/tweede metaregel/curated
+     vervallen op klein scherm (maker-credit nooit) */
+  .ph-card { left:calc(45vw - 75px); top:auto; bottom:80px; transform:none; width:280px; padding:18px 20px 16px; border-radius:14px; }
+  .ph-kicker { font-size:10px; }
+  .ph-fp { height:44px; margin:12px 0 14px; }
+  .ph-name { font-size:34px; }
+  .ph-int, .ph-meta br, .ph-meta2, .ph-cur { display:none; }
+  .ph-meta { font-size:11px; padding-top:12px; }
+  .ph-by { font-size:11px; margin-top:12px; }
+  .ph-view { font-size:16px; margin-top:14px; }
+}
+
+/* brede mobiel/tablet (575-768): boven 574px zou 45vw voorbij de
+   linkerrand van het geschaalde beeld (888px breed) schuiven en rechts
+   een gat laten. Beeld rechts verankeren sluit exact aan op de
+   45vw-formule op 574px; de kaart volgt dezelfde klimmerpositie. */
+@media (min-width:575px) and (max-width:768px){
+  .hero-photo, .hero-climber { background-position:100% 0; }
+  .ph-card { left:calc(100vw - 391px); }
+}
