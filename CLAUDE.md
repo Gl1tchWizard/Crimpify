@@ -25,8 +25,10 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v44`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v45`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v45`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v46`, enz.), anders zien bezoekers de oude versie.
+  De navigatietak cachet sinds v0.51 alleen geslaagde antwoorden (res.ok):
+  een 404 kan nooit blijven hangen als offline-kopie van een pad.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
   die wordt uitgesteld zolang een sessie loopt (guard op `sessionStartTime`,
   niet op de view). De v0.45-poging met een wachtende sw plus update-balk is
@@ -104,6 +106,16 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   Load/ACWR blijft altijd actieve tijd × intensiteit; wall komt daar
   nergens in. Entries zonder `wall` (pre-v0.45) zijn overal uitgesloten,
   nooit als nul geteld.
+- **Website (v0.51):** statische publieke site op `/why/` (index.html plus
+  assets-map met self-hosted woff2-fonts), positionering "the open climbing
+  training library". Staat bewust NIET in de sw-precache (network-first
+  navigatie serveert hem online; offline valt het pad terug op de
+  app-shell). De sessiekaarten linken naar echte `#s=`-deel-links van de
+  zes gecureerde sessies en tonen "Curated by Crimpify" tot er echte
+  makers zijn. Geen externe requests behalve GoatCounter (zelfde teller
+  als de app). Claims toekomstvast: geen "data stays on your device", geen
+  "no ads"; publishing altijd als "coming" gelabeld tot het bestaat. De
+  gele glitch betekent remix/fork, nooit decoratie.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
@@ -666,7 +678,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.50) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.51) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
