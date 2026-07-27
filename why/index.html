@@ -51,12 +51,27 @@
       </div>
     </div>
 
-    <!-- een matzwarte telefoon met de echte Power Hour-interface;
-         mag rechts deels buiten beeld, nooit over de klimmer -->
-    <a class="phone-wrap" id="phStack" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsMjAsNV19" aria-label="Featured session: Power Hour, session by Crimpify. View in the app.">
-      <span class="phone-cap"><b>Featured session</b><i>Session by Crimpify</i></span>
-      <span class="phone-frame"><img src="assets/phone-power-hour.png" alt="Power Hour in the Crimpify app: four blocks, sixty minutes, ready to start" width="366" height="644"></span>
+    <!-- compacte Power Hour-kaart, rechts van het midden, ingebed in de foto -->
+    <a class="ph-card" id="phStack" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsMjAsNV19" aria-label="Featured session: Power Hour by Teo Marchetti, curated by Crimpify. View in the app.">
+      <span class="ph-kicker">Featured session</span>
+      <span class="ph-fp" aria-hidden="true">
+        <i style="flex:20;height:56%;background:var(--prepare)"></i>
+        <i style="flex:15;height:82%;background:var(--max-effort)"></i>
+        <i style="flex:20;height:100%;background:var(--max-effort)"></i>
+        <i style="flex:5;height:34%;background:var(--prepare)"></i>
+      </span>
+      <span class="ph-name">Power Hour</span>
+      <span class="ph-int">Hard moves, big holds,<br>full commitment.</span>
+      <span class="ph-meta">60 min &middot; Max Strength &amp; Power<br>Gym wall &middot; 4 blocks</span>
+      <span class="ph-by">Session by Teo Marchetti</span>
+      <span class="ph-cur">Curated by Crimpify</span>
+      <span class="ph-view">View session &#8594;</span>
     </a>
+    <!-- voorgrondlaag: identieke kopie van de herofoto, geclipt tot de
+         klimmer, boven de kaart. De kaart zit achter de klimmer en voor
+         de rots. pointer-events none; misuitlijning toont hoogstens rots
+         op rots en is daardoor onzichtbaar. -->
+    <div class="hero-climber" aria-hidden="true"></div>
   </section>
 </main>
 
