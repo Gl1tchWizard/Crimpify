@@ -380,6 +380,20 @@ const BLOCKLIB = {
   yogaFlow: { n:'Yoga cool-down', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'-', addedDate:'2026-07-21',
     links:[{label:'Follow-along video', url:'https://www.youtube.com/watch?v=w5Qqy6b_yd0'}],
     why:'A calm yoga flow to close the session: hips, shoulders and long exhales. Follow the video.' },
+
+  // ── SESSIE-SPECIFIEKE BLOKKEN (deployment brief, juli 2026) ──
+  // sessionOnly:true = bestaat alleen binnen de eigen sessie, nooit in de
+  // Build-picker (bescherming van de bibliotheek, backlog 30). Geen
+  // addedDate: deze blokken horen niet los in News te verschijnen.
+  // Power Hour (60 min: 20+15+20+5, sessiebereik 50-80)
+  phWarmup: { n:'Power Warm-up', t:20, tMin:15, tMax:30, c:'var(--prepare)', rpe:'2-6', sessionOnly:true,
+    why:'Raise temperature, prepare fingers and joints, and build up to fast, forceful movement without creating fatigue.\n1. Short pulse raiser.\n2. Prepare wrists, shoulders, scapulae, trunk and hips.\n3. Progressive finger and pulling recruitment.\n4. Several easy boulders.\n5. Gradually add faster pulls, deadpoints and controlled dynamic moves.\n6. Finish with two to four submaximal dynamic moves at 70 to 90 percent intent.\nYou are ready when fingers and shoulders feel warm, movement feels faster than at the start, catches feel controlled, landings feel safe and you feel sharper, not tired. Do not rush into maximal attempts because the timer reached twenty minutes: extend the warm-up if necessary.' },
+  phDynamic: { n:'Dynamic Power', t:15, tMin:10, tMax:20, c:'var(--max-effort)', rpe:'8-9', sessionOnly:true,
+    why:'Explosive initiation, accurate catches and commitment while fully fresh. Choose about three dynamic moves or very short dynamic boulders: deadpoints, lateral dynamic moves, powerful catches, coordinated hand changes, foot-driven movement or short coordination sequences. One to four powerful moves each, on positive holds with safe landings.\nTwo to three quality attempts per move, with two to three minutes of rest. No rushed attempts and no repeated grinding after speed has dropped. Calibration attempts are allowed to learn distance or timing; the working attempts test power, not prolonged beta solving.\nCue: drive hard, arrive soft.' },
+  phLimit: { n:'Big-Hold Limit Power', t:20, tMin:15, tMax:30, c:'var(--max-effort)', rpe:'8-9', sessionOnly:true,
+    why:'Maximum intent on short, powerful climbing without grip difficulty, long sequences or pump taking over. Choose two to four problems of about three to six moves: steep or powerful movement, relatively positive holds, clear or quickly understandable beta, and a strong pulling, compression or coordination demand. Rest three to five minutes between hard attempts and keep the number of fully committed attempts small.\nA suitable problem requires real power, may not go immediately and produces useful attempts; it does not depend mainly on tiny holds, does not create progressive pump and does not need ten attempts to understand.\nStop or change the move when two consecutive attempts are clearly slower, less coordinated, less committed or less controlled than your best. Also stop or scale down for sharp pain, unsafe catches, deteriorating landings, clear pump or finger, elbow or shoulder discomfort. A failed attempt can still be an excellent power rep; a slow, exhausted send may be a poor one.\nCue: pull fast, not long.' },
+  phDownshift: { n:'Log & Downshift', t:5, tMin:3, tMax:10, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Finish without adding unnecessary fatigue: very easy climbing, walking and shaking out, brief notes, quiet recovery.\nReflection: which attempt had the most speed, and what made it different?' },
 };
 
 // ══ SESSIONS = energy system containers ══
@@ -4192,9 +4206,9 @@ const MOCK_CHOOSE = [
   { cat:'featured', name:'Crimp Factory',  coach:'Jaap dJ',     designed:true, mins:91, color:'amber',  rpe:'8-9', load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['warmupFinger','activeCurls','maxHangs','boardApply','stretch'],
     intent:'Max finger strength on small edges. Long rests, full effort.',
     why:'Most climbers plateau because their fingers never see a truly maximal stimulus. Crimp Factory is built around one thing: small edges, long rests, full effort. You leave strong, not wrecked.' },
-  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['dynamic','limitBlocks','dynos','stretch'],
+  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', designed:true, mins:60, color:'red',    rpe:'8-9', load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['phWarmup','phDynamic','phLimit','phDownshift'],
     intent:'Hard moves, big holds, full commitment.',
-    why:'Hard moves on big holds train your ability to pull fast. Attempts are short, rests are long, and quality beats volume all session.' },
+    why:'Power is force delivered fast. Short dynamic moves and big-hold limit boulders let you pull at full speed without small holds or pump stealing the session. Rest long, stop when speed drops, and make every attempt count.' },
   { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   load:2, sys:'capacity', goal:'Aerobic base', gear:['Gym wall','Kilterboard'], level:'all levels', keys:['warmup','volume','boardApply','stretchLong'],
     intent:'Volume day. Stay smooth, stop before form breaks.',
     why:'A wide aerobic base makes every other session land better. Base Camp keeps you moving at a volume you can finish smooth, and you stop before form breaks.' },
