@@ -2670,7 +2670,9 @@ function renderBlockPicker(query) {
   const grouped = new Set();
   BLOCK_GROUPS.forEach(g=>g.keys.forEach(k=>grouped.add(k)));
   const own = Object.keys(BLOCKLIB).filter(k=>k.startsWith('ux_'));
-  const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_'));
+  // sessionOnly-blokken bestaan alleen binnen hun eigen sessie en horen
+  // nooit in de Build-picker (bescherming van de bibliotheek, backlog 30)
+  const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_') && !BLOCKLIB[k].sessionOnly);
   const allGroups = [
     ...(own.length ? [{name:'Own', keys:own}] : []),
     ...BLOCK_GROUPS,
@@ -3576,7 +3578,7 @@ function buildDetail(idx) {
   // external links (e.g. Grip Gains)
   if (b.links) {
     info += `<div class="detail-section-lbl">protocol</div>` + b.links.map(l =>
-      `<a href="${l.url}" target="_blank" style="display:flex;align-items:center;justify-content:space-between;background:var(--carbon);border:1px solid color-mix(in srgb, var(--acid) 25%, transparent);border-radius:8px;padding:13px 14px;text-decoration:none;margin-bottom:8px;">
+      `<a href="${l.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;background:var(--carbon);border:1px solid color-mix(in srgb, var(--acid) 25%, transparent);border-radius:8px;padding:13px 14px;text-decoration:none;margin-bottom:8px;">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--acid);">${l.label}</span>
         <span style="color:color-mix(in srgb, var(--acid) 55%, transparent);font-size:14px;">↗</span>
       </a>`).join('');
