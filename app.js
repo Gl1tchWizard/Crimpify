@@ -4829,7 +4829,12 @@ function openBlockDetail(key) {
     </div>
     ${inIdx.length ? `<div class="ch-shelf">${inIdx.map(i => chCard(i, true)).join('')}</div>` : ''}
     <div style="height:16px;"></div>`;
-  document.getElementById('bdAddBtn').onclick = () => addBlockToSession(key);
+  // sessionOnly-blokken bestaan alleen binnen hun sessie: geen ADD TO
+  // SESSION, de weg erheen loopt via APPEARS IN (vangnet; de picker en
+  // News tonen ze toch al niet)
+  const addBtn = document.getElementById('bdAddBtn');
+  addBtn.style.display = b.sessionOnly ? 'none' : '';
+  addBtn.onclick = () => addBlockToSession(key);
   if (inIdx.length) enableWheelScroll('#blockDetailBody .ch-shelf');
   const bd = document.getElementById('blockDetail');
   bd.style.display = 'flex';
