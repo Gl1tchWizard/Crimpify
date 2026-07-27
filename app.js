@@ -429,6 +429,18 @@ const sessions = [
   } catch {}
 })();
 
+// eenmalig en idempotent: bestaande historie-entries zonder uuid krijgen
+// er een bij de eerste laadbeurt (identiteit voor de servermigratie; ts
+// blijft het logtijdstip). Entries die er al een hebben blijven onaangeroerd.
+(function(){
+  try {
+    const h = JSON.parse(localStorage.getItem('crimpify_history') || '[]');
+    let changed = false;
+    h.forEach(e => { if (e && !e.uuid) { e.uuid = newUuid(); changed = true; } });
+    if (changed) localStorage.setItem('crimpify_history', JSON.stringify(h));
+  } catch {}
+})();
+
 // startlijst (tot je eigen sessies binnenkomen)
 let recent = [];  // gevuld vanuit historie; favorieten komen apart uit crimpify_favs
 
@@ -465,7 +477,12 @@ function sessionLoad(id, minutes) {
 }
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
-  const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
+  // v/uuid/tz/sid: schema-voorbereiding. uuid is de identiteit van de
+  // entry (ts blijft het logtijdstip), sid koppelt hem aan de gedraaide
+  // sessie-instantie, tz maakt de kloktijden later reconstrueerbaar.
+  const e = { v: SCHEMA_V, uuid: newUuid(), id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
+  try { e.tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
+  if (sessionSid) e.sid = sessionSid;
   if (snap) {
     e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks;
     if (snap.wall != null) e.wall = snap.wall;
@@ -548,6 +565,25 @@ const PAUSE_OUTLIER_MS = 15 * 60000;
 let _sessionPaused = false;    // uitschieter-markering, reist mee naar de entry
 let _hiddenAt = null;          // wanneer de tab verborgen raakte
 
+// ── SCHEMA-VOORBEREIDING (servermigratie): versie en identiteit ──
+// SCHEMA_V reist als veld v mee op alle nieuw opgeslagen records; lezers
+// vatten een ontbrekende v op als versie 0 en werken gewoon door (geen
+// migratieframework). sid = unieke identiteit van een sessie-instantie:
+// gemaakt, gedeeld, geremixt of hervat. Een link draagt hem mee (veld s),
+// openen uit een link of hervatten behoudt hem, een remix krijgt een
+// nieuwe en bewaart de bron als srcSid op de kopie.
+const SCHEMA_V = 1;
+let sessionSid = null;
+function newUuid() {
+  try { if (crypto.randomUUID) return crypto.randomUUID(); } catch {}
+  // fallback voor insecure contexts (http op LAN-test): v4 uit getRandomValues
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+  const h = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+  return h.slice(0,8) + '-' + h.slice(8,12) + '-' + h.slice(12,16) + '-' + h.slice(16,20) + '-' + h.slice(20);
+}
+function ensureSid() { if (!sessionSid) sessionSid = newUuid(); return sessionSid; }
+
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
 // eindige tijd voor opslag/encoding: in de builder is de som leidend;
@@ -563,7 +599,7 @@ let customKeys = null;      // array van blok-keys van de draft
 
 function saveDraft() {
   try {
-    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined, ov: durationOverride['custom'] || undefined }));
+    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ v: SCHEMA_V, sid: sessionSid || undefined, keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined, ov: durationOverride['custom'] || undefined }));
   } catch {}
 }
 function loadDraft() {
@@ -1280,6 +1316,7 @@ function saveActive() {
     Object.keys(sessionLog).forEach(k => { spent[k] = sessionLog[k].spent || 0; });
     const cb = currentBlocks[currentBlockIdx];
     localStorage.setItem('crimpify_active', JSON.stringify({
+      v: SCHEMA_V, sid: sessionSid || undefined,
       keys: currentBlocks.map(b => b._key), name: s.name, color: s.color || 'lime',
       sessionId: s.id, idx: currentBlockIdx, spent, ts: Date.now(),
       // additief (v0.45): absolute klokken en de volledige bloklog, zodat een
@@ -1350,6 +1387,7 @@ function resumeActive(fromReload) {
   // absolute klokken herstellen: sessie- en blokstart lopen door een reload
   // heen gewoon door (wall clock), in plaats van op nul te beginnen
   sessionStartTime = a.st || Date.now();
+  sessionSid = a.sid || null;   // hervatten behoudt de sessie-identiteit
   // uitschieter-markering herstellen; een gat sinds de laatste heartbeat
   // groter dan de pauzedrempel (app gedood, later hervat) telt ook
   _sessionPaused = !!a.pz || (Date.now() - a.ts > PAUSE_OUTLIER_MS);
@@ -1367,6 +1405,7 @@ function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  ensureSid();   // elke gestarte sessie heeft identiteit; link/hervat behoudt de zijne
   _sessionPaused = false; _hiddenAt = null;
   startHeartbeat();
   trackEvent('session_started');
@@ -2278,7 +2317,7 @@ function recapShare() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
   const s = getSession(e.id);
-  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Session'), e.keys, e.time || 60, e.color || 'lime');
+  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Session'), e.keys, e.time || 60, e.color || 'lime', null, e.sid ? { s: e.sid } : undefined);
   const name = e.name || (s ? s.name : 'Session');
   if (navigator.share) { navigator.share({ title: 'Crimpify: ' + name, text: shareText(name, e.time), url }).catch(()=>{ openShareDialog(url); }); }
   else { openShareDialog(url); }
@@ -2287,6 +2326,7 @@ function recapAgain() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
   closeRecap();
+  sessionSid = null;   // opnieuw draaien = nieuwe instantie, de entry houdt zijn eigen sid
   const s = getSession(e.id);
   customSession = { id:'custom', cat:'again', name: e.name || (s ? s.name : 'Session'), desc:'', color: e.color || 'lime', rpe: s ? s.rpe : '–', intent:'Same session as before. Adapt and lock in, or start right away.' };
   customKeys = e.keys.filter(k => BLOCKLIB[k]);
@@ -2515,6 +2555,7 @@ function startBuildPath() {
 function openDraft() {
   const d = loadDraft();
   if (!d) return;
+  sessionSid = d.sid || null;   // het concept behoudt zijn identiteit
   customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
   if (d.basedOn) customSession.basedOn = d.basedOn;
   customKeys = d.keys.slice();
@@ -2530,6 +2571,7 @@ function openFav(i) {
   if (_favLongPressed) return;
   const f = loadFavs()[i];
   if (!f) return;
+  sessionSid = null;   // favoriet is een sjabloon: elke keer een verse instantie
   customSession = { id:'custom', cat:'own', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favourite session.' };
   if (f.basedOn) customSession.basedOn = f.basedOn;
   customKeys = f.keys.slice();
@@ -2757,7 +2799,7 @@ function confirmNewExercise() {
   // fixed:true — de ingevoerde minuten zijn de duur, de tijd-fitter blijft eraf
   const g = document.getElementById('neCat').value;
   if (!g || !CAT_COLOR[g]) { document.getElementById('neCat').focus(); return; }
-  const block = { n: name, t, c: CAT_COLOR[g], g, rpe, why, fixed: true };
+  const block = { v: SCHEMA_V, n: name, t, c: CAT_COLOR[g], g, rpe, why, fixed: true };
   if (url) block.links = [{ label: linkLabel(url), url }];
   const store = loadCustomBlocks();
   store[key] = block;
@@ -2816,6 +2858,9 @@ function unlockEdit() {
   buildSlab();
 }
 function duplicateSession() {
+  // remix: nieuwe identiteit, de bron-sid reist mee op de kopie
+  if (customSession && sessionSid) customSession.srcSid = sessionSid;
+  sessionSid = newUuid();
   if (customSession) customSession.name = chooseCopyTitle(customSession.name);
   sessionOwned = true;
   sessionLocked = false;
@@ -2829,7 +2874,7 @@ function toggleFavorite() {
   if (favs.some(f => f.name === s.name)) {
     favs = favs.filter(f => f.name !== s.name);
   } else {
-    const entry = { name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite(), d: currentBlocks.map(b=>b.t) };
+    const entry = { v: SCHEMA_V, name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite(), d: currentBlocks.map(b=>b.t) };
     if (activeSessionId === 'custom' && customSession && customSession.basedOn) entry.basedOn = customSession.basedOn;
     favs.unshift(entry);
   }
@@ -2848,12 +2893,15 @@ function encodeSession() {
   try { sender = localStorage.getItem('crimpify_name') || ''; } catch {}
   const maker = (activeSessionId === 'custom' && customSession && customSession.basedOn) ? customSession.basedOn.coach
     : (activeSessionId === 'custom' && customSession && customSession.madeBy) || undefined;
-  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime', currentBlocks.map(b=>b.t), { f: sender || undefined, m: maker });
+  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime', currentBlocks.map(b=>b.t), { f: sender || undefined, m: maker, s: ensureSid() });
 }
 function encodePayload(name, keys, time, color, durations, meta) {
-  const payload = { n: name || 'Session', k: keys, t: time, c: color || 'lime' };
+  // v = schemaversie van de payload, s = sessie-identiteit (additief; oude
+  // links zonder deze velden blijven werken, oude clients negeren ze)
+  const payload = { v: SCHEMA_V, n: name || 'Session', k: keys, t: time, c: color || 'lime' };
   if (meta && meta.f) payload.f = meta.f;
   if (meta && meta.m) payload.m = meta.m;
+  if (meta && meta.s) payload.s = meta.s;
   if (Array.isArray(durations) && durations.length === keys.length) payload.d = durations;
   // eigen oefeningen reizen mee in de link
   const own = keys.filter(k=>k.startsWith('ux_') && BLOCKLIB[k]);
@@ -2975,6 +3023,10 @@ function importFromHash() {
   const banner = sender ? `${sender} sent you "${p.n || 'a session'}".` : 'Shared session, locked by its maker.';
   customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent: banner };
   if (typeof p.m === 'string' && p.m.trim()) customSession.madeBy = p.m.trim().slice(0, 24);
+  // identiteit en schemaversie uit de link bewaren: de sessie behoudt de
+  // sid van de maker (geen nieuwe), oude links zonder s/v werken gewoon
+  sessionSid = (typeof p.s === 'string' && p.s) ? p.s : null;
+  customSession.shareV = (typeof p.v === 'number') ? p.v : 0;
   customKeys = validKeys;
   durationOverride['custom'] = {};
   validDur.forEach((mv, i) => { if (mv != null) durationOverride['custom'][i] = mv; });
@@ -3053,6 +3105,7 @@ function renderPreview() {
 
 let recentFolded = false;
 function selectSession(id) {
+  sessionSid = null;   // nieuw sessietype = verse instantie
   activeSessionId = id;
   sessionLocked = false;
   sessionOwned = true;
@@ -4115,12 +4168,12 @@ function chResultCard(i) {
       <div class="ch-name">${s.name}</div>
       <div class="ch-result-coach">by ${s.coach} <span>· ${COACH_ROLE[s.coach] || 'coach'}</span></div>
       <div class="ch-line">${s.goal} · ${sessionMins(s)} min · ${s.gear.join(', ')}</div>
-      <div class="ch-foot"><span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load, true)}</span><span>${s.done ? s.done + ' done' : ''}</span></div>
+      <div class="ch-foot"><span style="display:flex;align-items:center;gap:6px;">load ${chPhalanx(s.load, true)}</span>${s.designed ? '<span>designed</span>' : ''}${s.done ? `<span>${s.done} done</span>` : ''}</div>
     </div>
   </div>`;
 }
 function renderChooseResults() {
-  const hits = MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => chMatch(x.s)).sort((a, b) => b.s.done - a.s.done);
+  const hits = MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => chMatch(x.s)).sort((a, b) => (b.s.done || 0) - (a.s.done || 0));
   if (!hits.length) return `<div class="ch-empty">No sessions match<span>Try fewer filters or a different word.</span></div>`;
   return `<div class="ch-results">
     <div class="ch-shelf-sub" style="padding:14px 0 8px;">${hits.length} session${hits.length === 1 ? '' : 's'} found</div>
@@ -4134,62 +4187,64 @@ function renderChooseResults() {
 // door de maker, voedt ACWR), done = completion_count (mock tot er een backend is).
 const MOCK_CHOOSE = [
   // cat: 'featured' | 'new' | 'popular' | 'coach' (redactionele herkomst)
-  { cat:'featured', name:'Crimp Factory',  coach:'Jaap dJ',     mins:75, color:'amber',  rpe:'8-9', done:214, load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['dynamic','maxHangs','board1','stretch'],
+  { cat:'featured', name:'Crimp Factory',  coach:'Jaap dJ',     designed:true, mins:91, color:'amber',  rpe:'8-9', load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard','Kilterboard'], level:'intermediate+', keys:['warmupFinger','activeCurls','maxHangs','boardApply','stretch'],
     intent:'Max finger strength on small edges. Long rests, full effort.',
     why:'Most climbers plateau because their fingers never see a truly maximal stimulus. Crimp Factory is built around one thing: small edges, long rests, full effort. You leave strong, not wrecked.' },
-  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', done:187, load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['dynamic','limitBlocks','dynos','stretch'],
+  { cat:'featured', name:'Power Hour',     coach:'Teo Marchetti', mins:60, color:'red',    rpe:'8-9', load:4, sys:'power', goal:'Max power', gear:['Gym wall'], level:'all levels', keys:['dynamic','limitBlocks','dynos','stretch'],
     intent:'Hard moves, big holds, full commitment.',
     why:'Hard moves on big holds train your ability to pull fast. Attempts are short, rests are long, and quality beats volume all session.' },
-  { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   done:156, load:2, sys:'capacity', goal:'Aerobic base', gear:['Gym wall','Kilterboard'], level:'all levels', keys:['warmup','volume','boardApply','stretchLong'],
+  { cat:'featured', name:'Base Camp',      coach:'Ana Kovač',     mins:90, color:'green',  rpe:'6',   load:2, sys:'capacity', goal:'Aerobic base', gear:['Gym wall','Kilterboard'], level:'all levels', keys:['warmup','volume','boardApply','stretchLong'],
     intent:'Volume day. Stay smooth, stop before form breaks.',
     why:'A wide aerobic base makes every other session land better. Base Camp keeps you moving at a volume you can finish smooth, and you stop before form breaks.' },
-  { cat:'new',      name:'Board Blitz',    coach:'Teo Marchetti', mins:60, color:'amber',  rpe:'8',   done:12,  load:3, sys:'power', goal:'Max power', gear:['Kilterboard'], level:'intermediate+', keys:['dynamic','campus','board1','stretch'],
+  { cat:'new',      name:'Board Blitz',    coach:'Teo Marchetti', mins:60, color:'amber',  rpe:'8',   load:3, sys:'power', goal:'Max power', gear:['Kilterboard'], level:'intermediate+', keys:['dynamic','campus','board1','stretch'],
     intent:'Short and sharp board work.',
     why:'Board work compresses power training into an hour: controlled attempts, full rests, skin watched. Short and sharp beats long and sloppy.' },
-  { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', mins:75, color:'purple', rpe:'5-6', done:8,   load:2, sys:'skill', goal:'Technique', gear:['Gym wall','Spray wall'], level:'all levels', keys:['warmup','drillBlocks','sprayLight','stretch'],
+  { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', mins:75, color:'purple', rpe:'5-6', load:2, sys:'skill', goal:'Technique', gear:['Gym wall','Spray wall'], level:'all levels', keys:['warmup','drillBlocks','sprayLight','stretch'],
     intent:'Movement quality over difficulty. Quiet feet, straight arms.',
     why:'Movement quality over difficulty. You climb below your max so your attention can go where it matters: hips, feet and pace.' },
-  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', done:19,  load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','drillsOnly','skillLight','stretch'],
+  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','drillsOnly','skillLight','stretch'],
     intent:'Technique session. Every foot placement counts.',
     why:'Every foot placement counts. One session of deliberate feet changes how you climb for weeks after.' },
-  { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', done:342, load:3, sys:'power endurance', goal:'Power endurance', gear:['Gym wall'], level:'intermediate+', keys:['warmup','hehe','fourByFour','stretchLong'],
+  { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', load:3, sys:'power endurance', goal:'Power endurance', gear:['Gym wall'], level:'intermediate+', keys:['warmup','hehe','fourByFour','stretchLong'],
     intent:'Power endurance. Pace yourself, the last set decides.',
     why:'Pump tolerance is trainable. The Grinder builds it in sets: pace yourself early, because the last set decides.' },
-  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',done:298, load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['warmupFinger','project','stretch'],
+  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['warmupFinger','project','stretch'],
     intent:'Project attempts at full freshness. Rest long, try hard.',
     why:'Project attempts at full freshness. The long rests feel slow and are the point: every try deserves your best power.' },
-  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', done:251, load:1, sys:'recovery', goal:'Recovery', gear:['Gym wall'], level:'all levels', keys:['mobilityOpen','easyClimb','hog','stretch'],
+  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', load:1, sys:'recovery', goal:'Recovery', gear:['Gym wall'], level:'all levels', keys:['mobilityOpen','easyClimb','hog','stretch'],
     intent:'Recovery climbing. Leave the gym feeling better.',
     why:'Recovery climbing keeps you moving without adding load. The goal is simple: leave the gym feeling better than you came in.' },
-  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', done:96,  load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard'], level:'intermediate+', keys:['warmupFinger','maxHangs','activeCurls','stretch'],
+  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard'], level:'intermediate+', keys:['warmupFinger','maxHangs','activeCurls','stretch'],
     intent:'Structured finger loading, from prep to max.',
     why:'Structured finger loading from preparation to maximal work, in the order tendons like. No cold max hangs, ever.' },
-  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', done:74,  load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['dynamic','compStyle','pyramide','stretchLong'],
+  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['dynamic','compStyle','pyramide','stretchLong'],
     intent:'Four-minute walls of effort, comp format.',
     why:'Comp format: four-minute walls of effort with real decisions under fatigue. Train the format before you meet it.' },
-  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', done:63,  load:1, sys:'recovery', goal:'Recovery', gear:['Fingerboard'], level:'all levels', keys:['mobilityOpen','hog','nohangs','stretchLong'],
+  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', load:1, sys:'recovery', goal:'Recovery', gear:['Fingerboard'], level:'all levels', keys:['mobilityOpen','hog','nohangs','stretchLong'],
     intent:'Tendon care and easy movement on a rest week.',
     why:'Tendon care and easy movement for a rest week. The point of resting well is coming back stronger.' },
   // echte gecureerde sessie: denkt in aantallen (count-blokken), niet in tijd
-  { cat:'coach',    name:'Easy Thirty',    coach:'Vincent',       mins:60, color:'green',  rpe:'4-5', done:57,  load:2, sys:'capacity', goal:'Easy volume', gear:['Gym wall'], level:'all levels', keys:['dynamic','easyTen','mediumTwenty'],
+  { cat:'coach',    name:'Easy Thirty',    coach:'Vincent',       mins:60, color:'green',  rpe:'4-5', load:2, sys:'capacity', goal:'Easy volume', gear:['Gym wall'], level:'all levels', keys:['dynamic','easyTen','mediumTwenty'],
     intent:'Thirty boulders, counted, not timed. Warm up and flow.',
     why:'A session that thinks in boulders instead of minutes: ten easy ones to warm up, twenty medium ones as the main course. You tick them off as you climb, and quality decides whether a boulder counts.' },
   // huis-sessie op een gevestigd principe: intensiteit vooraan terwijl je fris bent (geen merkclaim)
-  { cat:'coach',    name:'Fresh First',    coach:'Crimpify',      mins:60, color:'amber',  rpe:'8-9', done:88,  load:4, sys:'performance', goal:'Hardest first', gear:['Gym wall'], level:'intermediate+', keys:['frontGrowth','frontBuild','frontMaint'], addedDate:'2026-07-16',
+  { cat:'coach',    name:'Fresh First',    coach:'Crimpify',      mins:60, color:'amber',  rpe:'8-9', load:4, sys:'performance', goal:'Hardest first', gear:['Gym wall'], level:'intermediate+', keys:['frontGrowth','frontBuild','frontMaint'], addedDate:'2026-07-16',
     intent:'Hardest work first while you are fresh, easy volume last. Arrive warm.',
     why:'Most climbers do it backwards: they warm up forever, then try hard when they are already tired. Fresh First flips it. The hardest material goes first, while your nervous system is sharp and your focus is full, because that is when you can actually move the needle. The middle third builds the boulders you are developing. Easy volume and simple movement come last, as the wind-down, not the opener. Arrive warm, spend your best energy on what matters, and finish smooth.' },
-  // vier gecureerde coach-sessies (Fundamentals, juli 2026); done:0 = eerlijk,
-  // de kaart verbergt de teller tot er echte completions zijn
-  { cat:'coach', name:'Five by Five', coach:'Guru', mins:120, color:'lime', rpe:'8-9', done:0, load:3, sys:'power endurance', goal:'Comp capacity', gear:['Gym wall'], level:'all levels', keys:['fiveWarmup','wallRamp','fiveProblems','slabWork','squatLat'], addedDate:'2026-07-21',
+  // gecureerde coach-sessies (Fundamentals, juli 2026), designed:true =
+  // echt ontworpen (voedt de vaste Coach sessions-plank, de hero-rotatie en
+  // het designed-label). Geen done-veld meer, nergens: tellers komen pas
+  // terug met echte completions (backlog 12), geen nepgetallen.
+  { cat:'coach', name:'Five by Five', coach:'Guru', designed:true, mins:120, color:'lime', rpe:'8-9', load:3, sys:'power endurance', goal:'Comp capacity', gear:['Gym wall'], level:'all levels', keys:['fiveWarmup','wallRamp','fiveProblems','slabWork','squatLat'], addedDate:'2026-07-21',
     intent:'Five hard problems, three climbs each on the clock, then slab under fatigue.',
     why:'Comp style capacity. Five hard problems targeting different skills, each climbed three times within five minutes with five minutes rest between problems, then deliberate slab work while tired. If you send everything your estimate was too easy; if you fail three or more sets, tune it down. Aim for the sweet spot of suffering.' },
-  { cat:'coach', name:'Four Shots', coach:'Glitch', mins:120, color:'purple', rpe:'7-8', done:0, load:3, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','activeCurls','skillChoice','skillChoice','skillChoice','fourShots','cleanRepeat','meditation'], addedDate:'2026-07-21',
+  { cat:'coach', name:'Four Shots', coach:'Glitch', designed:true, mins:120, color:'purple', rpe:'7-8', load:3, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','activeCurls','skillChoice','skillChoice','skillChoice','fourShots','cleanRepeat','meditation'], addedDate:'2026-07-21',
     intent:'Three drills of your choice, then hard climbing with a plan.',
     why:'Skill training is the most important part of climbing. This session includes public drills from Charlie "Paradigm" Schreiber: three skill blocks of your own choice, then Four Shots, hard boulders climbed with a plan and full recovery, closed with one clean repeat and two quiet minutes.' },
-  { cat:'new', name:'Sarah Connor', coach:'Sarah', mins:120, color:'green', rpe:'6-7', done:0, load:3, sys:'capacity', goal:'Capacity + strength', gear:['Gym wall','Fingerboard'], level:'all levels', keys:['ownWarmup','skillChoice','easyDozen','terminator','yogaFlow'], addedDate:'2026-07-21',
+  { cat:'new', name:'Sarah Connor', coach:'Sarah', designed:true, mins:120, color:'green', rpe:'6-7', load:3, sys:'capacity', goal:'Capacity + strength', gear:['Gym wall','Fingerboard'], level:'all levels', keys:['ownWarmup','skillChoice','easyDozen','terminator','yogaFlow'], addedDate:'2026-07-21',
     intent:'Easy mileage first, then Terminator mode in the gym.',
     why:'Easy bouldering to build the base without tiring yourself, then a deliberately fatiguing gym circuit: weighted pull-ups, rows, traverses and hangs, three rounds. Cool down with a calm yoga flow. She will be back.' },
-  { cat:'coach', name:'Summer Capacity', coach:'Magnus W', mins:120, color:'green', rpe:'5-6', done:0, load:3, sys:'capacity', goal:'Volume', gear:['Gym wall','Kilterboard','Spray wall'], level:'all levels', keys:['ownWarmup','progDeadhangs','skillChoice','skillChoice','capacityMix','stretch'], addedDate:'2026-07-21',
+  { cat:'coach', name:'Summer Capacity', coach:'Magnus W', designed:true, mins:120, color:'green', rpe:'5-6', load:3, sys:'capacity', goal:'Volume', gear:['Gym wall','Kilterboard','Spray wall'], level:'all levels', keys:['ownWarmup','progDeadhangs','skillChoice','skillChoice','capacityMix','stretch'], addedDate:'2026-07-21',
     intent:'Deadhangs while fresh, two skill blocks, then a big counted capacity set.',
     why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' }
 ];
@@ -4263,7 +4318,7 @@ function chCard(i, noStar) {
       <div class="ch-name">${s.name}</div>
       <div class="ch-line">${s.goal} · ${sessionMins(s)} min</div>
       <div class="ch-line">${s.gear[0]} · load ${chPhalanx(s.load, true)}</div>
-      <div class="ch-foot"><span>${coachShort(s.coach)}</span><span>${s.done ? s.done + ' done' : ''}</span></div>
+      <div class="ch-foot"><span>${coachShort(s.coach)}</span>${s.designed ? '<span>designed</span>' : ''}${s.done ? `<span>${s.done} done</span>` : ''}</div>
     </div>
   </div>`;
 }
@@ -4283,7 +4338,7 @@ function computeForYou() {
   const needRest = h[0].sig === 'red' || (h[0].sig === 'orange' && h[1] && h[1].sig === 'orange');
   if (needRest) {
     return { title:'For you', sub:'your last signals ask for an easy day',
-      idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.load <= 2).sort((a, b) => a.s.load - b.s.load || b.s.done - a.s.done).slice(0, 4).map(x => x.i) };
+      idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.load <= 2).sort((a, b) => a.s.load - b.s.load || (b.s.done || 0) - (a.s.done || 0)).slice(0, 4).map(x => x.i) };
   }
   // roteer energiesystemen: wat je de laatste 7 dagen niet trainde komt eerst
   const now = Date.now();
@@ -4298,7 +4353,7 @@ function computeTimeShelf() {
   const t = getT();
   const all = MOCK_CHOOSE.map((s, i) => ({ s, i }));
   if (!isFinite(t)) return { title:'Any length', sub:'no time limit set', idxs: all.sort((a, b) => sessionMins(b.s) - sessionMins(a.s)).map(x => x.i) };
-  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => sessionMins(x.s) <= t).sort((a, b) => b.s.done - a.s.done).map(x => x.i) };
+  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => sessionMins(x.s) <= t).sort((a, b) => (b.s.done || 0) - (a.s.done || 0)).map(x => x.i) };
 }
 // gecureerd: handmatig samengestelde lijst in afstemming met de Apex-gym, hardcoded tot er
 // een backend is; wordt dan berekend, het ontwerp blijft gelijk (CLAUDE.md Choose-flow punt 4)
@@ -4308,7 +4363,11 @@ function renderChoose() {
   const body = document.getElementById('chooseBody');
   if (!body) return;
   if (chSearchActive()) { body.innerHTML = renderChooseResults(); return; }  // zoeken vervangt de planken
-  const fi = 0;  // session of the week: redactionele keuze
+  // session of the week: roteert per dag over de echt ontworpen sessies
+  // (designed:true), nooit meer een hardcoded mock-entry
+  const designedIdx = MOCK_CHOOSE.map((s, i) => s.designed ? i : -1).filter(i => i >= 0);
+  const daySeed = new Date().getDate() + new Date().getMonth() * 31;
+  const fi = designedIdx.length ? designedIdx[daySeed % designedIdx.length] : 0;
   const f = MOCK_CHOOSE[fi];
   const fcol = C[f.color] || C.lime;
   const hero = `
@@ -4327,20 +4386,24 @@ function renderChoose() {
       </div>
       <div class="ch-tape">${chBlueprint(f.keys)}</div>
       <div class="ch-feat-meta">
-        <span>${sessionMins(f)} min</span><span>${f.goal.toLowerCase()}</span>${f.done ? `<span>${f.done} done</span>` : ''}
+        <span>${sessionMins(f)} min</span><span>${f.goal.toLowerCase()}</span>${f.designed ? '<span>designed</span>' : ''}${f.done ? `<span>${f.done} done</span>` : ''}
         <span style="margin-left:auto;display:flex;align-items:center;gap:6px;">load ${chPhalanx(f.load)}</span>
       </div>
       <button class="ch-view-btn" onclick="openChoosePreview(${fi})">View session</button>
     </div>`;
-  // coach-sessies verdeeld over de gecureerde planken (Apex, New); For you en
-  // de tijdplank rekenen zelf en worden nooit handmatig gevuld. De eigen
-  // coach-plank boven de hero is teruggedraaid: die brak de landing-hiërarchie.
+  // For you en de tijdplank rekenen zelf en worden nooit handmatig gevuld.
+  // De vaste Coach sessions-plank (designed:true) maakt de ontworpen
+  // sessies vindbaar zonder zoeken; de eerdere coach-plank op de LANDING
+  // blijft teruggedraaid (die brak de landing-hiërarchie), dit is de
+  // catalogus, waar planken thuishoren.
+  const coachShelf = { title:'Coach sessions', sub:'designed start to finish', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.designed).map(x => x.i) };
   const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
   body.innerHTML = hero
     + chShelf(computeForYou())
     + chShelf(computeTimeShelf())
     + chShelf(apexShelf)
+    + chShelf(coachShelf)
     + chShelf(newShelf)
     + '<div style="height:16px;"></div>';
   enableWheelScroll('#chooseBody .ch-shelf');
@@ -4449,6 +4512,7 @@ function sharePreviewSession() {
 function customizeFromChoose() {
   if (_previewIdx == null) return;
   const s = MOCK_CHOOSE[_previewIdx];
+  sessionSid = newUuid();   // kopie uit de catalogus = nieuw gemaakte sessie
   customSession = { id:'custom', cat:'own', name: chooseCopyTitle(s.name), desc:'', color: s.color, rpe: s.rpe, intent: s.intent, basedOn: { title: s.name, coach: s.coach } };
   customKeys = s.keys.slice();
   durationOverride['custom'] = {};  // verse kopie, geen stale slot-overrides
@@ -4461,6 +4525,7 @@ function customizeFromChoose() {
 }
 
 function openMockSession(i) {
+  sessionSid = null;   // catalogus-sessie openen = verse instantie
   const s = MOCK_CHOOSE[i];
   if (!s) return;
   customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach + ' (mock)' };

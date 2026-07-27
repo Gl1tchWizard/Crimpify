@@ -50,8 +50,8 @@ Vier vastgelegde strategische beslissingen:
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v41`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v42`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v43`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v44`, enz.), anders zien bezoekers de oude versie.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
   die wordt uitgesteld zolang een sessie loopt (guard op `sessionStartTime`,
   niet op de view). De v0.45-poging met een wachtende sw plus update-balk is
@@ -154,6 +154,18 @@ catalogus; oude entries zonder basedOn blijven geldig. `d` (favs, dichte
 array minuten per blok) en `ov` (draft, sparse overrides per slot) zijn ook
 additief: oude entries zonder deze velden vallen terug op de basisduren.
 Deel-links dragen hetzelfde additieve `d`-veld.
+
+**Schema-voorbereiding servermigratie (v0.49, allemaal additief):** nieuw
+geschreven records (historie, favs, draft, eigen blokken, actieve sessie)
+dragen `v` = `SCHEMA_V` (nu 1); ontbrekende `v` = versie 0, lezers werken
+gewoon door, geen migratieframework. Sessie-instanties krijgen een `sid`
+(uuid): gedeelde links dragen hem als payload-veld `s` (plus payload-`v`),
+de ontvanger behoudt hem, een remix krijgt een nieuwe sid met de bron als
+`srcSid`, draft en actieve sessie persisteren hem, favorieten zijn
+sjablonen (elke opening een verse instantie). Historie-entries krijgen
+`uuid` (identiteit; `ts` blijft het logtijdstip, bestaande entries krijgen
+eenmalig idempotent een uuid bij het laden), `tz` (IANA-tijdzone) en `sid`.
+Het `id`-veld blijft het sessietype.
 
 `sig` is het stoplicht: `'green' | 'orange' | 'red' | null`. `load` = duur ×
 intensiteitsfactor (zie `INTENSITY_FACTORS` in de code, Foster/Gabbett-model,
@@ -479,7 +491,9 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
    ACWR-model, consistent met het bestaande `load`-veld.
 2. **Sociale maat = completions, geen likes.** Kaarten tonen voltooiingen in de
    stijl "184 done"; opslaan is de secundaire actie. Likes verdwijnen overal.
-   Echt tellen vraagt een backend: tot die er is zijn de aantallen mock.
+   Echt tellen vraagt een backend. De mock-tellers zijn verwijderd (v0.48):
+   geen done-veld tot er echte completions zijn, geen placeholder, geen nul;
+   de kaartweergave verbergt de teller volledig als het veld ontbreekt.
 3. **Drie lagen kijkdiepte.** Discovery-kaart (kort: naam, vingerafdruk/tape,
    load, coach, één metaregel) → tik → preview (blokken, materiaal, niveau,
    volledige coachregel, why-this-session) → Start session opent de volledige
@@ -496,6 +510,14 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
      afstemming met de Apex-gym, voorlopig hardcoded. Curatie in plaats van
      berekening; wordt berekend zodra er een backend is. Featured/New mogen
      blijven als redactionele planken.
+   - "Coach sessions" (v0.48): vaste plank met de echt ontworpen sessies,
+     gevoed door het veld `designed: true` op MOCK_CHOOSE-entries. Dat veld
+     scheidt echt van mock: de hero (session of the week) roteert per dag
+     uitsluitend over designed-sessies (nooit meer hardcoded een
+     mock-entry) en designed-kaarten dragen het woord "designed" in de
+     kaartvoet: bestaande typografie, geen badge, geen kleuraccent. De vijf
+     designed-sessies: Five by Five, Four Shots, Sarah Connor, Summer
+     Capacity en Crimp Factory (echt gemaakt in v0.48).
    Als we groot gaan worden gecureerde planken berekende planken; het ontwerp
    blijft gelijk, alleen de bron verandert.
 5. **Vastleggen, niet bouwen:** het vollere sessie-datamodel (title, creator,
@@ -607,8 +629,9 @@ verwijzen ernaar.
 
 ### Wacht op een backend
 
-12. **Echte completions.** "N done" is nu mock; een completion telt pas bij
-    een afgemaakte sessie. Geen nieuwe nepgetallen tot die tijd.
+12. **Echte completions.** De mock-tellers zijn verwijderd (v0.48); het
+    done-veld komt pas terug wanneer een completion echt telt, bij een
+    afgemaakte sessie via een backend. Geen nieuwe nepgetallen tot die tijd.
 13. **Remix-tellers.** Een remix telt pas wanneer de kopie wordt opgeslagen.
 14. **Berekende planken.** Popular at Apex e.a. van curatie naar berekening;
     het ontwerp blijft gelijk, alleen de bron verandert.
@@ -661,7 +684,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.47) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.49) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
