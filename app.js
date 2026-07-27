@@ -4265,6 +4265,8 @@ const MOCK_CHOOSE = [
     intent:'Three hard boulders. Three tries each. Make them count.',
     why:'Prepare patiently, then attack one problem at a time. Choose three hard board boulders, give each a maximum of three fully recovered attempts, and change the style or angle as you go. The blitz is in the attempt limit, not in rushing the warm-up.' },
   { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', designed:true, mins:75, color:'purple', rpe:'3-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall','Spray wall'], level:'all levels', keys:['fsWarmup','fsPrimer','fsConnect','fsFreeFlow','fsDownshift'],
+    links:[{label:'Watch the inspiration video', url:'https://www.youtube.com/watch?v=_zR_mmXjWU8'}],
+    linkNote:'Chris Sharma did not design or endorse this session.',
     intent:'Movement quality over difficulty. Find your rhythm.',
     why:'Flow comes from connecting movements, not rushing them. Climb below your max so you can read ahead, stay relaxed and let each position prepare the next. Finish by ignoring the colours and creating your own lines. Inspired by Chris Sharma\'s pursuit of flow state.' },
   { cat:'new',      name:'Ninja Feet',     coach:'Ines Fujimoto', designed:true, mins:50, color:'purple', rpe:'3-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['nfWarmup','nfDrill','nfReal','nfNormal'],
@@ -4531,6 +4533,8 @@ function openChoosePreview(i) {
       </div>
       <div class="pv-lbl">why this session</div>
       <div class="pv-why">${s.why}</div>
+      ${(s.links || []).map(l => `<a class="bd-link" href="${l.url}" target="_blank" rel="noopener">${l.label} →</a>`).join('')}
+      ${s.linkNote ? `<div class="pv-linknote">${s.linkNote}</div>` : ''}
       <div class="pv-lbl">session structure · scales to your time when you start</div>
       ${blocks}
       <div class="pv-lbl">equipment</div>

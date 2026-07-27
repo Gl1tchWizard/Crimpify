@@ -581,3 +581,5 @@ body {
 .news-arrow { color:var(--acid); }
 .news-body { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.04em; color:var(--dust); margin-top:3px; line-height:1.5; }
 .news-x { flex-shrink:0; background:none; border:none; color:var(--disabled); font-size:16px; line-height:1; cursor:pointer; padding:0 2px; }
+/* disclaimer direct bij een sessie-link in de preview (bv. inspiratievideo) */
+.pv-linknote { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; color:var(--disabled); margin:6px 0 4px; }
