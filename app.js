@@ -425,6 +425,15 @@ const BLOCKLIB = {
     why:'Ignore the colours. Create your own line. Choose your own start and finish, combine holds from different colours, follow movement that feels interesting, and alter the line when a position does not flow. There is no required colour, no existing boulder to follow, no grade, no mandatory top and no required send. The purpose is creativity, presence and movement exploration: avoid turning the line into a project or chasing a grade, and stop when experimentation becomes repeated failure. Only use mixed-colour climbing where gym rules and safety allow it.\nInspired by Chris Sharma\'s pursuit of flow state. This session was not designed or endorsed by Chris Sharma.' },
   fsDownshift: { n:'Downshift', t:5, tMin:3, tMax:10, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
     why:'Ease out with a few relaxed minutes of very easy movement.\nReduce difficulty during this session whenever you have to fight, repeated failures become the focus, pump distracts from movement, the cues become impossible to apply, or the session turns into projecting. The session succeeds when movement becomes more connected, creative and economical, not when you complete the hardest possible boulder.\nReflection: which line or boulder felt most natural when you stopped forcing the movement?' },
+  // Ninja Feet (50 min: 10+20+15+5, sessiebereik 40-60)
+  nfWarmup: { n:'Warm-up', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'2-3', sessionOnly:true,
+    why:'Climb several very easy boulders across different wall angles. Begin noticing where each foot lands, without exaggerating the drill yet. Stay relaxed.' },
+  nfDrill: { n:'Ninja Feet', t:20, tMin:15, tMax:30, c:'var(--skill)', rpe:'3-4', sessionOnly:true,
+    why:'Look. Place once. Trust it. On very easy to easy boulders, for every deliberate foot placement:\n1. Look at the foothold.\n2. Choose the exact point of contact.\n3. Keep looking until the foot touches.\n4. Place the foot once.\n5. Do not scrape or search.\n6. Do not immediately reposition.\n7. Transfer weight onto the foot.\n8. Continue to the next movement.\nSilence is useful feedback, but not the only goal: a placement can make some sound and still be accurate. The key question is whether the foot landed where you intended, first time. When a placement is inaccurate, notice it, identify why, and improve the next one. Do not restart every boulder as punishment; the drill should create many clean repetitions without frustration.' },
+  nfReal: { n:'Real Boulders', t:15, tMin:10, tMax:20, c:'var(--skill)', rpe:'3-5', sessionOnly:true,
+    why:'Transfer the same foot-placement quality into normal climbing on easy to moderate boulders: visual attention until contact, one deliberate placement, reduced scraping and trust during the weight transfer. Use a maximum of two attempts per boulder. If difficulty causes repeated poor placements, choose an easier boulder; do not sacrifice the drill to complete a harder grade.' },
+  nfNormal: { n:'Climb Normally', t:5, tMin:3, tMax:10, c:'var(--skill)', rpe:'3-4', sessionOnly:true,
+    why:'Let the explicit cue fade and allow the skill to become part of normal movement: a few easy boulders without repeating the full checklist internally. Notice whether the feet remain more precise, and avoid overthinking.\nReduce difficulty during this session when you repeatedly scrape, place feet without watching them, correct frequently, fatigue becomes the main limiter, or the drill creates excessive tension or hesitation. The goal is not perfectly silent climbing; it is accurate first-contact foot placement you can trust.\nReflection: where did you place the foot correctly but still hesitate to trust it?' },
 };
 
 // ══ SESSIONS = energy system containers ══
@@ -4249,9 +4258,9 @@ const MOCK_CHOOSE = [
   { cat:'new',      name:'Flow State',     coach:'Ines Fujimoto', designed:true, mins:75, color:'purple', rpe:'3-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall','Spray wall'], level:'all levels', keys:['fsWarmup','fsPrimer','fsConnect','fsFreeFlow','fsDownshift'],
     intent:'Movement quality over difficulty. Find your rhythm.',
     why:'Flow comes from connecting movements, not rushing them. Climb below your max so you can read ahead, stay relaxed and let each position prepare the next. Finish by ignoring the colours and creating your own lines. Inspired by Chris Sharma\'s pursuit of flow state.' },
-  { cat:'new',      name:'Silent Feet',    coach:'Ines Fujimoto', mins:45, color:'purple', rpe:'4-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['dynamic','drillsOnly','skillLight','stretch'],
-    intent:'Technique session. Every foot placement counts.',
-    why:'Every foot placement counts. One session of deliberate feet changes how you climb for weeks after.' },
+  { cat:'new',      name:'Ninja Feet',     coach:'Ines Fujimoto', designed:true, mins:50, color:'purple', rpe:'3-5', load:2, sys:'skill', goal:'Technique', gear:['Gym wall'], level:'all levels', keys:['nfWarmup','nfDrill','nfReal','nfNormal'],
+    intent:'Every foot placement counts.',
+    why:'Precise feet save grip, create better positions and remove unnecessary movement. Look until contact, place once, then trust the foot enough to move from it.' },
   { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     mins:90, color:'lime',   rpe:'7-8', load:3, sys:'power endurance', goal:'Power endurance', gear:['Gym wall'], level:'intermediate+', keys:['warmup','hehe','fourByFour','stretchLong'],
     intent:'Power endurance. Pace yourself, the last set decides.',
     why:'Pump tolerance is trainable. The Grinder builds it in sets: pace yourself early, because the last set decides.' },
@@ -4381,7 +4390,7 @@ function chShelf(shelf) {
 function computeForYou() {
   const idxOf = name => MOCK_CHOOSE.findIndex(s => s.name === name);
   const h = loadHistory();
-  if (!h.length) return { title:'For you', sub:'new here · good first sessions', idxs:[idxOf('Base Camp'), idxOf('Silent Feet'), idxOf('Easy Does It')] };
+  if (!h.length) return { title:'For you', sub:'new here · good first sessions', idxs:[idxOf('Base Camp'), idxOf('Ninja Feet'), idxOf('Easy Does It')] };
   const needRest = h[0].sig === 'red' || (h[0].sig === 'orange' && h[1] && h[1].sig === 'orange');
   if (needRest) {
     return { title:'For you', sub:'your last signals ask for an easy day',
