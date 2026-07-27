@@ -19,6 +19,31 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
    sessie zijn. Geen scores die afmaken belonen.
 4. **Open source.** AGPL-3.0; LICENSE staat in de repo.
 
+## Strategie
+
+Zie `STRATEGY.md` in de repo-root voor de strategische context: doelgroep,
+de volgorde waarin de waarde wordt ontsloten (individu tot 0.9, dan de
+coach met een groep om de distributie, dan zelfstandige groepsleden, als
+laatste makers zonder coach) en de rol van coaches als startsegment.
+STRATEGY.md geeft richting en is geen backlog: het bepaalt de volgorde en
+de grenzen waarbinnen backlog-items worden gekozen, niet zelf een lijst
+van te bouwen werk.
+
+Vier vastgelegde strategische beslissingen:
+
+- Zichtbaarheid in de catalogus volgt uit curatie (Featured), niet uit
+  publieke tellers. Makerstatistieken blijven prive. Populair is bij
+  klimtraining niet hetzelfde als goed.
+- Voor publiceren bestaat, moet er een contentlicentie zijn (richting
+  CC BY-SA) los van de AGPL op de code. Zonder dat is maker-credit een
+  loze belofte. Voorwaarde voor 0.9, niet erna.
+- Tussen 0.9 en de open bibliotheek zit een redactionele fase: de eerste
+  circa vijftig sessies worden met de hand gemaakt samen met een handvol
+  coaches. Publiceren openzetten en hopen werkt niet.
+- De remix-aanname is nog niet getest. Lineage wordt niet gebouwd voordat
+  blijkt dat coaches op elkaars werk willen voortbouwen in plaats van
+  alleen hun eigen werk te verspreiden.
+
 ## Techniek
 
 - Drie bronbestanden: `index.html` (markup en inline SVG-symbols), `app.js`
