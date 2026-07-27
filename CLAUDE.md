@@ -573,6 +573,12 @@ verwijzen ernaar.
     belasting. Dat is de oorzaak van "onduidelijk waar het op slaat".
     Splitsen of terugbrengen naar vijf per groep is een aparte, grotere
     beslissing.
+31. **Herkomst en bronvermelding bij blokken.** Blokteksten controleren
+    op te dichte aansluiting bij gepubliceerde bronnen, en waar een
+    protocol een bekende oorsprong heeft (max hangs, no hangs, HEHE,
+    repeaters) een bronveld toevoegen. Auteursrecht dekt de methode
+    niet, maar attributie is de norm in de klimwereld en het is precies
+    wat "we show our work" belooft.
 
 ### Wacht op de eerste veldtest
 
