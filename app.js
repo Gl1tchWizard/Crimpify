@@ -382,9 +382,10 @@ const BLOCKLIB = {
     why:'A calm yoga flow to close the session: hips, shoulders and long exhales. Follow the video.' },
 
   // ── SESSIE-SPECIFIEKE BLOKKEN (deployment brief, juli 2026) ──
-  // sessionOnly:true = bestaat alleen binnen de eigen sessie, nooit in de
-  // Build-picker (bescherming van de bibliotheek, backlog 30). Geen
-  // addedDate: deze blokken horen niet los in News te verschijnen.
+  // sessionOnly:true is een herkomstmarkering (voor deze sessie gebouwd);
+  // er wordt nergens op gefilterd: de blokken staan gewoon in de
+  // picker-groepen zodat een variant bouwen kan. Geen addedDate: ze horen
+  // niet los in News te verschijnen.
   // Power Hour (60 min: 20+15+20+5, sessiebereik 50-80)
   phWarmup: { n:'Power Warm-up', t:20, tMin:15, tMax:30, c:'var(--prepare)', rpe:'2-6', sessionOnly:true,
     why:'Raise temperature, prepare fingers and joints, and build up to fast, forceful movement without creating fatigue.\n1. Short pulse raiser.\n2. Prepare wrists, shoulders, scapulae, trunk and hips.\n3. Progressive finger and pulling recruitment.\n4. Several easy boulders.\n5. Gradually add faster pulls, deadpoints and controlled dynamic moves.\n6. Finish with two to four submaximal dynamic moves at 70 to 90 percent intent.\nYou are ready when fingers and shoulders feel warm, movement feels faster than at the start, catches feel controlled, landings feel safe and you feel sharper, not tired. Do not rush into maximal attempts because the timer reached twenty minutes: extend the warm-up if necessary.' },
@@ -2666,14 +2667,14 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls'] },
-  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat'] },
-  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix'] },
-  { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup'] },
+  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat','bcBoardPrimer','fsPrimer','fsConnect','fsFreeFlow','nfDrill','nfReal','nfNormal'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix','bcMileage'] },
+  { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator','tgSetup','tgHehe'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots','phDynamic','phLimit','bbReady','bbThree'] },
   { name:'Finger strength',               keys:['maxHangs','progDeadhangs'] },
   { name:'Antagonist, core & gym',     keys:['pushStrength','coreLegs','mini1','mini2','mini3'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow','phDownshift','bcWindDown','bbLog','fsDownshift','tgDownshift'] },
 ];
 // ── KLEURGRAMMATICA ──
 // kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
@@ -2734,9 +2735,7 @@ function renderBlockPicker(query) {
   const grouped = new Set();
   BLOCK_GROUPS.forEach(g=>g.keys.forEach(k=>grouped.add(k)));
   const own = Object.keys(BLOCKLIB).filter(k=>k.startsWith('ux_'));
-  // sessionOnly-blokken bestaan alleen binnen hun eigen sessie en horen
-  // nooit in de Build-picker (bescherming van de bibliotheek, backlog 30)
-  const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_') && !BLOCKLIB[k].sessionOnly);
+  const rest = Object.keys(BLOCKLIB).filter(k=>!grouped.has(k) && !k.startsWith('ux_'));
   const allGroups = [
     ...(own.length ? [{name:'Own', keys:own}] : []),
     ...BLOCK_GROUPS,
@@ -4829,11 +4828,8 @@ function openBlockDetail(key) {
     </div>
     ${inIdx.length ? `<div class="ch-shelf">${inIdx.map(i => chCard(i, true)).join('')}</div>` : ''}
     <div style="height:16px;"></div>`;
-  // sessionOnly-blokken bestaan alleen binnen hun sessie: geen ADD TO
-  // SESSION, de weg erheen loopt via APPEARS IN (vangnet; de picker en
-  // News tonen ze toch al niet)
   const addBtn = document.getElementById('bdAddBtn');
-  addBtn.style.display = b.sessionOnly ? 'none' : '';
+  addBtn.style.display = '';
   addBtn.onclick = () => addBlockToSession(key);
   if (inIdx.length) enableWheelScroll('#blockDetailBody .ch-shelf');
   const bd = document.getElementById('blockDetail');

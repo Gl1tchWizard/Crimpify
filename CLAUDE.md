@@ -507,11 +507,13 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
      Capacity, Crimp Factory (echt gemaakt in v0.48) en sinds v0.50 de zes
      uit de deployment brief: Power Hour, Base Camp, Board Blitz, Flow
      State, Ninja Feet (vervangt Silent Feet) en The Grinder. Hun blokken
-     dragen `sessionOnly: true`: ze bestaan alleen binnen hun sessie en
-     verschijnen nooit in de Build-picker (bescherming van de bibliotheek,
-     backlog 30) en hebben geen addedDate (nooit los in News). Flow State
-     draagt de eerste externe link van de app (Sharma-inspiratievideo, op
-     het Free Flow-blok, met zichtbare geen-endorsement-disclaimer).
+     dragen `sessionOnly: true` als herkomstmarkering; er wordt nergens op
+     gefilterd (beslissing v0.51): de blokken staan gewoon in de
+     picker-groepen zodat varianten bouwen kan. Ze hebben geen addedDate
+     (nooit los in News). Flow State draagt de eerste externe link van de
+     app (Sharma-inspiratievideo, op het Free Flow-blok en in het
+     sessiedetail via de additieve velden `links`/`linkNote` op de entry,
+     beide met zichtbare geen-endorsement-disclaimer).
    Als we groot gaan worden gecureerde planken berekende planken; het ontwerp
    blijft gelijk, alleen de bron verandert.
 5. **Vastleggen, niet bouwen:** het vollere sessie-datamodel (title, creator,
