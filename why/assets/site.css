@@ -41,7 +41,7 @@ header.site { position:relative; z-index:20; background:var(--ink); border-botto
 .brand b { font-family:var(--disp); font-weight:900; font-size:26px; letter-spacing:.08em; color:var(--chalk); line-height:1; }
 .brand-sub { display:block; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--dust); margin-top:3px; }
 nav.main { margin-left:auto; display:flex; gap:28px; }
-nav.main a { font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:8px 0; }
+nav.main a { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:8px 0; }
 nav.main a:hover { color:var(--chalk); }
 header.site .btn { padding:12px 22px; font-size:14px; }
 
@@ -60,30 +60,19 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .hero h1 .dot { color:var(--acid); }
 .hero p.lede { max-width:440px; font-size:19px; line-height:1.55; color:var(--chalk); opacity:.88; }
 .hero-ctas { display:flex; gap:16px; margin:34px 0 20px; flex-wrap:wrap; }
-.proof { font-size:14px; color:var(--dust); margin-bottom:10px; }
 .trust { font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); }
 
-/* ── Power Hour productobject ── */
-.ph-stack { position:relative; width:376px; flex-shrink:0; }
-/* maximaal twee subtiele kaartranden erachter: de bibliotheek is groter */
-.ph-stack::before, .ph-stack::after { content:''; position:absolute; inset:0; border-radius:16px; background:var(--carbon); border:1px solid var(--graphite); z-index:0; }
-.ph-stack::before { transform:translate(-22px,20px) rotate(-2deg); opacity:.55; }
-.ph-stack::after { transform:translate(-11px,10px) rotate(-1deg); opacity:.75; }
-.ph-card { position:relative; z-index:2; background:rgba(17,18,15,.97); border:1px solid var(--graphite); border-radius:16px; padding:26px 26px 24px; box-shadow:0 30px 70px rgba(0,0,0,.55); }
-.ph-kicker { display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--dust); }
-.ph-kicker .designed { color:var(--acid); }
-.ph-fp { display:flex; gap:5px; height:74px; align-items:flex-end; margin:18px 0 16px; }
-.ph-fp i { display:block; border-radius:4px 4px 2px 2px; }
-.ph-card h2 { font-family:var(--disp); font-weight:900; font-size:40px; letter-spacing:.02em; text-transform:uppercase; line-height:1; }
-.ph-int { font-size:15px; color:var(--dust); line-height:1.5; margin:10px 0 16px; }
-.ph-meta { display:flex; flex-direction:column; gap:7px; font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); border-top:1px solid var(--graphite); padding-top:16px; }
-.ph-meta span { display:flex; justify-content:space-between; }
-.ph-meta span::after { content:attr(data-r); color:var(--dust); }
-.ph-meta b { color:var(--acid); font-weight:400; }
-.ph-cred { display:flex; flex-direction:column; gap:4px; font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--dust); margin:16px 0 18px; }
-.ph-card .btn { display:block; text-align:center; }
+/* ── Power Hour: één matzwarte telefoon met de echte interface ──
+   uiterst rechts, ~13% buiten de viewportrand; nooit over de klimmer */
+.phone-wrap { position:absolute; z-index:3; right:-12px; top:50%; transform:translateY(-50%); width:382px; text-decoration:none; display:block; }
+.phone-cap { display:flex; justify-content:space-between; align-items:baseline; margin:0 20px 12px 4px; }
+.phone-cap b { font-family:var(--mono); font-weight:500; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--chalk); text-shadow:0 1px 10px rgba(11,12,10,.9); }
+.phone-cap i { font-family:var(--mono); font-style:normal; font-size:11px; letter-spacing:.08em; color:var(--chalk); opacity:.8; text-shadow:0 1px 10px rgba(11,12,10,.9); }
+.phone-frame { display:block; background:#0C0D0B; border:1px solid #23241F; border-radius:40px; padding:13px; box-shadow:0 44px 90px rgba(0,0,0,.62), inset 0 0 0 2px #060705; }
+.phone-frame img { width:100%; height:auto; border-radius:28px; display:block; }
+.phone-wrap:hover .phone-frame { border-color:#3a3c34; }
 
 @media (max-width:1180px){
   .hero-copy { max-width:52%; }
-  .ph-stack { width:346px; }
+  .phone-wrap { width:348px; right:-10px; }
 }
