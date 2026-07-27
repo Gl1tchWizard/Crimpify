@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v44';
+const CACHE = 'crimpify-v45';
 const CORE = [
   './',
   'index.html',
@@ -44,8 +44,12 @@ self.addEventListener('fetch', e => {
   if (e.request.mode === 'navigate' || url.pathname.endsWith('index.html')) {
     e.respondWith(
       fetch(e.request).then(res => {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy));
+        // alleen geslaagde antwoorden cachen: een 404 mag nooit blijven
+        // hangen als de offline-kopie van een pad (backlog 27, /why)
+        if (res.ok) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+        }
         return res;
       }).catch(() => caches.match(e.request).then(r => r || caches.match('index.html')))
     );
