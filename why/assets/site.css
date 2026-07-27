@@ -47,13 +47,14 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
 /* ── hero: één compositie van foto, kop en productobject ── */
 .hero { position:relative; min-height:820px; display:flex; align-items:center; overflow:hidden; background:var(--ink); }
-.hero-photo { position:absolute; inset:0; background:url('hero.jpg') 62% center / cover no-repeat; }
+/* laagvolgorde: foto+shade (1) → kaart (2) → klimmer (3) → copy (4) */
+.hero-photo { position:absolute; inset:0; z-index:1; background:url('hero.jpg') 62% center / cover no-repeat; }
 /* gradient links voor leesbaarheid; bewust half doorzichtig zodat de
    acid-spatten in de foto zelf achter de kop blijven gloeien */
-.hero-shade { position:absolute; inset:0; background:
+.hero-shade { position:absolute; inset:0; z-index:1; background:
   linear-gradient(90deg, rgba(11,12,10,.78) 0%, rgba(11,12,10,.52) 30%, rgba(11,12,10,.14) 52%, rgba(11,12,10,0) 68%),
   linear-gradient(0deg, rgba(11,12,10,.42) 0%, rgba(11,12,10,0) 24%); }
-.hero-grid { position:relative; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:48px; width:100%; padding:64px 0; }
+.hero-grid { position:relative; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:48px; width:100%; padding:64px 0; }
 .hero-copy { max-width:46%; }
 .eyebrow { font-family:var(--mono); font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:var(--chalk); opacity:.85; }
 .hero h1 { font-family:var(--disp); font-weight:900; font-size:clamp(84px,9.6vw,138px); line-height:.92; text-transform:uppercase; letter-spacing:.005em; margin:22px 0 28px; text-shadow:0 4px 34px rgba(11,12,10,.55); }
@@ -63,11 +64,18 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .trust { font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, var(--chalk) 30%, var(--dust)); }
 
 /* ── Power Hour: compacte kaart, ingebed in de foto ──
-   Laagvolgorde: foto (1) → copy (2) → kaart (3) → klimmerlaag (4).
-   De kaart zit achter de klimmer en voor de rots. */
-.ph-card { position:absolute; z-index:3; right:180px; top:50%; transform:translateY(-50%); width:378px; display:flex; flex-direction:column; text-decoration:none; background:rgba(15,16,13,.94); border:1px solid var(--graphite); border-radius:16px; padding:26px 28px 24px; box-shadow:0 34px 80px rgba(0,0,0,.55); }
+   De kaart zit achter de klimmer en voor de rots. Positie is verankerd
+   aan de FOTO, niet aan de viewport: de klimmer staat door de cover-
+   berekening op 62vw+const (foto breder dan viewport) dan wel op een
+   vast beeldpercentage (viewport breder dan foto, media query onder).
+   Zo is de overlap kaart/klimmer op elke desktopbreedte gelijk.
+   Linkerdeel van de kaart (~30%, padding-left) is bewust stille zone
+   die achter de klimmer doorloopt; alle leesbare content staat rechts. */
+.ph-card { position:absolute; z-index:2; left:min(62vw, calc(100vw - 402px)); top:50%; transform:translateY(-50%); width:378px; display:flex; flex-direction:column; text-decoration:none; background:rgba(8,10,9,.94); border:1px solid var(--graphite); border-radius:16px; padding:26px 24px 24px 112px; box-shadow:0 34px 80px rgba(0,0,0,.55); }
+@media (min-width:1458px){ .ph-card { left:calc(69.737vw - 103px); } }
 .ph-kicker { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--dust); text-align:right; }
-.ph-fp { display:flex; gap:5px; height:64px; align-items:flex-end; margin:16px 0 18px; }
+/* fingerprint mag door de stille zone heen lopen (negatieve marge) */
+.ph-fp { display:flex; gap:5px; height:64px; align-items:flex-end; margin:16px 0 18px -84px; }
 .ph-fp i { display:block; border-radius:4px 4px 2px 2px; }
 .ph-name { font-family:var(--disp); font-weight:900; font-size:42px; letter-spacing:.02em; text-transform:uppercase; line-height:1; color:var(--chalk); text-align:right; }
 .ph-int { font-size:15px; color:var(--dust); line-height:1.5; margin:10px 0 16px; text-align:right; }
@@ -80,10 +88,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 /* voorgrondlaag: dezelfde foto als los vrijstaand klimmer-asset (alpha-
    mask, zelfde canvasmaat als hero.jpg) met identieke background-regels,
    dus per constructie pixel-perfect uitgelijnd op .hero-photo */
-.hero-climber { position:absolute; inset:0; z-index:4; pointer-events:none;
-  background:url('hero-climber-foreground.webp') 62% center / cover no-repeat; }
+.hero-climber { position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:url('hero-climber-foreground.webp') 62% center / cover no-repeat;
+  filter:drop-shadow(8px 10px 14px rgba(0,0,0,.28)); }
 
 @media (max-width:1180px){
   .hero-copy { max-width:52%; }
-  .ph-card { right:60px; width:356px; }
 }
