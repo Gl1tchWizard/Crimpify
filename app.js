@@ -429,6 +429,18 @@ const sessions = [
   } catch {}
 })();
 
+// eenmalig en idempotent: bestaande historie-entries zonder uuid krijgen
+// er een bij de eerste laadbeurt (identiteit voor de servermigratie; ts
+// blijft het logtijdstip). Entries die er al een hebben blijven onaangeroerd.
+(function(){
+  try {
+    const h = JSON.parse(localStorage.getItem('crimpify_history') || '[]');
+    let changed = false;
+    h.forEach(e => { if (e && !e.uuid) { e.uuid = newUuid(); changed = true; } });
+    if (changed) localStorage.setItem('crimpify_history', JSON.stringify(h));
+  } catch {}
+})();
+
 // startlijst (tot je eigen sessies binnenkomen)
 let recent = [];  // gevuld vanuit historie; favorieten komen apart uit crimpify_favs
 
@@ -465,7 +477,12 @@ function sessionLoad(id, minutes) {
 }
 function logSessionDone(id, variant, time, sig, snap) {
   const h = loadHistory();
-  const e = { id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
+  // v/uuid/tz/sid: schema-voorbereiding. uuid is de identiteit van de
+  // entry (ts blijft het logtijdstip), sid koppelt hem aan de gedraaide
+  // sessie-instantie, tz maakt de kloktijden later reconstrueerbaar.
+  const e = { v: SCHEMA_V, uuid: newUuid(), id, variant: variant||'', time: time||0, ts: Date.now(), sig: sig || null, load: sessionLoad(id, time) };
+  try { e.tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch {}
+  if (sessionSid) e.sid = sessionSid;
   if (snap) {
     e.keys = snap.keys; e.name = snap.name; e.color = snap.color; e.blocks = snap.blocks;
     if (snap.wall != null) e.wall = snap.wall;
@@ -548,6 +565,25 @@ const PAUSE_OUTLIER_MS = 15 * 60000;
 let _sessionPaused = false;    // uitschieter-markering, reist mee naar de entry
 let _hiddenAt = null;          // wanneer de tab verborgen raakte
 
+// ── SCHEMA-VOORBEREIDING (servermigratie): versie en identiteit ──
+// SCHEMA_V reist als veld v mee op alle nieuw opgeslagen records; lezers
+// vatten een ontbrekende v op als versie 0 en werken gewoon door (geen
+// migratieframework). sid = unieke identiteit van een sessie-instantie:
+// gemaakt, gedeeld, geremixt of hervat. Een link draagt hem mee (veld s),
+// openen uit een link of hervatten behoudt hem, een remix krijgt een
+// nieuwe en bewaart de bron als srcSid op de kopie.
+const SCHEMA_V = 1;
+let sessionSid = null;
+function newUuid() {
+  try { if (crypto.randomUUID) return crypto.randomUUID(); } catch {}
+  // fallback voor insecure contexts (http op LAN-test): v4 uit getRandomValues
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 15) | 64; b[8] = (b[8] & 63) | 128;
+  const h = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+  return h.slice(0,8) + '-' + h.slice(8,12) + '-' + h.slice(12,16) + '-' + h.slice(16,20) + '-' + h.slice(20);
+}
+function ensureSid() { if (!sessionSid) sessionSid = newUuid(); return sessionSid; }
+
 // ── HELPERS ──
 function getT() { return timeValues[activeTimeIdx]; }
 // eindige tijd voor opslag/encoding: in de builder is de som leidend;
@@ -563,7 +599,7 @@ let customKeys = null;      // array van blok-keys van de draft
 
 function saveDraft() {
   try {
-    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined, ov: durationOverride['custom'] || undefined }));
+    if (customKeys && customSession) localStorage.setItem('crimpify_draft', JSON.stringify({ v: SCHEMA_V, sid: sessionSid || undefined, keys: customKeys, name: customSession.name, color: customSession.color, rpe: customSession.rpe, intent: customSession.intent, locked: sessionLocked, owned: sessionOwned, basedOn: customSession.basedOn || undefined, ov: durationOverride['custom'] || undefined }));
   } catch {}
 }
 function loadDraft() {
@@ -1280,6 +1316,7 @@ function saveActive() {
     Object.keys(sessionLog).forEach(k => { spent[k] = sessionLog[k].spent || 0; });
     const cb = currentBlocks[currentBlockIdx];
     localStorage.setItem('crimpify_active', JSON.stringify({
+      v: SCHEMA_V, sid: sessionSid || undefined,
       keys: currentBlocks.map(b => b._key), name: s.name, color: s.color || 'lime',
       sessionId: s.id, idx: currentBlockIdx, spent, ts: Date.now(),
       // additief (v0.45): absolute klokken en de volledige bloklog, zodat een
@@ -1350,6 +1387,7 @@ function resumeActive(fromReload) {
   // absolute klokken herstellen: sessie- en blokstart lopen door een reload
   // heen gewoon door (wall clock), in plaats van op nul te beginnen
   sessionStartTime = a.st || Date.now();
+  sessionSid = a.sid || null;   // hervatten behoudt de sessie-identiteit
   // uitschieter-markering herstellen; een gat sinds de laatste heartbeat
   // groter dan de pauzedrempel (app gedood, later hervat) telt ook
   _sessionPaused = !!a.pz || (Date.now() - a.ts > PAUSE_OUTLIER_MS);
@@ -1367,6 +1405,7 @@ function startSession() {
   currentBlockIdx = 0;
   sessionLog = {};
   sessionStartTime = Date.now();
+  ensureSid();   // elke gestarte sessie heeft identiteit; link/hervat behoudt de zijne
   _sessionPaused = false; _hiddenAt = null;
   startHeartbeat();
   trackEvent('session_started');
@@ -2278,7 +2317,7 @@ function recapShare() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
   const s = getSession(e.id);
-  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Session'), e.keys, e.time || 60, e.color || 'lime');
+  const url = location.origin + location.pathname + '#s=' + encodePayload(e.name || (s ? s.name : 'Session'), e.keys, e.time || 60, e.color || 'lime', null, e.sid ? { s: e.sid } : undefined);
   const name = e.name || (s ? s.name : 'Session');
   if (navigator.share) { navigator.share({ title: 'Crimpify: ' + name, text: shareText(name, e.time), url }).catch(()=>{ openShareDialog(url); }); }
   else { openShareDialog(url); }
@@ -2287,6 +2326,7 @@ function recapAgain() {
   const e = _recapEntry;
   if (!e || !e.keys || !e.keys.length) return;
   closeRecap();
+  sessionSid = null;   // opnieuw draaien = nieuwe instantie, de entry houdt zijn eigen sid
   const s = getSession(e.id);
   customSession = { id:'custom', cat:'again', name: e.name || (s ? s.name : 'Session'), desc:'', color: e.color || 'lime', rpe: s ? s.rpe : '–', intent:'Same session as before. Adapt and lock in, or start right away.' };
   customKeys = e.keys.filter(k => BLOCKLIB[k]);
@@ -2515,6 +2555,7 @@ function startBuildPath() {
 function openDraft() {
   const d = loadDraft();
   if (!d) return;
+  sessionSid = d.sid || null;   // het concept behoudt zijn identiteit
   customSession = { id:'custom', cat:'own', name:d.name || 'My session', desc:'', color:d.color || 'lime', rpe:d.rpe || '–', intent:d.intent || 'Self-assembled.' };
   if (d.basedOn) customSession.basedOn = d.basedOn;
   customKeys = d.keys.slice();
@@ -2530,6 +2571,7 @@ function openFav(i) {
   if (_favLongPressed) return;
   const f = loadFavs()[i];
   if (!f) return;
+  sessionSid = null;   // favoriet is een sjabloon: elke keer een verse instantie
   customSession = { id:'custom', cat:'own', name:f.name, desc:'', color:f.color || 'lime', rpe:f.rpe || '–', intent:f.intent || 'Favourite session.' };
   if (f.basedOn) customSession.basedOn = f.basedOn;
   customKeys = f.keys.slice();
@@ -2757,7 +2799,7 @@ function confirmNewExercise() {
   // fixed:true — de ingevoerde minuten zijn de duur, de tijd-fitter blijft eraf
   const g = document.getElementById('neCat').value;
   if (!g || !CAT_COLOR[g]) { document.getElementById('neCat').focus(); return; }
-  const block = { n: name, t, c: CAT_COLOR[g], g, rpe, why, fixed: true };
+  const block = { v: SCHEMA_V, n: name, t, c: CAT_COLOR[g], g, rpe, why, fixed: true };
   if (url) block.links = [{ label: linkLabel(url), url }];
   const store = loadCustomBlocks();
   store[key] = block;
@@ -2816,6 +2858,9 @@ function unlockEdit() {
   buildSlab();
 }
 function duplicateSession() {
+  // remix: nieuwe identiteit, de bron-sid reist mee op de kopie
+  if (customSession && sessionSid) customSession.srcSid = sessionSid;
+  sessionSid = newUuid();
   if (customSession) customSession.name = chooseCopyTitle(customSession.name);
   sessionOwned = true;
   sessionLocked = false;
@@ -2829,7 +2874,7 @@ function toggleFavorite() {
   if (favs.some(f => f.name === s.name)) {
     favs = favs.filter(f => f.name !== s.name);
   } else {
-    const entry = { name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite(), d: currentBlocks.map(b=>b.t) };
+    const entry = { v: SCHEMA_V, name: s.name, keys: currentBlocks.map(b=>b._key), color: s.color || 'lime', rpe: s.rpe || '–', intent: s.intent || '', time: getTFinite(), d: currentBlocks.map(b=>b.t) };
     if (activeSessionId === 'custom' && customSession && customSession.basedOn) entry.basedOn = customSession.basedOn;
     favs.unshift(entry);
   }
@@ -2848,12 +2893,15 @@ function encodeSession() {
   try { sender = localStorage.getItem('crimpify_name') || ''; } catch {}
   const maker = (activeSessionId === 'custom' && customSession && customSession.basedOn) ? customSession.basedOn.coach
     : (activeSessionId === 'custom' && customSession && customSession.madeBy) || undefined;
-  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime', currentBlocks.map(b=>b.t), { f: sender || undefined, m: maker });
+  return encodePayload(s ? s.name : 'Session', currentBlocks.map(b=>b._key), getTFinite(), s ? s.color : 'lime', currentBlocks.map(b=>b.t), { f: sender || undefined, m: maker, s: ensureSid() });
 }
 function encodePayload(name, keys, time, color, durations, meta) {
-  const payload = { n: name || 'Session', k: keys, t: time, c: color || 'lime' };
+  // v = schemaversie van de payload, s = sessie-identiteit (additief; oude
+  // links zonder deze velden blijven werken, oude clients negeren ze)
+  const payload = { v: SCHEMA_V, n: name || 'Session', k: keys, t: time, c: color || 'lime' };
   if (meta && meta.f) payload.f = meta.f;
   if (meta && meta.m) payload.m = meta.m;
+  if (meta && meta.s) payload.s = meta.s;
   if (Array.isArray(durations) && durations.length === keys.length) payload.d = durations;
   // eigen oefeningen reizen mee in de link
   const own = keys.filter(k=>k.startsWith('ux_') && BLOCKLIB[k]);
@@ -2975,6 +3023,10 @@ function importFromHash() {
   const banner = sender ? `${sender} sent you "${p.n || 'a session'}".` : 'Shared session, locked by its maker.';
   customSession = { id:'custom', cat:'shared', name: (p.n||'Shared session'), desc:'', color: p.c||'lime', rpe:'–', intent: banner };
   if (typeof p.m === 'string' && p.m.trim()) customSession.madeBy = p.m.trim().slice(0, 24);
+  // identiteit en schemaversie uit de link bewaren: de sessie behoudt de
+  // sid van de maker (geen nieuwe), oude links zonder s/v werken gewoon
+  sessionSid = (typeof p.s === 'string' && p.s) ? p.s : null;
+  customSession.shareV = (typeof p.v === 'number') ? p.v : 0;
   customKeys = validKeys;
   durationOverride['custom'] = {};
   validDur.forEach((mv, i) => { if (mv != null) durationOverride['custom'][i] = mv; });
@@ -3053,6 +3105,7 @@ function renderPreview() {
 
 let recentFolded = false;
 function selectSession(id) {
+  sessionSid = null;   // nieuw sessietype = verse instantie
   activeSessionId = id;
   sessionLocked = false;
   sessionOwned = true;
@@ -4459,6 +4512,7 @@ function sharePreviewSession() {
 function customizeFromChoose() {
   if (_previewIdx == null) return;
   const s = MOCK_CHOOSE[_previewIdx];
+  sessionSid = newUuid();   // kopie uit de catalogus = nieuw gemaakte sessie
   customSession = { id:'custom', cat:'own', name: chooseCopyTitle(s.name), desc:'', color: s.color, rpe: s.rpe, intent: s.intent, basedOn: { title: s.name, coach: s.coach } };
   customKeys = s.keys.slice();
   durationOverride['custom'] = {};  // verse kopie, geen stale slot-overrides
@@ -4471,6 +4525,7 @@ function customizeFromChoose() {
 }
 
 function openMockSession(i) {
+  sessionSid = null;   // catalogus-sessie openen = verse instantie
   const s = MOCK_CHOOSE[i];
   if (!s) return;
   customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach + ' (mock)' };
