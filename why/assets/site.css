@@ -411,19 +411,19 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 /* gelaagde composities vanaf desktopbreedte */
 @media (min-width:1181px){
   .splat { display:block; }
-  .splat-send { top:8px; left:485px; width:150px; height:auto; }
+  .splat-send { top:0; left:445px; width:130px; height:auto; }
   .splat-plan { top:0; left:800px; width:320px; height:auto; }
   .s-send .wrap { display:block; }
-  .send-stage { height:620px; margin-top:24px; }
+  .send-stage { height:700px; margin-top:24px; }
   .send-step { position:absolute; margin:0; }
-  .ss1 { left:20px; top:17px; width:240px; z-index:1; }
+  .ss1 { left:0; top:17px; width:260px; z-index:1; }
   .ss1 .shot-crop { height:300px; }
-  .ss2 { left:480px; top:-364px; width:420px; z-index:3; }
-  .ss2 .step-txt { width:360px; }
+  .ss2 { left:510px; top:-364px; width:520px; z-index:3; }
+  .ss2 .step-txt { width:400px; }
   .ss2 .shot { width:100%; }
-  .ss3 { left:810px; top:101px; width:230px; z-index:1; }
+  .ss3 { left:1020px; top:101px; width:260px; z-index:1; }
   .ss3 .shot-crop { height:310px; }
-  .ss4 { left:1180px; top:174px; width:200px; z-index:1; }
+  .ss4 { left:1190px; top:174px; width:260px; z-index:2; }
   .ss4 .shot-crop { height:280px; }
   .ss4 .shot-crop img { margin-top:-36%; }  /* de deel-dialoog in beeld, niet de gedimde kop */
 
