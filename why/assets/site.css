@@ -285,7 +285,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
 .shot { display:block; border-radius:20px; box-shadow:var(--elev); border:1px solid var(--graphite); }
 
-.band { position:relative; padding:120px 0; }
+.band { position:relative; padding:96px 0; }
 .band-dark { background:var(--ink); color:var(--chalk); }
 .band-paper { background:var(--paper); color:var(--ink); }
 .band h2 { font-family:var(--disp); font-weight:900; font-size:clamp(50px,4.6vw,68px); line-height:.95; text-transform:uppercase; }
@@ -309,7 +309,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .step-b { display:block; font-size:16px; line-height:1.5; color:var(--dust); margin-top:8px; }
 
 /* ── sectie 4: TRAIN ON PURPOSE ── */
-.s-plan .band-head { margin-bottom:56px; }
+.s-plan .band-head { margin-bottom:40px; }
 .plan-photo { width:min(520px,100%); }
 .done-panel { width:min(560px,calc(100% - 24px)); margin:-80px auto 0; position:relative; z-index:3; background:var(--carbon); color:var(--chalk); border-radius:20px; box-shadow:var(--elev); padding:36px 40px; }
 .done-kicker { font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--acid); }
@@ -332,7 +332,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
 /* ── sectie 5: BUILT IN THE OPEN ── */
 .s-open .wrap { position:relative; }
-.s-open .band-head { margin-bottom:56px; }
+.s-open .band-head { margin-bottom:44px; }
 .open-points { max-width:640px; }
 .open-point h3 { font-family:var(--mono); font-weight:500; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
 .open-point p { font-size:17px; line-height:1.6; color:var(--dust); margin-top:8px; max-width:46ch; }
@@ -372,13 +372,13 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .coach-qr { display:flex; align-items:center; gap:18px; margin-top:40px; }
 .coach-qr img { border-radius:8px; display:block; }
 .coach-qr span { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); }
-.coach-stage { margin-top:48px; display:flex; flex-direction:column; gap:20px; }
+.coach-stage { margin-top:32px; display:flex; flex-direction:column; gap:20px; }
 .coach-wall-frame { width:min(480px,88%); margin-left:auto; overflow:hidden; border-radius:20px; box-shadow:var(--elev); }
 .coach-wall-frame img { display:block; width:100%; height:auto; }
 .coach-screen { width:min(420px,78%); margin:0; }
 
 /* ── satirische reviewband: ingehouden knipoog ── */
-.s-reviews { padding:calc(80px + tan(var(--angle))*100vw) 0 80px; clip-path:polygon(0 calc(tan(var(--angle))*100vw), 100% 0, 100% 100%, 0 100%); margin-top:calc(-1*tan(var(--angle))*100vw); }
+.s-reviews { padding:calc(64px + tan(var(--angle))*100vw) 0 64px; clip-path:polygon(0 calc(tan(var(--angle))*100vw), 100% 0, 100% 100%, 0 100%); margin-top:calc(-1*tan(var(--angle))*100vw); }
 .review-band { list-style:none; display:grid; grid-template-columns:repeat(4,1fr); gap:48px; margin:0; padding:0; }
 .rv-score { display:block; font-family:var(--disp); font-weight:900; font-size:40px; line-height:1; color:var(--acid); }
 .review-band blockquote { font-size:15px; line-height:1.5; color:var(--chalk); margin:12px 0 0; }
@@ -391,7 +391,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .cta-shade { position:absolute; inset:0; z-index:0; background:
   linear-gradient(90deg, rgba(11,12,10,.84) 0%, rgba(11,12,10,.6) 40%, rgba(11,12,10,.28) 70%, rgba(11,12,10,.16) 100%),
   linear-gradient(0deg, rgba(11,12,10,.5) 0%, rgba(11,12,10,0) 40%); }
-.cta-wrap { position:relative; z-index:1; padding:40px 0; }
+.cta-wrap { position:relative; z-index:1; padding:16px 0; }
 .s-cta h2 { font-size:clamp(84px,9.6vw,138px); line-height:.92; letter-spacing:.005em; text-shadow:0 4px 34px rgba(11,12,10,.55); }
 .cta-actions { display:flex; gap:16px; margin:36px 0 22px; flex-wrap:wrap; }
 .cta-ambition { font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, var(--chalk) 30%, var(--dust)); }
@@ -427,10 +427,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ss4 .shot-crop { height:280px; }
   .ss4 .shot-crop img { margin-top:-36%; }  /* de deel-dialoog in beeld, niet de gedimde kop */
 
-  .plan-stage { position:relative; height:760px; }
+  .plan-stage { position:relative; height:700px; }
   .plan-photo { position:absolute; left:0; top:0; width:520px; z-index:1; }
-  .done-panel { position:absolute; left:380px; top:90px; width:560px; margin:0; }
-  .plan-copy { position:absolute; left:1040px; top:220px; width:320px; margin:0; }
+  .done-panel { position:absolute; left:380px; top:64px; width:560px; margin:0; }
+  .plan-copy { position:absolute; left:1000px; top:170px; width:340px; margin:0; }
 
   .open-proof { position:absolute; right:0; top:-200px; width:520px; margin:0; z-index:3; }
 
