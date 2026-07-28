@@ -111,11 +111,38 @@ offline-capable PWA. Live op https://crimpify.com via GitHub Pages.
   training library". Staat bewust NIET in de sw-precache (network-first
   navigatie serveert hem online; offline valt het pad terug op de
   app-shell). De sessiekaarten linken naar echte `#s=`-deel-links van de
-  zes gecureerde sessies en tonen "Curated by Crimpify" tot er echte
-  makers zijn. Geen externe requests behalve GoatCounter (zelfde teller
+  zes gecureerde sessies; "Curated by Crimpify" is in fase 3.7 overal
+  verwijderd, de makernaam ("Session by …") blijft. Geen externe requests
+  behalve GoatCounter (zelfde teller
   als de app). Claims toekomstvast: geen "data stays on your device", geen
   "no ads"; publishing altijd als "coming" gelabeld tot het bestaat. De
   gele glitch betekent remix/fork, nooit decoratie.
+- **Website-vervolgplan (revised section plan, 28 juli 2026, vervangt
+  het oude sectieplan):** fase 1-3 (hero + bibliotheek) zijn gebouwd en
+  bevroren; geen latere fase mag ze heropenen. Daaronder, in volgorde:
+  BUILD TO SEND. (vier stappen 01 FIND IT / 02 TRAIN IT / 03 ADAPT IT /
+  04 SEND IT, eindigt bewust op doorgeven; donkere sectie; de acid-lijn
+  vorkt bij 04 en betekent remix), TRAIN ON PURPOSE (hand-op-rots-foto +
+  echte Session Done-interface + de stoplicht-pixelmonsters), BUILT IN
+  THE OPEN (provenance en openheid samengevoegd; één quote met naam en
+  rol, in markup gemarkeerd met data-placeholder="true" tot de echte er
+  is; geen perslogo's, sterren of gebruikerstellers), FOR COACHES AND
+  GYMS (geen prijzen of tiers), slot-CTA die REFRESH YOUR SESH. herhaalt.
+  Visueel principe overal: per sectie één dominant zwevend productobject
+  met echte UI en binnenpanelen dat iets overlapt (foto, sectierand of
+  band-grens); hooguit twee ondersteunende objecten, deels afgesneden;
+  één elevatiefamilie; niets belangrijks achter iets anders.
+  Vastgelegde correcties op de oude master-brief (niet opnieuw
+  introduceren): (1) de hero-kop is REFRESH YOUR SESH., niet GOOD
+  TRAINING SHOULD TRAVEL; (2) de pixelmonsters zijn goedgekeurde assets,
+  de angel/halo-richting is ingetrokken; (3) fingerprint-hoogtevariatie
+  is correct, elke instructie om ze te vlakken is fout; (4) claims eerst
+  toetsen aan de huidige app; (5) de site bezit precies twee regels,
+  REFRESH YOUR SESH. en BUILD TO SEND., alle andere campagneregels zijn
+  ingetrokken en er komt geen derde. De ambitie "Building the world's
+  largest open climbing training library" is een ondersteunende regel,
+  nooit een kop; schaalclaims over gebruikers/sessies pas bij echte
+  getallen.
 - **Deploy:** push naar de Pages-repo root. `CNAME` bevat `crimpify.com`.
 - **Logo:** inline SVG-symbols in index.html: `#cf-mark` (viewBox 0 0 362 413) en
   `#cf-word` (viewBox 0 0 2460 476), beide `fill="currentColor"`. Losse bestanden:
