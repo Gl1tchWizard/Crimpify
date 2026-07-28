@@ -19,15 +19,14 @@
   --disp:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif; --mono:'DM Mono',monospace;
   /* één paginagrid: hero en bibliotheek delen dezelfde goot */
   --gutter:40px;
-  /* fase 4: één elevatiefamilie voor alle zwevende objecten + skeletgrijs */
+  /* één elevatiefamilie voor alle zwevende objecten */
   --elev:0 24px 60px rgba(0,0,0,.45);
-  --ph:#8B8B85; --ph-ink:#3F403B;
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
 html,body { overflow-x:clip; }
 body { background:var(--ink); color:var(--chalk); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
-img,svg { max-width:100%; display:block; }
+img,svg { max-width:100%; height:auto; display:block; }
 a { color:inherit; }
 .wrap { max-width:calc(1440px - 2*var(--gutter)); margin:0 auto; padding:0 var(--gutter); }
 a:focus-visible,button:focus-visible { outline:2px solid var(--acid); outline-offset:3px; }
@@ -281,8 +280,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    composities gelden vanaf 1181px. Placeholders: vlak middengrijs,
    mono-label met asset, ratio en rol; juiste maat en positie. */
 
-.ph { position:relative; background:var(--ph); border-radius:20px; box-shadow:var(--elev); }
-.ph > span { position:absolute; top:12px; left:14px; right:14px; font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ph-ink); }
+.shot { display:block; border-radius:20px; box-shadow:var(--elev); border:1px solid var(--graphite); }
 
 .band { position:relative; padding:120px 0; }
 .band-dark { background:var(--ink); color:var(--chalk); }
@@ -302,8 +300,8 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .send-flow { list-style:none; margin:0; padding:0; }
 .send-step { margin-top:36px; }
 .send-step:first-child { margin-top:0; }
-.shot-crop { overflow:hidden; border-radius:20px; box-shadow:var(--elev); }
-.shot-crop .ph { box-shadow:none; border-radius:0; }
+.shot-crop { overflow:hidden; border-radius:20px; box-shadow:var(--elev); border:1px solid var(--graphite); }
+.shot-crop img { display:block; width:100%; }
 .step-txt { display:block; margin-top:18px; }
 .step-no { display:block; font-family:var(--mono); font-size:13px; letter-spacing:.1em; color:var(--dust); }
 .step-t { display:block; font-family:var(--disp); font-weight:800; font-size:24px; letter-spacing:.04em; text-transform:uppercase; margin-top:8px; }
@@ -314,15 +312,21 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .plan-photo { width:min(520px,100%); }
 .done-panel { width:min(560px,calc(100% - 24px)); margin:-80px auto 0; position:relative; z-index:3; background:var(--carbon); color:var(--chalk); border-radius:20px; box-shadow:var(--elev); padding:36px 40px; }
 .done-kicker { font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--acid); }
-.done-row { display:flex; align-items:center; gap:16px; margin-top:18px; }
+.done-row { display:flex; align-items:baseline; gap:16px; margin-top:18px; }
 .done-label { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); width:88px; flex:none; }
-.bar { display:block; height:14px; flex:1; background:var(--graphite); border-radius:7px; }
-.bar-wide { height:20px; border-radius:10px; }
-.tick { width:22px; height:22px; flex:none; border:1px solid var(--graphite); border-radius:6px; }
-.done-response { border:1px solid var(--graphite); border-radius:12px; padding:20px; margin-top:26px; }
+.done-val { font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--chalk); }
+.done-blocks { list-style:none; margin:16px 0 0; padding:0; }
+.done-blocks li { display:flex; align-items:center; gap:12px; padding:8px 0; border-top:1px solid color-mix(in srgb, var(--graphite) 60%, transparent); font-size:15px; }
+.done-blocks li > span:first-child { flex:1; }
+.done-min { font-family:var(--mono); font-size:12px; color:var(--dust); }
+.tick { position:relative; width:22px; height:22px; flex:none; border:1px solid var(--graphite); border-radius:6px; }
+.tick-done { border-color:var(--dust); }
+.tick-done::after { content:"¹3"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--chalk); }
+.done-response { border:1px solid var(--graphite); border-radius:12px; padding:20px; margin-top:22px; }
 .done-response .done-label { width:auto; }
-.ph-inline { margin-top:14px; box-shadow:none; border-radius:12px; }
-.done-cta { height:52px; border-radius:10px; background:var(--graphite); margin-top:26px; }
+.done-monsters { display:flex; align-items:center; justify-content:space-around; gap:24px; margin-top:14px; }
+.done-monsters img { width:48px; height:48px; image-rendering:pixelated; }
+.done-cta { padding:15px 0; border-radius:10px; background:var(--acid); color:var(--acid-text); margin-top:24px; font-family:var(--disp); font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; text-align:center; }
 .plan-copy { font-size:19px; line-height:1.6; margin-top:36px; max-width:44ch; }
 
 /* ── sectie 5: BUILT IN THE OPEN ── */
@@ -352,8 +356,8 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .coach-screen { width:min(420px,72%); margin:-220px auto 0 0; position:relative; z-index:3; }
 
 /* ── sectie 7: slot-CTA + footer ── */
-.s-cta { overflow:hidden; }
-.s-cta .ph-bleed { position:absolute; inset:0; border-radius:0; box-shadow:none; z-index:0; }
+.s-cta { overflow:hidden; background:var(--ink); }
+.cta-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
 .cta-wrap { position:relative; z-index:1; padding:40px 0; }
 .s-cta h2 { font-size:clamp(84px,9.6vw,138px); line-height:.92; letter-spacing:.005em; text-shadow:0 4px 34px rgba(11,12,10,.55); }
 .cta-actions { display:flex; gap:16px; margin:36px 0 22px; flex-wrap:wrap; }
@@ -377,11 +381,12 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ss1 .shot-crop { height:300px; }
   .ss2 { left:480px; top:-364px; width:420px; z-index:3; }
   .ss2 .step-txt { width:360px; }
+  .ss2 .shot { width:100%; }
   .ss3 { left:870px; top:120px; width:230px; z-index:1; }
   .ss3 .shot-crop { height:310px; }
-  .ss3 .ph > span { left:46px; }  /* label begint rechts van het dominante venster */
   .ss4 { left:1160px; top:260px; width:200px; z-index:1; }
   .ss4 .shot-crop { height:280px; }
+  .ss4 .shot-crop img { margin-top:-36%; }  /* de deel-dialoog in beeld, niet de gedimde kop */
 
   .plan-stage { position:relative; height:760px; }
   .plan-photo { position:absolute; left:0; top:0; width:520px; z-index:1; }
@@ -404,10 +409,9 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ss1 .shot-crop, .ss3 .shot-crop, .ss4 .shot-crop { height:240px; border-radius:14px; }
   /* diepte zonder de stapvolgorde te breken: 02 bloedt de linkerrand af,
      04 de rechter; beide worden door de sectierand gesneden */
-  .ss2 .ph { width:calc(100% + 20px); margin-left:-20px; border-radius:0 20px 20px 0; }
+  .ss2 .shot { width:calc(100% + 20px); margin-left:-20px; border-radius:0 20px 20px 0; }
   .ss4 .shot-crop { width:calc(100% + 20px); border-radius:14px 0 0 14px; }
   .send-step { margin-top:44px; }
-  .ph > span { font-size:10px; }
   .done-panel { padding:26px 22px; }
   .plan-copy { font-size:17px; }
   .coach-screen { margin-top:-160px; }

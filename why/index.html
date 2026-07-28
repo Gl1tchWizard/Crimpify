@@ -171,23 +171,19 @@
         </svg>
         <ol class="send-flow">
           <li class="send-step ss1">
-            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="lib-browse.png" style="aspect-ratio:780/1688">
-              <span>lib-browse.png &middot; 780:1688 &middot; step 01 browse screen</span></div></div>
+            <div class="shot-crop"><img src="assets/lib-browse.png" width="780" height="1688" loading="lazy" alt="Crimpify browse view with session shelves sorted by goal and time"></div>
             <div class="step-txt"><span class="step-no">01</span><span class="step-t">Find it</span><span class="step-b">Pick the time you have. Get a session with a reason to exist.</span></div>
           </li>
           <li class="send-step ss2">
-            <div class="ph" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
-              <span>shot-session.png &middot; 9:16 &middot; step 02 session window (dominant)</span></div>
+            <img class="shot" src="assets/shot-open.png" width="540" height="960" loading="lazy" alt="A shared session opened from a link: Ines sent you Flow State, ready to start without an account">
             <div class="step-txt"><span class="step-no">02</span><span class="step-t">Train it</span><span class="step-b">Open the link and go. No account, no setup, no signup wall.</span></div>
           </li>
           <li class="send-step ss3">
-            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="shot-timer.png" style="aspect-ratio:540/960">
-              <span>shot-timer.png &middot; 9:16 &middot; step 03 active block</span></div></div>
+            <div class="shot-crop"><img src="assets/shot-timer.png" width="540" height="960" loading="lazy" alt="A running block timer with pause, finish and skip controls"></div>
             <div class="step-txt"><span class="step-no">03</span><span class="step-t">Adapt it</span><span class="step-b">Stop a set. Skip a block. Change the call. The session bends.</span></div>
           </li>
           <li class="send-step ss4">
-            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="MISSING: share view" style="aspect-ratio:540/960">
-              <span>MISSING: share view &middot; 9:16 &middot; step 04 share screen</span></div></div>
+            <div class="shot-crop"><img src="assets/shot-share.png" width="540" height="960" loading="lazy" alt="The share dialog with a single session link ready to copy"></div>
             <div class="step-txt"><span class="step-no">04</span><span class="step-t">Send it</span><span class="step-b">Pass it on with one link. Your name stays on it.</span></div>
           </li>
         </ol>
@@ -202,22 +198,28 @@
         <h2>A plan is a direction.<br>Not a dare.</h2>
       </header>
       <div class="plan-stage">
-        <div class="ph plan-photo" data-placeholder="true" data-asset="hand.jpg" style="aspect-ratio:3/4">
-          <span>hand.jpg &middot; 3:4 &middot; section 4 chapter art</span>
-        </div>
-        <!-- echte paneelstructuur in grijs: tijdrij, blokkenrij, responspaneel -->
+        <img class="shot plan-photo" src="assets/hand-520.jpg" srcset="assets/hand-520.jpg 520w, assets/hand-1040.jpg 1040w" sizes="(max-width:768px) 100vw, 520px" width="520" height="693" loading="lazy" alt="A chalked hand finding a crimp on dark rock">
+        <!-- de echte Session Done-structuur, gevuld met een echte Flow
+             State-sessie: tijdrij, blokkenlijst, responspaneel, actie -->
         <div class="done-panel">
           <p class="done-kicker">Session done</p>
-          <div class="done-row"><span class="done-label">Time</span><span class="bar bar-wide"></span></div>
-          <div class="done-row"><span class="done-label">Blocks</span><span class="bar"></span><span class="tick"></span></div>
-          <div class="done-row"><span class="done-label"></span><span class="bar"></span><span class="tick"></span></div>
+          <div class="done-row"><span class="done-label">Time</span><span class="done-val">1:22 gym time &middot; 74 min active</span></div>
+          <ul class="done-blocks">
+            <li><span>Progressive Warm-up</span><span class="done-min">15'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Flow Primer</span><span class="done-min">10'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Connect the Moves</span><span class="done-min">30'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Free Flow</span><span class="done-min">15'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Downshift</span><span class="done-min">4'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+          </ul>
           <div class="done-response">
             <p class="done-label">How did it feel?</p>
-            <div class="ph ph-inline" data-placeholder="true" data-asset="monster-green.png monster-orange.png monster-red.png" style="aspect-ratio:9/2">
-              <span>monster-green/orange/red.png &middot; 1:1 &times;3 &middot; signal states</span>
+            <div class="done-monsters">
+              <img src="assets/monster-green.png" width="256" height="256" loading="lazy" alt="Green pixel monster: boss defeated, strong and in control">
+              <img src="assets/monster-orange.png" width="256" height="256" loading="lazy" alt="Orange pixel monster: hard but controlled">
+              <img src="assets/monster-red.png" width="256" height="256" loading="lazy" alt="Red pixel monster: not today, back off smart">
             </div>
           </div>
-          <div class="done-cta"></div>
+          <div class="done-cta">Save result</div>
         </div>
         <p class="plan-copy">Stop a set. Skip a block. Change the call.<br>That is training too.</p>
       </div>
@@ -275,12 +277,8 @@
           </div>
         </div>
         <div class="coach-stage">
-          <div class="ph coach-wall" data-placeholder="true" data-asset="Crimpify8.png" style="aspect-ratio:1023/1537">
-            <span>Crimpify8.png &middot; 2:3 &middot; indoor wall</span>
-          </div>
-          <div class="ph coach-screen" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
-            <span>shot-session.png &middot; 9:16 &middot; coach's own session (replace with coach capture)</span>
-          </div>
+          <img class="shot coach-wall" src="assets/coach-wall-500.jpg" srcset="assets/coach-wall-500.jpg 500w, assets/coach-wall-1000.jpg 1000w" sizes="(max-width:768px) 88vw, 480px" width="500" height="751" loading="lazy" alt="A climber mid-move on a steep indoor bouldering wall">
+          <img class="shot coach-screen" src="assets/shot-coach.png" width="540" height="960" loading="lazy" alt="A coach's session in Crimpify: Five by Five with its blocks, coach credit and start action">
         </div>
       </div>
     </div>
@@ -296,9 +294,8 @@
       </div>
       <p class="cta-ambition">Building the world's largest open climbing training library.</p>
     </div>
-    <div class="ph ph-bleed" data-placeholder="true" data-asset="Crimpify1-11.png (pick calm wide founder image)">
-      <span>Crimpify1-11.png &middot; wide &middot; section 7 background</span>
-    </div>
+    <img class="cta-photo" src="assets/cta-wide-1440.jpg" srcset="assets/cta-wide-720.jpg 720w, assets/cta-wide-1440.jpg 1440w" sizes="100vw" width="1440" height="810" loading="lazy" alt="A boulderer pulling onto an overhanging boulder while a spotter watches">
+    <div class="cta-shade" aria-hidden="true"></div>
   </section>
 </main>
 
