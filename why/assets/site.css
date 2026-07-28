@@ -414,10 +414,12 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
   .open-proof { position:absolute; right:0; top:-200px; width:520px; margin:0; z-index:3; }
 
-  .coach-grid { display:grid; grid-template-columns:560px 1fr; gap:80px; align-items:center; }
-  .coach-stage { position:relative; height:1240px; margin:0; }
-  .coach-wall { position:absolute; right:0; top:0; width:480px; margin:0; z-index:3; }
-  .coach-screen { position:absolute; left:0; top:611px; width:340px; margin:0; z-index:1; }
+  .coach-grid { display:grid; grid-template-columns:460px 1fr; gap:36px; align-items:start; }
+  /* één cluster: scherm links-onder, foto rechts-boven ervoor; de
+     overlap (108x84) vangt alleen schermchroom, nooit inhoud */
+  .coach-stage { position:relative; height:1060px; margin:0; }
+  .coach-wall { position:absolute; left:212px; top:0; width:380px; margin:0; z-index:3; }
+  .coach-screen { position:absolute; left:0; top:487px; width:320px; margin:0; z-index:1; }
 }
 
 /* mobiel */
