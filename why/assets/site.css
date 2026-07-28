@@ -14,7 +14,11 @@
   --chalk:#F4F2EA; --paper:#F2EDE1; --dust:#92968B; --disabled:#55594F;
   --acid:#E6F557; --acid-text:#0B0C0A;
   --prepare:#72A7F2; --volume:#42D6A4; --max-effort:#FF861F; --skill:#A58BFA;
+  /* gedempte volume-variant: easy-segmenten in het Grinder-fingerprint */
+  --volume-dim:color-mix(in srgb, var(--volume) 45%, var(--carbon));
   --disp:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif; --mono:'DM Mono',monospace;
+  /* één paginagrid: hero en bibliotheek delen dezelfde goot */
+  --gutter:40px;
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
@@ -22,7 +26,7 @@ html,body { overflow-x:clip; }
 body { background:var(--ink); color:var(--chalk); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
 img,svg { max-width:100%; display:block; }
 a { color:inherit; }
-.wrap { max-width:1360px; margin:0 auto; padding:0 40px; }
+.wrap { max-width:calc(1440px - 2*var(--gutter)); margin:0 auto; padding:0 var(--gutter); }
 a:focus-visible,button:focus-visible { outline:2px solid var(--acid); outline-offset:3px; }
 @media (prefers-reduced-motion:reduce){ *,*::before,*::after { transition:none !important; animation:none !important; } }
 
@@ -80,7 +84,6 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .ph-int { font-size:15px; color:var(--dust); line-height:1.5; margin:10px 0 16px; text-align:right; }
 .ph-meta { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); line-height:1.9; border-top:1px solid var(--graphite); padding-top:14px; text-align:right; }
 .ph-by { font-family:var(--mono); font-size:12px; letter-spacing:.08em; color:var(--acid); margin-top:14px; text-align:right; }
-.ph-cur { font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--dust); margin-top:3px; text-align:right; }
 .ph-view { font-family:var(--disp); font-weight:800; font-size:17px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:18px; text-align:right; }
 .ph-card:hover .ph-view { text-shadow:0 0 18px rgba(230,245,87,.5); }
 
@@ -104,7 +107,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    (cut-through, lichter dan desktop). */
 .m-nav { display:none; }
 @media (max-width:768px){
-  .wrap { padding:0 20px; }
+  :root { --gutter:20px; }
 
   /* header: compact, logo + OPEN THE APP + menuknop */
   .site-bar { padding:12px 20px; gap:14px; }
@@ -145,7 +148,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ph-kicker { font-size:10px; }
   .ph-card .fp { height:44px; margin:12px 0 14px; }
   .ph-name { font-size:34px; }
-  .ph-int, .ph-meta br, .ph-meta2, .ph-cur { display:none; }
+  .ph-int, .ph-meta br, .ph-meta2 { display:none; }
   .ph-meta { font-size:11px; padding-top:12px; }
   .ph-by { font-size:11px; margin-top:12px; }
   .ph-view { font-size:16px; margin-top:14px; }
@@ -156,7 +159,12 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    maximaal twee foto's. Fingerprints zijn de productidentiteit: groot,
    uit echte blokdata (breedtes = minuten), elk een eigen structuur. */
 .library { position:relative; background:var(--paper); color:var(--ink); padding:120px 0; }
-.library .wrap { max-width:1240px; }
+/* zelfde grid als de hero: de hero-grid strips de wrap-padding en leeft
+   op de wrap-BOX (1440 - 2 goten breed); op desktop doet de bibliotheek
+   dat ook. Gestapelde layouts (tablet/mobiel) houden hun goot. */
+@media (min-width:1181px){
+  .library .wrap { padding-left:0; padding-right:0; }
+}
 /* subtiele fysieke textuur, alleen op het papier (kaarten liggen erboven) */
 /* geen mix-blend-mode: dat schakelt Chromium-breed de tekst-rasterisatie
    om en veranderde de goedgekeurde hero pixel-voor-pixel */
@@ -167,7 +175,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .lib-head { max-width:620px; margin-bottom:72px; }
 .lib-eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--disabled); }
 .lib-head h2 { font-family:var(--disp); font-weight:900; font-size:clamp(50px,4.6vw,68px); line-height:.95; text-transform:uppercase; margin-top:16px; }
-.lib-lede { font-size:18px; line-height:1.5; max-width:60ch; color:var(--ink); margin-top:20px; }
+.lib-lede { font-size:19px; line-height:1.5; max-width:60ch; color:var(--ink); margin-top:20px; }
 
 /* kaarten: zwarte trainingsobjecten, per type een eigen indeling */
 .lc { position:relative; display:flex; flex-direction:column; text-decoration:none; background:var(--carbon); color:var(--chalk); border-radius:20px; overflow:hidden; box-shadow:0 18px 44px rgba(11,12,10,.18); }
@@ -177,55 +185,54 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .lc-name { font-family:var(--disp); font-weight:900; font-size:32px; letter-spacing:.02em; text-transform:uppercase; line-height:1; }
 .lc-int { font-size:15px; color:var(--dust); line-height:1.5; margin-top:8px; }
 .lc-stats { display:flex; align-items:baseline; gap:16px; border-top:1px solid rgba(244,242,234,.13); margin-top:16px; padding-top:14px; }
-.lc-stats b { font-family:var(--mono); font-weight:500; font-size:13px; letter-spacing:.08em; text-transform:uppercase; line-height:1; }
-.lc-stats span { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); }
-.lc-by { font-family:var(--mono); font-size:14px; letter-spacing:.08em; color:var(--acid); margin-top:12px; }
+.lc-stats b { font-family:var(--mono); font-weight:500; font-size:14px; letter-spacing:.08em; text-transform:uppercase; line-height:1; }
+.lc-stats span { font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); }
+.lc-by { font-family:var(--mono); font-size:15px; letter-spacing:.08em; color:var(--acid); margin-top:12px; }
 .lc-view { font-family:var(--mono); font-weight:500; font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:16px; }
 .lc-arrow { position:absolute; right:20px; bottom:16px; font-family:var(--disp); font-weight:800; font-size:22px; color:var(--acid); }
 
-/* ── het fingerprint-systeem, afgeleid van de hero (fase 3.6) ──
-   Eén implementatie, drie plaatsingen. Breedte = echte blokminuten
-   (flex), hoogte = geauteurd intensiteitsprofiel als percentage van het
-   spoor (ordinaal consistent met rpe, met de hand gestemd per blok),
-   segmenten staan op de spoorbodem. Radius 4/4/2/2, vaste gap 5px,
-   kleur = echte blokkleur, min-width 12px houdt korte blokken zichtbaar.
-   Plaatsingen verschillen uitsluitend in spoorhoogte (64 / 64 / 96). */
+/* ── Homepage fingerprint system: duration-proportional widths,
+   real block colours, authored intensity profiles ──
+   Breedte = echte blokminuten (flex) en kleur = echte bloktokens komen
+   uit de sessiedata; hoogte is art direction (ordinaal met rpe, met de
+   hand gestemd per blok). Segmenten staan op de spoorbodem, radius
+   4/4/2/2, vaste gap 5px, min-width 12px houdt korte blokken zichtbaar.
+   Eén implementatie: .fp plus schaalmodifier .fp-tall (64 / 96).
+   Let op: genereert de app ooit zelf fingerprints, dan is daarvoor een
+   deterministische rpe→hoogte-mapping nodig; deze profielen zijn dat
+   niet. */
 .fp { display:flex; gap:5px; height:64px; align-items:flex-end; }
 .fp i { display:block; border-radius:4px 4px 2px 2px; min-width:12px; }
 .fp-tall { height:96px; }
-.fp-caption { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
+.fp-caption { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
 
-/* het featured object: foto links (46%), product rechts, vaste maat */
-.lc-flow { width:min(1040px,100%); height:440px; flex-direction:row; align-items:stretch; }
+/* het featured object: foto links (46%), product rechts, volle gridbreedte */
+.lc-flow { width:100%; height:440px; flex-direction:row; align-items:stretch; }
 .lc-flow .lc-photo { width:46%; height:auto; object-fit:cover; display:block; }
 .lc-flow .lc-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:48px; }
 .lc-flow .lc-name { font-size:48px; margin-top:12px; }
-.lc-flow .lc-int { font-size:18px; }
+.lc-flow .lc-int { font-size:19px; }
 .lc-flow .fp { flex-shrink:0; margin-top:14px; }
 .lc-flow .lc-stats { border-top:0; padding-top:0; margin-top:16px; }  /* geen lijn onder het spoor: leest als grafiek-as */
 .lc-flow .lc-view { margin-top:12px; }
 
-/* ondersteunende strip: fingerprint links (40%), tekst rechts, zelfde
-   linkerrand en kaarttaal als Flow State, één trap kleiner. 900px breed
-   (fase 3.5): op 1040 bleef rechts een leeg restvlak achter de tekst. */
-.lc-grind { width:min(900px,100%); height:232px; margin:32px 0 0; flex-direction:row; align-items:center; gap:44px; padding:28px 44px; }
+/* onderste rij: de actie links in de bewuste leegte, de strip rechts
+   uitgelijnd op de rechterrand van Flow State. De leegte is compositie. */
+.lib-row { display:flex; align-items:center; margin-top:32px; }
+.lc-grind { width:min(900px,100%); height:232px; margin-left:auto; flex-direction:row; align-items:center; gap:44px; padding:28px 44px; }
 .lc-grind-main { width:40%; flex:none; display:flex; flex-direction:column; justify-content:center; }
 .lc-grind-info { flex:1; display:flex; flex-direction:column; }
 .lc-grind .lc-name { font-size:36px; }
 .lc-grind .lc-int { font-size:16px; margin-top:6px; }
 .lc-grind .lc-stats { margin-top:12px; padding-top:10px; }
-.lc-grind .lc-stats b, .lc-grind .lc-stats span { font-size:12px; }
-.lc-grind .lc-by { font-size:13px; margin-top:10px; }
+.lc-grind .lc-stats b, .lc-grind .lc-stats span { font-size:13px; }
+.lc-grind .lc-by { font-size:14px; margin-top:10px; }
 .lc-grind .lc-view { font-size:13px; margin-top:12px; }
-
-/* één actie onder de kaarten, links uitgelijnd met de kaartrand */
-.lib-cta { margin-top:24px; }
-.lib-cta .btn { line-height:1; }
 
 @media (max-width:1180px) and (min-width:769px){
   .lib-head { margin-bottom:48px; }
-  .lc-grind { width:100%; }
-  .lc-flow { width:100%; }
+  .lib-row { flex-direction:column-reverse; align-items:flex-start; gap:24px; }
+  .lc-grind { width:100%; margin-left:0; }
 }
 
 /* brede mobiel/tablet (575-768): boven 574px zou 45vw voorbij de
@@ -255,7 +262,8 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .lc-flow .fp { height:54px; }
 
   /* compact en fingerprint-gedreven: het fp-blok staat in de DOM voorop */
-  .lc-grind { width:100%; height:auto; margin:18px 0 0; flex-direction:column; align-items:stretch; gap:0; padding:22px 24px 20px; }
+  .lib-row { flex-direction:column-reverse; align-items:stretch; margin-top:18px; }
+  .lc-grind { width:100%; height:auto; margin:0; flex-direction:column; align-items:stretch; gap:0; padding:22px 24px 20px; }
   .lc-grind-main { width:auto; }
   .lc-grind .fp { height:60px; }
   .lc-grind-info { margin-top:16px; }
