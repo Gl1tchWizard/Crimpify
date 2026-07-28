@@ -150,7 +150,164 @@
 
     </div>
   </section>
+
+  <!-- STAGE 4: grijs skelet, secties 3-7. Elke foto en elk app-screen is
+       een gelabelde placeholder (.ph, data-placeholder); compositie,
+       tekst, routing en de acid-vork zijn echt. Niet polijsten. -->
+
+  <!-- sectie 3: BUILD TO SEND. — donker, vier stappen, één dominant venster -->
+  <section class="band band-dark s-send" id="travels">
+    <div class="wrap">
+      <header class="band-head">
+        <h2>Build to send<span class="dot">.</span></h2>
+        <p class="band-sub">Send is what climbers call finishing a boulder.<br>It is also what happens to a good session.</p>
+      </header>
+      <!-- dominant venster kruist de bovenrand van de sectie (top -200 bij
+           120 sectiepadding = 80px de papierband in) -->
+      <div class="ph send-dom" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
+        <span>shot-session.png &middot; 9:16 &middot; step 02 session window (dominant)</span>
+      </div>
+      <div class="send-stage">
+        <svg class="send-line" viewBox="0 0 1360 560" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,240 1360,240"/>
+          <polyline points="1080,240 1360,360"/>
+        </svg>
+        <div class="send-supp send-s1"><div class="ph" data-placeholder="true" data-asset="lib-browse.png" style="aspect-ratio:780/1688">
+          <span>lib-browse.png &middot; 780:1688 &middot; step 01 browse screen</span></div></div>
+        <div class="send-supp send-s3"><div class="ph" data-placeholder="true" data-asset="shot-timer.png" style="aspect-ratio:540/960">
+          <span>shot-timer.png &middot; 9:16 &middot; step 03 active block</span></div></div>
+        <div class="send-supp send-s4"><div class="ph" data-placeholder="true" data-asset="MISSING: share view" style="aspect-ratio:540/960">
+          <span>MISSING: share view &middot; 9:16 &middot; step 04 share screen</span></div></div>
+      </div>
+      <ol class="send-steps">
+        <li><span class="step-no">01</span><span class="step-t">Find it</span><span class="step-b">Pick the time you have. Get a session with a reason to exist.</span></li>
+        <li><span class="step-no">02</span><span class="step-t">Train it</span><span class="step-b">Open the link and go. No account, no setup, no signup wall.</span></li>
+        <li><span class="step-no">03</span><span class="step-t">Adapt it</span><span class="step-b">Stop a set. Skip a block. Change the call. The session bends.</span></li>
+        <li><span class="step-no">04</span><span class="step-t">Send it</span><span class="step-b">Pass it on with one link. Your name stays on it.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- sectie 4: TRAIN ON PURPOSE — papier, hoofdstukfoto + Session Done -->
+  <section class="band band-paper s-plan" id="purpose">
+    <div class="wrap">
+      <header class="band-head">
+        <h2>A plan is a direction.<br>Not a dare.</h2>
+      </header>
+      <div class="plan-stage">
+        <div class="ph plan-photo" data-placeholder="true" data-asset="hand.jpg" style="aspect-ratio:3/4">
+          <span>hand.jpg &middot; 3:4 &middot; section 4 chapter art</span>
+        </div>
+        <!-- echte paneelstructuur in grijs: tijdrij, blokkenrij, responspaneel -->
+        <div class="done-panel">
+          <p class="done-kicker">Session done</p>
+          <div class="done-row"><span class="done-label">Time</span><span class="bar bar-wide"></span></div>
+          <div class="done-row"><span class="done-label">Blocks</span><span class="bar"></span><span class="tick"></span></div>
+          <div class="done-row"><span class="done-label"></span><span class="bar"></span><span class="tick"></span></div>
+          <div class="done-response">
+            <p class="done-label">How did it feel?</p>
+            <div class="ph ph-inline" data-placeholder="true" data-asset="monster-green.png monster-orange.png monster-red.png" style="aspect-ratio:9/2">
+              <span>monster-green/orange/red.png &middot; 1:1 &times;3 &middot; signal states</span>
+            </div>
+          </div>
+          <div class="done-cta"></div>
+        </div>
+        <p class="plan-copy">Stop a set. Skip a block. Change the call.<br>That is training too.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- sectie 5: BUILT IN THE OPEN — donker, bewijs op detailformaat -->
+  <section class="band band-dark s-open" id="open">
+    <div class="wrap">
+      <header class="band-head">
+        <h2>You can read<br>every assumption.</h2>
+      </header>
+      <div class="open-grid">
+        <div class="open-points">
+          <div class="open-point"><h3>Open knowledge</h3><p>Sessions are published to be used, adapted and improved.</p></div>
+          <div class="open-point"><h3>Creator credit</h3><p>Remix a session and the original maker stays on it.</p></div>
+          <div class="open-point"><h3>Open source</h3><p>The app, the load model and the training assumptions are public.</p></div>
+          <figure class="quote" data-placeholder="true" data-asset="real coach testimonial">
+            <blockquote>&ldquo;Exactly what we needed. Simple to build, easy to follow, and my group actually uses it.&rdquo;</blockquote>
+            <figcaption>Sabina, climbing coach</figcaption>
+          </figure>
+        </div>
+        <div class="open-proof">
+          <!-- echt fragment uit app.js (INTENSITY_FACTORS, r.527-539), ingekort -->
+          <pre class="code-card"><code>const INTENSITY_FACTORS = {
+  strength: 0.85,
+  power:    0.85,
+  pe:       0.75,
+  capacity: 0.65,
+  skill:    0.55,
+  recovery: 0.30,
+};
+// load = minutes &times; factor</code></pre>
+          <ul class="open-links">
+            <li><a href="https://github.com/Gl1tchWizard/Crimpify">View the source &#8594;</a></li>
+            <li><a href="/docs/load-model.md">Read the load model &#8594;</a></li>
+            <li><a href="/LICENSE">Read the licence &#8594;</a></li>
+          </ul>
+          <p class="open-lic">Code AGPL-3.0 &middot; Published sessions CC BY-SA 4.0</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- sectie 6: FOR COACHES AND GYMS — papier, één screen over de muurfoto -->
+  <section class="band band-paper s-coach" id="coaches">
+    <div class="wrap">
+      <div class="coach-grid">
+        <div class="coach-copy">
+          <h2>Turn your coaching<br>into a library.</h2>
+          <p class="coach-lines">Build once.<br>Share one link.<br>Keep your method organised.<br>Publish what is worth passing on.</p>
+          <div class="coach-qr">
+            <img src="assets/qr.png" alt="QR code linking to the Crimpify app" width="128" height="128">
+            <span>Add to home screen</span>
+          </div>
+        </div>
+        <div class="coach-stage">
+          <div class="ph coach-wall" data-placeholder="true" data-asset="Crimpify8.png" style="aspect-ratio:1023/1537">
+            <span>Crimpify8.png &middot; 2:3 &middot; indoor wall</span>
+          </div>
+          <div class="ph coach-screen" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
+            <span>shot-session.png &middot; 9:16 &middot; coach's own session (replace with coach capture)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- sectie 7: slot-CTA — donker, fotografisch, de regel van de hero -->
+  <section class="band band-dark s-cta">
+    <div class="wrap cta-wrap">
+      <h2>Refresh<br>your sesh<span class="dot">.</span></h2>
+      <div class="cta-actions">
+        <a class="btn btn-acid" href="/#browse">Explore the library</a>
+        <a class="btn btn-ghost" href="/#build">Contribute a session</a>
+      </div>
+      <p class="cta-ambition">Building the world's largest open climbing training library.</p>
+    </div>
+    <div class="ph ph-bleed" data-placeholder="true" data-asset="Crimpify1-11.png (pick calm wide founder image)">
+      <span>Crimpify1-11.png &middot; wide &middot; section 7 background</span>
+    </div>
+  </section>
 </main>
+
+<footer class="site-foot">
+  <div class="wrap foot-grid">
+    <a class="brand" href="/" aria-label="Crimpify"><span class="mark" aria-hidden="true"></span><b>CRIMPIFY</b></a>
+    <nav aria-label="Footer">
+      <a href="#sessions">Sessions</a>
+      <a href="#travels">How it travels</a>
+      <a href="#purpose">Train on purpose</a>
+      <a href="#open">Open source</a>
+      <a href="#coaches">For coaches</a>
+    </nav>
+    <p class="foot-lic">Code AGPL-3.0 &middot; Sessions CC BY-SA 4.0 &middot; <a href="https://github.com/Gl1tchWizard/Crimpify">Source</a></p>
+  </div>
+</footer>
 
 <!-- GoatCounter: cookieloos, aggregaat-only; zelfde teller als de app -->
 <script data-goatcounter="https://crimpify.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

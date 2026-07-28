@@ -19,6 +19,9 @@
   --disp:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif; --mono:'DM Mono',monospace;
   /* één paginagrid: hero en bibliotheek delen dezelfde goot */
   --gutter:40px;
+  /* fase 4: één elevatiefamilie voor alle zwevende objecten + skeletgrijs */
+  --elev:0 24px 60px rgba(0,0,0,.45);
+  --ph:#8B8B85; --ph-ink:#3F403B;
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
@@ -163,7 +166,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    op de wrap-BOX (1440 - 2 goten breed); op desktop doet de bibliotheek
    dat ook. Gestapelde layouts (tablet/mobiel) houden hun goot. */
 @media (min-width:1181px){
-  .library .wrap { padding-left:0; padding-right:0; }
+  .library .wrap, .band .wrap { padding-left:0; padding-right:0; }
 }
 /* subtiele fysieke textuur, alleen op het papier (kaarten liggen erboven) */
 /* geen mix-blend-mode: dat schakelt Chromium-breed de tekst-rasterisatie
@@ -271,4 +274,143 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
   .lib-cta { margin-top:20px; }
   .lib-cta .btn { display:block; text-align:center; padding:17px 20px; line-height:1.4; }
+}
+
+/* ══ fase 4: grijs skelet, secties 3-7 ══
+   Basis = gestapelde flow (werkt op elke breedte), de gelaagde
+   composities gelden vanaf 1181px. Placeholders: vlak middengrijs,
+   mono-label met asset, ratio en rol; juiste maat en positie. */
+
+.ph { position:relative; background:var(--ph); border-radius:20px; box-shadow:var(--elev); }
+.ph > span { position:absolute; top:12px; left:14px; right:14px; font-family:var(--mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; color:var(--ph-ink); }
+
+.band { position:relative; padding:120px 0; }
+.band-dark { background:var(--ink); color:var(--chalk); }
+.band-paper { background:var(--paper); color:var(--ink); }
+.band h2 { font-family:var(--disp); font-weight:900; font-size:clamp(50px,4.6vw,68px); line-height:.95; text-transform:uppercase; }
+.band h2 .dot { color:var(--acid); }
+.band-sub { font-size:19px; line-height:1.5; color:var(--dust); margin-top:20px; max-width:60ch; }
+.band-head { max-width:640px; }
+
+/* ── sectie 3: BUILD TO SEND. ── */
+.s-send .wrap { position:relative; display:flex; flex-direction:column; }
+.send-dom { order:-1; align-self:flex-end; width:min(420px,78%); margin:-200px 0 8px; z-index:3; }
+.send-stage { position:relative; margin-top:32px; display:flex; gap:14px; }
+.send-line { display:none; position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+.send-line polyline { fill:none; stroke:var(--acid); stroke-width:3; vector-effect:non-scaling-stroke; }
+.send-supp { overflow:hidden; border-radius:20px; box-shadow:var(--elev); flex:1; height:220px; }
+.send-supp .ph { box-shadow:none; border-radius:0; }
+.send-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:40px; margin:64px 0 0; padding:0; list-style:none; }
+.step-no { display:block; font-family:var(--mono); font-size:13px; letter-spacing:.1em; color:var(--dust); }
+.step-t { display:block; font-family:var(--disp); font-weight:800; font-size:24px; letter-spacing:.04em; text-transform:uppercase; margin-top:10px; }
+.step-b { display:block; font-size:16px; line-height:1.5; color:var(--dust); margin-top:8px; }
+
+/* ── sectie 4: TRAIN ON PURPOSE ── */
+.s-plan .band-head { margin-bottom:56px; }
+.plan-photo { width:min(520px,100%); }
+.done-panel { width:min(560px,calc(100% - 24px)); margin:-80px auto 0; position:relative; z-index:3; background:var(--carbon); color:var(--chalk); border-radius:20px; box-shadow:var(--elev); padding:36px 40px; }
+.done-kicker { font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--acid); }
+.done-row { display:flex; align-items:center; gap:16px; margin-top:18px; }
+.done-label { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); width:88px; flex:none; }
+.bar { display:block; height:14px; flex:1; background:var(--graphite); border-radius:7px; }
+.bar-wide { height:20px; border-radius:10px; }
+.tick { width:22px; height:22px; flex:none; border:1px solid var(--graphite); border-radius:6px; }
+.done-response { border:1px solid var(--graphite); border-radius:12px; padding:20px; margin-top:26px; }
+.done-response .done-label { width:auto; }
+.ph-inline { margin-top:14px; box-shadow:none; border-radius:12px; }
+.done-cta { height:52px; border-radius:10px; background:var(--graphite); margin-top:26px; }
+.plan-copy { font-size:19px; line-height:1.6; margin-top:36px; max-width:44ch; }
+
+/* ── sectie 5: BUILT IN THE OPEN ── */
+.s-open .wrap { position:relative; }
+.s-open .band-head { margin-bottom:56px; }
+.open-points { max-width:640px; }
+.open-point h3 { font-family:var(--mono); font-weight:500; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
+.open-point p { font-size:17px; line-height:1.6; color:var(--dust); margin-top:8px; max-width:46ch; }
+.open-point + .open-point { margin-top:32px; }
+.quote { margin:48px 0 0; border-left:3px solid var(--graphite); padding-left:24px; }
+.quote blockquote { font-family:var(--disp); font-weight:700; font-size:24px; line-height:1.25; letter-spacing:.01em; }
+.quote figcaption { font-family:var(--mono); font-size:13px; color:var(--dust); margin-top:12px; }
+.open-proof { margin-top:56px; max-width:520px; }
+.code-card { background:var(--carbon); border:1px solid var(--graphite); border-radius:20px; box-shadow:var(--elev); padding:28px 32px; font-family:var(--mono); font-size:13px; line-height:1.7; color:var(--chalk); overflow-x:auto; margin:0; }
+.open-links { list-style:none; margin:28px 0 0; padding:0; }
+.open-links li + li { margin-top:12px; }
+.open-links a { font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--acid); text-decoration:none; }
+.open-lic { font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--dust); margin-top:24px; }
+
+/* ── sectie 6: FOR COACHES AND GYMS ── */
+.coach-lines { font-size:19px; line-height:1.7; margin-top:24px; }
+.coach-qr { display:flex; align-items:center; gap:18px; margin-top:40px; }
+.coach-qr img { border-radius:8px; display:block; }
+.coach-qr span { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); }
+.coach-stage { margin-top:48px; }
+.coach-wall { width:min(480px,88%); margin-left:auto; }
+.coach-screen { width:min(420px,72%); margin:-220px auto 0 0; position:relative; z-index:3; }
+
+/* ── sectie 7: slot-CTA + footer ── */
+.s-cta { overflow:hidden; }
+.s-cta .ph-bleed { position:absolute; inset:0; border-radius:0; box-shadow:none; z-index:0; }
+.cta-wrap { position:relative; z-index:1; padding:40px 0; }
+.s-cta h2 { font-size:clamp(84px,9.6vw,138px); line-height:.92; letter-spacing:.005em; text-shadow:0 4px 34px rgba(11,12,10,.55); }
+.cta-actions { display:flex; gap:16px; margin:36px 0 22px; flex-wrap:wrap; }
+.cta-ambition { font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, var(--chalk) 30%, var(--dust)); }
+
+.site-foot { background:var(--ink); border-top:1px solid var(--graphite); padding:48px 0 56px; color:var(--chalk); }
+.foot-grid { display:flex; align-items:center; gap:24px 40px; flex-wrap:wrap; }
+.site-foot nav { display:flex; gap:24px; margin-left:auto; flex-wrap:wrap; }
+.site-foot nav a { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; }
+.site-foot nav a:hover { color:var(--chalk); }
+.foot-lic { width:100%; font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--disabled); }
+.foot-lic a { color:var(--dust); }
+
+/* gelaagde composities vanaf desktopbreedte */
+@media (min-width:1181px){
+  .s-send .wrap { display:block; }
+  .send-dom { position:absolute; top:-200px; left:830px; width:420px; margin:0; }
+  .send-stage { display:block; height:560px; margin-top:24px; }
+  .send-line { display:block; }
+  .send-supp { position:absolute; flex:none; }
+  .send-s1 { left:380px; top:120px; width:260px; height:340px; z-index:1; }
+  .send-s3 { left:600px; top:40px; width:260px; height:380px; z-index:0; }
+  .send-s4 { left:1100px; top:290px; width:260px; height:280px; z-index:1; }
+  .send-steps { margin-top:96px; }
+
+  .plan-stage { position:relative; height:760px; }
+  .plan-photo { position:absolute; left:0; top:0; width:520px; z-index:1; }
+  .done-panel { position:absolute; left:380px; top:90px; width:560px; margin:0; }
+  .plan-copy { position:absolute; left:1040px; top:220px; width:320px; margin:0; }
+
+  .open-proof { position:absolute; right:0; top:-200px; width:520px; margin:0; z-index:3; }
+
+  .coach-grid { display:grid; grid-template-columns:560px 1fr; gap:80px; align-items:center; }
+  .coach-stage { position:relative; height:900px; margin:0; }
+  .coach-wall { position:absolute; right:0; top:0; width:480px; margin:0; z-index:1; }
+  .coach-screen { position:absolute; left:0; top:140px; width:420px; margin:0; }
+}
+
+/* mobiel */
+@media (max-width:768px){
+  .band { padding:64px 0; }
+  .band h2 { font-size:clamp(40px,11.5vw,54px); }
+  .band-sub { font-size:16px; }
+  .send-dom { width:72%; margin:-124px 0 8px; }
+  .send-stage { gap:10px; }
+  .send-supp { height:170px; border-radius:14px; }
+  .ph > span { font-size:10px; }
+  .send-steps { grid-template-columns:1fr; gap:28px; margin-top:40px; }
+  .done-panel { padding:26px 22px; }
+  .plan-copy { font-size:17px; }
+  .coach-screen { margin-top:-160px; }
+  .s-cta h2 { font-size:clamp(56px,16.5vw,68px); }
+  .cta-actions { flex-direction:column; }
+  .cta-actions .btn { display:block; text-align:center; }
+  .foot-grid { flex-direction:column; align-items:flex-start; gap:20px; }
+  .site-foot nav { margin-left:0; gap:14px 20px; }
+}
+
+/* de 04-kaart wordt door de sectierand gesneden (body clipt horizontaal);
+   het label wikkelt binnen de zichtbare strook naast het dominante venster */
+@media (min-width:1181px){
+  .send-s4 { left:1260px; }
+  .send-s4 .ph > span { right:auto; width:112px; }
 }
