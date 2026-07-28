@@ -390,8 +390,15 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .foot-lic { width:100%; font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--disabled); }
 .foot-lic a { color:var(--dust); }
 
+/* uitgesneden figuren: één per hoofdstuk, kruisen een rand; geen halo,
+   geen schaduw, niets essentieels erachter. Alleen op desktop. */
+.cutout { display:none; position:absolute; pointer-events:none; }
+
 /* gelaagde composities vanaf desktopbreedte */
 @media (min-width:1181px){
+  .cutout { display:block; }
+  .cut-hand { top:-120px; right:-40px; width:400px; height:auto; z-index:4; }
+  .cut-spotter { left:100px; top:175px; width:230px; height:auto; z-index:4; }
   .s-send .wrap { display:block; }
   .send-stage { height:620px; margin-top:24px; }
   .send-line { display:block; z-index:0; }
