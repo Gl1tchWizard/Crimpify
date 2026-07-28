@@ -124,9 +124,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .m-panel a:hover { color:var(--chalk); }
 
   /* hero: copy boven, fotoband (500px) onder; kaart hangt over de
-     onderrand van de band (bottom 80 < bandvoet 120) */
-  .hero { min-height:0; display:block; padding-bottom:580px; }
-  .hero-photo, .hero-shade, .hero-climber { inset:auto 0 120px 0; height:500px; }
+     onderrand van de band (bottom 56 < bandvoet 96). De smalle inktstrook
+     onder de kaart is de overgang naar de papieren bibliotheek (fase 3). */
+  .hero { min-height:0; display:block; padding-bottom:556px; }
+  .hero-photo, .hero-shade, .hero-climber { inset:auto 0 96px 0; height:500px; }
   .hero-photo, .hero-climber { background-size:auto 500px; background-position:calc(45vw - 572px) 0; }
   .hero-shade { background:linear-gradient(180deg, var(--ink) 0%, rgba(11,12,10,.45) 16%, rgba(11,12,10,0) 42%); }
   .hero-grid { display:block; padding:40px 20px 0; }
@@ -141,7 +142,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   /* compacte Power Hour-kaart: kicker, fingerprint, titel, één
      metaregel, maker, VIEW SESSION; intent/tweede metaregel/curated
      vervallen op klein scherm (maker-credit nooit) */
-  .ph-card { left:calc(45vw - 75px); top:auto; bottom:80px; transform:none; width:280px; padding:18px 20px 16px; border-radius:14px; }
+  .ph-card { left:calc(45vw - 75px); top:auto; bottom:56px; transform:none; width:280px; padding:18px 20px 16px; border-radius:14px; }
   .ph-kicker { font-size:10px; }
   .ph-fp { height:44px; margin:12px 0 14px; }
   .ph-name { font-size:34px; }
@@ -151,6 +152,73 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ph-view { font-size:16px; margin-top:14px; }
 }
 
+/* ── fase 3: de bibliotheek ──
+   Redactionele mozaïek op warm papier, kaarten zijn diepzwarte objecten.
+   Fingerprints tonen de echte blokstructuur per sessie (breedtes =
+   minuten), elk met een eigen karakter: golvend (Flow State), gestapeld
+   volume (Base Camp), hard/easy-intervallen (Grinder), 3×3-spikes
+   (Board Blitz), voetstappen (Ninja Feet). */
+.library { background:var(--paper); color:var(--ink); border-top:3px solid var(--acid); padding:96px 0 108px; }
+.lib-grid { display:grid; grid-template-columns:330px 1fr 1fr 300px; gap:26px;
+  grid-template-areas:
+    "head  flow  flow  base"
+    "grind grind grind base"
+    "s1    s2    s3    grow"; }
+.lib-head { grid-area:head; padding-right:14px; }
+.lib-eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--disabled); }
+.lib-head h2 { font-family:var(--disp); font-weight:900; font-size:clamp(40px,3.6vw,54px); line-height:.95; text-transform:uppercase; margin:18px 0 22px; }
+.lib-lede { font-size:17px; line-height:1.6; color:var(--ink); }
+.lib-sub { font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase; color:var(--disabled); margin:14px 0 30px; }
+.btn-ink { background:var(--ink); color:var(--chalk); }
+.btn-ink:hover { box-shadow:0 10px 30px rgba(11,12,10,.35); }
+
+/* kaarten: zwarte sessie-objecten */
+.lc { display:flex; flex-direction:column; text-decoration:none; background:var(--carbon); color:var(--chalk); border-radius:14px; overflow:hidden; box-shadow:0 18px 44px rgba(11,12,10,.18); }
+.lc:hover .lc-view { text-shadow:0 0 18px rgba(230,245,87,.5); }
+.lc img { width:100%; height:auto; object-fit:cover; display:block; }
+.lc-body { display:flex; flex-direction:column; padding:22px 24px 20px; }
+.lc-name { font-family:var(--disp); font-weight:900; font-size:30px; letter-spacing:.02em; text-transform:uppercase; line-height:1; }
+.lc-int { font-size:15px; color:var(--dust); line-height:1.5; margin-top:8px; }
+.lc-meta { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); opacity:.85; margin-top:12px; }
+.lc-by { font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--acid); margin-top:10px; }
+.lc-view { font-family:var(--disp); font-weight:800; font-size:15px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:14px; }
+
+/* fingerprints */
+.fp { display:flex; gap:4px; height:44px; align-items:flex-end; margin-top:16px; }
+.fp i { display:block; border-radius:3px 3px 1px 1px; }
+.fp-flow i { border-radius:99px; }
+.fp-grind { gap:3px; }
+.fp-blitz { gap:2px; height:38px; }
+.fp-blitz .fp-gap { flex:4; }
+.fp-ninja { gap:3px; height:38px; }
+.fp-ninja .fp-dot { flex:4; background:var(--skill); border-radius:2px; }
+.fp-ph { height:38px; }
+
+/* mozaïek-plaatsing */
+.lc-flow { grid-area:flow; }
+.lc-flow img { aspect-ratio:16/9.6; }
+.lc-flow .lc-name { font-size:40px; }
+.lc-base { grid-area:base; align-self:start; margin-top:34px; }
+.lc-base img { aspect-ratio:5/6; }
+.lc-grind { grid-area:grind; flex-direction:row; align-items:stretch; }
+.lc-grind img { width:44%; height:auto; aspect-ratio:auto; object-fit:cover; }
+.lc-grind .lc-body { flex:1; justify-content:center; padding:26px 30px; }
+.lc-grind .lc-name { font-size:34px; }
+.lc-sm { padding:20px 22px 18px; }
+.lc-sm .lc-name { font-size:24px; }
+.lc-sm .lc-meta { margin-top:8px; }
+.lc-blitz { grid-area:s1; }
+.lc-ninja { grid-area:s2; }
+.lc-ph2 { grid-area:s3; }
+.lib-growth { grid-area:grow; border:1px dashed rgba(41,43,37,.5); border-radius:14px; display:flex; align-items:center; padding:20px 22px; }
+.lib-growth p { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); line-height:1.9; }
+.lib-cta-m { display:none; }
+
+@media (max-width:1180px) and (min-width:769px){
+  .lib-grid { grid-template-columns:1fr 1fr; grid-template-areas:
+    "head head" "flow base" "grind grind" "s1 s2" "s3 grow"; }
+}
+
 /* brede mobiel/tablet (575-768): boven 574px zou 45vw voorbij de
    linkerrand van het geschaalde beeld (888px breed) schuiven en rechts
    een gat laten. Beeld rechts verankeren sluit exact aan op de
@@ -158,4 +226,27 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 @media (min-width:575px) and (max-width:768px){
   .hero-photo, .hero-climber { background-position:100% 0; }
   .ph-card { left:calc(100vw - 391px); }
+}
+
+/* bibliotheek mobiel: kop, Flow State groot, Grinder als tweede, twee
+   compacte rijen, CTA. Base Camp, Power Hour en de groeitegel blijven
+   desktop-materiaal: geen eindeloze kaartenmuur. Staat bewust ná de
+   desktop-mozaïekregels: gelijke specificiteit, bron-volgorde beslist. */
+@media (max-width:768px){
+  .library { padding:56px 0 64px; }
+  .lib-grid { display:flex; flex-direction:column; gap:18px; }
+  .lib-head { padding-right:0; margin-bottom:8px; }
+  .lib-head h2 { font-size:clamp(38px,11vw,46px); }
+  .lib-lede { font-size:16px; }
+  .lib-head .btn-ink { display:none; }  /* CTA staat mobiel onderaan de sectie */
+  .lc-base, .lc-ph2, .lib-growth { display:none; }
+  .lc-flow .lc-name { font-size:32px; }
+  .lc-grind { flex-direction:column; }
+  .lc-grind img { width:100%; aspect-ratio:16/8.5; }
+  .lc-grind .lc-body { padding:22px 24px 20px; }
+  .lc-grind .lc-name { font-size:30px; }
+  .lc-sm { padding:18px 20px 16px; }
+  .lib-cta-m { display:block; margin-top:10px; }
+  .lib-cta-m .btn-ink { display:block; text-align:center; padding:17px 20px; }
+  .lib-note-m { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); margin-top:14px; text-align:center; }
 }
