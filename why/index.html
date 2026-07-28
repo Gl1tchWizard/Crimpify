@@ -162,29 +162,36 @@
         <h2>Build to send<span class="dot">.</span></h2>
         <p class="band-sub">Send is what climbers call finishing a boulder.<br>It is also what happens to a good session.</p>
       </header>
-      <!-- dominant venster kruist de bovenrand van de sectie (top -200 bij
-           120 sectiepadding = 80px de papierband in) -->
-      <div class="ph send-dom" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
-        <span>shot-session.png &middot; 9:16 &middot; step 02 session window (dominant)</span>
-      </div>
+      <!-- fase 5.1: elke stap draagt zijn eigen scherm; het dominante
+           venster (stap 02) kruist de bovenrand van de sectie met 80px -->
       <div class="send-stage">
-        <svg class="send-line" viewBox="0 0 1360 560" preserveAspectRatio="none" aria-hidden="true">
-          <polyline points="0,240 1360,240"/>
-          <polyline points="1080,240 1360,360"/>
+        <svg class="send-line" viewBox="0 0 1360 700" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,300 1360,300"/>
+          <polyline points="1080,300 1360,430"/>
         </svg>
-        <div class="send-supp send-s1"><div class="ph" data-placeholder="true" data-asset="lib-browse.png" style="aspect-ratio:780/1688">
-          <span>lib-browse.png &middot; 780:1688 &middot; step 01 browse screen</span></div></div>
-        <div class="send-supp send-s3"><div class="ph" data-placeholder="true" data-asset="shot-timer.png" style="aspect-ratio:540/960">
-          <span>shot-timer.png &middot; 9:16 &middot; step 03 active block</span></div></div>
-        <div class="send-supp send-s4"><div class="ph" data-placeholder="true" data-asset="MISSING: share view" style="aspect-ratio:540/960">
-          <span>MISSING: share view &middot; 9:16 &middot; step 04 share screen</span></div></div>
+        <ol class="send-flow">
+          <li class="send-step ss1">
+            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="lib-browse.png" style="aspect-ratio:780/1688">
+              <span>lib-browse.png &middot; 780:1688 &middot; step 01 browse screen</span></div></div>
+            <div class="step-txt"><span class="step-no">01</span><span class="step-t">Find it</span><span class="step-b">Pick the time you have. Get a session with a reason to exist.</span></div>
+          </li>
+          <li class="send-step ss2">
+            <div class="ph" data-placeholder="true" data-asset="shot-session.png" style="aspect-ratio:540/960">
+              <span>shot-session.png &middot; 9:16 &middot; step 02 session window (dominant)</span></div>
+            <div class="step-txt"><span class="step-no">02</span><span class="step-t">Train it</span><span class="step-b">Open the link and go. No account, no setup, no signup wall.</span></div>
+          </li>
+          <li class="send-step ss3">
+            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="shot-timer.png" style="aspect-ratio:540/960">
+              <span>shot-timer.png &middot; 9:16 &middot; step 03 active block</span></div></div>
+            <div class="step-txt"><span class="step-no">03</span><span class="step-t">Adapt it</span><span class="step-b">Stop a set. Skip a block. Change the call. The session bends.</span></div>
+          </li>
+          <li class="send-step ss4">
+            <div class="shot-crop"><div class="ph" data-placeholder="true" data-asset="MISSING: share view" style="aspect-ratio:540/960">
+              <span>MISSING: share view &middot; 9:16 &middot; step 04 share screen</span></div></div>
+            <div class="step-txt"><span class="step-no">04</span><span class="step-t">Send it</span><span class="step-b">Pass it on with one link. Your name stays on it.</span></div>
+          </li>
+        </ol>
       </div>
-      <ol class="send-steps">
-        <li><span class="step-no">01</span><span class="step-t">Find it</span><span class="step-b">Pick the time you have. Get a session with a reason to exist.</span></li>
-        <li><span class="step-no">02</span><span class="step-t">Train it</span><span class="step-b">Open the link and go. No account, no setup, no signup wall.</span></li>
-        <li><span class="step-no">03</span><span class="step-t">Adapt it</span><span class="step-b">Stop a set. Skip a block. Change the call. The session bends.</span></li>
-        <li><span class="step-no">04</span><span class="step-t">Send it</span><span class="step-b">Pass it on with one link. Your name stays on it.</span></li>
-      </ol>
     </div>
   </section>
 
