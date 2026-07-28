@@ -347,6 +347,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .open-lic { font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--dust); margin-top:24px; }
 
 /* ── sectie 6: FOR COACHES AND GYMS ── */
+.coach-quotes { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; margin-bottom:72px; }
+.coach-quotes .quote { margin:0; }
+.coach-quotes blockquote { font-size:20px; }
+.coach-quotes figcaption { color:var(--disabled); }
 .coach-lines { font-size:19px; line-height:1.7; margin-top:24px; }
 .coach-qr { display:flex; align-items:center; gap:18px; margin-top:40px; }
 .coach-qr img { border-radius:8px; display:block; }
@@ -418,6 +422,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .send-step { margin-top:44px; }
   .done-panel { padding:26px 22px; }
   .plan-copy { font-size:17px; }
+  .coach-quotes { grid-template-columns:1fr; gap:28px; margin-bottom:40px; }
   .coach-screen { margin-top:-160px; }
   .s-cta h2 { font-size:clamp(56px,16.5vw,68px); }
   .cta-actions { flex-direction:column; }
