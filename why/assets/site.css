@@ -143,7 +143,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
      vervallen op klein scherm (maker-credit nooit) */
   .ph-card { left:calc(45vw - 75px); top:auto; bottom:56px; transform:none; width:280px; padding:18px 20px 16px; border-radius:14px; }
   .ph-kicker { font-size:10px; }
-  .ph-card .fp { margin:12px 0 14px; }
+  .ph-card .fp { height:44px; margin:12px 0 14px; }
   .ph-name { font-size:34px; }
   .ph-int, .ph-meta br, .ph-meta2, .ph-cur { display:none; }
   .ph-meta { font-size:11px; padding-top:12px; }
@@ -183,14 +183,16 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .lc-view { font-family:var(--mono); font-weight:500; font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:16px; }
 .lc-arrow { position:absolute; right:20px; bottom:16px; font-family:var(--disp); font-weight:800; font-size:22px; color:var(--acid); }
 
-/* ── het fingerprint-systeem: één spoor, één implementatie ──
-   Breedte = echte blokminuten (flex), kleur = echte blokkleur, hoogte is
-   overal gelijk binnen een spoor; alleen de segmenthoogte verschilt per
-   plaatsing (hero 18 / featured 22 / strip 18). Geen as, geen baseline,
-   geen variërende hoogtes: intensiteit leeft in kleur en breedteritme. */
-.fp { display:flex; gap:4px; }
-.fp i { display:block; height:18px; border-radius:9px; min-width:12px; }
-.fp-lg i { height:22px; border-radius:11px; }
+/* ── het fingerprint-systeem, afgeleid van de hero (fase 3.6) ──
+   Eén implementatie, drie plaatsingen. Breedte = echte blokminuten
+   (flex), hoogte = geauteurd intensiteitsprofiel als percentage van het
+   spoor (ordinaal consistent met rpe, met de hand gestemd per blok),
+   segmenten staan op de spoorbodem. Radius 4/4/2/2, vaste gap 5px,
+   kleur = echte blokkleur, min-width 12px houdt korte blokken zichtbaar.
+   Plaatsingen verschillen uitsluitend in spoorhoogte (64 / 64 / 96). */
+.fp { display:flex; gap:5px; height:64px; align-items:flex-end; }
+.fp i { display:block; border-radius:4px 4px 2px 2px; min-width:12px; }
+.fp-tall { height:96px; }
 .fp-caption { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
 
 /* het featured object: foto links (46%), product rechts, vaste maat */
@@ -199,8 +201,8 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .lc-flow .lc-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:48px; }
 .lc-flow .lc-name { font-size:48px; margin-top:12px; }
 .lc-flow .lc-int { font-size:18px; }
-.lc-flow .fp { flex-shrink:0; margin-top:22px; }
-.lc-flow .lc-stats { border-top:0; padding-top:0; margin-top:22px; }  /* geen lijn onder het spoor: leest als grafiek-as */
+.lc-flow .fp { flex-shrink:0; margin-top:14px; }
+.lc-flow .lc-stats { border-top:0; padding-top:0; margin-top:16px; }  /* geen lijn onder het spoor: leest als grafiek-as */
 .lc-flow .lc-view { margin-top:12px; }
 
 /* ondersteunende strip: fingerprint links (40%), tekst rechts, zelfde
@@ -250,10 +252,12 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .lc-flow .lc-body { padding:22px 24px 20px; }
   .lc-flow .lc-name { font-size:36px; margin-top:8px; }
   .lc-flow .lc-int { font-size:15px; }
+  .lc-flow .fp { height:54px; }
 
   /* compact en fingerprint-gedreven: het fp-blok staat in de DOM voorop */
   .lc-grind { width:100%; height:auto; margin:18px 0 0; flex-direction:column; align-items:stretch; gap:0; padding:22px 24px 20px; }
   .lc-grind-main { width:auto; }
+  .lc-grind .fp { height:60px; }
   .lc-grind-info { margin-top:16px; }
   .lc-grind .lc-name { font-size:30px; }
 
