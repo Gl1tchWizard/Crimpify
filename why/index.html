@@ -85,27 +85,31 @@
     <div class="hero-climber" aria-hidden="true"></div>
   </section>
 
-  <!-- STAGE 3.2: gecureerde bibliotheek. Twee sessieverhalen (Flow State
-       featured, The Grinder breed) plus een matzwarte telefoon met het
-       ECHTE Browse Sessions-scherm (screenshot van de app zelf, /#browse).
-       De volledige catalogus leeft in de app; de homepage cureert. -->
+  <!-- STAGE 3.3: de bibliotheek, gereset. Alleen: intro, een groot
+       Flow State-object, een lage Grinder-strip en een Browse-actie.
+       Geen telefoon, geen extra kaarten; de catalogus leeft in de app.
+       Data en /#s=-links komen uit de echte app-catalogus. -->
   <section class="library" id="sessions">
-    <div class="wrap lib-grid">
+    <div class="wrap">
 
       <header class="lib-head">
-        <p class="lib-eyebrow">The open library</p>
-        <h2>Build<br>to send.</h2>
-        <p class="lib-lede">Every session has a purpose, clear coaching and a reason for its structure.</p>
-        <a class="btn btn-ink" href="/#browse">Browse sessions &#8594;</a>
+        <div class="lib-head-l">
+          <p class="lib-eyebrow">The open library</p>
+          <h2>Start with<br>a good session.</h2>
+        </div>
+        <div class="lib-head-r">
+          <p class="lib-lede">Every session has a purpose, clear coaching and a reason for its structure.</p>
+          <a class="btn btn-ink" href="/#browse">Browse all sessions &#8594;</a>
+        </div>
       </header>
 
-      <!-- featured: foto links (~42%), trainingsobject rechts -->
+      <!-- het enige featured object: foto links (~45%), product rechts -->
       <a class="lc lc-flow" href="/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJJbmVzIEZ1amltb3RvIiwiZCI6WzE1LDEwLDMwLDE1LDVdfQ" aria-label="Flow State, 75 minute skill session by Ines Fujimoto, gym wall or spray wall. View in the app.">
-        <img class="lc-photo" src="assets/lib-flowstate-560.jpg" srcset="assets/lib-flowstate-560.jpg 560w, assets/lib-flowstate-1000.jpg 1000w" sizes="(max-width:768px) 100vw, 400px" loading="lazy" alt="Climber in an open, extended position reaching high on a sunlit boulder">
+        <img class="lc-photo" src="assets/lib-flowstate-560.jpg" srcset="assets/lib-flowstate-560.jpg 560w, assets/lib-flowstate-1000.jpg 1000w" sizes="(max-width:768px) 100vw, 480px" loading="lazy" alt="Climber in an open, extended position reaching high on a sunlit boulder">
         <div class="lc-body">
           <span class="lc-kicker">Featured session</span>
           <span class="lc-name">Flow State</span>
-          <span class="lc-int">Movement quality over difficulty. Find your rhythm.</span>
+          <span class="lc-int">Movement quality over difficulty.<br>Find your rhythm.</span>
           <span class="fp fp-flow" aria-hidden="true">
             <i style="flex:15;height:42%;background:var(--prepare)"></i>
             <i style="flex:10;height:60%;background:var(--skill)"></i>
@@ -119,22 +123,11 @@
         </div>
       </a>
 
-      <!-- echte Browse Sessions: screenshot van de app (/#browse), geen mock -->
-      <div class="lib-device">
-        <p class="lib-device-label">More in the library</p>
-        <a class="phone" href="/#browse" aria-label="Browse all sessions in the Crimpify app">
-          <img src="assets/lib-browse.png" width="390" height="844" loading="lazy" alt="The Browse Sessions screen in the Crimpify app, with shelves For you and Under 120 min showing Base Camp, Ninja Feet, Crimp Factory and Power Hour">
-        </a>
-      </div>
-
-      <!-- tweede verhaal: breed en donker, HEHE-fingerprint als identiteit -->
+      <!-- ondersteunende strip: het HEHE-fingerprint is het beeld -->
       <a class="lc lc-grind" href="/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsyMCwxNSw2MCwxMF19" aria-label="The Grinder, 105 minute power endurance session by Ana Kovač. View in the app.">
-        <img class="lc-strip" src="assets/lib-grinder-360.jpg" srcset="assets/lib-grinder-360.jpg 360w, assets/lib-grinder-720.jpg 720w" sizes="200px" loading="lazy" alt="Climber compressing horizontally under a dark overhanging boulder">
         <div class="lc-grind-info">
           <span class="lc-name">The Grinder</span>
           <span class="lc-int">Hard. Easy. Hard. Easy.<br>Are you willing to suffer?</span>
-          <span class="lc-stats"><b>105 min</b><span>Power endurance</span></span>
-          <span class="lc-by">Session by Ana Kovač</span>
         </div>
         <div class="lc-grind-main">
           <!-- fingerprint = de echte HEHE-structuur: 4 sets hard/easy in het 60-min blok -->
@@ -148,13 +141,17 @@
             <i style="flex:10;height:24%;background:var(--prepare)"></i>
           </span>
           <span class="fp-caption">Hard / easy &times; 4 sets, on the same four boulders</span>
+        </div>
+        <div class="lc-grind-side">
+          <span class="lc-stats"><b>105 min</b><span>Power endurance</span></span>
+          <span class="lc-by">Session by Ana Kovač</span>
           <span class="lc-view">View session &#8594;</span>
         </div>
       </a>
 
-      <!-- mobiel staat de CTA onderaan de sectie; desktop in de kop -->
+      <!-- mobiel staat de actie onderaan de sectie; desktop in de kop -->
       <div class="lib-cta-m">
-        <a class="btn btn-ink" href="/#browse">Browse sessions &#8594;</a>
+        <a class="btn btn-ink" href="/#browse">Browse all sessions &#8594;</a>
       </div>
 
     </div>
