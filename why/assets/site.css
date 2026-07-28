@@ -358,6 +358,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 /* ── sectie 7: slot-CTA + footer ── */
 .s-cta { overflow:hidden; background:var(--ink); }
 .cta-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+/* shade zoals de hero: leesbaarheid links waar kop en acties staan */
+.cta-shade { position:absolute; inset:0; z-index:0; background:
+  linear-gradient(90deg, rgba(11,12,10,.84) 0%, rgba(11,12,10,.6) 40%, rgba(11,12,10,.28) 70%, rgba(11,12,10,.16) 100%),
+  linear-gradient(0deg, rgba(11,12,10,.5) 0%, rgba(11,12,10,0) 40%); }
 .cta-wrap { position:relative; z-index:1; padding:40px 0; }
 .s-cta h2 { font-size:clamp(84px,9.6vw,138px); line-height:.92; letter-spacing:.005em; text-shadow:0 4px 34px rgba(11,12,10,.55); }
 .cta-actions { display:flex; gap:16px; margin:36px 0 22px; flex-wrap:wrap; }
