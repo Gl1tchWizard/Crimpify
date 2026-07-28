@@ -401,8 +401,15 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .foot-lic { width:100%; font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--disabled); }
 .foot-lic a { color:var(--dust); }
 
+/* verfspatten: echte spatten uit de founderfotografie (geen tekeningen);
+   hooguit één per hoofdstuk, naast een kop, nooit over tekst */
+.splat { display:none; position:absolute; pointer-events:none; z-index:0; }
+
 /* gelaagde composities vanaf desktopbreedte */
 @media (min-width:1181px){
+  .splat { display:block; }
+  .splat-send { top:8px; left:485px; width:150px; height:auto; }
+  .splat-plan { top:0; left:800px; width:320px; height:auto; }
   .s-send .wrap { display:block; }
   .send-stage { height:620px; margin-top:24px; }
   .send-step { position:absolute; margin:0; }
