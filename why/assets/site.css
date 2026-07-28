@@ -162,12 +162,10 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    om en veranderde de goedgekeurde hero pixel-voor-pixel */
 .library::before { content:""; position:absolute; inset:0; pointer-events:none; opacity:.05;
   background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
-.lib-grid { position:relative; display:grid; grid-template-columns:330px 1fr 1fr 1fr; gap:24px;
+.lib-grid { position:relative; display:grid; grid-template-columns:minmax(320px,1fr) 2fr; gap:44px 40px;
   grid-template-areas:
-    "head  flow  flow  flow"
-    "base  base  blitz blitz"
-    "grind grind grind grind"
-    "ninja ninja ph2   grow"; }
+    "head   flow"
+    "device grind"; }
 .lib-head { grid-area:head; padding-right:16px; align-self:center; }
 .lib-eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--disabled); }
 .lib-head h2 { font-family:var(--disp); font-weight:900; font-size:clamp(42px,3.8vw,56px); line-height:.95; text-transform:uppercase; margin:18px 0 22px; }
@@ -204,46 +202,35 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .fp-ph { height:40px; }
 .fp-caption { font-family:var(--mono); font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
 
-/* featured: foto links (~46%), trainingsobject rechts */
+/* featured: foto links (~42%), trainingsobject rechts */
 .lc-flow { grid-area:flow; flex-direction:row; align-items:stretch; }
-.lc-flow .lc-photo { width:46%; height:auto; object-fit:cover; display:block; }
-.lc-flow .lc-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px 32px; }
+.lc-flow .lc-photo { width:42%; height:auto; object-fit:cover; display:block; }
+.lc-flow .lc-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px 34px; }
 .lc-flow .lc-name { font-size:46px; margin-top:10px; }
 .lc-flow .lc-int { font-size:16px; }
 
-/* medium, fingerprint-led */
-.lc-base { grid-area:base; padding:26px 28px 22px; }
-.lc-blitz { grid-area:blitz; padding:26px 28px 22px; }
-.lc-blitz .fp { margin:0 0 18px; }
-.lc-base .fp, .lc-blitz .fp { margin-bottom:4px; }
-.lc-blitz .fp-blitz { margin-bottom:16px; }
+/* echte Browse Sessions in een matzwarte telefoon */
+.lib-device { grid-area:device; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.lib-device-label { font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--disabled); margin-bottom:16px; }
+.phone { display:block; width:270px; padding:12px; background:#0A0B09; border:1px solid #26281F; border-radius:38px; box-shadow:0 30px 70px rgba(11,12,10,.35); }
+.phone img { width:100%; height:auto; border-radius:27px; display:block; }
 
-/* breed anker: smalle strip, HEHE-fingerprint als identiteit */
-.lc-grind { grid-area:grind; flex-direction:row; align-items:stretch; }
+/* tweede verhaal: smalle strip, HEHE-fingerprint als identiteit */
+.lc-grind { grid-area:grind; flex-direction:row; align-items:stretch; align-self:center; }
 .lc-grind .lc-strip { width:200px; height:auto; object-fit:cover; display:block; }
-.lc-grind-info { width:320px; display:flex; flex-direction:column; justify-content:center; padding:26px 8px 26px 30px; }
+.lc-grind-info { width:320px; display:flex; flex-direction:column; justify-content:center; padding:30px 8px 30px 30px; }
 .lc-grind .lc-name { font-size:38px; }
-.lc-grind-main { flex:1; display:flex; flex-direction:column; justify-content:center; padding:26px 32px; }
+.lc-grind-main { flex:1; display:flex; flex-direction:column; justify-content:center; padding:30px 32px; }
 .lc-grind-main .lc-view { align-self:flex-end; }
 
-/* compact */
-.lc-ninja { grid-area:ninja; flex-direction:row; align-items:center; gap:26px; padding:22px 56px 22px 26px; }
-.lc-ninja-info { display:flex; flex-direction:column; min-width:180px; }
-.lc-ninja .lc-name { font-size:26px; }
-.lc-ninja .fp { flex:1; margin-top:0; }
-.lc-ninja .lc-arrow { bottom:auto; top:50%; transform:translateY(-50%); }
-.lc-ph2 { grid-area:ph2; padding:22px 24px 18px; }
-.lc-ph2 .lc-name { font-size:24px; }
-.lc-ph2 .fp { margin-top:14px; }
-
-.lib-growth { grid-area:grow; border:1px dashed rgba(41,43,37,.5); border-radius:14px; display:flex; align-items:center; padding:20px 22px; }
-.lib-growth p { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); line-height:1.9; }
 .lib-cta-m { display:none; }
 
 @media (max-width:1180px) and (min-width:769px){
   .lib-grid { grid-template-columns:1fr 1fr; grid-template-areas:
-    "head head" "flow flow" "base blitz" "grind grind" "ninja ph2" "grow grow"; }
+    "head head" "flow flow" "device grind"; }
   .lc-grind-info { width:260px; }
+  .lc-grind { flex-direction:column; }
+  .lc-grind .lc-strip { display:none; }
 }
 
 /* brede mobiel/tablet (575-768): boven 574px zou 45vw voorbij de
@@ -255,22 +242,19 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ph-card { left:calc(100vw - 391px); }
 }
 
-/* bibliotheek mobiel (fase 3.1): intro, Flow State featured, Grinder als
-   sterke compacte kaart (zonder fotostrip), compacte rijen voor Base
-   Camp, Board Blitz en Ninja Feet, CTA onderaan. Power Hour en de
-   groeitegel blijven desktop-materiaal (geen herhaling direct na de
-   herokaart, geen eindeloze feed). Staat bewust ná de desktopregels:
-   gelijke specificiteit, bron-volgorde beslist. */
+/* bibliotheek mobiel (fase 3.2): intro, Flow State featured, echte
+   Browse-telefoon, Grinder, CTA onderaan. Geen extra sessiekaarten,
+   geen catalogusfeed. Staat bewust ná de desktopregels: gelijke
+   specificiteit, bron-volgorde beslist. */
 @media (max-width:768px){
   .library { padding:56px 0 64px; }
-  .lib-grid { display:flex; flex-direction:column; gap:16px; }
+  .lib-grid { display:flex; flex-direction:column; gap:18px; }
   .lib-head { order:0; padding-right:0; margin-bottom:10px; align-self:stretch; }
-  .lib-head h2 { font-size:clamp(38px,11vw,46px); }
+  .lib-head h2 { font-size:clamp(44px,13vw,54px); }
   .lib-lede { font-size:16px; }
   .lib-head .btn-ink { display:none; }  /* CTA staat mobiel onderaan de sectie */
-  .lc-flow { order:1; } .lc-grind { order:2; } .lc-base { order:3; }
-  .lc-blitz { order:4; } .lc-ninja { order:5; } .lib-cta-m { order:6; }
-  .lc-ph2, .lib-growth { display:none; }
+  .lc-flow { order:1; } .lib-device { order:2; } .lc-grind { order:3; }
+  .lib-cta-m { order:4; }
 
   .lc-flow { flex-direction:column; }
   .lc-flow .lc-photo { width:100%; aspect-ratio:16/9; }
@@ -278,26 +262,17 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .lc-flow .lc-name { font-size:34px; margin-top:8px; }
   .fp-flow { height:52px; }
 
+  .lib-device { margin:14px 0 8px; }
+  .phone { width:250px; }
+
   .lc-grind { flex-direction:column; }
   .lc-grind .lc-strip { display:none; }
   .lc-grind-info { width:auto; padding:22px 24px 0; }
   .lc-grind .lc-name { font-size:30px; }
   .lc-grind-main { padding:6px 24px 20px; }
   .fp-grind { height:64px; margin-top:14px; }
-
-  .lc-base, .lc-blitz { padding:20px 22px 18px; }
-  .lc-base .lc-int, .lc-blitz .lc-int { display:none; }
-  .lc-base .lc-name, .lc-blitz .lc-name { font-size:26px; }
-  .fp-base { height:44px; }
-  .fp-blitz { height:40px; margin:0 0 4px; }
-  .lc-blitz .fp-blitz { margin-bottom:12px; }
   .lc-stats b { font-size:20px; }
-
-  .lc-ninja { padding:20px 48px 20px 22px; gap:18px; }
-  .lc-ninja-info { min-width:150px; }
-  .fp-ninja { height:36px; }
 
   .lib-cta-m { display:block; margin-top:12px; }
   .lib-cta-m .btn-ink { display:block; text-align:center; padding:17px 20px; }
-  .lib-note-m { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); margin-top:14px; text-align:center; }
 }
