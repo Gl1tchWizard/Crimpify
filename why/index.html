@@ -18,7 +18,7 @@
 
 <header class="site">
   <div class="wrap site-bar">
-    <a class="brand" href="https://crimpify.com/" aria-label="Crimpify">
+    <a class="brand" href="/" aria-label="Crimpify">
       <span class="mark" aria-hidden="true"></span>
       <span><b>CRIMPIFY</b><span class="brand-sub">THE OPEN CLIMBING TRAINING LIBRARY</span></span>
     </a>
@@ -29,7 +29,7 @@
       <a href="#open">Open source</a>
       <a href="#coaches">For coaches</a>
     </nav>
-    <a class="btn btn-acid" href="https://crimpify.com/">Open the app</a>
+    <a class="btn btn-acid" href="/">Open the app</a>
     <!-- mobiel menu: <details>, geen JS; desktop verbergt dit -->
     <details class="m-nav">
       <summary aria-label="Menu"><i></i><i></i></summary>
@@ -55,15 +55,15 @@
         <h1>Refresh<br>your sesh<span class="dot">.</span></h1>
         <p class="lede">Find sessions built by climbers and coaches. Train them, adapt them and pass them on. The maker keeps the credit.</p>
         <div class="hero-ctas">
-          <a class="btn btn-acid" href="https://crimpify.com/#browse">Explore the library</a>
-          <a class="btn btn-ghost" href="https://crimpify.com/#build">Build a session</a>
+          <a class="btn btn-acid" href="/#browse">Explore the library</a>
+          <a class="btn btn-ghost" href="/#build">Build a session</a>
         </div>
         <p class="trust">Free to train &middot; No account required &middot; Open source</p>
       </div>
     </div>
 
     <!-- compacte Power Hour-kaart, rechts van het midden, ingebed in de foto -->
-    <a class="ph-card" id="phStack" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiVGVvIE1hcmNoZXR0aSIsImQiOlsyMCwxNSwyMCw1XX0" aria-label="Featured session: Power Hour by Teo Marchetti, curated by Crimpify. View in the app.">
+    <a class="ph-card" id="phStack" href="/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiVGVvIE1hcmNoZXR0aSIsImQiOlsyMCwxNSwyMCw1XX0" aria-label="Featured session: Power Hour by Teo Marchetti, curated by Crimpify. View in the app.">
       <span class="ph-kicker">Featured session</span>
       <span class="ph-fp" aria-hidden="true">
         <i style="flex:20;height:56%;background:var(--prepare)"></i>
@@ -85,9 +85,10 @@
     <div class="hero-climber" aria-hidden="true"></div>
   </section>
 
-  <!-- STAGE 3: de bibliotheek. Redactionele mozaïek op papier; alle data
-       (titels, intents, duren, makers, blokken, #s=-links) komt uit de
-       echte app-catalogus. Fingerprints tonen de echte blokstructuur. -->
+  <!-- STAGE 3.1: de bibliotheek als productbibliotheek. Trainingsobjecten
+       voorop, maximaal twee foto's, fingerprints als productidentiteit.
+       Alle data (titels, intents, duren, makers, blokken, /#s=-links)
+       komt uit de echte app-catalogus. -->
   <section class="library" id="sessions">
     <div class="wrap lib-grid">
 
@@ -96,104 +97,117 @@
         <h2>Sessions with<br>a reason to exist.</h2>
         <p class="lib-lede">Every curated session has a clear purpose, real coaching instructions and a reason for its structure.</p>
         <p class="lib-sub">No filler workouts. No random exercise lists.</p>
-        <a class="btn btn-ink" href="https://crimpify.com/#browse">Explore the library &#8594;</a>
+        <a class="btn btn-ink" href="/#browse">Explore the library &#8594;</a>
       </header>
 
-      <a class="lc lc-flow" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJJbmVzIEZ1amltb3RvIiwiZCI6WzE1LDEwLDMwLDE1LDVdfQ" aria-label="Flow State, 75 minute technique session by Ines Fujimoto. View in the app.">
-        <img src="assets/lib-flowstate.jpg" alt="Climber in an open, extended position reaching high on a sunlit boulder">
+      <!-- featured: foto links (~48%), trainingsobject rechts -->
+      <a class="lc lc-flow" href="/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJJbmVzIEZ1amltb3RvIiwiZCI6WzE1LDEwLDMwLDE1LDVdfQ" aria-label="Flow State, 75 minute skill session by Ines Fujimoto, gym wall or spray wall. View in the app.">
+        <img class="lc-photo" src="assets/lib-flowstate-560.jpg" srcset="assets/lib-flowstate-560.jpg 560w, assets/lib-flowstate-1000.jpg 1000w" sizes="(max-width:768px) 100vw, 440px" loading="lazy" alt="Climber in an open, extended position reaching high on a sunlit boulder">
         <div class="lc-body">
+          <span class="lc-kicker">Featured session</span>
           <span class="lc-name">Flow State</span>
           <span class="lc-int">Movement quality over difficulty. Find your rhythm.</span>
           <span class="fp fp-flow" aria-hidden="true">
-            <i style="flex:15;height:40%;background:var(--prepare)"></i>
-            <i style="flex:10;height:58%;background:var(--skill)"></i>
-            <i style="flex:30;height:78%;background:var(--skill)"></i>
-            <i style="flex:15;height:64%;background:var(--skill)"></i>
-            <i style="flex:5;height:32%;background:var(--prepare)"></i>
+            <i style="flex:15;height:42%;background:var(--prepare)"></i>
+            <i style="flex:10;height:60%;background:var(--skill)"></i>
+            <i style="flex:30;height:82%;background:var(--skill)"></i>
+            <i style="flex:15;height:66%;background:var(--skill)"></i>
+            <i style="flex:5;height:30%;background:var(--prepare)"></i>
           </span>
-          <span class="lc-meta">75 min &middot; Technique &middot; Gym wall or spray wall</span>
+          <span class="lc-stats"><b>75 min</b><span>Skill &amp; coordination</span></span>
           <span class="lc-by">Session by Ines Fujimoto</span>
           <span class="lc-view">View session &#8594;</span>
         </div>
       </a>
 
-      <a class="lc lc-base" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQmFzZSBDYW1wIiwiayI6WyJiY1dhcm11cCIsImJjQm9hcmRQcmltZXIiLCJiY01pbGVhZ2UiLCJiY1dpbmREb3duIl0sInQiOjkwLCJjIjoiZ3JlZW4iLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsxNSwxNSw1MCwxMF19" aria-label="Base Camp, 90 minute aerobic base session by Ana Kovač. View in the app.">
-        <img src="assets/lib-basecamp.jpg" alt="Climber standing at the foot of a tall boulder, reading the line">
-        <div class="lc-body">
-          <span class="lc-name">Base Camp</span>
-          <span class="fp fp-base" aria-hidden="true">
-            <i style="flex:15;height:38%;background:var(--prepare)"></i>
-            <i style="flex:15;height:52%;background:var(--skill)"></i>
-            <i style="flex:50;height:60%;background:var(--volume)"></i>
-            <i style="flex:10;height:30%;background:var(--prepare)"></i>
-          </span>
-          <span class="lc-meta">90 min &middot; Aerobic base</span>
-          <span class="lc-by">Session by Ana Kova&#269;</span>
-        </div>
+      <!-- medium, fingerprint-led: het 50-min volumeblok domineert -->
+      <a class="lc lc-base" href="/#s=eyJ2IjoxLCJuIjoiQmFzZSBDYW1wIiwiayI6WyJiY1dhcm11cCIsImJjQm9hcmRQcmltZXIiLCJiY01pbGVhZ2UiLCJiY1dpbmREb3duIl0sInQiOjkwLCJjIjoiZ3JlZW4iLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsxNSwxNSw1MCwxMF19" aria-label="Base Camp, 90 minute aerobic base session by Ana Kovač. View in the app.">
+        <span class="lc-name">Base Camp</span>
+        <span class="lc-int">Volume day. Stay smooth, stop before form breaks.</span>
+        <span class="fp fp-base" aria-hidden="true">
+          <i style="flex:15;height:40%;background:var(--prepare)"></i>
+          <i style="flex:15;height:55%;background:var(--skill)"></i>
+          <i style="flex:50;height:68%;background:var(--volume)"></i>
+          <i style="flex:10;height:30%;background:var(--prepare)"></i>
+        </span>
+        <span class="lc-stats"><b>90 min</b><span>Aerobic base</span></span>
+        <span class="lc-by">Session by Ana Kovač</span>
+        <span class="lc-arrow" aria-hidden="true">&#8594;</span>
       </a>
 
-      <a class="lc lc-grind" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsyMCwxNSw2MCwxMF19" aria-label="The Grinder, 105 minute power endurance session by Ana Kovač. View in the app.">
-        <img src="assets/lib-grinder.jpg" alt="Climber compressing horizontally under a dark overhanging boulder">
-        <div class="lc-body">
+      <!-- medium, fingerprint boven: ramp en drie 3x3-clusters -->
+      <a class="lc lc-blitz" href="/#s=eyJ2IjoxLCJuIjoiQm9hcmQgQmxpdHoiLCJrIjpbImJiUHJpbWVyIiwiYmJSZWFkeSIsImJiVGhyZWUiLCJiYkxvZyJdLCJ0IjoxMjAsImMiOiJhbWJlciIsIm0iOiJUZW8gTWFyY2hldHRpIiwiZCI6WzEwLDQwLDYwLDEwXX0" aria-label="Board Blitz, 120 minute max power session by Teo Marchetti, kilterboard. View in the app.">
+        <span class="fp fp-blitz" aria-hidden="true">
+          <i style="flex:10;height:30%;background:var(--prepare)"></i>
+          <i style="flex:10;height:40%;background:var(--max-effort)"></i><i style="flex:10;height:54%;background:var(--max-effort)"></i><i style="flex:10;height:68%;background:var(--max-effort)"></i><i style="flex:10;height:80%;background:var(--max-effort)"></i>
+          <span class="fp-gap"></span>
+          <i style="flex:6;height:98%;background:var(--max-effort)"></i><i style="flex:6;height:98%;background:var(--max-effort)"></i><i style="flex:6;height:98%;background:var(--max-effort)"></i>
+          <span class="fp-gap"></span>
+          <i style="flex:6;height:88%;background:var(--max-effort)"></i><i style="flex:6;height:88%;background:var(--max-effort)"></i><i style="flex:6;height:88%;background:var(--max-effort)"></i>
+          <span class="fp-gap"></span>
+          <i style="flex:6;height:94%;background:var(--max-effort)"></i><i style="flex:6;height:94%;background:var(--max-effort)"></i><i style="flex:6;height:94%;background:var(--max-effort)"></i>
+          <i style="flex:10;height:24%;background:var(--prepare)"></i>
+        </span>
+        <span class="lc-name">Board Blitz</span>
+        <span class="lc-int">Three hard boulders. Three tries each. Make them count.</span>
+        <span class="lc-stats"><b>120 min</b><span>Max power</span></span>
+        <span class="lc-by">Session by Teo Marchetti</span>
+        <span class="lc-arrow" aria-hidden="true">&#8594;</span>
+      </a>
+
+      <!-- breed anker: smalle fotostrip, HEHE-fingerprint als identiteit -->
+      <a class="lc lc-grind" href="/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsyMCwxNSw2MCwxMF19" aria-label="The Grinder, 105 minute power endurance session by Ana Kovač. View in the app.">
+        <img class="lc-strip" src="assets/lib-grinder-360.jpg" srcset="assets/lib-grinder-360.jpg 360w, assets/lib-grinder-720.jpg 720w" sizes="220px" loading="lazy" alt="Climber compressing horizontally under a dark overhanging boulder">
+        <div class="lc-grind-info">
           <span class="lc-name">The Grinder</span>
-          <span class="lc-int">Hard. Easy. Hard. Easy. Are you willing to suffer?</span>
+          <span class="lc-int">Hard. Easy. Hard. Easy.<br>Are you willing to suffer?</span>
+          <span class="lc-stats"><b>105 min</b><span>Power endurance</span></span>
+          <span class="lc-by">Session by Ana Kovač</span>
+        </div>
+        <div class="lc-grind-main">
           <!-- fingerprint = de echte HEHE-structuur: 4 sets hard/easy in het 60-min blok -->
           <span class="fp fp-grind" aria-hidden="true">
-            <i style="flex:20;height:40%;background:var(--prepare)"></i>
-            <i style="flex:15;height:50%;background:var(--volume)"></i>
-            <i style="flex:9;height:92%;background:var(--volume)"></i><i style="flex:6;height:38%;background:var(--volume)"></i>
-            <i style="flex:9;height:88%;background:var(--volume)"></i><i style="flex:6;height:36%;background:var(--volume)"></i>
-            <i style="flex:9;height:94%;background:var(--volume)"></i><i style="flex:6;height:40%;background:var(--volume)"></i>
-            <i style="flex:9;height:90%;background:var(--volume)"></i><i style="flex:6;height:34%;background:var(--volume)"></i>
-            <i style="flex:10;height:26%;background:var(--prepare)"></i>
+            <i style="flex:20;height:38%;background:var(--prepare)"></i>
+            <i style="flex:15;height:48%;background:var(--volume)"></i>
+            <i style="flex:9;height:94%;background:var(--volume)"></i><i style="flex:6;height:36%;background:var(--volume)"></i>
+            <i style="flex:9;height:88%;background:var(--volume)"></i><i style="flex:6;height:34%;background:var(--volume)"></i>
+            <i style="flex:9;height:98%;background:var(--volume)"></i><i style="flex:6;height:38%;background:var(--volume)"></i>
+            <i style="flex:9;height:92%;background:var(--volume)"></i><i style="flex:6;height:32%;background:var(--volume)"></i>
+            <i style="flex:10;height:24%;background:var(--prepare)"></i>
           </span>
-          <span class="lc-meta">105 min &middot; Power endurance &middot; Gym wall</span>
-          <span class="lc-by">Session by Ana Kova&#269;</span>
+          <span class="fp-caption">Hard / easy &times; 4 sets, on the same four boulders</span>
           <span class="lc-view">View session &#8594;</span>
         </div>
       </a>
 
-      <a class="lc lc-sm lc-blitz" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQm9hcmQgQmxpdHoiLCJrIjpbImJiUHJpbWVyIiwiYmJSZWFkeSIsImJiVGhyZWUiLCJiYkxvZyJdLCJ0IjoxMjAsImMiOiJhbWJlciIsIm0iOiJUZW8gTWFyY2hldHRpIiwiZCI6WzEwLDQwLDYwLDEwXX0" aria-label="Board Blitz, 120 minute max power session by Teo Marchetti. View in the app.">
-        <span class="lc-name">Board Blitz</span>
-        <span class="lc-meta">120 min &middot; Max power &middot; Kilterboard</span>
-        <!-- fingerprint = oplopende ramp, dan drie boulders × drie pogingen -->
-        <span class="fp fp-blitz" aria-hidden="true">
-          <i style="flex:10;height:30%;background:var(--prepare)"></i>
-          <i style="flex:10;height:38%;background:var(--max-effort)"></i><i style="flex:10;height:52%;background:var(--max-effort)"></i><i style="flex:10;height:66%;background:var(--max-effort)"></i><i style="flex:10;height:80%;background:var(--max-effort)"></i>
-          <span class="fp-gap"></span>
-          <i style="flex:6;height:96%;background:var(--max-effort)"></i><i style="flex:6;height:96%;background:var(--max-effort)"></i><i style="flex:6;height:96%;background:var(--max-effort)"></i>
-          <span class="fp-gap"></span>
-          <i style="flex:6;height:88%;background:var(--max-effort)"></i><i style="flex:6;height:88%;background:var(--max-effort)"></i><i style="flex:6;height:88%;background:var(--max-effort)"></i>
-          <span class="fp-gap"></span>
-          <i style="flex:6;height:92%;background:var(--max-effort)"></i><i style="flex:6;height:92%;background:var(--max-effort)"></i><i style="flex:6;height:92%;background:var(--max-effort)"></i>
-          <i style="flex:10;height:24%;background:var(--prepare)"></i>
-        </span>
-        <span class="lc-by">Teo Marchetti</span>
-      </a>
-
-      <a class="lc lc-sm lc-ninja" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiTmluamEgRmVldCIsImsiOlsibmZXYXJtdXAiLCJuZkRyaWxsIiwibmZSZWFsIiwibmZOb3JtYWwiXSwidCI6NTAsImMiOiJwdXJwbGUiLCJtIjoiSW5lcyBGdWppbW90byIsImQiOlsxMCwyMCwxNSw1XX0" aria-label="Ninja Feet, 50 minute technique session by Ines Fujimoto. View in the app.">
-        <span class="lc-name">Ninja Feet</span>
-        <span class="lc-meta">50 min &middot; Technique &middot; Gym wall</span>
-        <!-- fingerprint = voetplaatsingen: kleine precieze stappen -->
+      <!-- compact, horizontaal: voetstappen-fingerprint rechts -->
+      <a class="lc lc-ninja" href="/#s=eyJ2IjoxLCJuIjoiTmluamEgRmVldCIsImsiOlsibmZXYXJtdXAiLCJuZkRyaWxsIiwibmZSZWFsIiwibmZOb3JtYWwiXSwidCI6NTAsImMiOiJwdXJwbGUiLCJtIjoiSW5lcyBGdWppbW90byIsImQiOlsxMCwyMCwxNSw1XX0" aria-label="Ninja Feet, 50 minute technique session by Ines Fujimoto. View in the app.">
+        <div class="lc-ninja-info">
+          <span class="lc-name">Ninja Feet</span>
+          <span class="lc-stats"><b>50 min</b><span>Technique</span></span>
+          <span class="lc-by">Session by Ines Fujimoto</span>
+        </div>
         <span class="fp fp-ninja" aria-hidden="true">
           <i style="flex:10;height:34%;background:var(--prepare)"></i>
-          <i class="fp-dot" style="height:52%"></i><i class="fp-dot" style="height:64%"></i><i class="fp-dot" style="height:52%"></i><i class="fp-dot" style="height:70%"></i><i class="fp-dot" style="height:56%"></i><i class="fp-dot" style="height:66%"></i>
+          <i class="fp-dot" style="height:54%"></i><i class="fp-dot" style="height:66%"></i><i class="fp-dot" style="height:52%"></i><i class="fp-dot" style="height:72%"></i><i class="fp-dot" style="height:58%"></i><i class="fp-dot" style="height:68%"></i>
           <i style="flex:15;height:48%;background:var(--skill)"></i>
-          <i class="fp-dot" style="height:40%"></i><i class="fp-dot" style="height:44%"></i>
+          <i class="fp-dot" style="height:40%"></i><i class="fp-dot" style="height:46%"></i>
         </span>
-        <span class="lc-by">Ines Fujimoto</span>
+        <span class="lc-arrow" aria-hidden="true">&#8594;</span>
       </a>
 
-      <a class="lc lc-sm lc-ph2" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiVGVvIE1hcmNoZXR0aSIsImQiOlsyMCwxNSwyMCw1XX0" aria-label="Power Hour, 60 minute max power session by Teo Marchetti. View in the app.">
+      <!-- compact, secundair (staat al in de hero) -->
+      <a class="lc lc-ph2" href="/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiVGVvIE1hcmNoZXR0aSIsImQiOlsyMCwxNSwyMCw1XX0" aria-label="Power Hour, 60 minute max power session by Teo Marchetti. View in the app.">
         <span class="lc-name">Power Hour</span>
-        <span class="lc-meta">60 min &middot; Max power &middot; Gym wall</span>
         <span class="fp fp-ph" aria-hidden="true">
           <i style="flex:20;height:44%;background:var(--prepare)"></i>
-          <i style="flex:15;height:82%;background:var(--max-effort)"></i>
+          <i style="flex:15;height:84%;background:var(--max-effort)"></i>
           <i style="flex:20;height:100%;background:var(--max-effort)"></i>
           <i style="flex:5;height:28%;background:var(--prepare)"></i>
         </span>
-        <span class="lc-by">Teo Marchetti</span>
+        <span class="lc-stats"><b>60 min</b><span>Max power</span></span>
+        <span class="lc-by">Session by Teo Marchetti</span>
+        <span class="lc-arrow" aria-hidden="true">&#8594;</span>
       </a>
 
       <div class="lib-growth">
@@ -202,7 +216,7 @@
 
       <!-- mobiel staat de CTA onderaan de sectie; desktop in de kop -->
       <div class="lib-cta-m">
-        <a class="btn btn-ink" href="https://crimpify.com/#browse">Explore the library &#8594;</a>
+        <a class="btn btn-ink" href="/#browse">Explore the library &#8594;</a>
         <p class="lib-note-m">New sessions are added as they are tested and approved.</p>
       </div>
 
