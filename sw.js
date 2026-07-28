@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v45';
+const CACHE = 'crimpify-v47';
 const CORE = [
   './',
   'index.html',
@@ -52,6 +52,23 @@ self.addEventListener('fetch', e => {
         }
         return res;
       }).catch(() => caches.match(e.request).then(r => r || caches.match('index.html')))
+    );
+    return;
+  }
+
+  // /why/-assets: netwerk eerst. De publieke site staat bewust niet in de
+  // precache; cache-first pinde hier de allereerste site.css voor eeuwig
+  // naast een verse index (network-first) — de onstijlbare bibliotheek.
+  // Cache blijft het offline-vangnet.
+  if (url.pathname.startsWith('/why/')) {
+    e.respondWith(
+      fetch(e.request).then(res => {
+        if (res.ok && url.origin === location.origin) {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy));
+        }
+        return res;
+      }).catch(() => caches.match(e.request))
     );
     return;
   }

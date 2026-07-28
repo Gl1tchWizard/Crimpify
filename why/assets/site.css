@@ -1,5 +1,5 @@
-/* Crimpify public site (/why/). Zelfde ontwerptokens als de app; fonts
-   self-hosted als woff2, geen externe requests voor het uiterlijk. */
+/* Crimpify public site (/why/), stage 1: header + hero.
+   Zelfde ontwerptokens als de app; fonts self-hosted als woff2. */
 
 @font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:700; font-display:swap; src:url('fonts/BarlowCondensed-700.woff2') format('woff2'); }
 @font-face { font-family:'Barlow Condensed'; font-style:normal; font-weight:800; font-display:swap; src:url('fonts/BarlowCondensed-800.woff2') format('woff2'); }
@@ -11,194 +11,426 @@
 
 :root {
   --ink:#0B0C0A; --carbon:#11120F; --graphite:#292B25;
-  --chalk:#F4F2EA; --paper:#EFEDE3; --dust:#92968B; --disabled:#55594F;
+  --chalk:#F4F2EA; --paper:#F2EDE1; --dust:#92968B; --disabled:#55594F;
   --acid:#E6F557; --acid-text:#0B0C0A;
   --prepare:#72A7F2; --volume:#42D6A4; --max-effort:#FF861F; --skill:#A58BFA;
-  --sig-green:#4ADE80; --sig-orange:#FB923C; --sig-red:#F87171;
+  /* gedempte volume-variant: easy-segmenten in het Grinder-fingerprint */
+  --volume-dim:color-mix(in srgb, var(--volume) 45%, var(--carbon));
   --disp:'Barlow Condensed',sans-serif; --body:'Barlow',sans-serif; --mono:'DM Mono',monospace;
+  /* één paginagrid: hero en bibliotheek delen dezelfde goot */
+  --gutter:40px;
+  /* één elevatiefamilie voor alle zwevende objecten */
+  --elev:0 24px 60px rgba(0,0,0,.45);
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html { scroll-behavior:smooth; }
 html,body { overflow-x:clip; }
 body { background:var(--ink); color:var(--chalk); font-family:var(--body); font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased; }
-img,svg { max-width:100%; display:block; }
+img,svg { max-width:100%; height:auto; display:block; }
 a { color:inherit; }
-.wrap { max-width:1180px; margin:0 auto; padding:0 24px; }
-section { padding:96px 0; }
-@media (max-width:720px){ section { padding:64px 0; } .wrap { padding:0 18px; } }
-
-.eyebrow { font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--dust); }
-.mono { font-family:var(--mono); font-size:12px; letter-spacing:.08em; }
-h1,h2,h3 { font-family:var(--disp); text-transform:uppercase; line-height:.95; letter-spacing:.005em; }
-h2 { font-size:clamp(34px,5vw,56px); font-weight:900; }
-.sec-kicker { font-family:var(--mono); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--dust); margin-bottom:14px; }
+.wrap { max-width:calc(1440px - 2*var(--gutter)); margin:0 auto; padding:0 var(--gutter); }
+a:focus-visible,button:focus-visible { outline:2px solid var(--acid); outline-offset:3px; }
+@media (prefers-reduced-motion:reduce){ *,*::before,*::after { transition:none !important; animation:none !important; } }
 
 /* knoppen */
-.btn { display:inline-block; font-family:var(--disp); font-weight:800; font-size:16px; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:15px 28px; border-radius:4px; }
-.btn-acid { background:var(--acid); color:var(--acid-text); box-shadow:0 0 22px rgba(230,245,87,.16); }
-.btn-acid:hover { box-shadow:0 0 30px rgba(230,245,87,.32); }
-.btn-ghost { border:1px solid var(--graphite); color:var(--chalk); }
-.btn-ghost:hover { border-color:var(--dust); }
-.paper .btn-ghost { border-color:#C9C6B8; color:var(--ink); }
-a:focus-visible,button:focus-visible { outline:2px solid var(--acid); outline-offset:3px; }
+.btn { display:inline-block; font-family:var(--disp); font-weight:800; font-size:17px; letter-spacing:.1em; text-transform:uppercase; text-decoration:none; padding:16px 30px; border-radius:4px; white-space:nowrap; }
+.btn-acid { background:var(--acid); color:var(--acid-text); box-shadow:0 0 26px rgba(230,245,87,.2); }
+.btn-acid:hover { box-shadow:0 0 36px rgba(230,245,87,.38); }
+.btn-ghost { border:1px solid rgba(244,242,234,.35); color:var(--chalk); }
+.btn-ghost:hover { border-color:var(--chalk); }
 
-/* ── header ── */
-header.site { position:sticky; top:0; z-index:50; background:rgba(11,12,10,.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--graphite); }
-.site-bar { display:flex; align-items:center; gap:22px; padding:14px 0; }
-.brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
-.brand svg { width:22px; height:25px; color:var(--acid); }
-.brand b { font-family:var(--disp); font-weight:900; font-size:21px; letter-spacing:.08em; color:var(--chalk); }
-.brand-sub { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.2em; color:var(--dust); margin-top:1px; }
-nav.main { margin-left:auto; display:flex; gap:22px; }
-nav.main a { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:6px 0; }
+/* ── navigatie ── */
+header.site { position:relative; z-index:20; background:var(--ink); border-bottom:1px solid rgba(41,43,37,.8); }
+.site-bar { display:flex; align-items:center; gap:26px; padding:20px 0; }
+.brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
+.mark { width:30px; height:34px; background:var(--acid); -webkit-mask:url('../../crimpify-mono.svg') no-repeat center / contain; mask:url('../../crimpify-mono.svg') no-repeat center / contain; }
+.brand b { font-family:var(--disp); font-weight:900; font-size:26px; letter-spacing:.08em; color:var(--chalk); line-height:1; }
+.brand-sub { display:block; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--dust); margin-top:3px; }
+nav.main { margin-left:auto; display:flex; gap:28px; }
+nav.main a { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:8px 0; }
 nav.main a:hover { color:var(--chalk); }
-.site .btn { padding:10px 18px; font-size:13px; }
-@media (max-width:860px){ nav.main { display:none; } .site-bar { justify-content:space-between; } }
-@media (max-width:480px){ .brand-sub { display:none; } }
-.btn { white-space:nowrap; }
+header.site .btn { padding:12px 22px; font-size:14px; }
 
-/* ── hero ── */
-.hero { padding:84px 0 90px; position:relative; overflow:hidden;
-  background:
-    linear-gradient(90deg, var(--ink) 34%, rgba(11,12,10,.72) 58%, rgba(11,12,10,.38) 100%),
-    url('hero-climber.jpg') right center / cover no-repeat,
-    var(--ink); }
-@media (max-width:940px){
-  .hero { background:
-    linear-gradient(180deg, rgba(11,12,10,.82), rgba(11,12,10,.94) 70%, var(--ink)),
-    url('hero-climber.jpg') center top / cover no-repeat,
-    var(--ink); }
+/* ── hero: één compositie van foto, kop en productobject ── */
+.hero { position:relative; min-height:820px; display:flex; align-items:center; overflow:hidden; background:var(--ink); }
+/* laagvolgorde: foto+shade (1) → kaart (2) → klimmer (3) → copy (4) */
+.hero-photo { position:absolute; inset:0; z-index:1; background:url('hero.jpg') 62% center / cover no-repeat; }
+/* gradient links voor leesbaarheid; bewust half doorzichtig zodat de
+   acid-spatten in de foto zelf achter de kop blijven gloeien */
+.hero-shade { position:absolute; inset:0; z-index:1; background:
+  linear-gradient(90deg, rgba(11,12,10,.78) 0%, rgba(11,12,10,.52) 30%, rgba(11,12,10,.14) 52%, rgba(11,12,10,0) 68%),
+  linear-gradient(0deg, rgba(11,12,10,.42) 0%, rgba(11,12,10,0) 24%); }
+.hero-grid { position:relative; z-index:4; display:flex; align-items:center; justify-content:space-between; gap:48px; width:100%; padding:64px 0; }
+.hero-copy { max-width:46%; }
+.eyebrow { font-family:var(--mono); font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:var(--chalk); opacity:.85; }
+.hero h1 { font-family:var(--disp); font-weight:900; font-size:clamp(84px,9.6vw,138px); line-height:.92; text-transform:uppercase; letter-spacing:.005em; margin:22px 0 28px; text-shadow:0 4px 34px rgba(11,12,10,.55); }
+.hero h1 .dot { color:var(--acid); }
+.hero p.lede { max-width:440px; font-size:19px; line-height:1.55; color:var(--chalk); opacity:.88; }
+.hero-ctas { display:flex; gap:16px; margin:34px 0 20px; flex-wrap:wrap; }
+.trust { font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, var(--chalk) 30%, var(--dust)); }
+
+/* ── Power Hour: compacte kaart, ingebed in de foto ──
+   De kaart zit achter de klimmer en voor de rots. Positie is verankerd
+   aan de FOTO, niet aan de viewport: de klimmer staat door de cover-
+   berekening op 62vw+const (foto breder dan viewport) dan wel op een
+   vast beeldpercentage (viewport breder dan foto, media query onder).
+   Zo is de overlap kaart/klimmer op elke desktopbreedte gelijk.
+   Linkerdeel van de kaart (~30%, padding-left) is bewust stille zone
+   die achter de klimmer doorloopt; alle leesbare content staat rechts. */
+.ph-card { position:absolute; z-index:2; left:min(62vw, calc(100vw - 402px)); top:50%; transform:translateY(-50%); width:378px; display:flex; flex-direction:column; text-decoration:none; background:rgba(8,10,9,.94); border:1px solid var(--graphite); border-radius:16px; padding:26px 24px 24px 112px; box-shadow:0 34px 80px rgba(0,0,0,.55); }
+@media (min-width:1458px){ .ph-card { left:calc(69.737vw - 103px); } }
+.ph-kicker { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--dust); text-align:right; }
+/* fingerprint mag door de stille zone heen lopen (negatieve marge) */
+.ph-card .fp { margin:16px 0 18px -84px; }
+.ph-name { font-family:var(--disp); font-weight:900; font-size:42px; letter-spacing:.02em; text-transform:uppercase; line-height:1; color:var(--chalk); text-align:right; }
+.ph-int { font-size:15px; color:var(--dust); line-height:1.5; margin:10px 0 16px; text-align:right; }
+.ph-meta { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--chalk); line-height:1.9; border-top:1px solid var(--graphite); padding-top:14px; text-align:right; }
+.ph-by { font-family:var(--mono); font-size:12px; letter-spacing:.08em; color:var(--acid); margin-top:14px; text-align:right; }
+.ph-view { font-family:var(--disp); font-weight:800; font-size:17px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:18px; text-align:right; }
+.ph-card:hover .ph-view { text-shadow:0 0 18px rgba(230,245,87,.5); }
+
+/* voorgrondlaag: dezelfde foto als los vrijstaand klimmer-asset (alpha-
+   mask, zelfde canvasmaat als hero.jpg) met identieke background-regels,
+   dus per constructie pixel-perfect uitgelijnd op .hero-photo */
+.hero-climber { position:absolute; inset:0; z-index:3; pointer-events:none;
+  background:url('hero-climber-foreground.webp') 62% center / cover no-repeat;
+  filter:drop-shadow(8px 10px 14px rgba(0,0,0,.28)); }
+
+@media (max-width:1180px){
+  .hero-copy { max-width:52%; }
 }
-.hero-grid { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(0,.85fr); gap:56px; align-items:center; }
-.hero h1 { font-size:clamp(52px,8.4vw,118px); font-weight:900; margin:18px 0 26px; }
-.hero h1 .tr { position:relative; white-space:nowrap; }
-/* de glitch met betekenis: een onderbroken lijn die verspringt (fork) */
-.hero h1 .tr::after { content:''; position:absolute; left:2%; width:38%; bottom:-.10em; height:.055em; background:var(--acid); }
-.hero h1 .tr::before { content:''; position:absolute; left:46%; width:34%; bottom:-.17em; height:.055em; background:var(--acid); }
-.hero p.lede { max-width:480px; font-size:18px; color:var(--dust); }
-.hero-ctas { display:flex; gap:14px; margin:32px 0 22px; flex-wrap:wrap; }
-.trust { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--disabled); }
-.trust b { color:var(--dust); font-weight:400; }
 
-/* sessie-rail rechts in de hero: de bibliotheek, geen dashboard */
-.rail { display:flex; flex-direction:column; gap:8px; }
-.rail-head { font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--disabled); margin-bottom:4px; display:flex; justify-content:space-between; }
-.rail a { display:flex; align-items:center; gap:14px; text-decoration:none; background:var(--carbon); border:1px solid var(--graphite); border-radius:10px; padding:12px 14px; }
-.rail a:hover { border-color:var(--dust); }
-.rail .fp { width:44px; height:34px; border-radius:5px; overflow:hidden; display:flex; flex-shrink:0; }
-.rail .fp i { display:block; height:100%; }
-.rail .rn { flex:1; min-width:0; }
-.rail .rn b { display:block; font-family:var(--disp); font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase; color:var(--chalk); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rail .rn span { display:block; font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--dust); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rail .rt { font-family:var(--mono); font-size:12px; color:var(--acid); text-align:right; line-height:1.2; flex-shrink:0; }
-.rail .rt small { display:block; font-size:9px; color:var(--disabled); letter-spacing:.12em; }
-@media (max-width:940px){ .hero-grid { grid-template-columns:1fr; gap:44px; } .hero p.lede { max-width:560px; } }
+/* ── mobiel (fase 2): eigen compositie, geen gestapelde desktop ──
+   Copy op inkt, daaronder een fotoband van 500px met een vaste
+   beeldschaal (background-size:auto 500px): de klimmer is op elke
+   mobiele breedte even groot en staat verankerd op 45vw. De kaart is
+   aan dezelfde 45vw verankerd en hangt over de onderrand van de foto;
+   de schenen/schoenen van de klimmer kruisen de fingerprint-zone
+   (cut-through, lichter dan desktop). */
+.m-nav { display:none; }
+@media (max-width:768px){
+  :root { --gutter:20px; }
 
-/* ── papieren secties ── */
-.paper { background:var(--paper); color:var(--ink); }
-.paper .sec-kicker { color:#7C7A6E; }
-.paper .mono-dim { color:#7C7A6E; }
+  /* header: compact, logo + OPEN THE APP + menuknop */
+  .site-bar { padding:12px 20px; gap:14px; }
+  .brand-sub { display:none; }
+  .brand b { font-size:24px; }
+  .mark { width:26px; height:30px; }
+  nav.main { display:none; }
+  header.site .btn { margin-left:auto; padding:12px 16px; font-size:13px; }
+  .m-nav { display:block; position:relative; }
+  .m-nav summary { list-style:none; cursor:pointer; width:44px; height:44px; border:1px solid var(--graphite); border-radius:6px; display:flex; flex-direction:column; gap:6px; align-items:center; justify-content:center; }
+  .m-nav summary::-webkit-details-marker { display:none; }
+  .m-nav summary i { width:16px; height:2px; background:var(--chalk); }
+  .m-nav[open] summary { border-color:var(--chalk); }
+  .m-panel { position:absolute; right:0; top:calc(100% + 10px); z-index:30; min-width:220px; display:flex; flex-direction:column; background:var(--carbon); border:1px solid var(--graphite); border-radius:10px; padding:8px 0; box-shadow:0 18px 44px rgba(0,0,0,.5); }
+  .m-panel a { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:12px 18px; }
+  .m-panel a:hover { color:var(--chalk); }
 
-/* ── sessiekaarten ── */
-.cards { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px; }
-@media (max-width:940px){ .cards { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:620px){ .cards { grid-template-columns:1fr; } }
-.card { display:flex; flex-direction:column; text-decoration:none; background:var(--ink); color:var(--chalk); border-radius:14px; overflow:hidden; border:1px solid rgba(11,12,10,.2); box-shadow:0 18px 40px rgba(11,12,10,.18); transition:transform .15s ease; }
-.card:hover { transform:translateY(-4px); }
-/* cover: het fingerprint-systeem als primaire kunst (blokvolgorde, breedte = duur) */
-.cover { display:flex; height:190px; background:var(--carbon); padding:18px 16px 0; gap:5px; align-items:flex-end; }
-.cover i { display:block; border-radius:4px 4px 0 0; min-width:8px; }
-.card-body { padding:18px 18px 16px; display:flex; flex-direction:column; gap:8px; flex:1; }
-.card-body h3 { font-size:27px; font-weight:900; letter-spacing:.03em; }
-.card-body .ci { font-size:14px; color:var(--dust); line-height:1.45; flex:1; }
-.card-meta { display:flex; flex-wrap:wrap; gap:6px 14px; font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); border-top:1px solid var(--graphite); padding-top:12px; }
-.card-meta .cm-t { color:var(--acid); }
-.card-cred { display:flex; justify-content:space-between; font-family:var(--mono); font-size:10px; letter-spacing:.08em; color:var(--dust); }
-.cards-foot { margin-top:34px; }
-.cards-foot a { font-family:var(--mono); font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--acid); padding-bottom:3px; }
+  /* hero: copy boven, fotoband (500px) onder; kaart hangt over de
+     onderrand van de band (bottom 56 < bandvoet 96). De smalle inktstrook
+     onder de kaart is de overgang naar de papieren bibliotheek (fase 3). */
+  .hero { min-height:0; display:block; padding-bottom:556px; }
+  .hero-photo, .hero-shade, .hero-climber { inset:auto 0 96px 0; height:500px; }
+  .hero-photo, .hero-climber { background-size:auto 500px; background-position:calc(45vw - 572px) 0; }
+  .hero-shade { background:linear-gradient(180deg, var(--ink) 0%, rgba(11,12,10,.45) 16%, rgba(11,12,10,0) 42%); }
+  .hero-grid { display:block; padding:40px 20px 0; }
+  .hero-copy { max-width:none; }
+  .eyebrow { font-size:11px; letter-spacing:.18em; }
+  .hero h1 { font-size:clamp(56px,16.5vw,68px); margin:16px 0 20px; }
+  .hero p.lede { font-size:17px; max-width:34ch; }
+  .hero-ctas { flex-direction:column; gap:12px; margin:26px 0 18px; }
+  .hero-ctas .btn { display:block; text-align:center; padding:17px 20px; }
+  .trust { font-size:11px; letter-spacing:.12em; }
 
-/* ── how training travels ── */
-.loop { display:grid; grid-template-columns:repeat(4,1fr); gap:34px; margin-top:56px; position:relative; }
-@media (max-width:860px){ .loop { grid-template-columns:repeat(2,1fr); } }
-@media (max-width:520px){ .loop { grid-template-columns:1fr; } }
-.step { position:relative; padding-top:26px; }
-/* de doorlopende lijn, die bij REMIX aftakt: de glitch betekent forken.
-   Alleen op de vierkoloms-layout; gestapeld zijn de lijnen betekenisloos. */
-@media (min-width:861px){
-  .step::before { content:''; position:absolute; top:8px; left:0; right:-34px; height:2px; background:var(--graphite); }
-  .step:last-child::before { right:0; background:var(--acid); }
-  .step:last-child::after { content:''; position:absolute; top:8px; right:24%; width:36%; height:2px; background:var(--acid); transform:rotate(-14deg); transform-origin:left center; }
+  /* compacte Power Hour-kaart: kicker, fingerprint, titel, één
+     metaregel, maker, VIEW SESSION; intent/tweede metaregel/curated
+     vervallen op klein scherm (maker-credit nooit) */
+  .ph-card { left:calc(45vw - 75px); top:auto; bottom:56px; transform:none; width:280px; padding:18px 20px 16px; border-radius:14px; }
+  .ph-kicker { font-size:10px; }
+  .ph-card .fp { height:44px; margin:12px 0 14px; }
+  .ph-name { font-size:34px; }
+  .ph-int, .ph-meta br, .ph-meta2 { display:none; }
+  .ph-meta { font-size:11px; padding-top:12px; }
+  .ph-by { font-size:11px; margin-top:12px; }
+  .ph-view { font-size:16px; margin-top:14px; }
 }
-.step .no { font-family:var(--mono); font-size:11px; color:var(--acid); letter-spacing:.2em; }
-.step h3 { font-size:24px; margin:8px 0 8px; }
-.step p { font-size:14px; color:var(--dust); }
-.loop-note { margin-top:40px; font-family:var(--mono); font-size:11px; letter-spacing:.1em; color:var(--disabled); }
-.loop-note b { color:var(--dust); font-weight:400; }
-.coming { display:inline-block; font-family:var(--mono); font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--acid); border:1px solid rgba(230,245,87,.3); border-radius:4px; padding:1px 7px; vertical-align:2px; }
-.paper .coming { color:#6d7420; border-color:rgba(109,116,32,.4); }
 
-/* ── built by climbers ── */
-.slots { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px; }
-@media (max-width:720px){ .slots { grid-template-columns:1fr; } }
-.slot { border:1px dashed #C9C6B8; border-radius:12px; padding:26px 22px; }
-.slot h3 { font-size:22px; }
-.slot p { font-size:14px; color:#6f6d61; margin-top:8px; }
-.slot .mono { color:#7C7A6E; margin-top:14px; display:block; font-size:10px; letter-spacing:.16em; text-transform:uppercase; }
+/* ── fase 3.1: de bibliotheek als productbibliotheek ──
+   Warm papier met subtiele korrel, diepzwarte trainingsobjecten,
+   maximaal twee foto's. Fingerprints zijn de productidentiteit: groot,
+   uit echte blokdata (breedtes = minuten), elk een eigen structuur. */
+.library { position:relative; background:var(--paper); color:var(--ink); padding:120px 0; }
+/* zelfde grid als de hero: de hero-grid strips de wrap-padding en leeft
+   op de wrap-BOX (1440 - 2 goten breed); op desktop doet de bibliotheek
+   dat ook. Gestapelde layouts (tablet/mobiel) houden hun goot. */
+@media (min-width:1181px){
+  .library .wrap, .band .wrap { padding-left:0; padding-right:0; }
+}
+/* subtiele fysieke textuur, alleen op het papier (kaarten liggen erboven) */
+/* geen mix-blend-mode: dat schakelt Chromium-breed de tekst-rasterisatie
+   om en veranderde de goedgekeurde hero pixel-voor-pixel */
+.library::before { content:""; position:absolute; inset:0; pointer-events:none; opacity:.05;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2'/></filter><rect width='160' height='160' filter='url(%23n)'/></svg>"); }
+.library .wrap { position:relative; }
+/* intro: één blok van maximaal 620px, daarna 72px naar de kaarten */
+.lib-head { max-width:620px; margin-bottom:72px; }
+.lib-eyebrow { font-family:var(--mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--disabled); }
+.lib-head h2 { font-family:var(--disp); font-weight:900; font-size:clamp(50px,4.6vw,68px); line-height:.95; text-transform:uppercase; margin-top:16px; }
+.lib-lede { font-size:19px; line-height:1.5; max-width:60ch; color:var(--ink); margin-top:20px; }
 
-/* ── train on purpose ── */
-.two-col { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:64px; align-items:center; }
-@media (max-width:860px){ .two-col { grid-template-columns:1fr; gap:44px; } }
-.sigs { list-style:none; margin-top:26px; display:flex; flex-direction:column; gap:16px; }
-.sigs li { display:flex; gap:16px; align-items:flex-start; font-size:15px; color:var(--dust); }
-.sigs img { width:40px; height:40px; image-rendering:pixelated; flex-shrink:0; }
-.sigs b { color:var(--chalk); font-family:var(--disp); font-weight:800; text-transform:uppercase; letter-spacing:.05em; font-size:16px; }
-/* session done-kaart: herbouw van de echte app-summary */
-.done-card { background:var(--carbon); border:1px solid var(--graphite); border-radius:16px; padding:24px; max-width:430px; box-shadow:0 24px 60px rgba(0,0,0,.45); }
-.done-card .dk { font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--dust); }
-.done-card h3 { font-size:30px; margin:6px 0 2px; }
-.done-card .dm { font-family:var(--mono); font-size:11px; color:var(--dust); }
-.done-bar { display:flex; height:12px; border-radius:6px; overflow:hidden; margin:16px 0 8px; background:var(--ink); }
-.done-bar i { display:block; height:100%; }
-.done-rows { display:flex; flex-direction:column; gap:6px; margin-top:10px; }
-.done-rows div { display:flex; justify-content:space-between; font-family:var(--mono); font-size:11px; color:var(--dust); padding:7px 10px; background:var(--ink); border-radius:6px; }
-.done-rows .skip span:last-child { color:var(--disabled); }
-.done-ask { margin-top:16px; font-family:var(--mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); text-align:center; }
-.done-lights { display:flex; gap:8px; margin-top:10px; }
-.done-lights span { flex:1; text-align:center; font-family:var(--mono); font-size:9px; letter-spacing:.1em; text-transform:uppercase; padding:12px 4px 9px; border-radius:9px; border:1px solid var(--graphite); color:var(--dust); }
-.done-lights i { display:block; width:14px; height:14px; border-radius:50%; margin:0 auto 6px; }
-.done-lights .on { border-color:rgba(74,222,128,.45); background:rgba(74,222,128,.08); color:var(--sig-green); }
+/* kaarten: zwarte trainingsobjecten, per type een eigen indeling */
+.lc { position:relative; display:flex; flex-direction:column; text-decoration:none; background:var(--carbon); color:var(--chalk); border-radius:20px; overflow:hidden; box-shadow:0 18px 44px rgba(11,12,10,.18); }
+.lc:hover .lc-view { text-shadow:0 0 18px rgba(230,245,87,.5); }
+.lc:hover .lc-arrow { text-shadow:0 0 18px rgba(230,245,87,.5); }
+.lc-kicker { font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--acid); }
+.lc-name { font-family:var(--disp); font-weight:900; font-size:32px; letter-spacing:.02em; text-transform:uppercase; line-height:1; }
+.lc-int { font-size:15px; color:var(--dust); line-height:1.5; margin-top:8px; }
+.lc-stats { display:flex; align-items:baseline; gap:16px; border-top:1px solid rgba(244,242,234,.13); margin-top:16px; padding-top:14px; }
+.lc-stats b { font-family:var(--mono); font-weight:500; font-size:14px; letter-spacing:.08em; text-transform:uppercase; line-height:1; }
+.lc-stats span { font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); }
+.lc-by { font-family:var(--mono); font-size:15px; letter-spacing:.08em; color:var(--acid); margin-top:12px; }
+.lc-view { font-family:var(--mono); font-weight:500; font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--acid); margin-top:16px; }
+.lc-arrow { position:absolute; right:20px; bottom:16px; font-family:var(--disp); font-weight:800; font-size:22px; color:var(--acid); }
 
-/* ── open by design ── */
-.open-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-top:44px; }
-@media (max-width:860px){ .open-grid { grid-template-columns:1fr; } }
-.open-cell { border-top:2px solid var(--ink); padding-top:18px; }
-.open-cell h3 { font-size:22px; }
-.open-cell p { font-size:14px; color:#6f6d61; margin:8px 0 14px; }
-.open-cell a { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--acid); padding-bottom:2px; }
-.open-cell .mono-coming { font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#7C7A6E; }
+/* ── Homepage fingerprint system: duration-proportional widths,
+   real block colours, authored intensity profiles ──
+   Breedte = echte blokminuten (flex) en kleur = echte bloktokens komen
+   uit de sessiedata; hoogte is art direction (ordinaal met rpe, met de
+   hand gestemd per blok). Segmenten staan op de spoorbodem, radius
+   4/4/2/2, vaste gap 5px, min-width 12px houdt korte blokken zichtbaar.
+   Eén implementatie: .fp plus schaalmodifier .fp-tall (64 / 96).
+   Let op: genereert de app ooit zelf fingerprints, dan is daarvoor een
+   deterministische rpe→hoogte-mapping nodig; deze profielen zijn dat
+   niet. */
+.fp { display:flex; gap:5px; height:64px; align-items:flex-end; }
+.fp i { display:block; border-radius:4px 4px 2px 2px; min-width:12px; }
+.fp-tall { height:96px; }
+.fp-caption { font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--dust); margin-top:10px; }
 
-/* ── coaches ── */
-.coach { background:var(--carbon); }
-.coach-grid { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr); gap:64px; align-items:center; }
-@media (max-width:860px){ .coach-grid { grid-template-columns:1fr; } }
-.coach ul { list-style:none; margin-top:24px; display:flex; flex-direction:column; gap:16px; }
-.coach li { padding-left:18px; position:relative; color:var(--dust); font-size:15px; }
-.coach li::before { content:''; position:absolute; left:0; top:.55em; width:8px; height:2px; background:var(--acid); }
-.coach li b { color:var(--chalk); }
-.coach-side img { width:100%; max-width:380px; border-radius:12px; filter:grayscale(1) contrast(1.05); margin-bottom:26px; }
-.manifesto { font-family:var(--disp); font-weight:800; font-size:clamp(26px,3.2vw,38px); line-height:1.1; text-transform:uppercase; color:var(--chalk); border-left:3px solid var(--acid); padding-left:26px; }
+/* het featured object: foto links (46%), product rechts, volle gridbreedte */
+.lc-flow { width:100%; height:440px; flex-direction:row; align-items:stretch; }
+.lc-flow .lc-photo { width:46%; height:auto; object-fit:cover; display:block; }
+.lc-flow .lc-body { flex:1; display:flex; flex-direction:column; justify-content:center; padding:48px; }
+.lc-flow .lc-name { font-size:48px; margin-top:12px; }
+.lc-flow .lc-int { font-size:19px; }
+.lc-flow .fp { flex-shrink:0; margin-top:14px; }
+.lc-flow .lc-stats { border-top:0; padding-top:0; margin-top:16px; }  /* geen lijn onder het spoor: leest als grafiek-as */
+.lc-flow .lc-view { margin-top:12px; }
 
-/* ── final cta ── */
-.final { text-align:center; padding:120px 0; }
-.final h2 { font-size:clamp(36px,5.4vw,64px); max-width:900px; margin:0 auto; }
-.final .hero-ctas { justify-content:center; margin-top:38px; }
-.final .sub { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--disabled); margin-top:20px; }
+/* onderste rij: de actie links in de bewuste leegte, de strip rechts
+   uitgelijnd op de rechterrand van Flow State. De leegte is compositie. */
+.lib-row { display:flex; align-items:center; margin-top:32px; }
+.lc-grind { width:min(900px,100%); height:232px; margin-left:auto; flex-direction:row; align-items:center; gap:44px; padding:28px 44px; }
+.lc-grind-main { width:40%; flex:none; display:flex; flex-direction:column; justify-content:center; }
+.lc-grind-info { flex:1; display:flex; flex-direction:column; }
+.lc-grind .lc-name { font-size:36px; }
+.lc-grind .lc-int { font-size:16px; margin-top:6px; }
+.lc-grind .lc-stats { margin-top:12px; padding-top:10px; }
+.lc-grind .lc-stats b, .lc-grind .lc-stats span { font-size:13px; }
+.lc-grind .lc-by { font-size:14px; margin-top:10px; }
+.lc-grind .lc-view { font-size:13px; margin-top:12px; }
 
-/* ── footer ── */
-footer.site { border-top:1px solid var(--graphite); padding:34px 0 44px; }
-.foot-grid { display:flex; flex-wrap:wrap; gap:18px 34px; align-items:center; justify-content:space-between; }
-.foot-grid .mono { color:var(--disabled); font-size:10px; letter-spacing:.1em; }
-.foot-links { display:flex; gap:22px; }
-.foot-links a { font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); text-decoration:none; }
-.foot-links a:hover { color:var(--chalk); }
+@media (max-width:1180px) and (min-width:769px){
+  .lib-head { margin-bottom:48px; }
+  .lib-row { flex-direction:column-reverse; align-items:flex-start; gap:24px; }
+  .lc-grind { width:100%; margin-left:0; }
+}
+
+/* brede mobiel/tablet (575-768): boven 574px zou 45vw voorbij de
+   linkerrand van het geschaalde beeld (888px breed) schuiven en rechts
+   een gat laten. Beeld rechts verankeren sluit exact aan op de
+   45vw-formule op 574px; de kaart volgt dezelfde klimmerpositie. */
+@media (min-width:575px) and (max-width:768px){
+  .hero-photo, .hero-climber { background-position:100% 0; }
+  .ph-card { left:calc(100vw - 391px); }
+}
+
+/* bibliotheek mobiel (fase 3.3): intro, Flow State (foto boven), Grinder
+   compact en fingerprint-gedreven, volle-breedte actie. Geen telefoon,
+   geen extra kaarten. Staat bewust ná de desktopregels: gelijke
+   specificiteit, bron-volgorde beslist. */
+@media (max-width:768px){
+  .library { padding:56px 0 64px; }
+  .lib-head { margin-bottom:28px; }
+  .lib-head h2 { font-size:clamp(44px,13vw,54px); }
+  .lib-lede { font-size:16px; }
+
+  .lc-flow { width:100%; height:auto; flex-direction:column; }
+  .lc-flow .lc-photo { width:100%; aspect-ratio:16/9; }
+  .lc-flow .lc-body { padding:22px 24px 20px; }
+  .lc-flow .lc-name { font-size:36px; margin-top:8px; }
+  .lc-flow .lc-int { font-size:15px; }
+  .lc-flow .fp { height:54px; }
+
+  /* compact en fingerprint-gedreven: het fp-blok staat in de DOM voorop */
+  .lib-row { flex-direction:column-reverse; align-items:stretch; margin-top:18px; }
+  .lc-grind { width:100%; height:auto; margin:0; flex-direction:column; align-items:stretch; gap:0; padding:22px 24px 20px; }
+  .lc-grind-main { width:auto; }
+  .lc-grind .fp { height:60px; }
+  .lc-grind-info { margin-top:16px; }
+  .lc-grind .lc-name { font-size:30px; }
+
+  .lib-cta { margin-top:20px; }
+  .lib-cta .btn { display:block; text-align:center; padding:17px 20px; line-height:1.4; }
+}
+
+/* ══ fase 4: grijs skelet, secties 3-7 ══
+   Basis = gestapelde flow (werkt op elke breedte), de gelaagde
+   composities gelden vanaf 1181px. Placeholders: vlak middengrijs,
+   mono-label met asset, ratio en rol; juiste maat en positie. */
+
+.shot { display:block; border-radius:20px; box-shadow:var(--elev); border:1px solid var(--graphite); }
+
+.band { position:relative; padding:120px 0; }
+.band-dark { background:var(--ink); color:var(--chalk); }
+.band-paper { background:var(--paper); color:var(--ink); }
+.band h2 { font-family:var(--disp); font-weight:900; font-size:clamp(50px,4.6vw,68px); line-height:.95; text-transform:uppercase; }
+.band h2 .dot { color:var(--acid); }
+.band-sub { font-size:19px; line-height:1.5; color:var(--dust); margin-top:20px; max-width:60ch; }
+.band-head { max-width:640px; }
+
+/* ── sectie 3: BUILD TO SEND. ──
+   fase 5.1: elke stap is scherm + tekst in één blok (proximity doet het
+   werk); de acid-lijn draagt de verbinding en vorkt bij stap 04 */
+.s-send .wrap { position:relative; }
+.send-stage { position:relative; margin-top:32px; }
+.send-line { display:none; position:absolute; inset:0; width:100%; height:100%; z-index:2; pointer-events:none; }
+.send-line polyline { fill:none; stroke:var(--acid); stroke-width:3; vector-effect:non-scaling-stroke; }
+.send-flow { list-style:none; margin:0; padding:0; }
+.send-step { margin-top:36px; }
+.send-step:first-child { margin-top:0; }
+.shot-crop { overflow:hidden; border-radius:20px; box-shadow:var(--elev); border:1px solid var(--graphite); }
+.shot-crop img { display:block; width:100%; }
+.step-txt { display:block; margin-top:18px; }
+.step-no { display:block; font-family:var(--mono); font-size:13px; letter-spacing:.1em; color:var(--dust); }
+.step-t { display:block; font-family:var(--disp); font-weight:800; font-size:24px; letter-spacing:.04em; text-transform:uppercase; margin-top:8px; }
+.step-b { display:block; font-size:16px; line-height:1.5; color:var(--dust); margin-top:8px; }
+
+/* ── sectie 4: TRAIN ON PURPOSE ── */
+.s-plan .band-head { margin-bottom:56px; }
+.plan-photo { width:min(520px,100%); }
+.done-panel { width:min(560px,calc(100% - 24px)); margin:-80px auto 0; position:relative; z-index:3; background:var(--carbon); color:var(--chalk); border-radius:20px; box-shadow:var(--elev); padding:36px 40px; }
+.done-kicker { font-family:var(--mono); font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--acid); }
+.done-row { display:flex; align-items:baseline; gap:16px; margin-top:18px; }
+.done-label { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); width:88px; flex:none; }
+.done-val { font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--chalk); }
+.done-blocks { list-style:none; margin:16px 0 0; padding:0; }
+.done-blocks li { display:flex; align-items:center; gap:12px; padding:8px 0; border-top:1px solid color-mix(in srgb, var(--graphite) 60%, transparent); font-size:15px; }
+.done-blocks li > span:first-child { flex:1; }
+.done-min { font-family:var(--mono); font-size:12px; color:var(--dust); }
+.tick { position:relative; width:22px; height:22px; flex:none; border:1px solid var(--graphite); border-radius:6px; }
+.tick-done { border-color:var(--dust); }
+.tick-done::after { content:"¹3"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--chalk); }
+.done-response { border:1px solid var(--graphite); border-radius:12px; padding:20px; margin-top:22px; }
+.done-response .done-label { width:auto; }
+.done-monsters { display:flex; align-items:center; justify-content:space-around; gap:24px; margin-top:14px; }
+.done-monsters img { width:48px; height:48px; image-rendering:pixelated; }
+.done-cta { padding:15px 0; border-radius:10px; background:var(--acid); color:var(--acid-text); margin-top:24px; font-family:var(--disp); font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; text-align:center; }
+.plan-copy { font-size:19px; line-height:1.6; margin-top:36px; max-width:44ch; }
+
+/* ── sectie 5: BUILT IN THE OPEN ── */
+.s-open .wrap { position:relative; }
+.s-open .band-head { margin-bottom:56px; }
+.open-points { max-width:640px; }
+.open-point h3 { font-family:var(--mono); font-weight:500; font-size:13px; letter-spacing:.14em; text-transform:uppercase; }
+.open-point p { font-size:17px; line-height:1.6; color:var(--dust); margin-top:8px; max-width:46ch; }
+.open-point + .open-point { margin-top:32px; }
+.quote { margin:48px 0 0; border-left:3px solid var(--graphite); padding-left:24px; }
+.quote blockquote { font-family:var(--disp); font-weight:700; font-size:24px; line-height:1.25; letter-spacing:.01em; }
+.quote figcaption { font-family:var(--mono); font-size:13px; color:var(--dust); margin-top:12px; }
+.open-proof { margin-top:56px; max-width:520px; }
+.code-card { background:var(--carbon); border:1px solid var(--graphite); border-radius:20px; box-shadow:var(--elev); padding:28px 32px; font-family:var(--mono); font-size:13px; line-height:1.7; color:var(--chalk); overflow-x:auto; margin:0; }
+.open-links { list-style:none; margin:28px 0 0; padding:0; }
+.open-links li + li { margin-top:12px; }
+.open-links a { font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase; color:var(--acid); text-decoration:none; }
+.open-lic { font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--dust); margin-top:24px; }
+
+/* ── sectie 6: FOR COACHES AND GYMS ── */
+.coach-lines { font-size:19px; line-height:1.7; margin-top:24px; }
+.coach-qr { display:flex; align-items:center; gap:18px; margin-top:40px; }
+.coach-qr img { border-radius:8px; display:block; }
+.coach-qr span { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--disabled); }
+.coach-stage { margin-top:48px; display:flex; flex-direction:column; gap:20px; }
+.coach-wall { width:min(480px,88%); margin-left:auto; order:-1; }
+.coach-screen { width:min(420px,78%); margin:0; }
+
+/* ── satirische reviewband: ingehouden knipoog ── */
+.s-reviews { padding:80px 0; }
+.review-band { list-style:none; display:grid; grid-template-columns:repeat(4,1fr); gap:48px; margin:0; padding:0; }
+.rv-score { display:block; font-family:var(--disp); font-weight:900; font-size:40px; line-height:1; color:var(--acid); }
+.review-band blockquote { font-size:15px; line-height:1.5; color:var(--chalk); margin:12px 0 0; }
+.rv-outlet { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); margin-top:12px; }
+
+/* ── sectie 7: slot-CTA + footer ── */
+.s-cta { overflow:hidden; background:var(--ink); }
+.cta-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+/* shade zoals de hero: leesbaarheid links waar kop en acties staan */
+.cta-shade { position:absolute; inset:0; z-index:0; background:
+  linear-gradient(90deg, rgba(11,12,10,.84) 0%, rgba(11,12,10,.6) 40%, rgba(11,12,10,.28) 70%, rgba(11,12,10,.16) 100%),
+  linear-gradient(0deg, rgba(11,12,10,.5) 0%, rgba(11,12,10,0) 40%); }
+.cta-wrap { position:relative; z-index:1; padding:40px 0; }
+.s-cta h2 { font-size:clamp(84px,9.6vw,138px); line-height:.92; letter-spacing:.005em; text-shadow:0 4px 34px rgba(11,12,10,.55); }
+.cta-actions { display:flex; gap:16px; margin:36px 0 22px; flex-wrap:wrap; }
+.cta-ambition { font-family:var(--mono); font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:color-mix(in srgb, var(--chalk) 30%, var(--dust)); }
+
+.site-foot { background:var(--ink); border-top:1px solid var(--graphite); padding:48px 0 56px; color:var(--chalk); }
+.foot-grid { display:flex; align-items:center; gap:24px 40px; flex-wrap:wrap; }
+.site-foot nav { display:flex; gap:24px; margin-left:auto; flex-wrap:wrap; }
+.site-foot nav a { font-family:var(--mono); font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; }
+.site-foot nav a:hover { color:var(--chalk); }
+.foot-lic { width:100%; font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--disabled); }
+.foot-lic a { color:var(--dust); }
+
+/* gelaagde composities vanaf desktopbreedte */
+@media (min-width:1181px){
+  .s-send .wrap { display:block; }
+  .send-stage { height:620px; margin-top:24px; }
+  .send-line { display:block; z-index:0; }
+  .send-step { position:absolute; margin:0; }
+  .ss1 { left:20px; top:17px; width:240px; z-index:1; }
+  .ss1 .shot-crop { height:300px; }
+  .ss2 { left:480px; top:-364px; width:420px; z-index:3; }
+  .ss2 .step-txt { width:360px; }
+  .ss2 .shot { width:100%; }
+  .ss3 { left:810px; top:101px; width:230px; z-index:1; }
+  .ss3 .shot-crop { height:310px; }
+  .ss4 { left:1180px; top:174px; width:200px; z-index:1; }
+  .ss4 .shot-crop { height:280px; }
+  .ss4 .shot-crop img { margin-top:-36%; }  /* de deel-dialoog in beeld, niet de gedimde kop */
+
+  .plan-stage { position:relative; height:760px; }
+  .plan-photo { position:absolute; left:0; top:0; width:520px; z-index:1; }
+  .done-panel { position:absolute; left:380px; top:90px; width:560px; margin:0; }
+  .plan-copy { position:absolute; left:1040px; top:220px; width:320px; margin:0; }
+
+  .open-proof { position:absolute; right:0; top:-200px; width:520px; margin:0; z-index:3; }
+
+  .coach-grid { display:grid; grid-template-columns:560px 1fr; gap:80px; align-items:center; }
+  .coach-stage { position:relative; height:1240px; margin:0; }
+  .coach-wall { position:absolute; right:0; top:0; width:480px; margin:0; z-index:3; }
+  .coach-screen { position:absolute; left:0; top:611px; width:340px; margin:0; z-index:1; }
+}
+
+/* mobiel */
+@media (max-width:768px){
+  .band { padding:64px 0; }
+  .band h2 { font-size:clamp(40px,11.5vw,54px); }
+  .band-sub { font-size:16px; }
+  .ss1 .shot-crop, .ss3 .shot-crop, .ss4 .shot-crop { height:240px; border-radius:14px; }
+  /* diepte zonder de stapvolgorde te breken: 02 bloedt de linkerrand af,
+     04 de rechter; beide worden door de sectierand gesneden */
+  .ss2 .shot { width:calc(100% + 20px); margin-left:-20px; border-radius:0 20px 20px 0; }
+  .ss4 .shot-crop { width:calc(100% + 20px); border-radius:14px 0 0 14px; }
+  .send-step { margin-top:44px; }
+  .done-panel { padding:26px 22px; }
+  .plan-copy { font-size:17px; }
+  .s-reviews { padding:56px 0; }
+  .review-band { grid-template-columns:1fr; gap:32px; }
+  .s-cta h2 { font-size:clamp(56px,16.5vw,68px); }
+  .cta-actions { flex-direction:column; }
+  .cta-actions .btn { display:block; text-align:center; }
+  .foot-grid { flex-direction:column; align-items:flex-start; gap:20px; }
+  .site-foot nav { margin-left:0; gap:14px 20px; }
+}
+

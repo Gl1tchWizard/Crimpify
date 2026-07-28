@@ -4041,8 +4041,23 @@ registerCustomBlocks();
 applyCategoryColors();
 rebuildRecent(); renderSignalCal(); renderTodaysPick(); renderContinue(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
 const importedShare = importFromHash();  // gedeelde sessie via #s=… direct openen
+// deep links van de publieke site (/why/): #browse opent de bibliotheek
+// (Choose), #build de builder. Zelfde mechanisme als #s=: hash consumeren
+// en wissen, zodat BACK de in-app stack volgt.
+function consumeDeepLink() {
+  if (location.hash !== '#browse' && location.hash !== '#build') return false;
+  const dest = location.hash;
+  history.replaceState(null, '', location.pathname);
+  if (dest === '#browse') openChoose(); else goTo('v-build');
+  return true;
+}
+// uitvoering uitgesteld tot na het hele script (openChoose leest let-state
+// die pas verderop declareert). De bestemming wordt hier gevangen: de
+// sentinel-pushState onderaan stript de hash al vóór de timeout loopt.
+const bootDeepLink = (!importedShare && (location.hash === '#browse' || location.hash === '#build')) ? location.hash : null;
+if (bootDeepLink) setTimeout(() => { if (bootDeepLink === '#browse') openChoose(); else goTo('v-build'); }, 0);
 // terugkeer na tab-discard of sw-reload: binnen het venster terug waar je was
-if (!importedShare) {
+if (!importedShare && !bootDeepLink) {
   try {
     const rm = JSON.parse(localStorage.getItem('crimpify_resume') || 'null');
     localStorage.removeItem('crimpify_resume');
@@ -4107,6 +4122,7 @@ window.addEventListener('popstate', () => {
 // een hashchange (geen page-load), dus alsnog importeren
 window.addEventListener('hashchange', () => {
   if (location.hash.startsWith('#s=')) importFromHash();
+  else if (location.hash === '#browse' || location.hash === '#build') consumeDeepLink();
 });
 
 // ── PWA: register external service worker (auto-updating) ──

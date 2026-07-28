@@ -4,26 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Crimpify: the open climbing training library</title>
-<meta name="description" content="Discover climbing training sessions built by climbers and coaches. Train them, adapt them and pass them on, with credit to the people who made them. Free to train, no account required, open source.">
+<meta name="description" content="Refresh your sesh. Find climbing training sessions built by climbers and coaches. Train them, adapt them and pass them on. The maker keeps the credit.">
 <link rel="canonical" href="https://crimpify.com/why/">
 <meta property="og:title" content="Crimpify: the open climbing training library">
-<meta property="og:description" content="Good training should travel. Find it. Climb it. Remix it.">
+<meta property="og:description" content="Refresh your sesh. Find it. Send it. Remix it.">
 <meta property="og:image" content="https://crimpify.com/og.png">
 <meta property="og:url" content="https://crimpify.com/why/">
 <meta name="theme-color" content="#0B0C0A">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="assets/site.css">
-<style>
-  /* mark via mask op het bestaande mono-svg: kleurbaar zonder 36 kB pad-data */
-  .mark { width:22px; height:25px; background:var(--acid); -webkit-mask:url('../crimpify-mono.svg') no-repeat center / contain; mask:url('../crimpify-mono.svg') no-repeat center / contain; }
-  footer .mark { background:var(--dust); width:18px; height:21px; }
-</style>
 </head>
 <body>
 
 <header class="site">
   <div class="wrap site-bar">
-    <a class="brand" href="#top" aria-label="Crimpify home">
+    <a class="brand" href="/" aria-label="Crimpify">
       <span class="mark" aria-hidden="true"></span>
       <span><b>CRIMPIFY</b><span class="brand-sub">THE OPEN CLIMBING TRAINING LIBRARY</span></span>
     </a>
@@ -34,295 +29,298 @@
       <a href="#open">Open source</a>
       <a href="#coaches">For coaches</a>
     </nav>
-    <a class="btn btn-acid" href="https://crimpify.com/">Open the app</a>
+    <a class="btn btn-acid" href="/">Open the app</a>
+    <!-- mobiel menu: <details>, geen JS; desktop verbergt dit -->
+    <details class="m-nav">
+      <summary aria-label="Menu"><i></i><i></i></summary>
+      <nav class="m-panel" aria-label="Sections">
+        <a href="#sessions">Sessions</a>
+        <a href="#travels">How it travels</a>
+        <a href="#purpose">Train on purpose</a>
+        <a href="#open">Open source</a>
+        <a href="#coaches">For coaches</a>
+      </nav>
+    </details>
   </div>
 </header>
 
-<main id="top">
-
-  <!-- 1. HERO: de bibliotheek, geen dashboard -->
+<main>
+  <!-- STAGE 1: alleen de hero. Volgende secties volgen per fase. -->
   <section class="hero">
+    <div class="hero-photo" role="img" aria-label="Boulderer moving across a sculpted outdoor boulder"></div>
+    <div class="hero-shade" aria-hidden="true"></div>
     <div class="wrap hero-grid">
-      <div>
+      <div class="hero-copy">
         <p class="eyebrow">The open climbing training library</p>
-        <h1>Good training<br><span class="tr">should travel.</span></h1>
-        <p class="lede">Discover sessions built by climbers and coaches. Train them, adapt them and pass them on, with credit to the people who made them.</p>
+        <h1>Refresh<br>your sesh<span class="dot">.</span></h1>
+        <p class="lede">Find sessions built by climbers and coaches. Train them, adapt them and pass them on. The maker keeps the credit.</p>
         <div class="hero-ctas">
-          <a class="btn btn-acid" href="#sessions">Explore sessions</a>
-          <a class="btn btn-ghost" href="https://crimpify.com/">Build a session</a>
+          <a class="btn btn-acid" href="/#browse">Explore the library</a>
+          <a class="btn btn-ghost" href="/#build">Build a session</a>
         </div>
-        <p class="trust"><b>Free to train</b> &middot; <b>No account required</b> &middot; <b>Open source</b></p>
-      </div>
-      <div class="rail" aria-label="Curated sessions">
-        <p class="rail-head"><span>In the library</span><span>6 curated sessions</span></p>
-        <!-- data uit de app-code: namen, duren, categorieen, fingerprints -->
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsMjAsNV19">
-          <span class="fp" aria-hidden="true"><i style="width:33%;background:var(--prepare)"></i><i style="width:25%;background:var(--max-effort)"></i><i style="width:33%;background:var(--max-effort)"></i><i style="width:9%;background:var(--prepare)"></i></span>
-          <span class="rn"><b>Power Hour</b><span>Max Strength &amp; Power</span></span>
-          <span class="rt">60<small>MIN</small></span>
-        </a>
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQmFzZSBDYW1wIiwiayI6WyJiY1dhcm11cCIsImJjQm9hcmRQcmltZXIiLCJiY01pbGVhZ2UiLCJiY1dpbmREb3duIl0sInQiOjkwLCJjIjoiZ3JlZW4iLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMTUsMTUsNTAsMTBdfQ">
-          <span class="fp" aria-hidden="true"><i style="width:17%;background:var(--prepare)"></i><i style="width:17%;background:var(--skill)"></i><i style="width:55%;background:var(--volume)"></i><i style="width:11%;background:var(--prepare)"></i></span>
-          <span class="rn"><b>Base Camp</b><span>Capacity &amp; Volume</span></span>
-          <span class="rt">90<small>MIN</small></span>
-        </a>
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQm9hcmQgQmxpdHoiLCJrIjpbImJiUHJpbWVyIiwiYmJSZWFkeSIsImJiVGhyZWUiLCJiYkxvZyJdLCJ0IjoxMjAsImMiOiJhbWJlciIsIm0iOiJDcmltcGlmeSIsImQiOlsxMCw0MCw2MCwxMF19">
-          <span class="fp" aria-hidden="true"><i style="width:8%;background:var(--prepare)"></i><i style="width:34%;background:var(--max-effort)"></i><i style="width:50%;background:var(--max-effort)"></i><i style="width:8%;background:var(--prepare)"></i></span>
-          <span class="rn"><b>Board Blitz</b><span>Max Strength &amp; Power</span></span>
-          <span class="rt">120<small>MIN</small></span>
-        </a>
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJDcmltcGlmeSIsImQiOlsxNSwxMCwzMCwxNSw1XX0">
-          <span class="fp" aria-hidden="true"><i style="width:20%;background:var(--prepare)"></i><i style="width:13%;background:var(--skill)"></i><i style="width:40%;background:var(--skill)"></i><i style="width:20%;background:var(--skill)"></i><i style="width:7%;background:var(--prepare)"></i></span>
-          <span class="rn"><b>Flow State</b><span>Skill &amp; Coordination</span></span>
-          <span class="rt">75<small>MIN</small></span>
-        </a>
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiTmluamEgRmVldCIsImsiOlsibmZXYXJtdXAiLCJuZkRyaWxsIiwibmZSZWFsIiwibmZOb3JtYWwiXSwidCI6NTAsImMiOiJwdXJwbGUiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMTAsMjAsMTUsNV19">
-          <span class="fp" aria-hidden="true"><i style="width:20%;background:var(--prepare)"></i><i style="width:40%;background:var(--skill)"></i><i style="width:30%;background:var(--skill)"></i><i style="width:10%;background:var(--skill)"></i></span>
-          <span class="rn"><b>Ninja Feet</b><span>Skill &amp; Coordination</span></span>
-          <span class="rt">50<small>MIN</small></span>
-        </a>
-        <a href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsNjAsMTBdfQ">
-          <span class="fp" aria-hidden="true"><i style="width:19%;background:var(--prepare)"></i><i style="width:14%;background:var(--volume)"></i><i style="width:57%;background:var(--volume)"></i><i style="width:10%;background:var(--prepare)"></i></span>
-          <span class="rn"><b>The Grinder</b><span>Power Endurance</span></span>
-          <span class="rt">105<small>MIN</small></span>
-        </a>
+        <p class="trust">Free to train &middot; No account required &middot; Open source</p>
       </div>
     </div>
+
+    <!-- compacte Power Hour-kaart, rechts van het midden, ingebed in de foto -->
+    <a class="ph-card" id="phStack" href="/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiVGVvIE1hcmNoZXR0aSIsImQiOlsyMCwxNSwyMCw1XX0" aria-label="Featured session: Power Hour by Teo Marchetti. View in the app.">
+      <span class="ph-kicker">Featured session</span>
+      <span class="fp" aria-hidden="true">
+        <i style="flex:20;height:56%;background:var(--prepare)"></i>
+        <i style="flex:15;height:82%;background:var(--max-effort)"></i>
+        <i style="flex:20;height:100%;background:var(--max-effort)"></i>
+        <i style="flex:5;height:34%;background:var(--prepare)"></i>
+      </span>
+      <span class="ph-name">Power Hour</span>
+      <span class="ph-int">Hard moves, big holds,<br>full commitment.</span>
+      <span class="ph-meta"><span>60 min &middot; Max Strength &amp; Power</span><br><span class="ph-meta2">Gym wall &middot; 4 blocks</span></span>
+      <span class="ph-by">Session by Teo Marchetti</span>
+      <span class="ph-view">View session &#8594;</span>
+    </a>
+    <!-- voorgrondlaag: vrijstaand klimmer-asset (alpha-mask) op hetzelfde
+         canvas als de herofoto, met identieke background-regels en dus
+         per constructie uitgelijnd. De kaart zit achter de klimmer en
+         voor de rots. pointer-events none. -->
+    <div class="hero-climber" aria-hidden="true"></div>
   </section>
 
-  <!-- 2. START WITH A SESSION -->
-  <section class="paper" id="sessions">
+  <!-- STAGE 3.3: de bibliotheek, gereset. Alleen: intro, een groot
+       Flow State-object, een lage Grinder-strip en een Browse-actie.
+       Geen telefoon, geen extra kaarten; de catalogus leeft in de app.
+       Data en /#s=-links komen uit de echte app-catalogus. -->
+  <section class="library" id="sessions">
     <div class="wrap">
-      <p class="sec-kicker">Start with a session</p>
-      <h2>Six curated sessions.<br>Made to train. Made to share.</h2>
-      <div class="cards">
 
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiUG93ZXIgSG91ciIsImsiOlsicGhXYXJtdXAiLCJwaER5bmFtaWMiLCJwaExpbWl0IiwicGhEb3duc2hpZnQiXSwidCI6NjAsImMiOiJyZWQiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsMjAsNV19">
-          <div class="cover" aria-hidden="true"><i style="flex:20;height:64%;background:var(--prepare)"></i><i style="flex:15;height:88%;background:var(--max-effort)"></i><i style="flex:20;height:100%;background:var(--max-effort)"></i><i style="flex:5;height:38%;background:var(--prepare)"></i></div>
-          <div class="card-body">
-            <h3>Power Hour</h3>
-            <p class="ci">Hard moves, big holds, full commitment.</p>
-            <p class="card-meta"><span class="cm-t">60 min</span><span>Max Strength &amp; Power</span><span>Gym wall</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
+      <header class="lib-head">
+        <p class="lib-eyebrow">The open library</p>
+        <h2>Start with<br>a good session.</h2>
+        <p class="lib-lede">Every session has a purpose, clear coaching and a reason for its structure.</p>
+      </header>
+
+      <!-- het enige featured object: foto links (~45%), product rechts -->
+      <a class="lc lc-flow" href="/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJJbmVzIEZ1amltb3RvIiwiZCI6WzE1LDEwLDMwLDE1LDVdfQ" aria-label="Flow State, 75 minute skill session by Ines Fujimoto, gym wall or spray wall. View in the app.">
+        <img class="lc-photo" src="assets/lib-flowstate-560.jpg" srcset="assets/lib-flowstate-560.jpg 560w, assets/lib-flowstate-1000.jpg 1000w" sizes="(max-width:768px) 100vw, 600px" loading="lazy" alt="Climber in an open, extended position reaching high on a sunlit boulder">
+        <div class="lc-body">
+          <span class="lc-kicker">Featured session</span>
+          <span class="lc-name">Flow State</span>
+          <span class="lc-int">Movement quality over difficulty.<br>Find your rhythm.</span>
+          <span class="fp" aria-hidden="true">
+            <i style="flex:15;height:42%;background:var(--prepare)"></i>
+            <i style="flex:10;height:60%;background:var(--skill)"></i>
+            <i style="flex:30;height:82%;background:var(--skill)"></i>
+            <i style="flex:15;height:66%;background:var(--skill)"></i>
+            <i style="flex:5;height:30%;background:var(--prepare)"></i>
+          </span>
+          <span class="lc-stats"><b>75 min</b><span>Skill &amp; coordination</span></span>
+          <span class="lc-by">Session by Ines Fujimoto</span>
+          <span class="lc-view">View session &#8594;</span>
+        </div>
+      </a>
+
+      <!-- onderste rij: actie links in de bewuste leegte, strip rechts -->
+      <div class="lib-row">
+        <div class="lib-cta">
+          <a class="btn btn-acid" href="/#browse">Browse all sessions &#8594;</a>
+        </div>
+        <!-- ondersteunende strip: het HEHE-fingerprint is het beeld -->
+        <a class="lc lc-grind" href="/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQW5hIEtvdmHEjSIsImQiOlsyMCwxNSw2MCwxMF19" aria-label="The Grinder, 105 minute power endurance session by Ana Kovač. View in the app.">
+          <div class="lc-grind-main">
+            <!-- fingerprint = de echte HEHE-structuur: 4 sets hard/easy in het
+                 60-min blok; hard = volume, easy = volume-dim -->
+            <span class="fp fp-tall" aria-hidden="true">
+              <i style="flex:20;height:38%;background:var(--prepare)"></i>
+              <i style="flex:15;height:48%;background:var(--volume)"></i>
+              <i style="flex:9;height:94%;background:var(--volume)"></i><i style="flex:6;height:36%;background:var(--volume-dim)"></i>
+              <i style="flex:9;height:88%;background:var(--volume)"></i><i style="flex:6;height:34%;background:var(--volume-dim)"></i>
+              <i style="flex:9;height:98%;background:var(--volume)"></i><i style="flex:6;height:38%;background:var(--volume-dim)"></i>
+              <i style="flex:9;height:92%;background:var(--volume)"></i><i style="flex:6;height:32%;background:var(--volume-dim)"></i>
+              <i style="flex:10;height:24%;background:var(--prepare)"></i>
+            </span>
+            <span class="fp-caption">Hard / easy &times; 4 sets, on the same four boulders</span>
+          </div>
+          <div class="lc-grind-info">
+            <span class="lc-name">The Grinder</span>
+            <span class="lc-int">Hard. Easy. Hard. Easy.<br>Are you willing to suffer?</span>
+            <span class="lc-stats"><b>105 min</b><span>Power endurance</span></span>
+            <span class="lc-by">Session by Ana Kovač</span>
+            <span class="lc-view">View session &#8594;</span>
           </div>
         </a>
-
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQmFzZSBDYW1wIiwiayI6WyJiY1dhcm11cCIsImJjQm9hcmRQcmltZXIiLCJiY01pbGVhZ2UiLCJiY1dpbmREb3duIl0sInQiOjkwLCJjIjoiZ3JlZW4iLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMTUsMTUsNTAsMTBdfQ">
-          <div class="cover" aria-hidden="true"><i style="flex:15;height:55%;background:var(--prepare)"></i><i style="flex:15;height:70%;background:var(--skill)"></i><i style="flex:50;height:100%;background:var(--volume)"></i><i style="flex:10;height:40%;background:var(--prepare)"></i></div>
-          <div class="card-body">
-            <h3>Base Camp</h3>
-            <p class="ci">Volume day. Stay smooth, stop before form breaks.</p>
-            <p class="card-meta"><span class="cm-t">90 min</span><span>Capacity &amp; Volume</span><span>Gym wall</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
-          </div>
-        </a>
-
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiQm9hcmQgQmxpdHoiLCJrIjpbImJiUHJpbWVyIiwiYmJSZWFkeSIsImJiVGhyZWUiLCJiYkxvZyJdLCJ0IjoxMjAsImMiOiJhbWJlciIsIm0iOiJDcmltcGlmeSIsImQiOlsxMCw0MCw2MCwxMF19">
-          <div class="cover" aria-hidden="true"><i style="flex:10;height:45%;background:var(--prepare)"></i><i style="flex:40;height:82%;background:var(--max-effort)"></i><i style="flex:60;height:100%;background:var(--max-effort)"></i><i style="flex:10;height:38%;background:var(--prepare)"></i></div>
-          <div class="card-body">
-            <h3>Board Blitz</h3>
-            <p class="ci">Three hard boulders. Three tries each. Make them count.</p>
-            <p class="card-meta"><span class="cm-t">120 min</span><span>Max Strength &amp; Power</span><span>Board</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
-          </div>
-        </a>
-
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiRmxvdyBTdGF0ZSIsImsiOlsiZnNXYXJtdXAiLCJmc1ByaW1lciIsImZzQ29ubmVjdCIsImZzRnJlZUZsb3ciLCJmc0Rvd25zaGlmdCJdLCJ0Ijo3NSwiYyI6InB1cnBsZSIsIm0iOiJDcmltcGlmeSIsImQiOlsxNSwxMCwzMCwxNSw1XX0">
-          <div class="cover" aria-hidden="true"><i style="flex:15;height:52%;background:var(--prepare)"></i><i style="flex:10;height:68%;background:var(--skill)"></i><i style="flex:30;height:100%;background:var(--skill)"></i><i style="flex:15;height:84%;background:var(--skill)"></i><i style="flex:5;height:34%;background:var(--prepare)"></i></div>
-          <div class="card-body">
-            <h3>Flow State</h3>
-            <p class="ci">Movement quality over difficulty. Find your rhythm.</p>
-            <p class="card-meta"><span class="cm-t">75 min</span><span>Skill &amp; Coordination</span><span>Gym wall</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
-          </div>
-        </a>
-
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiTmluamEgRmVldCIsImsiOlsibmZXYXJtdXAiLCJuZkRyaWxsIiwibmZSZWFsIiwibmZOb3JtYWwiXSwidCI6NTAsImMiOiJwdXJwbGUiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMTAsMjAsMTUsNV19">
-          <div class="cover" aria-hidden="true"><i style="flex:10;height:48%;background:var(--prepare)"></i><i style="flex:20;height:100%;background:var(--skill)"></i><i style="flex:15;height:78%;background:var(--skill)"></i><i style="flex:5;height:36%;background:var(--skill)"></i></div>
-          <div class="card-body">
-            <h3>Ninja Feet</h3>
-            <p class="ci">Every foot placement counts.</p>
-            <p class="card-meta"><span class="cm-t">50 min</span><span>Skill &amp; Coordination</span><span>Gym wall</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
-          </div>
-        </a>
-
-        <a class="card" href="https://crimpify.com/#s=eyJ2IjoxLCJuIjoiVGhlIEdyaW5kZXIiLCJrIjpbInRnV2FybXVwIiwidGdTZXR1cCIsInRnSGVoZSIsInRnRG93bnNoaWZ0Il0sInQiOjEwNSwiYyI6ImxpbWUiLCJtIjoiQ3JpbXBpZnkiLCJkIjpbMjAsMTUsNjAsMTBdfQ">
-          <div class="cover" aria-hidden="true"><i style="flex:20;height:56%;background:var(--prepare)"></i><i style="flex:15;height:72%;background:var(--volume)"></i><i style="flex:60;height:100%;background:var(--volume)"></i><i style="flex:10;height:40%;background:var(--prepare)"></i></div>
-          <div class="card-body">
-            <h3>The Grinder</h3>
-            <p class="ci">Hard. Easy. Hard. Easy. Are you willing to suffer?</p>
-            <p class="card-meta"><span class="cm-t">105 min</span><span>Power Endurance</span><span>Gym wall</span></p>
-            <p class="card-cred"><span>Curated by Crimpify</span><span>designed</span></p>
-          </div>
-        </a>
-
       </div>
-      <p class="cards-foot"><a href="https://crimpify.com/">View all sessions in the app &#8594;</a></p>
+
     </div>
   </section>
 
-  <!-- 3. HOW TRAINING TRAVELS -->
-  <section id="travels">
+  <!-- Fase 4/5 + deploy pass: secties 3-7 met echte assets en app-screens.
+       Echte coachquotes komen later in sectie 6; tot die tijd is de
+       satirische reviewband (data-satire) de enige social proof. -->
+
+  <!-- sectie 3: BUILD TO SEND. — donker, vier stappen, één dominant venster -->
+  <section class="band band-dark s-send" id="travels">
     <div class="wrap">
-      <p class="sec-kicker">Find it. Climb it. Remix it.</p>
-      <h2>How training travels</h2>
-      <div class="loop">
-        <div class="step">
-          <p class="no">01</p>
-          <h3>Build</h3>
-          <p>Create a session with purpose. Blocks, durations and instructions that make your method easy to follow.</p>
-        </div>
-        <div class="step">
-          <p class="no">02</p>
-          <h3>Share</h3>
-          <p>One link carries the whole session. Whoever opens it gets exactly what you built, with your name on it.</p>
-        </div>
-        <div class="step">
-          <p class="no">03</p>
-          <h3>Climb</h3>
-          <p>Open it and train. No account needed. Your private training history is yours; publish or sync only when you choose.</p>
-        </div>
-        <div class="step">
-          <p class="no">04</p>
-          <h3>Remix</h3>
-          <p>Adapt it to you. Fork it, change it, make it yours. Credit stays with the original.</p>
-        </div>
+      <header class="band-head">
+        <h2>Build to send<span class="dot">.</span></h2>
+        <p class="band-sub">Send is what climbers call finishing a boulder.<br>It is also what happens to a good session.</p>
+      </header>
+      <!-- fase 5.1: elke stap draagt zijn eigen scherm; het dominante
+           venster (stap 02) kruist de bovenrand van de sectie met 80px -->
+      <div class="send-stage">
+        <svg class="send-line" viewBox="0 0 1360 620" preserveAspectRatio="none" aria-hidden="true">
+          <polyline points="0,240.2 1360,403.4"/>
+          <polyline points="1100,372.2 1360,341"/>
+        </svg>
+        <ol class="send-flow">
+          <li class="send-step ss1">
+            <div class="shot-crop"><img src="assets/lib-browse.png" width="780" height="1688" loading="lazy" alt="Crimpify browse view with session shelves sorted by goal and time"></div>
+            <div class="step-txt"><span class="step-no">01</span><span class="step-t">Find it</span><span class="step-b">Pick the time you have. Get a session with a reason to exist.</span></div>
+          </li>
+          <li class="send-step ss2">
+            <img class="shot" src="assets/shot-open.png" width="540" height="960" loading="lazy" alt="A shared session opened from a link: Ines sent you Flow State, ready to start without an account">
+            <div class="step-txt"><span class="step-no">02</span><span class="step-t">Train it</span><span class="step-b">Open the link and go. No account, no setup, no signup wall.</span></div>
+          </li>
+          <li class="send-step ss3">
+            <div class="shot-crop"><img src="assets/shot-timer.png" width="540" height="960" loading="lazy" alt="A running block timer with pause, finish and skip controls"></div>
+            <div class="step-txt"><span class="step-no">03</span><span class="step-t">Adapt it</span><span class="step-b">Stop a set. Skip a block. Change the call. The session bends.</span></div>
+          </li>
+          <li class="send-step ss4">
+            <div class="shot-crop"><img src="assets/shot-share.png" width="540" height="960" loading="lazy" alt="The share dialog with a single session link ready to copy"></div>
+            <div class="step-txt"><span class="step-no">04</span><span class="step-t">Send it</span><span class="step-b">Pass it on with one link. Your name stays on it.</span></div>
+          </li>
+        </ol>
       </div>
-      <p class="loop-note"><b>Public publishing to the open library</b> <span class="coming">coming</span> later this year. Until then, every session travels by link.</p>
     </div>
   </section>
 
-  <!-- 4. BUILT BY CLIMBERS -->
-  <section class="paper">
+  <!-- sectie 4: TRAIN ON PURPOSE — papier, hoofdstukfoto + Session Done -->
+  <section class="band band-paper s-plan" id="purpose">
     <div class="wrap">
-      <p class="sec-kicker">Built by climbers</p>
-      <h2>A library with names on it</h2>
-      <p style="max-width:560px;margin-top:18px;color:#6f6d61;">Today the launch sessions are curated by Crimpify. The library is being built to carry real names: the coach who wrote the protocol, the climber who remixed it, the gym that runs it. Credit is the currency here, so it is never dropped.</p>
-      <div class="slots">
-        <div class="slot">
-          <h3>Creator profiles</h3>
-          <p>Every published session tied to the person who built it.</p>
-          <span class="mono">Coming with the open library</span>
+      <header class="band-head">
+        <h2>A plan is a direction.<br>Not a dare.</h2>
+      </header>
+      <div class="plan-stage">
+        <img class="shot plan-photo" src="assets/hand-520.jpg" srcset="assets/hand-520.jpg 520w, assets/hand-1040.jpg 1040w" sizes="(max-width:768px) 100vw, 520px" width="520" height="693" loading="lazy" alt="A chalked hand finding a crimp on dark rock">
+        <!-- de echte Session Done-structuur, gevuld met een echte Flow
+             State-sessie: tijdrij, blokkenlijst, responspaneel, actie -->
+        <div class="done-panel">
+          <p class="done-kicker">Session done</p>
+          <div class="done-row"><span class="done-label">Time</span><span class="done-val">1:22 gym time &middot; 74 min active</span></div>
+          <ul class="done-blocks">
+            <li><span>Progressive Warm-up</span><span class="done-min">15'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Flow Primer</span><span class="done-min">10'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Connect the Moves</span><span class="done-min">30'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Free Flow</span><span class="done-min">15'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+            <li><span>Downshift</span><span class="done-min">4'</span><span class="tick tick-done" aria-hidden="true"></span></li>
+          </ul>
+          <div class="done-response">
+            <p class="done-label">How did it feel?</p>
+            <div class="done-monsters">
+              <img src="assets/monster-green.png" width="256" height="256" loading="lazy" alt="Green pixel monster: boss defeated, strong and in control">
+              <img src="assets/monster-orange.png" width="256" height="256" loading="lazy" alt="Orange pixel monster: hard but controlled">
+              <img src="assets/monster-red.png" width="256" height="256" loading="lazy" alt="Red pixel monster: not today, back off smart">
+            </div>
+          </div>
+          <div class="done-cta">Save result</div>
         </div>
-        <div class="slot">
-          <h3>Coach collections</h3>
-          <p>A coach's method as a browsable, trainable body of work.</p>
-          <span class="mono">Coming with the open library</span>
-        </div>
-        <div class="slot">
-          <h3>Gym collections</h3>
-          <p>Sessions tuned to a gym's walls, boards and setting style.</p>
-          <span class="mono">Coming with the open library</span>
-        </div>
+        <p class="plan-copy">Stop a set. Skip a block. Change the call.<br>That is training too.</p>
       </div>
     </div>
   </section>
 
-  <!-- 5. TRAIN ON PURPOSE -->
-  <section id="purpose">
-    <div class="wrap two-col">
-      <div>
-        <p class="sec-kicker">Train on purpose</p>
-        <h2>You know your body.<br>You make the calls.</h2>
-        <p style="margin-top:18px;color:var(--dust);max-width:460px;">Every session ends with one question: how did it feel? That answer, not a completion percentage, steers what comes next. Skipping a block is a training decision, not a failure.</p>
-        <ul class="sigs">
-          <li><img src="assets/monster-green.png" alt="" width="40" height="40"><span><b>Green.</b> Strong and in control. Next session can take a little more.</span></li>
-          <li><img src="assets/monster-orange.png" alt="" width="40" height="40"><span><b>Orange.</b> Right at the edge. Hold the volume, recover well.</span></li>
-          <li><img src="assets/monster-red.png" alt="" width="40" height="40"><span><b>Red.</b> Too much today. Back off smart, come back stronger.</span></li>
-        </ul>
-      </div>
-      <div class="done-card" role="img" aria-label="Example of a finished session summary in the app">
-        <p class="dk">Session done</p>
-        <h3>Base Camp</h3>
-        <p class="dm">3 of 4 blocks done &middot; 1 skipped &middot; 82 min</p>
-        <div class="done-bar" aria-hidden="true"><i style="width:18%;background:var(--prepare)"></i><i style="width:17%;background:var(--skill)"></i><i style="width:53%;background:var(--volume)"></i><i style="width:12%;background:var(--prepare)"></i></div>
-        <div class="done-rows">
-          <div><span>PROGRESSIVE WARM-UP</span><span>15 min</span></div>
-          <div><span>BOARD MOVEMENT PRIMER</span><span>14 min</span></div>
-          <div><span>QUALITY MILEAGE</span><span>44 min</span></div>
-          <div class="skip"><span>EASY WIND-DOWN</span><span>skipped &middot; out of time</span></div>
-        </div>
-        <p class="done-ask">How did this session feel?</p>
-        <div class="done-lights" aria-hidden="true">
-          <span class="on"><i style="background:var(--sig-green)"></i>strong</span>
-          <span><i style="background:var(--sig-orange)"></i>on the edge</span>
-          <span><i style="background:var(--sig-red)"></i>too much</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6. OPEN BY DESIGN -->
-  <section class="paper" id="open">
+  <!-- sectie 5: BUILT IN THE OPEN — donker, bewijs op detailformaat -->
+  <section class="band band-dark s-open" id="open">
     <div class="wrap">
-      <p class="sec-kicker">Open by design</p>
-      <h2>We show our work</h2>
+      <header class="band-head">
+        <h2>You can read<br>every assumption.</h2>
+      </header>
       <div class="open-grid">
-        <div class="open-cell">
-          <h3>Open knowledge</h3>
-          <p>Sessions explain themselves: what they train, why the blocks are in this order, when to scale down. Sources are named where a protocol has one.</p>
-          <span class="mono-coming">Methodology notes: coming with the open library</span>
+        <div class="open-points">
+          <div class="open-point"><h3>Open knowledge</h3><p>Sessions are published to be used, adapted and improved.</p></div>
+          <div class="open-point"><h3>Creator credit</h3><p>Remix a session and the original maker stays on it.</p></div>
+          <div class="open-point"><h3>Open source</h3><p>The app, the load model and the training assumptions are public.</p></div>
         </div>
-        <div class="open-cell">
-          <h3>Creator credit</h3>
-          <p>A session keeps its maker's name when it is shared and when it is remixed. Attribution travels with the training.</p>
-          <span class="mono-coming">Content licensing: in preparation for publishing</span>
-        </div>
-        <div class="open-cell">
-          <h3>Open source</h3>
-          <p>The whole app is open code under AGPL-3.0. Read it, run it, improve it.</p>
-          <a href="https://github.com/Gl1tchWizard/Crimpify" rel="noopener">View the source</a><br><br>
-          <a href="https://github.com/Gl1tchWizard/Crimpify/blob/main/LICENSE" rel="noopener">License: AGPL-3.0</a>
+        <div class="open-proof">
+          <!-- echt fragment uit app.js (INTENSITY_FACTORS, r.527-539), ingekort -->
+          <pre class="code-card"><code>const INTENSITY_FACTORS = {
+  strength: 0.85,
+  power:    0.85,
+  pe:       0.75,
+  capacity: 0.65,
+  skill:    0.55,
+  recovery: 0.30,
+};
+// load = minutes &times; factor</code></pre>
+          <ul class="open-links">
+            <li><a href="https://github.com/Gl1tchWizard/Crimpify">View the source &#8594;</a></li>
+            <li><a href="/docs/load-model.md">Read the load model &#8594;</a></li>
+            <li><a href="/LICENSE">Read the licence &#8594;</a></li>
+          </ul>
+          <p class="open-lic">Code AGPL-3.0 &middot; Published sessions CC BY-SA 4.0</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 7. FOR COACHES AND GYMS -->
-  <section class="coach" id="coaches">
-    <div class="wrap coach-grid">
-      <div>
-        <p class="sec-kicker">For coaches and gyms</p>
-        <h2>Turn your coaching into a library</h2>
-        <ul>
-          <li><b>Build once, share forever.</b> Your sessions as links your athletes open on their own phone. No account needed on their side.</li>
-          <li><b>Your method, organised.</b> Warm-ups, protocols and progressions in one consistent, trainable format.</li>
-          <li><b>Private first.</b> Share with your group by link today. Publishing to the open library <span class="coming">coming</span> later this year, always your choice.</li>
-        </ul>
-      </div>
-      <div class="coach-side">
-        <img src="assets/hand.jpg" alt="Close-up of a climber's fingers on rock" loading="lazy">
-        <p class="manifesto">The best sessions are not kept secret. They are passed on. That is how everyone gets stronger.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8. FINAL CTA -->
-  <section class="final">
+  <!-- sectie 6: FOR COACHES AND GYMS — papier, één screen over de muurfoto -->
+  <section class="band band-paper s-coach" id="coaches">
     <div class="wrap">
-      <h2>Good training starts with someone sharing what works.</h2>
-      <div class="hero-ctas">
-        <a class="btn btn-acid" href="https://crimpify.com/">Explore the library</a>
-        <a class="btn btn-ghost" href="https://crimpify.com/">Contribute a session</a>
+      <div class="coach-grid">
+        <div class="coach-copy">
+          <h2>Turn your coaching<br>into a library.</h2>
+          <p class="coach-lines">Build once.<br>Share one link.<br>Keep your method organised.<br>Publish what is worth passing on.</p>
+          <div class="coach-qr">
+            <img src="assets/qr.png" alt="QR code linking to the Crimpify app" width="128" height="128" loading="lazy">
+            <span>Add to home screen</span>
+          </div>
+        </div>
+        <div class="coach-stage">
+          <img class="shot coach-screen" src="assets/shot-coach.png" width="540" height="960" loading="lazy" alt="A coach's session in Crimpify: Five by Five with its blocks, coach credit and start action">
+          <!-- signatuurzet: de foto komt vóór het scherm, zoals de klimmer
+               voor de Power Hour-kaart; alleen chroom verdwijnt erachter -->
+          <img class="shot coach-wall" src="assets/coach-wall-500.jpg" srcset="assets/coach-wall-500.jpg 500w, assets/coach-wall-1000.jpg 1000w" sizes="(max-width:768px) 88vw, 480px" width="500" height="751" loading="lazy" alt="A climber mid-move on a steep indoor bouldering wall">
+        </div>
       </div>
-      <p class="sub">Build in the app and share by link. Crimpify is free, open and built for everyone.</p>
     </div>
   </section>
 
+  <!-- satirische reviewband: een knipoog in de boss-defeated-stem.
+       Echte coachquotes komen later in sectie 6; dit vervangt ze niet. -->
+  <section class="band band-dark s-reviews" data-satire="true" aria-label="Satirical review scores">
+    <div class="wrap">
+      <ul class="review-band">
+        <li><span class="rv-score">10/10</span><blockquote>&ldquo;A masterclass in suffering. I laughed, I cried, I flapped.&rdquo;</blockquote><span class="rv-outlet">Crimp Paper Shotgun</span></li>
+        <li><span class="rv-score">9.5</span><blockquote>&ldquo;The most realistic skin damage system ever shipped.&rdquo;</blockquote><span class="rv-outlet">Polygripon</span></li>
+        <li><span class="rv-score">&#9733;&#9733;&#9733;&#9733;&#9733;</span><blockquote>&ldquo;Finally, an RPG where the final boss is your own hip flexors.&rdquo;</blockquote><span class="rv-outlet">The Beta Times</span></li>
+        <li><span class="rv-score">98%</span><blockquote>&ldquo;Editor's Choice. The 55+ meta is officially unbeatable.&rdquo;</blockquote><span class="rv-outlet">Cragspot</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- sectie 7: slot-CTA — donker, fotografisch, de regel van de hero -->
+  <section class="band band-dark s-cta">
+    <div class="wrap cta-wrap">
+      <h2>Refresh<br>your sesh<span class="dot">.</span></h2>
+      <div class="cta-actions">
+        <a class="btn btn-acid" href="/#browse">Explore the library</a>
+        <a class="btn btn-ghost" href="/#build">Contribute a session</a>
+      </div>
+      <p class="cta-ambition">Building the world's largest open climbing training library.</p>
+    </div>
+    <img class="cta-photo" src="assets/cta-wide-1440.jpg" srcset="assets/cta-wide-720.jpg 720w, assets/cta-wide-1440.jpg 1440w" sizes="100vw" width="1440" height="810" loading="lazy" alt="A boulderer pulling onto an overhanging boulder while a spotter watches">
+    <div class="cta-shade" aria-hidden="true"></div>
+  </section>
 </main>
 
-<footer class="site">
+<footer class="site-foot">
   <div class="wrap foot-grid">
-    <a class="brand" href="https://crimpify.com/" aria-label="Open the Crimpify app">
-      <span class="mark" aria-hidden="true"></span>
-      <span><b style="font-family:var(--disp);font-weight:900;font-size:17px;letter-spacing:.08em;color:var(--dust);">CRIMPIFY</b></span>
-    </a>
-    <div class="foot-links">
-      <a href="https://github.com/Gl1tchWizard/Crimpify" rel="noopener">GitHub</a>
-      <a href="https://github.com/Gl1tchWizard/Crimpify/blob/main/LICENSE" rel="noopener">by Glitch Labs &middot; AGPL-3.0</a>
-    </div>
-    <p class="mono">Visits counted with GoatCounter. No cookies, no personal data.</p>
+    <a class="brand" href="/" aria-label="Crimpify"><span class="mark" aria-hidden="true"></span><b>CRIMPIFY</b></a>
+    <nav aria-label="Footer">
+      <a href="#sessions">Sessions</a>
+      <a href="#travels">How it travels</a>
+      <a href="#purpose">Train on purpose</a>
+      <a href="#open">Open source</a>
+      <a href="#coaches">For coaches</a>
+    </nav>
+    <p class="foot-lic">Code AGPL-3.0 &middot; Sessions CC BY-SA 4.0 &middot; <a href="https://github.com/Gl1tchWizard/Crimpify">Source</a></p>
   </div>
 </footer>
 
@@ -330,3 +328,4 @@
 <script data-goatcounter="https://crimpify.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
+
