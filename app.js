@@ -439,6 +439,52 @@ const BLOCKLIB = {
     why:'Four sets. Each set: Hard A, then immediately Easy A, then immediately Hard B, then immediately Easy B. No rest between the four boulders, approximately five to ten minutes of full rest between sets, the same four boulders every set. Do not add 4x4 climbing afterward and no bonus sets unless that was an intentional progression decided before the session.\nSet 1, that was worse than expected: you are fresh, but the sequence immediately feels serious. Both hard boulders should go, perhaps only just. If fatigue alone already causes substantial failure here, the hard boulders were probably too difficult.\nSet 2, the easiest set: more fatigued, but better learned movement, improved pacing and more efficient beta can make this the strongest set.\nSet 3, on the gums: fatigue begins to overpower the learning gains. Use the feet, control grip pressure, keep breathing, avoid wasted movement and commit to known sequences. Often the key training set; the hard boulders may go only narrowly.\nSet 4, all in: no need to save energy. You know exactly what to do, but fatigue is now the major opponent. A fall may occur and can still belong to a good session; movement may look strained but must remain safe and recognisably climbing.\nThe selection was appropriate when set one feels harder than expected but succeeds, set two is often technically best, set three becomes a genuine fight and set four requires full commitment. Hards too easy: set four stays comfortable and active recovery feels unnecessary. Hards too difficult: set one already collapses and the session becomes repeated failure. Easies too difficult: they add pump, any move takes meaningful effort, or a fall is realistically possible.\nStop the session when movement becomes unsafe, repeated falls occur because control has disappeared, finger, elbow or shoulder pain appears, you become nauseous or unwell, the easy boulders stop functioning as recovery, or the fourth set becomes meaningless survival. High discomfort is expected; pain, sickness and unsafe movement are not training goals.\nProgress in this order: complete the four sets, improve movement quality, reduce the drop between sets, add a fifth set only when four go consistently well, and only after that make one hard boulder slightly harder. Never change several things at once. The easy boulders remain easy.' },
   tgDownshift: { n:'Downshift', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
     why:'Allow gradual recovery after a severe power endurance stimulus: very easy climbing, walking, shaking out, light mobility, quiet recovery. No extra hard climbing.\nReflection: which set showed the best balance between fatigue and efficient movement?' },
+
+  // ── Send Day (herzien, Remarks: Not reviewed) ──
+  sdWarmup: { n:'Warm-up & Recruitment', t:25, tMin:18, tMax:32, c:'var(--prepare)', rpe:'2-6', sessionOnly:true,
+    why:'Build gradually from easy movement to project-specific recruitment. Start with easy boulders and comfortable movement, then progress toward the angle, hold type and movement style of the project. Finish with two or three short recruitment efforts that feel powerful but do not create fatigue. End the block feeling ready, not tired.' },
+  sdProject: { n:'Project Attempts', t:70, tMin:50, tMax:90, c:'var(--max-effort)', rpe:'9-10', sessionOnly:true,
+    why:'Choose one project before beginning this block: one you have already tried and that is realistically possible today. Do not spend the block searching. Take a maximum of five to eight serious attempts with four to six minutes rest between full attempts. Short beta checks, isolated move practice and position tests do not need to count as full attempts unless they require a maximal effort.\nAfter each attempt, identify only one useful adjustment: position, timing, foot choice, breathing, commitment, or sequence. Stop when power clearly drops, movement quality deteriorates, skin becomes limiting, or the project is sent. Do not turn reduced-quality attempts into extra volume.' },
+  sdLog: { n:'Log & Downshift', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Climb or move easily for several minutes. Log: best attempt, best link, main crux, adjustment that helped, what to try first next time, current skin and power state.\nSending is the outcome. High-quality attempts are the training goal.' },
+
+  // ── Easy Does It (herzien, Remarks: Not reviewed) ──
+  edMobility: { n:'Mobility & Pulse', t:10, tMin:8, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Raise body temperature gradually with relaxed general movement, followed by gentle shoulder, wrist, hip and ankle mobility. Nothing in this block should feel like training yet.' },
+  edEasy: { n:'Easy Movement', t:30, tMin:20, tMax:40, c:'var(--volume)', rpe:'2-4', sessionOnly:true, checklist:true, target:16, range:'12-20',
+    why:'Climb approximately 12 to 20 easy boulders around RPE 2 to 4. Comfortable holds, familiar movement, relaxed breathing, controlled foot placements, varied but non-demanding angles. Maximum two attempts per boulder.\nDo not project. Do not chase pump. Do not add hard finishers. Move to an easier boulder whenever breathing, grip or movement becomes tense.' },
+  edDownshift: { n:'Downshift', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Finish with very easy movement or walking and let breathing and grip return fully to normal. Optional: a few gentle mobility movements that feel helpful. Do not force long passive stretches.\nThe session is successful when you leave feeling better than when you started.' },
+
+  // ── Finger School (herzien, Remarks: Not reviewed) ──
+  fgWarmup: { n:'General Warm-up', t:10, tMin:8, tMax:15, c:'var(--prepare)', rpe:'2-4', sessionOnly:true,
+    why:'Raise body temperature and prepare shoulders, elbows and wrists: easy general movement, shoulder activation, wrist movement and relaxed pulling preparation. Do not begin maximal finger loading while cold.' },
+  fgPrep: { n:'Finger Preparation', t:15, tMin:10, tMax:20, c:'var(--max-effort)', rpe:'4-6', sessionOnly:true,
+    why:'Progressive, submaximal hangs or supported no-hangs. Begin on a comfortable hold or with substantial assistance and increase load gradually across four to six preparation efforts; each should feel controlled. Finish when the fingers feel recruited and responsive, not pumped.' },
+  fgMax: { n:'Max Hangs', t:25, tMin:18, tMax:32, c:'var(--max-effort)', rpe:'8-9', sessionOnly:true, sets:6, rest:4,
+    why:'Five to six working hangs of 7 to 10 seconds, 3 to 5 minutes rest between them, RPE 8 to 9. Choose an edge, grip and load that allow a stable shoulder position, consistent grip, controlled body tension and completion without failure. Do not hang to failure.\nStop the block when grip position changes unexpectedly, shoulder position cannot be maintained, force drops clearly across sets, or pain is felt. Record the edge, grip, assistance or added load used. Unexpected or sharp pain is a stop signal, not a training stimulus.' },
+  fgLog: { n:'Optional Curls & Log', t:5, tMin:3, tMax:10, c:'var(--prepare)', rpe:'2-3', sessionOnly:true,
+    why:'Choose one: two or three very light sets of active finger curls, or skip additional loading and use the time to record the session. Log: edge, grip type, hang duration, load or assistance, RPE, and quality across sets.\nActive finger curls are optional support work, not a second maximal training block.' },
+
+  // ── Comp Simulator (herzien, Remarks: Not reviewed) ──
+  csWarmup: { n:'Competition Warm-up', t:20, tMin:15, tMax:25, c:'var(--prepare)', rpe:'2-6', sessionOnly:true,
+    why:'Warm up progressively without creating pump: easy movement, different hold types, several coordination or dynamic movements, and a small number of harder recruitment moves. Finish ready for a first serious attempt. Do not turn the warm-up into a volume block.' },
+  csRound: { n:'Four-Boulder Round', t:45, tMin:35, tMax:55, c:'var(--max-effort)', rpe:'8-9', sessionOnly:true,
+    why:'Select four unfamiliar or minimally rehearsed boulders and use one consistent competition-style format for all four. Recommended: a five-minute performance window per boulder, controlled rotation or recovery between boulders, remaining block time for setup, scoring and transitions.\nBefore touching each boulder: read the full line, identify the likely crux, choose a first sequence and commit to the opening attempt. Do not keep trying after the time window ends. Record attempts, tops, zones where applicable, and the main decision that affected the result.' },
+  csPressure: { n:'Pressure Round', t:15, tMin:10, tMax:20, c:'var(--max-effort)', rpe:'8-9', sessionOnly:true,
+    why:'Choose two additional boulders: one style you usually trust, one style you often avoid. Approximately seven minutes per boulder with a short transition. The objective is not simply to top both: practise making a fast first decision, adapting after feedback, and moving on before frustration takes over.' },
+  csDebrief: { n:'Debrief & Downshift', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Move easily and let breathing settle. For each round, record one observation about reading, attempt selection, pacing, recovery, commitment, or emotional control. Choose one competition skill to practise in the next simulation.\nThe score shows what happened. The decisions show what to train.' },
+
+  // ── The Reset (herzien, Remarks: Not reviewed) ──
+  trMobility: { n:'Mobility Flow', t:10, tMin:8, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Move gently through shoulders, wrists, spine, hips and ankles. Use comfortable active ranges and keep breathing relaxed. Do not force range or hold uncomfortable positions.' },
+  trNoHangs: { n:'Gentle No-Hangs', t:10, tMin:5, tMax:15, c:'var(--prepare)', rpe:'2-4', sessionOnly:true,
+    why:'Optional block. Use a comfortable edge with both feet supported and apply only light, controlled finger tension: roughly six to eight short efforts at RPE 2 to 4 with generous relaxation between them. This is movement and circulation, not finger-strength training.\nSkip the block entirely when finger loading does not feel appropriate; replace it with additional relaxed mobility.' },
+  trAntagonist: { n:'Antagonist Circuit', t:15, tMin:10, tMax:20, c:'var(--prepare)', rpe:'3-4', sessionOnly:true,
+    why:'Two relaxed rounds of low-fatigue movements: easy pushing, scapular control, wrist extensor work, external shoulder rotation, trunk control, or gentle lower-body movement. Keep several repetitions in reserve. Do not chase fatigue, pump or soreness.' },
+  trDownshift: { n:'Downshift', t:5, tMin:3, tMax:10, c:'var(--prepare)', rpe:'1', sessionOnly:true,
+    why:'Walk, breathe or lie down comfortably and let the session finish quietly. Optional log: overall fatigue, finger readiness, motivation, sleep, and whether the next planned hard session should remain unchanged.\nKeeping the habit does not require turning recovery into another workout.' },
 };
 
 // ══ SESSIONS = energy system containers ══
@@ -2636,14 +2682,14 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup','sdWarmup','edMobility','fgWarmup','csWarmup','trMobility'] },
   { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat','bcBoardPrimer','fsPrimer','fsConnect','fsFreeFlow','nfDrill','nfReal','nfNormal'] },
-  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix','bcMileage'] },
+  { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix','bcMileage','edEasy'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator','tgSetup','tgHehe'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots','phDynamic','phLimit','bbReady','bbThree'] },
-  { name:'Finger strength',               keys:['maxHangs','progDeadhangs'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots','phDynamic','phLimit','bbReady','bbThree','sdProject','csRound','csPressure'] },
+  { name:'Finger strength',               keys:['maxHangs','progDeadhangs','fgPrep','fgMax'] },
   { name:'Antagonist, core & gym',     keys:['pushStrength','coreLegs','mini1','mini2','mini3'] },
-  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow','phDownshift','bcWindDown','bbLog','fsDownshift','tgDownshift'] },
+  { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow','phDownshift','bcWindDown','bbLog','fsDownshift','tgDownshift','sdLog','edDownshift','fgLog','csDebrief','trNoHangs','trAntagonist','trDownshift'] },
 ];
 // ── KLEURGRAMMATICA ──
 // kleur = wat het traint (categorie), badge = waar het vandaan komt, tekst = hoe zwaar.
@@ -4262,21 +4308,26 @@ const MOCK_CHOOSE = [
   { cat:'popular',  name:'The Grinder',    coach:'Ana Kovač',     designed:true, mins:105, color:'lime',   rpe:'8-9', load:4, sys:'power endurance', goal:'Power endurance', gear:['Gym wall'], level:'intermediate+', keys:['tgWarmup','tgSetup','tgHehe','tgDownshift'],
     intent:'Hard. Easy. Hard. Easy. Are you willing to suffer?',
     why:'The session you will hate while doing it, and love because of the results. HEHE teaches you to keep climbing through the pump, recover on the wall and pull hard again before you are ready. Get it right and the power endurance starts to feel suspiciously Terminator-ish. Keep the vomit bag nearby for emotional support. Coach note: if you actually need the vomit bag, stop. The joke is not the training target.' },
-  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:75, color:'red',    rpe:'9-10',load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['warmupFinger','project','stretch'],
-    intent:'Project attempts at full freshness. Rest long, try hard.',
-    why:'Project attempts at full freshness. The long rests feel slow and are the point: every try deserves your best power.' },
-  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'3-4', load:1, sys:'recovery', goal:'Recovery', gear:['Gym wall'], level:'all levels', keys:['mobilityOpen','easyClimb','hog','stretch'],
-    intent:'Recovery climbing. Leave the gym feeling better.',
-    why:'Recovery climbing keeps you moving without adding load. The goal is simple: leave the gym feeling better than you came in.' },
-  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:60, color:'amber',  rpe:'8-9', load:4, sys:'strength', goal:'Max fingers', gear:['Fingerboard'], level:'intermediate+', keys:['warmupFinger','maxHangs','activeCurls','stretch'],
-    intent:'Structured finger loading, from prep to max.',
-    why:'Structured finger loading from preparation to maximal work, in the order tendons like. No cold max hangs, ever.' },
-  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', load:4, sys:'performance', goal:'Performance', gear:['Gym wall'], level:'advanced', keys:['dynamic','compStyle','pyramide','stretchLong'],
-    intent:'Four-minute walls of effort, comp format.',
-    why:'Comp format: four-minute walls of effort with real decisions under fatigue. Train the format before you meet it.' },
-  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:45, color:'blue',   rpe:'2-3', load:1, sys:'recovery', goal:'Recovery', gear:['Fingerboard'], level:'all levels', keys:['mobilityOpen','hog','nohangs','stretchLong'],
-    intent:'Tendon care and easy movement on a rest week.',
-    why:'Tendon care and easy movement for a rest week. The point of resting well is coming back stronger.' },
+  { cat:'popular',  name:'Send Day',       coach:'Mila Berg',     mins:110, color:'red',   rpe:'9-10',load:4, sys:'performance', goal:'Projecting', gear:['Gym wall'], level:'advanced', keys:['sdWarmup','sdProject','sdLog'],
+    remarks:'Not reviewed', addedDate:'2026-07-29',
+    intent:'One project. Full rests. Your best tries.',
+    why:'A focused projecting session for high-quality attempts on one boulder that matters. Sending is the outcome; high-quality attempts are the training goal.' },
+  { cat:'popular',  name:'Easy Does It',   coach:'Jonas Steen',   mins:50, color:'blue',   rpe:'2-4', load:1, sys:'recovery', goal:'Recovery', gear:['Gym wall'], level:'all levels', keys:['edMobility','edEasy','edDownshift'],
+    remarks:'Not reviewed', addedDate:'2026-07-29',
+    intent:'Move easy. Breathe. Leave better than you arrived.',
+    why:'A low-intensity recovery session using relaxed climbing and comfortable movement. The session is successful when you leave feeling better than when you started.' },
+  { cat:'coach',    name:'Finger School',  coach:'Mila Berg',     mins:55, color:'amber',  rpe:'8-9', load:4, sys:'strength', goal:'Finger strength', gear:['Fingerboard'], level:'intermediate+', keys:['fgWarmup','fgPrep','fgMax','fgLog'],
+    remarks:'Not reviewed', addedDate:'2026-07-29',
+    intent:'Warm fingers. Heavy hangs. Stop before form slips.',
+    why:'Max hangs: a structured maximum-strength fingerboard session for climbers who already have fingerboard experience. Not an introduction to fingerboarding.' },
+  { cat:'coach',    name:'Comp Simulator', coach:'Teo Marchetti', mins:90, color:'red',    rpe:'8-9', load:4, sys:'performance', goal:'Comp skills', gear:['Gym wall'], level:'advanced', keys:['csWarmup','csRound','csPressure','csDebrief'],
+    remarks:'Not reviewed', addedDate:'2026-07-29',
+    intent:'Read fast. Commit fast. Move on.',
+    why:'Practise reading, decision-making, attempt management and recovery under competition-style time pressure. The score shows what happened; the decisions show what to train.' },
+  { cat:'coach',    name:'The Reset',      coach:'Jonas Steen',   mins:40, color:'blue',   rpe:'2-3', load:1, sys:'recovery', goal:'Deload', gear:['Home or gym floor'], level:'all levels', keys:['trMobility','trNoHangs','trAntagonist','trDownshift'],
+    remarks:'Not reviewed', addedDate:'2026-07-29',
+    intent:'Deload the system. Keep the habit. Come back fresher.',
+    why:'A short no-climb deload session for maintaining movement and routine without adding meaningful climbing fatigue. A planned deload, not injury treatment or rehabilitation; no climbing is required.' },
   // echte gecureerde sessie: denkt in aantallen (count-blokken), niet in tijd
   { cat:'coach',    name:'Easy Thirty',    coach:'Vincent',       mins:60, color:'green',  rpe:'4-5', load:2, sys:'capacity', goal:'Easy volume', gear:['Gym wall'], level:'all levels', keys:['dynamic','easyTen','mediumTwenty'],
     intent:'Thirty boulders, counted, not timed. Warm up and flow.',
