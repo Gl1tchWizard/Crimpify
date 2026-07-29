@@ -24,6 +24,9 @@
   --angle:1.5deg;
   /* één elevatiefamilie voor alle zwevende objecten */
   --elev:0 24px 60px rgba(0,0,0,.45);
+  /* alleen voor de satirische reviewband: goud leest als recensie-
+     pull-quote, niet als merk (acid) en niet als de oprechte quotes */
+  --review-gold:#D9B45B;
 }
 
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
@@ -388,8 +391,8 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .rv-score { display:block; font-family:var(--disp); font-weight:900; font-size:52px; line-height:1; color:var(--review-gold); letter-spacing:.04em; }
 .review-band blockquote { font-size:16px; font-style:italic; line-height:1.5; color:var(--chalk); margin:14px auto 0; max-width:34ch; }
 .rv-outlet { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); margin-top:14px; }
-.rv-outlet::before { content:'4 a0'; color:var(--graphite); }
-.rv-outlet::after { content:' a04'; color:var(--graphite); }
+.rv-outlet::before { content:'\2014\00a0'; color:var(--graphite); }
+.rv-outlet::after { content:'\00a0\2014'; color:var(--graphite); }
 
 /* ── sectie 7: slot-CTA + footer ── */
 .s-cta { overflow:hidden; background:var(--ink); }
