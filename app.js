@@ -4407,7 +4407,8 @@ function computeTimeShelf() {
   const t = getT();
   const all = MOCK_CHOOSE.map((s, i) => ({ s, i }));
   if (!isFinite(t)) return { title:'Any length', sub:'no time limit set', idxs: all.sort((a, b) => sessionMins(b.s) - sessionMins(a.s)).map(x => x.i) };
-  return { title:`Under ${t} min`, sub:'fits the time you set', idxs: all.filter(x => sessionMins(x.s) <= t).sort((a, b) => (b.s.done || 0) - (a.s.done || 0)).map(x => x.i) };
+  // dichtstbijzijnde passing onder de limiet: een vraag, geen gefilterde catalogus
+  return { title:`Under ${t} min`, sub:'closest fit to the time you set', idxs: all.filter(x => sessionMins(x.s) <= t).sort((a, b) => sessionMins(b.s) - sessionMins(a.s)).map(x => x.i) };
 }
 // gecureerd: handmatig samengestelde lijst in afstemming met de Apex-gym, hardcoded tot er
 // een backend is; wordt dan berekend, het ontwerp blijft gelijk (CLAUDE.md Choose-flow punt 4)
@@ -4470,8 +4471,12 @@ function renderChoose() {
   // sessies vindbaar zonder zoeken; de eerdere coach-plank op de LANDING
   // blijft teruggedraaid (die brak de landing-hiërarchie), dit is de
   // catalogus, waar planken thuishoren.
-  const coachShelf = { title:'Coach sessions', sub:'designed start to finish', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.designed).map(x => x.i) };
-  const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
+  // Freshly added vervangt Coach sessions (designed dekte 11 van 18 = een
+  // label, geen selectie) en New (handmatige cat die nooit verliep):
+  // addedDate stuurt, verloopt vanzelf na 14 dagen, zelfde venster als News
+  const freshShelf = { title:'Freshly added', sub:'new in the library', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i }))
+    .filter(x => x.s.addedDate && (Date.now() - new Date(x.s.addedDate).getTime()) < 14 * 86400000)
+    .sort((a, b) => new Date(b.s.addedDate) - new Date(a.s.addedDate)).map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
   // één sessie, één plek: planken claimen in vaste volgorde uit wat er
   // nog over is (week -> for you -> tijd -> apex -> coach -> new); een
@@ -4480,7 +4485,7 @@ function renderChoose() {
   const claim = shelf => { shelf.idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity); shelf.idxs.forEach(i => claimed.add(i)); return shelf; };
   const shelfOrHide = shelf => shelf.idxs.length >= 2 ? chShelf(shelf) : '';
   body.innerHTML = renderTypeRow() + hero
-    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), apexShelf, coachShelf, newShelf].map(sh => shelfOrHide(claim(sh))).join('')
+    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), freshShelf, apexShelf].map(sh => shelfOrHide(claim(sh))).join('')
     + '<div style="height:16px;"></div>';
   enableWheelScroll('#chooseBody .ch-shelf');
 }
