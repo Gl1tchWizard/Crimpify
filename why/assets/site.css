@@ -416,6 +416,25 @@ header.site .btn { padding:12px 22px; font-size:14px; }
    hooguit één per hoofdstuk, naast een kop, nooit over tekst */
 .splat { display:none; position:absolute; pointer-events:none; z-index:0; }
 
+/* ── tabletband 769-1180: eigen bewuste compositie, geen desktop-krimp ──
+   Stappen als 2x2-raster van scherm+tekst-paren; het coachpaar blijft
+   een overlappend duo; reviewband 2x2. */
+@media (min-width:769px) and (max-width:1180px){
+  .send-stage { margin-top:40px; }
+  .send-flow { display:grid; grid-template-columns:1fr 1fr; gap:56px 44px; }
+  .send-step { margin:0; }
+  .shot-crop { height:380px; }
+  .ss2 .shot { width:100%; }
+  .plan-photo { margin:0 auto; }
+  .done-panel { margin:-80px auto 0; }
+  .plan-copy { margin:36px auto 0; text-align:center; }
+  .coach-stage { flex-direction:row; align-items:flex-start; gap:0; }
+  .coach-wall-frame { width:54%; margin:0; }
+  .coach-screen { width:54%; margin:40px 0 0 -8%; position:relative; z-index:3; }
+  .review-band { grid-template-columns:1fr 1fr; gap:40px; }
+  .coach-quotes { grid-template-columns:1fr; gap:28px; }
+}
+
 /* gelaagde composities vanaf desktopbreedte */
 @media (min-width:1181px){
   .splat { display:block; }
@@ -457,11 +476,11 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .band { padding:64px 0; }
   .band h2 { font-size:clamp(40px,11.5vw,54px); }
   .band-sub { font-size:16px; }
-  .ss1 .shot-crop, .ss3 .shot-crop, .ss4 .shot-crop { height:240px; border-radius:14px; }
+  .ss1 .shot-crop, .ss3 .shot-crop, .ss4 .shot-crop { height:240px; max-width:420px; border-radius:14px; }
   /* diepte zonder de stapvolgorde te breken: 02 bloedt de linkerrand af,
      04 de rechter; beide worden door de sectierand gesneden */
-  .ss2 .shot { width:calc(100% + 20px); margin-left:-20px; border-radius:0 20px 20px 0; }
-  .ss4 .shot-crop { width:calc(100% + 20px); border-radius:14px 0 0 14px; }
+  .ss2 .shot { width:calc(100% + 20px); max-width:460px; margin-left:-20px; border-radius:0 20px 20px 0; }
+  .ss4 .shot-crop { width:calc(100% + 20px); max-width:420px; margin-left:auto; border-radius:14px 0 0 14px; }
   .send-step { margin-top:44px; }
   .done-panel { padding:26px 22px; }
   .plan-copy { font-size:17px; }
