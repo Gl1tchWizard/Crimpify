@@ -87,7 +87,7 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
     // claim-volgorde-regel: planken verschijnen in vaste volgorde en geen
     // sessie staat twee keer op het scherm (naam-onafhankelijk; de
     // week-rotatie mag elke designed-sessie claimen)
-    const order = ['For you', 'Under ', 'Any length', 'Freshly added', 'Popular at Apex', 'Coach sessions', 'New'];
+    const order = ['For you', 'Under ', 'Any length', 'Popular at Apex', 'Freshly added', 'Coach sessions', 'New'];
     const titles = [...document.querySelectorAll('#chooseBody .ch-shelf-title')].map(e => e.textContent);
     let pos = -1, inOrder = true;
     for (const t of titles) {
@@ -101,7 +101,7 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
     return { titles, inOrder, dups, apexData: APEX_PICKS.length >= 3 };
   });
   assert(!placement.titles.includes('By Glitch') && placement.inOrder && placement.dups.length === 0 && placement.apexData,
-    `C planken volgen de claim-volgorde, nul dubbelingen (${placement.titles.join(' · ')})`);
+    `C planken volgen de weergavevolgorde, nul dubbelingen (${placement.titles.join(' · ')})`);
   // hero-BACK-stap: preview open en dicht moet op v-choose landen, niet op de landing
   await C.page.click('.ch-view-btn');
   await sleep(200);
