@@ -54,7 +54,7 @@ nav.main a:hover { color:var(--chalk); }
 header.site .btn { padding:12px 22px; font-size:14px; }
 
 /* ── hero: één compositie van foto, kop en productobject ── */
-.hero { position:relative; min-height:820px; display:flex; align-items:center; overflow:hidden; background:var(--ink); }
+.hero { position:relative; min-height:820px; display:flex; align-items:center; overflow:hidden; background:var(--ink); border-bottom:4px solid var(--acid); }  /* signatuur: precies één acid-regel, alleen op deze naad */
 /* laagvolgorde: foto+shade (1) → kaart (2) → klimmer (3) → copy (4) */
 .hero-photo { position:absolute; inset:0; z-index:1; background:url('hero.jpg') 62% center / cover no-repeat; }
 /* gradient links voor leesbaarheid; bewust half doorzichtig zodat de
