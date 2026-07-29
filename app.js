@@ -4525,14 +4525,20 @@ function renderChoose() {
     .filter(x => x.s.addedDate && (Date.now() - new Date(x.s.addedDate).getTime()) < 14 * 86400000)
     .sort((a, b) => new Date(b.s.addedDate) - new Date(a.s.addedDate)).map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
-  // één sessie, één plek: planken claimen in vaste volgorde uit wat er
-  // nog over is (week -> for you -> tijd -> apex -> coach -> new); een
-  // plank die na dedup onder de twee kaarten zakt verbergt zich
+  // één sessie, één plek. Claimen op substitueerbaarheid, minst
+  // substitueerbaar eerst: week (rotatie) -> Apex (vaste partnerpicks)
+  // -> Freshly (vast op addedDate) -> For you (algoritmisch, heeft
+  // alternatieven) -> Under (puur filter, claimt als laatste). De
+  // weergavevolgorde op het scherm blijft ongewijzigd; een plank die
+  // na dedup onder de twee kaarten zakt verbergt zich.
   const claimed = new Set([fi]);
   const claim = shelf => { shelf.idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity); shelf.idxs.forEach(i => claimed.add(i)); return shelf; };
   const shelfOrHide = shelf => shelf.idxs.length >= 2 ? chShelf(shelf) : '';
+  const forYouShelf = computeForYou();
+  const underShelf = Object.assign(computeTimeShelf(), { max: 4 });
+  [apexShelf, freshShelf, forYouShelf, underShelf].forEach(claim);
   body.innerHTML = renderTypeRow() + hero
-    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), apexShelf, freshShelf].map(sh => shelfOrHide(claim(sh))).join('')
+    + [forYouShelf, underShelf, apexShelf, freshShelf].map(shelfOrHide).join('')
     + '<div style="height:16px;"></div>';
   enableWheelScroll('#chooseBody .ch-shelf');
 }
