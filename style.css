@@ -323,14 +323,8 @@ body {
 .slab-block:hover { filter:brightness(1.12); }
 .slab-accent { position:absolute; left:0; top:0; bottom:0; width:3px; }
 .slab-block-name { flex:1; font-size:18px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; z-index:1; padding-left:14px; }
-.slab-block-dur { font-family:'DM Mono',monospace; font-size:11px; z-index:1; flex-shrink:0; margin-right:8px; }
-.dur-stepper { display:flex; align-items:center; gap:8px; flex-shrink:0; margin-right:18px; z-index:3; }
-.slab-chev { font-size:14px; z-index:3; flex-shrink:0; opacity:.4; margin-right:2px; }
 .slab-ghost { font-size:46px; font-weight:900; line-height:1; letter-spacing:-.03em; position:absolute; right:16px; top:50%; transform:translateY(-50%); pointer-events:none; user-select:none; opacity:.20; z-index:0; }
 .slab-ghost .gu { font-size:46px; font-weight:900; opacity:1; margin-left:-2px; }
-.slab-block-min { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:15px; letter-spacing:.02em; text-transform:uppercase; flex-shrink:0; margin-right:14px; opacity:.85; z-index:2; }
-.dur-btn { width:26px; height:26px; border-radius:6px; border:1px solid var(--graphite); background:color-mix(in srgb, var(--ink) 85%, transparent); font-size:16px; font-weight:700; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
-.dur-btn:active { transform:scale(.9); }
 .dur-val { font-family:'DM Mono',monospace; font-size:12px; min-width:30px; text-align:center; }
 .slab-progress { height:2px; background:var(--graphite); flex-shrink:0; }
 .slab-progress-fill { height:100%; background:var(--acid); opacity:.5; transition:width .3s; }
