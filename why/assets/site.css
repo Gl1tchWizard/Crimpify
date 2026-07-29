@@ -430,7 +430,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .ss2 .step-txt { width:400px; }
   .ss2 .shot { width:100%; }
   .ss3 { left:1020px; top:101px; width:260px; z-index:1; }
-  .ss3 .step-txt { padding-left:14px; }
+  .ss3 .step-txt { margin-left:14px; width:246px; }
   .ss3 .shot-crop { height:260px; }
   .ss4 { left:1100px; top:530px; width:260px; z-index:2; }
   .ss4 .step-txt { width:240px; }
