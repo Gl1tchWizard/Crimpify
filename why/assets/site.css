@@ -328,6 +328,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .done-monsters img { width:48px; height:48px; image-rendering:pixelated; }
 .done-cta { padding:15px 0; border-radius:10px; background:var(--acid); color:var(--acid-text); margin-top:24px; font-family:var(--disp); font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; text-align:center; }
 .plan-copy { font-size:19px; line-height:1.6; margin-top:36px; max-width:44ch; }
+.plan-copy p + p { margin-top:16px; }
 
 /* ── sectie 5: BUILT IN THE OPEN ── */
 .s-open .wrap { position:relative; }
