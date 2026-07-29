@@ -84,13 +84,24 @@ const inPlayer = v => ['v-detail','v-guided','v-drills','v-drillfocus','v-check'
   await C.page.evaluate(() => { openChoose ? openChoose() : goTo('v-choose'); });
   await sleep(300);
   const placement = await C.page.evaluate(() => {
+    // claim-volgorde-regel: planken verschijnen in vaste volgorde en geen
+    // sessie staat twee keer op het scherm (naam-onafhankelijk; de
+    // week-rotatie mag elke designed-sessie claimen)
+    const order = ['For you', 'Under ', 'Any length', 'Freshly added', 'Popular at Apex', 'Coach sessions', 'New'];
     const titles = [...document.querySelectorAll('#chooseBody .ch-shelf-title')].map(e => e.textContent);
-    const apex = APEX_PICKS.includes('Five by Five');
-    const sarah = MOCK_CHOOSE.find(s => s.name === 'Sarah Connor');
-    return { titles, apex, sarahNew: sarah && sarah.cat === 'new' };
+    let pos = -1, inOrder = true;
+    for (const t of titles) {
+      const idx = order.findIndex(o => t.startsWith(o));
+      if (idx < 0 || idx < pos) { inOrder = false; break; }
+      pos = idx;
+    }
+    const names = [(document.querySelector('.ch-feat-name') || {}).textContent || '']
+      .concat([...document.querySelectorAll('#chooseBody .ch-shelf .ch-name')].map(n => n.textContent.trim()));
+    const dups = names.filter((n, i) => n && names.indexOf(n) !== i);
+    return { titles, inOrder, dups, apexData: APEX_PICKS.length >= 3 };
   });
-  assert(!placement.titles.includes('By Glitch') && placement.apex && placement.sarahNew,
-    `C coach-sessies in de gecureerde planken, geen eigen plank (${placement.titles.join(' · ')})`);
+  assert(!placement.titles.includes('By Glitch') && placement.inOrder && placement.dups.length === 0 && placement.apexData,
+    `C planken volgen de claim-volgorde, nul dubbelingen (${placement.titles.join(' · ')})`);
   // hero-BACK-stap: preview open en dicht moet op v-choose landen, niet op de landing
   await C.page.click('.ch-view-btn');
   await sleep(200);
