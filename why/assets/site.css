@@ -382,10 +382,14 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
 /* ── satirische reviewband: ingehouden knipoog ── */
 .s-reviews { padding:calc(64px + tan(var(--angle))*100vw) 0 64px; clip-path:polygon(0 calc(tan(var(--angle))*100vw), 100% 0, 100% 100%, 0 100%); margin-top:calc(-1*tan(var(--angle))*100vw); }
-.review-band { list-style:none; display:grid; grid-template-columns:repeat(4,1fr); gap:48px; margin:0; padding:0; }
-.rv-score { display:block; font-family:var(--disp); font-weight:900; font-size:40px; line-height:1; color:var(--acid); }
-.review-band blockquote { font-size:15px; line-height:1.5; color:var(--chalk); margin:12px 0 0; }
-.rv-outlet { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--dust); margin-top:12px; }
+.review-band { list-style:none; display:grid; grid-template-columns:repeat(3,1fr); margin:0; padding:0; }
+.review-band li { text-align:center; padding:8px 40px; }
+.review-band li + li { border-left:1px solid var(--graphite); }
+.rv-score { display:block; font-family:var(--disp); font-weight:900; font-size:52px; line-height:1; color:var(--review-gold); letter-spacing:.04em; }
+.review-band blockquote { font-size:16px; font-style:italic; line-height:1.5; color:var(--chalk); margin:14px auto 0; max-width:34ch; }
+.rv-outlet { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--dust); margin-top:14px; }
+.rv-outlet::before { content:'4 a0'; color:var(--graphite); }
+.rv-outlet::after { content:' a04'; color:var(--graphite); }
 
 /* ── sectie 7: slot-CTA + footer ── */
 .s-cta { overflow:hidden; background:var(--ink); }
@@ -430,7 +434,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .coach-stage { flex-direction:row; align-items:flex-start; gap:0; }
   .coach-wall-frame { width:54%; margin:0; }
   .coach-screen { width:54%; margin:40px 0 0 -8%; position:relative; z-index:3; }
-  .review-band { grid-template-columns:1fr 1fr; gap:40px; }
+  .review-band { grid-template-columns:1fr 1fr; }
   .coach-quotes { grid-template-columns:1fr; gap:28px; }
 }
 
@@ -491,7 +495,9 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .coach-close { margin-top:36px; }
   .coach-quotes { grid-template-columns:1fr; gap:28px; margin-top:44px; }
   .s-reviews { padding:56px 0; }
-  .review-band { grid-template-columns:1fr; gap:32px; }
+  .review-band { grid-template-columns:1fr; }
+  .review-band li { padding:20px 8px; }
+  .review-band li + li { border-left:0; border-top:1px solid var(--graphite); }
   .s-cta h2 { font-size:clamp(56px,16.5vw,68px); }
   .cta-actions { flex-direction:column; }
   .cta-actions .btn { display:block; text-align:center; }
