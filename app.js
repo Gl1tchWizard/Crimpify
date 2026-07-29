@@ -4150,6 +4150,7 @@ if ('serviceWorker' in navigator) {
 // ══════════════════════════════════════════════════════════════
 // ── ZOEKEN IN CHOOSE: icoon klapt uit tot veld + filterchips; actief = verticale resultaten ──
 let chSearchOpen = false;
+let chTypeSel = null;   // actieve type-filter in de typerij bovenin Browse
 let chQuery = '';
 let chFilters = { time:null, goal:null, gear:null, load:null, level:null };  // single-select, null = uit
 const CH_GOAL_SYS = { 'recovery':['recovery'], 'volume':['capacity','power endurance'], 'max power':['power','performance'], 'fingers':['strength'], 'technique':['skill'] };
@@ -4194,6 +4195,7 @@ function toggleChSearch() {
 }
 function clearChSearch() {
   chQuery = '';
+  chTypeSel = null;
   chFilters = { time:null, goal:null, gear:null, load:null, level:null };
   const inp = document.getElementById('chSearchInput');
   if (inp) inp.value = '';
@@ -4442,10 +4444,30 @@ function computeTimeShelf() {
 // een backend is; wordt dan berekend, het ontwerp blijft gelijk (CLAUDE.md Choose-flow punt 4)
 const APEX_PICKS = ['Five by Five', 'The Grinder', 'Send Day', 'Easy Does It', 'Board Blitz'];
 
+// typerij: alle tien sessietypes, tikbaar; filter op sys, nooit een doodlopend pad
+function renderTypeRow() {
+  return `<div class="ch-types">` + sessions.map(t =>
+    `<button class="ch-type${chTypeSel === t.id ? ' on' : ''}" style="--tc:${(C[t.color] || C.lime).color};" onclick="chTypeTap('${t.id}')">${t.cat}${t.id === 'minidose' ? ' · ~20 min' : ''}</button>`
+  ).join('') + `</div>`;
+}
+function chTypeTap(id) { chTypeSel = (chTypeSel === id) ? null : id; renderChoose(); document.querySelector('#v-choose .scroll-body')?.scrollTo(0, 0); }
+function renderTypeResults(id) {
+  const t = sessions.find(x => x.id === id);
+  const sys = t.cat.toLowerCase();
+  const hits = MOCK_CHOOSE.map((s2, i) => ({ s2, i })).filter(x => x.s2.sys === sys);
+  const genRow = `<div class="ch-genrow" onclick="selectSession('${id}');goToSession();">
+      <div><b>Generate a ${t.cat} session</b><span>${t.desc.split(String.fromCharCode(10))[0].toLowerCase()} · built for your time</span></div><div class="ch-genarrow">→</div>
+    </div>`;
+  const cards = hits.map(x => chResultCard(x.i)).join('');
+  const head = `<div class="ch-shelf-sub" style="padding:14px 0 8px;">${hits.length ? hits.length + ' session' + (hits.length === 1 ? '' : 's') + ' · ' + t.cat.toLowerCase() : 'no curated ' + t.cat.toLowerCase() + ' sessions yet'}</div>`;
+  return `<div class="ch-results">${head}${cards}${hits.length < 3 ? genRow : ''}</div>`;
+}
+
 function renderChoose() {
   const body = document.getElementById('chooseBody');
   if (!body) return;
   if (chSearchActive()) { body.innerHTML = renderChooseResults(); return; }  // zoeken vervangt de planken
+  if (chTypeSel) { body.innerHTML = renderTypeRow() + renderTypeResults(chTypeSel); return; }  // typefilter vervangt de planken
   // session of the week: roteert per dag over de echt ontworpen sessies
   // (designed:true), nooit meer een hardcoded mock-entry
   const designedIdx = MOCK_CHOOSE.map((s, i) => s.designed ? i : -1).filter(i => i >= 0);
@@ -4482,7 +4504,7 @@ function renderChoose() {
   const coachShelf = { title:'Coach sessions', sub:'designed start to finish', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.designed).map(x => x.i) };
   const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
-  body.innerHTML = hero
+  body.innerHTML = renderTypeRow() + hero
     + chShelf(computeForYou())
     + chShelf(computeTimeShelf())
     + chShelf(apexShelf)
@@ -4505,6 +4527,7 @@ function openChoose() {
   const tgl = document.getElementById('chSearchToggle');
   if (tgl) tgl.classList.remove('on');
   chQuery = '';
+  chTypeSel = null;
   chFilters = { time:null, goal:null, gear:null, load:null, level:null };
   const inp = document.getElementById('chSearchInput');
   if (inp) inp.value = '';

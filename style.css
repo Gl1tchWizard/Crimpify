@@ -470,6 +470,14 @@ body {
 /* ════════════════════════════
    CHOOSE — catalogus (hero + planken) en preview-laag
 ════════════════════════════ */
+.ch-types { display:flex; gap:8px; overflow-x:auto; padding:12px 20px 4px; scrollbar-width:none; }
+.ch-types::-webkit-scrollbar { display:none; }
+.ch-type { flex:none; font-family:'DM Mono',monospace; font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--dust); background:var(--carbon); border:1px solid var(--graphite); border-left:3px solid var(--tc); border-radius:8px; padding:8px 12px; cursor:pointer; }
+.ch-type.on { color:var(--acid-text); background:var(--acid); border-color:var(--acid); }
+.ch-genrow { margin:10px 20px; padding:14px 16px; border:1px dashed var(--graphite); border-radius:12px; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; }
+.ch-genrow b { display:block; font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:17px; letter-spacing:.04em; text-transform:uppercase; color:var(--chalk); }
+.ch-genrow span { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--dust); }
+.ch-genarrow { font-family:'DM Mono',monospace; font-size:16px; color:var(--acid); }
 .ch-kicker { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--acid); padding:12px 20px 6px; }
 .ch-feat { margin:0 20px; border-bottom:1px solid var(--graphite); padding-bottom:18px; }
 .ch-feat-name { font-weight:900; font-size:46px; line-height:.9; text-transform:uppercase; letter-spacing:.01em; color:var(--chalk); }
