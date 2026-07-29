@@ -4521,8 +4521,10 @@ function renderChoose() {
   // Freshly added vervangt Coach sessions (designed dekte 11 van 18 = een
   // label, geen selectie) en New (handmatige cat die nooit verliep):
   // addedDate stuurt, verloopt vanzelf na 14 dagen, zelfde venster als News
-  const freshShelf = { title:'Freshly added', sub:'new in the library', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i }))
-    .filter(x => x.s.addedDate && (Date.now() - new Date(x.s.addedDate).getTime()) < 14 * 86400000)
+  // venster 30 dagen, cap 3 (nieuwste eerst): een plank, geen emmer;
+  // wat erbuiten valt blijft in de pool voor de planken die later claimen
+  const freshShelf = { title:'Freshly added', sub:'new in the library', max: 3, idxs: MOCK_CHOOSE.map((s, i) => ({ s, i }))
+    .filter(x => x.s.addedDate && (Date.now() - new Date(x.s.addedDate).getTime()) < 30 * 86400000)
     .sort((a, b) => new Date(b.s.addedDate) - new Date(a.s.addedDate)).map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
   // één sessie, één plek. Claimen op substitueerbaarheid, minst
