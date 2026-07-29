@@ -4504,12 +4504,14 @@ function renderChoose() {
   const coachShelf = { title:'Coach sessions', sub:'designed start to finish', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.designed).map(x => x.i) };
   const newShelf = { title:'New', sub:'fresh from the coaches', idxs: MOCK_CHOOSE.map((s, i) => ({ s, i })).filter(x => x.s.cat === 'new').map(x => x.i) };
   const apexShelf = { title:'Popular at Apex', sub:'curated with apex bouldergym', idxs: APEX_PICKS.map(n => MOCK_CHOOSE.findIndex(s => s.name === n)).filter(i => i >= 0) };
+  // één sessie, één plek: planken claimen in vaste volgorde uit wat er
+  // nog over is (week -> for you -> tijd -> apex -> coach -> new); een
+  // plank die na dedup onder de twee kaarten zakt verbergt zich
+  const claimed = new Set([fi]);
+  const claim = shelf => { shelf.idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity); shelf.idxs.forEach(i => claimed.add(i)); return shelf; };
+  const shelfOrHide = shelf => shelf.idxs.length >= 2 ? chShelf(shelf) : '';
   body.innerHTML = renderTypeRow() + hero
-    + chShelf(computeForYou())
-    + chShelf(computeTimeShelf())
-    + chShelf(apexShelf)
-    + chShelf(coachShelf)
-    + chShelf(newShelf)
+    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), apexShelf, coachShelf, newShelf].map(sh => shelfOrHide(claim(sh))).join('')
     + '<div style="height:16px;"></div>';
   enableWheelScroll('#chooseBody .ch-shelf');
 }
