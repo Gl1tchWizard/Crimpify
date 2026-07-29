@@ -137,12 +137,6 @@ const DRILLS = [
     goal:'Sharpens proprioception and sensory feedback for foot and hand placement enormously.' },
 ];
 
-// 1 drill per day, rotates
-function drillOfDay() {
-  const seed = new Date().getDate() + new Date().getMonth()*31;
-  return DRILLS[seed % DRILLS.length];
-}
-
 // ══ BLOCK LIBRARY ══
 // Every key is a reusable training block. t = base time at a 90 min session.
 // Gedeelde uitleg voor beide tendon-blokken: één bron, geen drift tussen de varianten.
@@ -1700,22 +1694,6 @@ function pickDrills(n) {
 // ══ DRILL PLAYER ══
 let dpDrills = [], dpTimers = [], dpIntervals = [], drillMode = 'session';
 
-function startDrillPlayer(blockIdx) {
-  drillMode = 'session';
-  const b = currentBlocks[blockIdx];
-  const n = (b._key === 'drillBlocks') ? 3 : 2;
-  dpDrills = pickDrills(n);
-  // verdeel blokduur over de drills als richttijd
-  const per = Math.max(3, Math.round(b.t / n));
-  dpTimers = dpDrills.map(()=> per*60);
-  dpIntervals = dpDrills.map(()=> null);
-  document.getElementById('drillSub').textContent = `${n} skills · target ${per} min each · tap open for instructions`;
-  document.getElementById('drillFooter').innerHTML = `movement skills<br><b style="color:var(--skill);">${b.t} min total</b>`;
-  document.getElementById('drillTitle').textContent = 'Movement skills';
-  renderDrillPlayer();
-  goTo('v-drills');
-}
-
 function startDrillLibrary(blockIdx) {
   dpFilter = '';
   const dsi = document.getElementById('drillSearch');
@@ -2594,15 +2572,6 @@ function applyCoach() {
   if (ti >= 0) setTimeIdx(ti);
   selectSession(pick.id);
   goToSession();
-}
-
-// ── TWEE PADEN ──
-function toggleGenerate() {
-  const s = document.getElementById('generateSection');
-  const chev = document.getElementById('genChev');
-  const open = s.style.display !== 'none';
-  s.style.display = open ? 'none' : '';
-  if (chev) chev.textContent = open ? '▾' : '▴';
 }
 
 function startBuildPath() {
