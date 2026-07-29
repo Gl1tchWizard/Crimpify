@@ -47,8 +47,7 @@ header.site { position:relative; z-index:20; background:var(--ink); border-botto
 .site-bar { display:flex; align-items:center; gap:26px; padding:20px 0; }
 .brand { display:flex; align-items:center; gap:12px; text-decoration:none; }
 .mark { width:30px; height:34px; background:var(--acid); -webkit-mask:url('../../crimpify-mono.svg') no-repeat center / contain; mask:url('../../crimpify-mono.svg') no-repeat center / contain; }
-.brand b { font-family:var(--disp); font-weight:900; font-size:26px; letter-spacing:.08em; color:var(--chalk); line-height:1; }
-.brand-sub { display:block; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--dust); margin-top:3px; }
+.brand b { font-family:var(--disp); font-weight:900; font-size:29px; letter-spacing:.08em; color:var(--chalk); line-height:1; }
 nav.main { margin-left:auto; display:flex; gap:28px; }
 nav.main a { font-family:var(--mono); font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); text-decoration:none; padding:8px 0; }
 nav.main a:hover { color:var(--chalk); }
@@ -116,7 +115,6 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 
   /* header: compact, logo + OPEN THE APP + menuknop */
   .site-bar { padding:12px 20px; gap:14px; }
-  .brand-sub { display:none; }
   .brand b { font-size:24px; }
   .mark { width:26px; height:30px; }
   nav.main { display:none; }
