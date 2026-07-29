@@ -4532,7 +4532,7 @@ function renderChoose() {
   const claim = shelf => { shelf.idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity); shelf.idxs.forEach(i => claimed.add(i)); return shelf; };
   const shelfOrHide = shelf => shelf.idxs.length >= 2 ? chShelf(shelf) : '';
   body.innerHTML = renderTypeRow() + hero
-    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), freshShelf, apexShelf].map(sh => shelfOrHide(claim(sh))).join('')
+    + [computeForYou(), Object.assign(computeTimeShelf(), { max: 4 }), apexShelf, freshShelf].map(sh => shelfOrHide(claim(sh))).join('')
     + '<div style="height:16px;"></div>';
   enableWheelScroll('#chooseBody .ch-shelf');
 }
