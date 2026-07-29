@@ -440,18 +440,22 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .splat-send { top:0; left:445px; width:130px; height:auto; }
   .splat-plan { top:0; left:800px; width:320px; height:auto; }
   .s-send .wrap { display:block; }
-  .send-stage { height:960px; margin-top:24px; }
+  .send-stage { height:740px; margin-top:24px; }
   .send-step { position:absolute; margin:0; }
+  /* bijschriften op één gedeelde basislijn (stage-y 590); alleen de
+     schermen houden hun hoogteverspringing */
+  .send-step .step-txt { position:absolute; }
+  .ss1 .step-txt { top:573px; left:0; width:300px; }
+  .ss2 .step-txt { top:954px; left:-150px; width:300px; }
+  .ss3 .step-txt { top:489px; left:-300px; width:300px; }
+  .ss4 .step-txt { top:340px; left:-20px; width:280px; }
   .ss1 { left:0; top:17px; width:260px; z-index:1; }
   .ss1 .shot-crop { height:300px; }
   .ss2 { left:510px; top:-364px; width:520px; z-index:3; }
-  .ss2 .step-txt { width:400px; }
   .ss2 .shot { width:100%; }
   .ss3 { left:1020px; top:101px; width:260px; z-index:1; }
-  .ss3 .step-txt { margin-left:14px; width:246px; }
   .ss3 .shot-crop { height:260px; }
-  .ss4 { left:1100px; top:530px; width:260px; z-index:2; }
-  .ss4 .step-txt { width:240px; }
+  .ss4 { left:1100px; top:250px; width:260px; z-index:2; }
   .ss4 .shot-crop { height:280px; }
   .ss4 .shot-crop img { margin-top:-36%; }  /* de deel-dialoog in beeld, niet de gedimde kop */
 
