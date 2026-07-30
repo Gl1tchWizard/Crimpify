@@ -162,6 +162,24 @@
         <h2>Build to send<span class="dot">.</span></h2>
         <p class="band-sub">Send the boulder. Send the session.</p>
       </header>
+      <div class="send-intro">
+        <p>No account, no subscription, no plan you'll abandon in week three. Tell it how long you have and climb.</p>
+        <p>And when you do find a coach, their sessions arrive as a link. Nothing to move.</p>
+        <!-- echt UI-fragment: de tijd-chips van de landing (timeValues in
+             app.js, 30-150 + geen limiet); de brief noemde 15/30/45/60/90/120,
+             maar de echte interface wint van de briefwaardes -->
+        <div class="time-frag" role="img" aria-label="The time picker from the app: 30 to 150 minutes or no limit, 60 selected">
+          <div class="time-item"><span class="t-num">30</span></div>
+          <div class="time-item"><span class="t-num">45</span></div>
+          <div class="time-item active"><span class="t-num">60</span></div>
+          <div class="time-item"><span class="t-num">75</span></div>
+          <div class="time-item"><span class="t-num">90</span></div>
+          <div class="time-item"><span class="t-num">105</span></div>
+          <div class="time-item"><span class="t-num">120</span></div>
+          <div class="time-item"><span class="t-num">150</span></div>
+          <div class="time-item"><span class="t-num">&infin;</span></div>
+        </div>
+      </div>
       <!-- elke stap draagt zijn eigen scherm; het dominante venster
            (stap 02) kruist de bovenrand van de sectie; de cascade zelf
            draagt de beweging (acid-lijn bewust verwijderd, run 1) -->
@@ -185,6 +203,7 @@
           </li>
         </ol>
       </div>
+      <p class="x-link"><a href="#coaches">Coach? See what this does for your athletes &#8594;</a></p>
     </div>
   </section>
 
@@ -193,7 +212,7 @@
     <img class="splat splat-plan" src="assets/splat-b.webp" width="420" height="559" loading="lazy" alt="" aria-hidden="true">
     <div class="wrap">
       <header class="band-head">
-        <h2>Serious training.<br>Never this much fun.</h2>
+        <h2>Get a good coach,<br>Or start here</h2>
       </header>
       <div class="plan-stage">
         <img class="shot plan-photo" src="assets/hand-520.jpg" srcset="assets/hand-520.jpg 520w, assets/hand-1040.jpg 1040w" sizes="(max-width:768px) 100vw, 520px" width="520" height="693" loading="lazy" alt="A chalked hand finding a crimp on dark rock">
@@ -220,9 +239,9 @@
           <div class="done-cta">Save result</div>
         </div>
         <div class="plan-copy">
-          <p>Structure is the hard part. Most climbers know what to do, not in what order, for how long, or when to back off.</p>
-          <p>Paid coaching is often worth the money. You just shouldn't have to start there.</p>
-          <p>Start with one good session. It teaches you the structure while you climb it.</p>
+          <p>Structure is the hard part. Most climbers challenge themselves, but without a plan that varies skill and intensity, and takes recovery seriously.</p>
+          <p>A good coach solves exactly that. Get one if you can. Most climbers can't, and not for lack of wanting: the good ones are booked, expensive, or three hours away.</p>
+          <p>So start with one good session. It shows you the order, the timing and the reason for each block while you climb it.</p>
         </div>
       </div>
     </div>
@@ -268,8 +287,9 @@
       <div class="coach-grid">
         <div class="coach-copy">
           <p class="coach-kicker">For coaches, gyms &amp; groups</p>
-          <h2>Turn your coaching<br>into a library.</h2>
-          <p class="coach-problem">Stop rebuilding the same sessions in notes, spreadsheets and messages. Build them once, keep the coaching attached and send every athlete one clear link.</p>
+          <h2>Your time is the bottleneck.<br>Not your knowledge.</h2>
+          <p class="coach-problem">You can only stand in so many gyms in a week. The sessions you have already thought through can travel further than you can.</p>
+          <p class="coach-problem">Build once. Send one link. Every athlete gets the session you intended, with your name on it.</p>
           <div class="coach-ctas">
             <a class="btn btn-acid" href="/#build">Build a session</a>
             <span class="coach-coming">Coach tools &mdash; coming next</span>
@@ -293,6 +313,9 @@
           <img class="shot coach-screen" src="assets/shot-coach-540.webp" width="540" height="960" loading="lazy" alt="A coach's session in Crimpify: Five by Five with its blocks, coach credit and start action">
         </div>
       </div>
+      <!-- de weigering: een uitgesproken grens vertelt een professional
+           dat het gereedschap zijn admin overneemt, niet zijn werk -->
+      <p class="coach-refusal">Crimpify builds sessions. Micro and macro cycles stay with you. Programming someone's year takes judgement about a person, and we are not going to automate that.</p>
       <!-- wat er wordt gebouwd: intentie, geen beschikbaarheid; items uit
            backlog/strategie (completions, coach model, coach-met-groep) -->
       <div class="coach-next">
@@ -326,6 +349,7 @@
         </figure>
       </div>
       <p class="coach-close">Good coaching should not disappear into a WhatsApp thread.</p>
+      <p class="x-link"><a href="#athletes">Training on your own? Start here &#8594;</a></p>
     </div>
   </section>
 
