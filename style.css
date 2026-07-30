@@ -460,6 +460,17 @@ body {
 .rhythm-letters span { text-align:center; font-family:'DM Mono',monospace; font-size:10px; color:var(--dust); }
 .rhythm-dots { margin-top:4px; }
 .rhythm-dots i { display:block; width:14px; height:14px; border-radius:50%; margin:0 auto; }
+/* stoplicht-monsters: één representatie van één ding, overal. Pixel-art
+   altijd scherp; de kleur blijft overal de code naast het beeld. */
+.sig-monster { image-rendering:pixelated; display:block; }
+.rhythm-dots i.rhythm-sig { border-radius:0; width:15px; height:15px; display:flex; align-items:center; justify-content:center; }
+/* selectie: één korte toestandsverandering, geen animatie bij reduced motion */
+.sig-pick .sig-monster { transition:transform .15s; }
+.sig-pick:active .sig-monster { transform:scale(1.15); }
+@media (prefers-reduced-motion:reduce){
+  .sig-pick .sig-monster { transition:none; }
+  .sig-pick:active .sig-monster { transform:none; }
+}
 
 /* ════════════════════════════
    CHOOSE — catalogus (hero + planken) en preview-laag
