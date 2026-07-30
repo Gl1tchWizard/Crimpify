@@ -309,6 +309,15 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .step-no { display:block; font-family:var(--mono); font-size:13px; letter-spacing:.1em; color:var(--dust); }
 .step-t { display:block; font-family:var(--disp); font-weight:800; font-size:24px; letter-spacing:.04em; text-transform:uppercase; margin-top:8px; }
 .step-b { display:block; font-size:16px; line-height:1.5; color:var(--dust); margin-top:8px; }
+/* intro boven de cascade + de echte tijd-chips van de landing
+   (waardes en stijl één-op-één uit app.js/style.css, niet nagetekend) */
+.send-intro { max-width:52ch; font-size:19px; line-height:1.6; }
+.send-intro p + p { margin-top:16px; }
+.time-frag { display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+.time-frag .time-item { width:46px; padding:9px 0; border-radius:8px; border:1px solid transparent; background:var(--carbon); text-align:center; }
+.time-frag .time-item.active { border-color:var(--acid); background:color-mix(in srgb, var(--acid) 5%, transparent); }
+.time-frag .t-num { font-size:17px; font-weight:900; color:var(--dust); line-height:1; }
+.time-frag .time-item.active .t-num { color:var(--acid); }
 
 /* ── sectie 4: TRAIN ON PURPOSE ── */
 .s-plan .band-head { margin-bottom:40px; }
