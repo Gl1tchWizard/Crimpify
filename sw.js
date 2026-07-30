@@ -1,5 +1,5 @@
 // Crimpify service worker — offline-first met verse index
-const CACHE = 'crimpify-v54';
+const CACHE = 'crimpify-v55';
 const CORE = [
   './',
   'index.html',
@@ -11,7 +11,13 @@ const CORE = [
   'icon-maskable-512.png',
   'apple-touch-icon.png',
   'favicon.svg',
-  'og.png'
+  'og.png',
+  'monster-green-96.png',
+  'monster-orange-96.png',
+  'monster-red-96.png',
+  'monster-green-32.png',
+  'monster-orange-32.png',
+  'monster-red-32.png'
 ];
 
 self.addEventListener('install', e => {

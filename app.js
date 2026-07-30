@@ -1182,6 +1182,8 @@ function signalTap(sig) {
   prerenderResultCard();
   const a = SIGNAL_ADVICE[sig];
   document.getElementById('signalAsk').style.display = 'none';
+  const m = document.getElementById('signalAdviceMonster');
+  if (m) { m.src = 'monster-' + sig + '-96.png'; m.alt = SIG_ALT[sig]; }
   const box = document.getElementById('signalAdvice');
   box.style.display = '';
   box.style.borderColor = 'color-mix(in srgb, ' + a.col + ' 33%, transparent)';
@@ -1292,7 +1294,9 @@ async function renderResultCard() {
     ctx.font = '400 30px "DM Mono", monospace';
     ctx.fillText('BOULDERS', bx + bW + 24, sy);
   }
-  // stoplicht: kleur plus korte tekst; alleen als er gelogd is, rood mag
+  // stoplicht: kleur plus korte tekst; alleen als er gelogd is, rood mag.
+  // Het monster erbij (zelfde representatie als in de app); de gekleurde
+  // dot en de tekst blijven de code, faalt het laden dan mist alleen het beeld
   let qy = sy + 160;
   if (sig && SIG_CARD[sig]) {
     ctx.beginPath();
@@ -1302,6 +1306,14 @@ async function renderResultCard() {
     ctx.fillStyle = chalk;
     ctx.font = '800 54px "Barlow Condensed", sans-serif';
     ctx.fillText(SIG_CARD[sig], M + 84, qy);
+    try {
+      const mi = new Image();
+      await new Promise((res, rej) => { mi.onload = res; mi.onerror = rej; mi.src = 'monster-' + sig + '-96.png'; });
+      const prev = ctx.imageSmoothingEnabled;
+      ctx.imageSmoothingEnabled = false;  // pixel-art scherp opschalen
+      ctx.drawImage(mi, W - M - 120, qy - 76, 120, 120);
+      ctx.imageSmoothingEnabled = prev;
+    } catch {}
     qy += 170;
   }
   // quote van de summary: past al bij het sessietype (gym-filter)
@@ -2129,7 +2141,7 @@ function buildRecent() {
   favs.forEach((f, i) => {
     const col = C[f.color] || C.lime;
     const last = hist.find(e => (e.name || '') === f.name);
-    const dot = last && last.sig ? `<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${SIG_COL[last.sig]};margin-right:5px;"></span>` : '';
+    const dot = last && last.sig ? `<span style="display:inline-block;vertical-align:-3px;margin-right:5px;">${sigMonster(last.sig, 14, 32)}</span>` : '';
     html += `<div class="recent-card" style="background:${col.bg};border-color:${col.border};" onclick="openFav(${i})" ontouchstart="favPressStart(${i})" ontouchend="favPressEnd()" ontouchmove="favPressEnd()" onmousedown="favPressStart(${i})" onmouseup="favPressEnd()">
       <div class="rc-top" style="background:${col.color};"></div>
       <div class="rc-body">
@@ -2182,15 +2194,20 @@ function renderSignalCal() {
     // entries staat nieuwste-eerst; recap opent de laatste sessie van die dag
     days.push({ trained: entries.length > 0, n: entries.length, col, load, day: d.getDay(), ts: entries.length ? entries[0].ts : null });
   }
-  // strip: dag-letters + één dot per dag. Dot = stoplichtsignaal van die dag,
-  // neutraal gevuld bij een sessie zonder signaal, leeg zonder training.
-  // Nooit sessietype-kleuren: de strip toont hoe het gaat, niet wat je trainde.
+  // strip: dag-letters + één cel per dag. Signaal = het monster van die dag
+  // (zwaarste wint), neutraal gevulde dot bij een sessie zonder signaal,
+  // lege dot zonder training. Nooit sessietype-kleuren: de strip toont hoe
+  // het gaat, niet wat je trainde.
   cal.innerHTML = `<div class="rhythm-letters">${days.map(d => `<span>${'SMTWTFS'[d.day]}</span>`).join('')}</div>
     <div class="rhythm-dots">${days.map(d => {
-      const fill = d.trained ? `background:${d.col ? SIG_COL[d.col] : 'var(--disabled)'};` : 'border:1px solid var(--graphite);';
-      const glow = d.col === 'red' ? 'box-shadow:0 0 8px color-mix(in srgb, var(--sig-red) 40%, transparent);' : '';
       const click = d.ts ? ` onclick="openRecap(${d.ts})"` : '';
-      return `<i${click} title="${d.trained ? 'load ' + d.load : ''}" style="${fill}${glow}${d.ts ? 'cursor:pointer;' : ''}"></i>`;
+      const title = d.trained ? 'load ' + d.load : '';
+      if (d.col) {
+        const glow = d.col === 'red' ? 'filter:drop-shadow(0 0 6px color-mix(in srgb, var(--sig-red) 40%, transparent));' : '';
+        return `<i${click} class="rhythm-sig" title="${title}" style="${glow}${d.ts ? 'cursor:pointer;' : ''}">${sigMonster(d.col, 15, 32)}</i>`;
+      }
+      const fill = d.trained ? 'background:var(--disabled);' : 'border:1px solid var(--graphite);';
+      return `<i${click} title="${title}" style="${fill}${d.ts ? 'cursor:pointer;' : ''}"></i>`;
     }).join('')}</div>`;
   // samenvatting: sessies in het venster + ACWR-zone in één woord (tik = ACWR-paneel)
   const trained = days.reduce((s,d)=>s+d.n,0);
@@ -2251,6 +2268,19 @@ function toggleLoadPanel() {
 // ── RECAP OF A FINISHED SESSION (openen vanuit Mijn sessies) ──
 let _recapEntry = null;
 const SIG_COL = { green:'var(--sig-green)', orange:'var(--sig-orange)', red:'var(--sig-red)' };
+// één representatie van één ding, overal: monster + label per signaal.
+// De kleur blijft de code; het label draagt de betekenis, nooit het beeld alleen.
+const SIG_LABEL = { green:'boss defeated', orange:'hard but controlled', red:'not today' };
+const SIG_ALT = {
+  green:  'Green signal: strong and in control',
+  orange: 'Orange signal: hard but controlled',
+  red:    'Red signal: too much today, back off',
+};
+// size 96 (weergave ~32-44px) of 32 (strip en rijen, ~14-18px)
+function sigMonster(sig, disp, size) {
+  if (!SIG_COL[sig]) return '';
+  return `<img class="sig-monster" src="monster-${sig}-${size || 96}.png" width="${disp}" height="${disp}" alt="${SIG_ALT[sig]}">`;
+}
 function openRecap(ts) {
   const e = loadHistory().find(x => x.ts === ts);
   if (!e) return;
@@ -2263,7 +2293,7 @@ function openRecap(ts) {
   const el = id => document.getElementById(id);
   el('recapName').textContent = name;
   const d = new Date(e.ts);
-  const sigTxt = e.sig === 'green' ? 'strong' : e.sig === 'orange' ? 'on the edge' : e.sig === 'red' ? 'too much' : 'no signal';
+  const sigTxt = SIG_LABEL[e.sig] || 'no signal';
   // wall clock is de kop: dat is wat de gebruiker heeft ervaren. Actieve
   // bloktijd als tweede getal, overhead (afgeleid, nooit gemeten) als
   // neutrale derde regel. Entries zonder wall (pre-v0.45) houden de oude
@@ -2283,8 +2313,21 @@ function openRecap(ts) {
   } else {
     tw.style.display = 'none';
   }
-  el('recapDot').style.background = SIG_COL[e.sig] || 'var(--graphite)';
-  el('recapDot').style.boxShadow = SIG_COL[e.sig] ? '0 0 14px color-mix(in srgb, ' + SIG_COL[e.sig] + ' 50%, transparent)' : 'none';
+  // triad: gekozen monster onmiskenbaar actief (glow in de signaalkleur),
+  // de andere twee gedimd; zonder signaal blijft de neutrale dot staan
+  if (SIG_COL[e.sig]) {
+    el('recapSig').innerHTML = ['green','orange','red'].map(s => {
+      const on = s === e.sig;
+      return `<span${on ? '' : ' aria-hidden="true"'} style="${on ? 'filter:drop-shadow(0 0 10px color-mix(in srgb, ' + SIG_COL[s] + ' 60%, transparent));' : 'opacity:.22;'}">${sigMonster(s, on ? 36 : 28, 96)}</span>`;
+    }).join('');
+    el('recapSig').style.display = 'flex';
+    el('recapDot').style.display = 'none';
+  } else {
+    el('recapSig').style.display = 'none';
+    el('recapDot').style.display = '';
+    el('recapDot').style.background = 'var(--graphite)';
+    el('recapDot').style.boxShadow = 'none';
+  }
 
   const blocks = e.blocks || [];
   const total = blocks.reduce((sum,b)=>sum+(b.spent||0),0) || 1;

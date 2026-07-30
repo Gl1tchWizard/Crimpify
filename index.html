@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.59</div>
+    <div id="splashBy">by Glitch Labs · v0.60</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -442,17 +442,19 @@
       <div id="signalAsk" style="margin-top:20px;">
         <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust);">how did this session feel?</div>
         <div style="display:flex;gap:10px;margin-top:12px;">
-          <button onclick="signalTap('green')" style="flex:1;padding:14px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-green) 33%, transparent);background:color-mix(in srgb, var(--sig-green) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
-            <span style="width:20px;height:20px;border-radius:50%;background:var(--sig-green);box-shadow:0 0 12px color-mix(in srgb, var(--sig-green) 50%, transparent);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sig-green);">strong</span>
+          <!-- monsters: het beeld erbij, de kleur blijft de code (rand,
+               vlak en labelkleur); betekenis nooit alleen in het beeld -->
+          <button class="sig-pick" onclick="signalTap('green')" style="flex:1;padding:14px 8px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-green) 33%, transparent);background:color-mix(in srgb, var(--sig-green) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <img class="sig-monster" src="monster-green-96.png" width="44" height="44" alt="Green signal: strong and in control">
+            <span style="font-family:'DM Mono',monospace;font-size:10px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:var(--sig-green);">boss defeated</span>
           </button>
-          <button onclick="signalTap('orange')" style="flex:1;padding:14px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-orange) 33%, transparent);background:color-mix(in srgb, var(--sig-orange) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
-            <span style="width:20px;height:20px;border-radius:50%;background:var(--sig-orange);box-shadow:0 0 12px color-mix(in srgb, var(--sig-orange) 50%, transparent);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sig-orange);">on the edge</span>
+          <button class="sig-pick" onclick="signalTap('orange')" style="flex:1;padding:14px 8px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-orange) 33%, transparent);background:color-mix(in srgb, var(--sig-orange) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <img class="sig-monster" src="monster-orange-96.png" width="44" height="44" alt="Orange signal: hard but controlled">
+            <span style="font-family:'DM Mono',monospace;font-size:10px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:var(--sig-orange);">hard but controlled</span>
           </button>
-          <button onclick="signalTap('red')" style="flex:1;padding:14px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-red) 33%, transparent);background:color-mix(in srgb, var(--sig-red) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:7px;">
-            <span style="width:20px;height:20px;border-radius:50%;background:var(--sig-red);box-shadow:0 0 12px color-mix(in srgb, var(--sig-red) 50%, transparent);"></span>
-            <span style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sig-red);">too much</span>
+          <button class="sig-pick" onclick="signalTap('red')" style="flex:1;padding:14px 8px;border-radius:12px;border:1px solid color-mix(in srgb, var(--sig-red) 33%, transparent);background:color-mix(in srgb, var(--sig-red) 12%, transparent);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;">
+            <img class="sig-monster" src="monster-red-96.png" width="44" height="44" alt="Red signal: too much today, back off">
+            <span style="font-family:'DM Mono',monospace;font-size:10px;line-height:1.3;letter-spacing:.1em;text-transform:uppercase;text-align:center;color:var(--sig-red);">not today</span>
           </button>
         </div>
         <!-- delen komt pas na het loggen: het stoplicht is hier de primaire actie -->
@@ -461,7 +463,10 @@
         </div>
       </div>
       <div id="signalAdvice" style="display:none;margin-top:20px;padding:16px;border:1px solid var(--graphite);border-radius:12px;background:var(--ink);">
-        <div id="signalAdviceTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.04em;">–</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img id="signalAdviceMonster" class="sig-monster" src="monster-green-96.png" width="32" height="32" alt="">
+          <div id="signalAdviceTitle" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-transform:uppercase;letter-spacing:.04em;">–</div>
+        </div>
         <div id="signalAdviceTxt" style="font-family:'Barlow',sans-serif;font-size:13px;line-height:1.55;color:var(--dust);margin-top:6px;">–</div>
         <!-- delen en bewaren als primaire acties op het resultaat -->
         <div style="display:flex;gap:8px;margin-top:14px;">
@@ -558,6 +563,9 @@
   <div id="recapView" style="display:none;position:absolute;inset:0;z-index:62;background:color-mix(in srgb, var(--ink) 95%, transparent);backdrop-filter:blur(4px);flex-direction:column;align-items:center;justify-content:center;padding:28px 22px;overflow-y:auto;">
     <div style="width:100%;max-width:330px;">
       <div style="text-align:center;">
+        <!-- triad: gekozen monster actief, de andere twee gedimd; zonder
+             signaal valt de weergave terug op de neutrale dot -->
+        <div id="recapSig" style="display:none;justify-content:center;gap:16px;margin:0 auto 10px;"></div>
         <div id="recapDot" style="width:16px;height:16px;border-radius:50%;margin:0 auto 10px;background:var(--graphite);"></div>
         <div id="recapName" style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;text-transform:uppercase;letter-spacing:.03em;color:var(--chalk);line-height:1.1;">–</div>
         <div id="recapMeta" style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--dust);margin-top:6px;">–</div>
