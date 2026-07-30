@@ -311,7 +311,7 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .step-b { display:block; font-size:16px; line-height:1.5; color:var(--dust); margin-top:8px; }
 /* intro boven de cascade + de echte tijd-chips van de landing
    (waardes en stijl één-op-één uit app.js/style.css, niet nagetekend) */
-.send-intro { max-width:52ch; font-size:19px; line-height:1.6; }
+.send-intro { max-width:52ch; font-size:19px; line-height:1.6; margin-top:24px; }
 .send-intro p + p { margin-top:16px; }
 .time-frag { display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
 .time-frag .time-item { width:46px; padding:9px 0; border-radius:8px; border:1px solid transparent; background:var(--carbon); text-align:center; }
@@ -465,6 +465,11 @@ header.site .btn { padding:12px 22px; font-size:14px; }
   .splat-send { top:0; left:445px; width:130px; height:auto; }
   .splat-plan { top:0; left:800px; width:320px; height:auto; }
   .s-send .wrap { display:block; }
+  /* de intro blijft in de vrije linkerkolom: het dominante scherm (ss2,
+     left 510) kruist de sectierand en mag geen tekst bedekken */
+  .send-intro { max-width:none; }
+  .send-intro p { max-width:430px; }
+  .send-intro .time-frag { max-width:470px; gap:6px; }
   .send-stage { height:740px; margin-top:24px; }
   .send-step { position:absolute; margin:0; }
   /* bijschriften op één gedeelde basislijn (stage-y 590); alleen de
