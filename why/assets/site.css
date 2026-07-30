@@ -318,17 +318,19 @@ header.site .btn { padding:12px 22px; font-size:14px; }
 .done-row { display:flex; align-items:baseline; gap:16px; margin-top:18px; }
 .done-label { font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--dust); width:88px; flex:none; }
 .done-val { font-family:var(--mono); font-size:13px; letter-spacing:.04em; color:var(--chalk); }
-.done-blocks { list-style:none; margin:16px 0 0; padding:0; }
-.done-blocks li { display:flex; align-items:center; gap:12px; padding:8px 0; border-top:1px solid color-mix(in srgb, var(--graphite) 60%, transparent); font-size:15px; }
+/* de blokkenlijst is het bewijs van het structuurargument en leest
+   als eerste; de gevoelsrij blijft echt maar wordt ondersteuning */
+.done-blocks { list-style:none; margin:18px 0 0; padding:0; }
+.done-blocks li { display:flex; align-items:center; gap:12px; padding:11px 0; border-top:1px solid color-mix(in srgb, var(--graphite) 60%, transparent); font-size:16px; }
 .done-blocks li > span:first-child { flex:1; }
-.done-min { font-family:var(--mono); font-size:12px; color:var(--dust); }
+.done-min { font-family:var(--mono); font-size:13px; color:var(--chalk); }
 .tick { position:relative; width:22px; height:22px; flex:none; border:1px solid var(--graphite); border-radius:6px; }
 .tick-done { border-color:var(--dust); }
-.tick-done::after { content:"¹3"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--chalk); }
-.done-response { border:1px solid var(--graphite); border-radius:12px; padding:20px; margin-top:22px; }
+.tick-done::after { content:"\2713"; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--chalk); }
+.done-response { border:1px solid color-mix(in srgb, var(--graphite) 60%, transparent); border-radius:12px; padding:12px 16px; margin-top:18px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
 .done-response .done-label { width:auto; }
-.done-monsters { display:flex; align-items:center; justify-content:space-around; gap:24px; margin-top:14px; }
-.done-monsters img { width:48px; height:48px; image-rendering:pixelated; }
+.done-monsters { display:flex; align-items:center; gap:20px; margin-top:0; }
+.done-monsters img { width:30px; height:30px; image-rendering:pixelated; }
 .done-cta { padding:15px 0; border-radius:10px; background:var(--acid); color:var(--acid-text); margin-top:24px; font-family:var(--disp); font-weight:800; font-size:16px; letter-spacing:.08em; text-transform:uppercase; text-align:center; }
 .plan-copy { font-size:19px; line-height:1.6; margin-top:36px; max-width:44ch; }
 .plan-copy p + p { margin-top:16px; }
