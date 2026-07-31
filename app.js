@@ -1027,24 +1027,61 @@ function goToSession() {
   goTo('v-session');
 }
 
+// Stoplicht-bewuste einde-quotes: de keuze valt ná de stoplicht-tik, nooit
+// bij het openen van de summary (een rood signaal mag nooit naast een
+// felicitatie staan). sig = pool: green viert (arcade/overwinning), orange
+// is consistentie en proces, red erkent en viert nooit. gym:true blijft het
+// dwarsfilter (alleen meedoen in de gym-sessie). restored:true = geen deel
+// van de oude pool: bij naam teruggehaald uit de knip van 21 juli (v0.38),
+// plus de nieuwe rode regel "Logged honestly."; die knip blijft verder
+// staan. Zonder signaal (skip) kiest de app uit de onveranderde oude pool:
+// alles zonder restored.
 const QUOTES = [
-  // Game / Arcade
-  { q: "Finish Him!" }, { q: "Victory. Flawless." }, { q: "Level Complete." },
-  { q: "Quest Complete." }, { q: "+1000 XP" }, { q: "Achievement Unlocked." },
-  { q: "You Survived." }, { q: "Boss Defeated." }, { q: "New Skill Acquired." },
-  { q: "Checkpoint Reached." }, { q: "A Man’s Sword Is A Man’s Honour." },
-  // Boulder / Climbing
-  { q: "Stronger Than Yesterday." }, { q: "One Move Closer." }, { q: "Trust the Process." },
-  { q: "The Wall Remembers." }, { q: "Leave Skin. Take Strength." }, { q: "Every Send Starts Here." },
-  { q: "Grip. Pull. Repeat." }, { q: "Rest. Adapt. Return." }, { q: "Training Logged. Progress Loading..." },
-  { q: "Your Future Project Just Got Easier." },
-  // Gym (alleen in gym-sessie)
-  { q: "Weights Returned. Respect Earned.", gym: true }, { q: "Iron Never Lies.", gym: true },
-  { q: "Strength Deposited.", gym: true }, { q: "Muscles Under Construction.", gym: true },
-  { q: "Recovery Starts Now.", gym: true }, { q: "Built, Not Bought.", gym: true },
-  { q: "Small Gains. Big Results.", gym: true }, { q: "Consistency Wins.", gym: true },
-  { q: "You Did the Work.", gym: true }, { q: "Mission Complete.", gym: true },
+  // GREEN — boss defeated: het arcade- en overwinningsregister
+  { q: "Finish Him!", sig: 'green' }, { q: "Victory. Flawless.", sig: 'green' },
+  { q: "Level Complete.", sig: 'green' }, { q: "Quest Complete.", sig: 'green' },
+  { q: "+1000 XP", sig: 'green' }, { q: "Achievement Unlocked.", sig: 'green' },
+  { q: "Boss Defeated.", sig: 'green' }, { q: "New Skill Acquired.", sig: 'green' },
+  { q: "A Man’s Sword Is A Man’s Honour.", sig: 'green' },
+  { q: "Weights Returned. Respect Earned.", sig: 'green', gym: true },
+  { q: "Strength Deposited.", sig: 'green', gym: true },
+  { q: "Built, Not Bought.", sig: 'green', gym: true },
+  { q: "Mission Complete.", sig: 'green', gym: true },
+  // ORANGE — hard but controlled: consistentie en proces
+  { q: "You Survived.", sig: 'orange' }, { q: "Checkpoint Reached.", sig: 'orange' },
+  { q: "Stronger Than Yesterday.", sig: 'orange' }, { q: "One Move Closer.", sig: 'orange' },
+  { q: "Trust the Process.", sig: 'orange' }, { q: "The Wall Remembers.", sig: 'orange' },
+  { q: "Leave Skin. Take Strength.", sig: 'orange' }, { q: "Every Send Starts Here.", sig: 'orange' },
+  { q: "Grip. Pull. Repeat.", sig: 'orange' }, { q: "Training Logged. Progress Loading...", sig: 'orange' },
+  { q: "Your Future Project Just Got Easier.", sig: 'orange' },
+  { q: "Discipline > Motivation.", sig: 'orange', restored: true },
+  { q: "Progress Compounds.", sig: 'orange', restored: true },
+  { q: "One Percent Better.", sig: 'orange', restored: true },
+  { q: "The Work Is the Reward.", sig: 'orange', restored: true },
+  { q: "Iron Never Lies.", sig: 'orange', gym: true },
+  { q: "Muscles Under Construction.", sig: 'orange', gym: true },
+  { q: "Small Gains. Big Results.", sig: 'orange', gym: true },
+  { q: "Consistency Wins.", sig: 'orange', gym: true },
+  { q: "You Did the Work.", sig: 'orange', gym: true },
+  // RED — not today: erkenning zonder felicitatie
+  { q: "Rest. Adapt. Return.", sig: 'red' },
+  { q: "No Zero Days.", sig: 'red', restored: true },
+  { q: "Keep Showing Up.", sig: 'red', restored: true },
+  { q: "Done Is Powerful.", sig: 'red', restored: true },
+  { q: "Return Tomorrow.", sig: 'red', restored: true },
+  { q: "Logged honestly.", sig: 'red', restored: true },
+  { q: "Recovery Starts Now.", sig: 'red', gym: true },
 ];
+// pool bij signaal, oude pool zonder signaal; gym blijft het dwarsfilter
+function pickQuote(sig) {
+  const isGym = activeSessionId === 'gym';
+  const pool = QUOTES.filter(qt => (isGym || !qt.gym) && (sig ? qt.sig === sig : !qt.restored));
+  return pool[Math.floor(Math.random() * pool.length)].q;
+}
+function setSummaryQuote(sig) {
+  document.getElementById('summaryQuote').textContent = pickQuote(sig);
+  document.getElementById('summaryQuoteBox').style.display = '';
+}
 
 function fmtMin(sec){
   const m = Math.round(sec/60);
@@ -1126,12 +1163,10 @@ function showSessionSummary() {
       <div style="font-family:'DM Mono',monospace;font-size:10px;color:${lblCol};text-align:right;">${lblTxt}</div>
     </div>`;
   }).join('');
-  // gym-quotes alleen in de gym-sessie; anders uitsluiten
-  const isGym = activeSessionId === 'gym';
-  const pool = QUOTES.filter(qt => isGym ? true : !qt.gym);
-  const quote = pool[Math.floor(Math.random()*pool.length)];
-  document.getElementById('summaryQuote').textContent = quote.q;
-  document.getElementById('summaryQuoteAuthor').style.display = 'none';
+  // geen quote bij openen: de keuze valt pas bij de stoplicht-tik (of skip),
+  // zodat een rood signaal nooit een felicitatie naast zich vindt
+  document.getElementById('summaryQuote').textContent = '';
+  document.getElementById('summaryQuoteBox').style.display = 'none';
   document.getElementById('sessionSummary').style.display = 'flex';
 
   // logging gebeurt pas bij de stoplicht-tik (of overslaan)
@@ -1176,9 +1211,11 @@ const SIGNAL_ADVICE = {
 };
 function signalTap(sig) {
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, sig, _pendingLog.snap); _pendingLog = null; }
+  // quote uit de signaalpool, vóór de prerender: de kaart leest dezelfde string
+  setSummaryQuote(sig);
   // pas na resultaat en deel/bewaar-acties: subtiele install-regel (1x)
   if (_installOfferPending) { _installOfferPending = false; revealSummaryInstall(); }
-  // stoplicht staat nu op de kaart: opnieuw voorrenderen
+  // stoplicht en quote staan nu op de kaart: opnieuw voorrenderen
   prerenderResultCard();
   const a = SIGNAL_ADVICE[sig];
   document.getElementById('signalAsk').style.display = 'none';
@@ -1193,6 +1230,10 @@ function signalTap(sig) {
 }
 function signalSkip() {
   if (_pendingLog) { logSessionDone(_pendingLog.id, _pendingLog.variant, _pendingLog.time, null, _pendingLog.snap); _pendingLog = null; }
+  // zonder signaal: de onveranderde oude pool. De summary sluit direct,
+  // dus de quote leeft alleen nog op de eindkaart
+  setSummaryQuote(null);
+  prerenderResultCard();
   closeSummary();
 }
 
