@@ -3149,7 +3149,7 @@ function copyShareLink() {
   try { navigator.clipboard.writeText(inp.value); } catch { document.execCommand('copy'); }
   const btn = document.getElementById('copyLinkBtn');
   btn.textContent = 'Copied ✓';
-  setTimeout(()=>{ btn.textContent = 'Kopieer link'; }, 1800);
+  setTimeout(()=>{ btn.textContent = 'Copy link'; }, 1800);
 }
 function importFromHash() {
   const m = location.hash.match(/#s=(.+)/);
@@ -3832,7 +3832,7 @@ function resetTimerConfirm() {
   const rb = document.getElementById('timerResetBtn');
   if (rb && rb.disabled) return;
   _pendingExit = () => resetTimer();
-  document.getElementById('confirmTitle').textContent = 'Timer resetten?';
+  document.getElementById('confirmTitle').textContent = 'Reset timer?';
   document.getElementById('confirmMsg').textContent = 'The clock jumps back to the start of this block.';
   // hergebruik dezelfde dialoog, maar met reset-actie
   const dlg = document.getElementById('confirmExit');

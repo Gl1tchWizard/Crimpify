@@ -635,10 +635,9 @@ verwijzen ernaar.
     Windows-firewall blokkeert poort 8317. Bind op 0.0.0.0 en maak één
     firewallregel. Zonder dit is testen op een echt toestel niet mogelijk
     en moet elke check via een merge.
-21. **Nederlandse strings opruimen.** "Timer resetten?" en "precies op
-    schema" staan nog in de UI; taalregel is Engels. ("precies op schema"
-    is inmiddels gefixt in de openstaande wall-clock-branch; "Timer
-    resetten?" resteert.)
+21. **Nederlandse strings opruimen.** Gedaan (v0.62): "Timer resetten?"
+    en de knoptekst "Kopieer link" waren de laatste; "precies op schema"
+    was al eerder gefixt. De taalregel (Engels) blijft gelden.
 22. **Licentieclaim zichtbaar maken.** Copyrightregel in README en
     bovenaan app.js. Plus een zichtbare link naar de repo in de app: bij
     een PWA is de broncode al geleverd, maar een expliciete link is de
