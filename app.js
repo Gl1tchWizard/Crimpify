@@ -4462,7 +4462,12 @@ const MOCK_CHOOSE = [
     why:'Easy bouldering to build the base without tiring yourself, then a deliberately fatiguing gym circuit: weighted pull-ups, rows, traverses and hangs, three rounds. Cool down with a calm yoga flow. She will be back.' },
   { cat:'coach', name:'Summer Capacity', coach:'Magnus W', designed:true, mins:120, color:'green', rpe:'5-6', load:3, sys:'capacity', goal:'Volume', gear:['Gym wall','Kilterboard','Spray wall'], level:'all levels', keys:['ownWarmup','progDeadhangs','skillChoice','skillChoice','capacityMix','stretch'], addedDate:'2026-07-21',
     intent:'Deadhangs while fresh, two skill blocks, then a big counted capacity set.',
-    why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' }
+    why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' },
+  // Jaap dJ (sept 2026): vingers eerst terwijl je fris bent, dan het board;
+  // de sessie eindigt wanneer de power wegvalt, en dat is het ontwerp
+  { cat:'coach', name:'Limit', coach:'Jaap dJ', designed:true, mins:115, color:'amber', rpe:'8-9', load:4, sys:'strength', goal:'Finger limit', gear:['Kilterboard','Weights','Gym wall'], level:'intermediate+', keys:['dynamic','activeCurls','lmBar','lmLiftMax','lmLiftVolume','lmEasy','lmRamp','lmProject','lmTail','lmCore'], addedDate:'2026-09-07',
+    intent:'Find your finger max, then take it to the board.',
+    why:'Fingers first, while you are fresh: find today\'s one rep max on a twenty millimetre edge, then two sets of max reps at eighty five percent of that number. Then climb. Easy boulders on every wall angle to get moving well, a Kilterboard ramp up to your flash limit, one or two projects at a grade you have not climbed before, and boulders two grades below your max until the power goes.\nThat last part is the point. The session ends when you lose power and start to get tired, and stopping there is the session done right, not cut short. Toes to bar to close.' }
 ];
 // kop = som: getoonde en gefilterde minuten zijn altijd de som van de
 // blok-basisduren van de sessie; het statische mins-veld is alleen fallback
