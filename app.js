@@ -2562,7 +2562,8 @@ function coachSuggest() {
     reason:'Fresh enough for quality. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is up next in your rotation.' + extra };
 }
 // MOCK-prototype: verzoen wat je lijf nodig heeft (coachSuggest) met de tijd die je hébt (slider).
-// De suggestie loopt live mee met de tijdbalk; autoregulatie wint altijd van ambitie.
+// De suggestie loopt live mee met de tijdbalk; de tijdbalk is leidend. pick.time
+// is advies in de tekst, geen instelling: START verandert de tijd niet (applyCoach).
 function adaptCoachToTime(pick) {
   const t = getT();
   const p = { ...pick };
@@ -2585,7 +2586,7 @@ function adaptCoachToTime(pick) {
       return p;
     }
     if (p.id === 'recovery') {
-      p.reason += ' You have ' + t + ' minutes, your body asked for ' + p.time + '. Recovery does not scale; do it well and go home.';
+      p.reason += ' You have ' + t + ' minutes; recovery needs fewer. Keep it light and stop when it is done.';
       return p;
     }
   }
@@ -2693,9 +2694,11 @@ function togglePickWhy(btn) {
 }
 function applyCoach() {
   if (!_coachPick) return;
-  const pick = _coachPick;  // vastpakken: setTimeIdx hieronder ververst _coachPick via renderTodaysPick
-  const ti = timeValues.indexOf(pick.time);
-  if (ti >= 0) setTimeIdx(ti);
+  // De tijd op de landing is de tijd die je hébt en de kaart is daarop
+  // berekend. Die tijd hier op pick.time zetten gaf een slab met andere
+  // minuten dan de kaart beloofde (110 op de kaart, 67 plus fit-waarschuwing
+  // erachter). De coach past zich aan de tijd aan, niet andersom.
+  const pick = _coachPick;
   selectSession(pick.id);
   goToSession();
 }
