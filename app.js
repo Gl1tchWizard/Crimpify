@@ -4764,7 +4764,7 @@ function openMockSession(i) {
   sessionSid = null;   // catalogus-sessie openen = verse instantie
   const s = MOCK_CHOOSE[i];
   if (!s) return;
-  customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach + ' (mock)' };
+  customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach };
   customKeys = s.keys.slice();
   activeSessionId = 'custom';
   sessionLocked = true;
