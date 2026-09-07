@@ -69,9 +69,11 @@ Vier vastgelegde strategische beslissingen:
   standaard niet mee, dus lokaal testen blijft schoon. Consistent met
   productprincipe 1: we tellen bezoeken, nooit individuen. Geen andere
   analytics of tracking toevoegen. Naast paginabezoeken sturen we een vaste
-  set aggregaat-events (`trackEvent()` in app.js, no-op als count.js
-  ontbreekt) die de hele deel-trechter dekken; de vraag die ze moeten
-  beantwoorden is: hoeveel ontvangers starten een sessie en delen daarna
+  set aggregaat-events (`trackEvent()` in app.js; events van vóór het laden
+  van count.js wachten in een rij en gaan weg via `flushEvents()` bij de
+  onload van de snippet, no-op als count.js nooit laadt) die de hele
+  deel-trechter dekken; de vraag die ze moeten beantwoorden is: hoeveel
+  ontvangers starten een sessie en delen daarna
   zelf iets. Events: `share_created` (link gemaakt), `share_opened-<naam>`
   (link geopend, met sessienaam: welke sessies reizen), `session_previewed`
   (preview geopend), `session_started`, `session_completed` (gelogd met

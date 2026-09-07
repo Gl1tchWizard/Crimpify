@@ -4051,10 +4051,20 @@ window.addEventListener('pagehide', flushState);
 // ── GROEIVLIEGWIEL: aggregaat-events + installatie-uitnodiging ──
 // GoatCounter-events: cookieloos en geaggregeerd, nooit individuen
 // (productprincipe 1). We meten welke sessies reizen en waar de trechter
-// lekt: shared-open-<sessie>, session-start, session-done-<sig>,
-// install-prompt-shown, install-accepted.
+// lekt; de vaste lijst eventnamen staat in CLAUDE.md (Techniek, Analytics).
+// count.js laadt async en ná app.js, dus een event dat tijdens de boot vuurt
+// (share_opened uit importFromHash) treft nog geen goatcounter aan. Zulke
+// events wachten in een rij en gaan weg zodra de snippet geladen is (de
+// onload in index.html roept flushEvents); laadt hij nooit, dan blijft het
+// een no-op, zoals voorheen.
+const _pendingEvents = [];
 function trackEvent(name) {
-  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, event: true }); } catch {}
+  if (!(window.goatcounter && window.goatcounter.count)) { _pendingEvents.push(name); return; }
+  try { window.goatcounter.count({ path: name, event: true }); } catch {}
+}
+function flushEvents() {
+  if (!(window.goatcounter && window.goatcounter.count)) return;
+  while (_pendingEvents.length) trackEvent(_pendingEvents.shift());
 }
 function slugName(n) { return (n || 'session').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 
