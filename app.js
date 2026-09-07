@@ -4766,11 +4766,12 @@ function openMockSession(i) {
   if (!s) return;
   customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach };
   customKeys = s.keys.slice();
+  durationOverride['custom'] = {};  // verse instantie, geen stale slot-overrides van een concept
   activeSessionId = 'custom';
   sessionLocked = true;
   sessionOwned = false;
-  // de gekozen tijd op de landing bepaalt het schema, ook voor Choose-sessies;
-  // de minuten op de kaart zijn browse-informatie, geen override
+  // een catalogus-instantie draait op de basisduren van zijn blokken (som is
+  // leidend, zoals in de builder); de tijd op de landing schaalt hier niet
   buildSlab();
   goTo('v-session');
 }
