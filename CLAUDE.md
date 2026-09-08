@@ -50,8 +50,8 @@ Vier vastgelegde strategische beslissingen:
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v57`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v58`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v58`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v59`, enz.), anders zien bezoekers de oude versie.
   De navigatietak cachet sinds v0.51 alleen geslaagde antwoorden (res.ok):
   een 404 kan nooit blijven hangen als offline-kopie van een pad.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
@@ -556,11 +556,17 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
      scheidt echt van mock: de hero (session of the week) roteert per dag
      uitsluitend over designed-sessies (nooit meer hardcoded een
      mock-entry) en designed-kaarten dragen het woord "designed" in de
-     kaartvoet: bestaande typografie, geen badge, geen kleuraccent. Elf
+     kaartvoet: bestaande typografie, geen badge, geen kleuraccent. Twaalf
      designed-sessies: Five by Five, Four Shots, Sarah Connor, Summer
-     Capacity, Crimp Factory (echt gemaakt in v0.48) en sinds v0.50 de zes
+     Capacity, Crimp Factory (echt gemaakt in v0.48), sinds v0.50 de zes
      uit de deployment brief: Power Hour, Base Camp, Board Blitz, Flow
-     State, Ninja Feet (vervangt Silent Feet) en The Grinder. Hun blokken
+     State, Ninja Feet (vervangt Silent Feet) en The Grinder, en sinds
+     v0.63 Limit (Jaap dJ, 115 min): de eerste sessie die een echte coach
+     zelf heeft aangeleverd, acht eigen lm-blokken plus hergebruik van
+     dynamic en activeCurls. Limit heeft als enige designed-sessie wel een
+     addedDate, zodat hij veertien dagen in News staat; de blokduren zijn
+     een schatting op basis van Jaaps tijden per boulder en mogen later
+     bijgesteld worden. Hun blokken
      dragen `sessionOnly: true` als herkomstmarkering; er wordt nergens op
      gefilterd (beslissing v0.51): de blokken staan gewoon in de
      picker-groepen zodat varianten bouwen kan. Ze hebben geen addedDate
@@ -733,7 +739,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.62) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.63) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
