@@ -562,8 +562,11 @@ blijft verborgen; mag terug als icoon, niet als balk bovenaan.
      uit de deployment brief: Power Hour, Base Camp, Board Blitz, Flow
      State, Ninja Feet (vervangt Silent Feet) en The Grinder, en sinds
      v0.63 Limit (Jaap dJ, 115 min): de eerste sessie die een echte coach
-     zelf heeft aangeleverd, acht eigen lm-blokken plus hergebruik van
-     dynamic en activeCurls. Limit heeft als enige designed-sessie wel een
+     zelf heeft aangeleverd, negen eigen lm-blokken plus hergebruik van
+     activeCurls, dat ook in zijn eigen Crimp Factory staat. Bewust geen
+     bibliotheekblokken met een eigen naam of andermans protocol in een
+     coach-sessie: de Charlie warm-up stond er eerst in en las als een
+     voorschrift van Jaap. Limit heeft als enige designed-sessie wel een
      addedDate, zodat hij veertien dagen in News staat; de blokduren zijn
      een schatting op basis van Jaaps tijden per boulder en mogen later
      bijgesteld worden. Hun blokken

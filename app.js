@@ -483,7 +483,10 @@ const BLOCKLIB = {
     why:'Walk, breathe or lie down comfortably and let the session finish quietly. Optional log: overall fatigue, finger readiness, motivation, sleep, and whether the next planned hard session should remain unchanged.\nKeeping the habit does not require turning recovery into another workout.' },
 
   // ── Limit (Jaap dJ, sept 2026; 115 min: 10+6+6+15+8+12+12+25+15+6,
-  //    sessiebereik 94-160). dynamic en activeCurls worden hergebruikt.
+  //    sessiebereik 90-160). Alleen activeCurls wordt hergebruikt; dat blok
+  //    staat ook in Jaaps eigen Crimp Factory.
+  lmMobility: { n:'Lower Body Mobility', t:10, tMin:6, tMax:15, c:'var(--prepare)', rpe:'1-2', sessionOnly:true,
+    why:'Ten minutes of dynamic stretching for the lower body, before anything else. Move through the ranges you are about to use: hips, groin, hamstrings, calves and ankles, with controlled swings, lunges and circles rather than long holds. Keep breathing and stay inside the end range; this is preparation, not a stretching session. Finish when squatting deep and stepping high feel easy.' },
   lmBar: { n:'Shoulder & Pull Prep', t:6, c:'var(--prepare)', rpe:'3-5', guided:true, fixed:true, sessionOnly:true,
     why:'Shoulders and pulling muscles ready for the bar before any finger loading. Hanging shoulder shrugs first: hang with straight arms and pull the shoulder blades down and together, ten calm reps. Then two sets of two to five pull-ups, supported by a band or a foot on a box if that is what it takes to keep them clean. Finish with two ten second two-arm lock-offs at ninety degrees. Rest between every set. This is preparation, so nothing here should feel like a max.',
     items:[
@@ -2796,7 +2799,7 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup','sdWarmup','edMobility','fgWarmup','csWarmup','trMobility','lmBar'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup','sdWarmup','edMobility','fgWarmup','csWarmup','trMobility','lmMobility','lmBar'] },
   { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat','bcBoardPrimer','fsPrimer','fsConnect','fsFreeFlow','nfDrill','nfReal','nfNormal','lmEasy'] },
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix','bcMileage','edEasy'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator','tgSetup','tgHehe'] },
@@ -4478,7 +4481,7 @@ const MOCK_CHOOSE = [
     why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' },
   // Jaap dJ (sept 2026): vingers eerst terwijl je fris bent, dan het board;
   // de sessie eindigt wanneer de power wegvalt, en dat is het ontwerp
-  { cat:'coach', name:'Limit', coach:'Jaap dJ', designed:true, mins:115, color:'amber', rpe:'8-9', load:4, sys:'strength', goal:'Finger limit', gear:['Kilterboard','Weights','Gym wall'], level:'intermediate+', keys:['dynamic','activeCurls','lmBar','lmLiftMax','lmLiftVolume','lmEasy','lmRamp','lmProject','lmTail','lmCore'], addedDate:'2026-09-07',
+  { cat:'coach', name:'Limit', coach:'Jaap dJ', designed:true, mins:115, color:'amber', rpe:'8-9', load:4, sys:'strength', goal:'Finger limit', gear:['Kilterboard','Weights','Gym wall'], level:'intermediate+', keys:['lmMobility','activeCurls','lmBar','lmLiftMax','lmLiftVolume','lmEasy','lmRamp','lmProject','lmTail','lmCore'], addedDate:'2026-09-07',
     intent:'Find your finger max, then take it to the board.',
     why:'Fingers first, while you are fresh: find today\'s one rep max on a twenty millimetre edge, then two sets of max reps at eighty five percent of that number. Then climb. Easy boulders on every wall angle to get moving well, a Kilterboard ramp up to your flash limit, one or two projects at a grade you have not climbed before, and boulders two grades below your max until the power goes.\nThat last part is the point. The session ends when you lose power and start to get tired, and stopping there is the session done right, not cut short. Toes to bar to close.' }
 ];
