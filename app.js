@@ -4667,8 +4667,18 @@ function renderChoose() {
   // weergavevolgorde op het scherm blijft ongewijzigd; een plank die
   // na dedup onder de twee kaarten zakt verbergt zich.
   const claimed = new Set([fi]);
-  const claim = shelf => { shelf.idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity); shelf.idxs.forEach(i => claimed.add(i)); return shelf; };
-  const shelfOrHide = shelf => shelf.idxs.length >= 2 ? chShelf(shelf) : '';
+  // Een plank die zich toch verbergt claimt niets. Anders eist hij een sessie
+  // op en verdwijnt die uit de HELE catalogus: precies wat er met de enige
+  // verse sessie gebeurde (Freshly added claimde hem, zakte onder de twee
+  // kaarten en verborg zich, dus stond hij nergens meer).
+  const MIN_SHELF = 2;
+  const claim = shelf => {
+    const idxs = shelf.idxs.filter(i => !claimed.has(i)).slice(0, shelf.max || Infinity);
+    shelf.idxs = idxs.length >= MIN_SHELF ? idxs : [];
+    shelf.idxs.forEach(i => claimed.add(i));
+    return shelf;
+  };
+  const shelfOrHide = shelf => shelf.idxs.length >= MIN_SHELF ? chShelf(shelf) : '';
   const forYouShelf = computeForYou();
   const underShelf = Object.assign(computeTimeShelf(), { max: 4 });
   [apexShelf, freshShelf, forYouShelf, underShelf].forEach(claim);
