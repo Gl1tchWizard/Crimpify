@@ -50,8 +50,8 @@ Vier vastgelegde strategische beslissingen:
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v58`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v59`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v59`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v60`, enz.), anders zien bezoekers de oude versie.
   De navigatietak cachet sinds v0.51 alleen geslaagde antwoorden (res.ok):
   een 404 kan nooit blijven hangen als offline-kopie van een pad.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
@@ -742,7 +742,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.63) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.64) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
