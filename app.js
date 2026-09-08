@@ -482,36 +482,37 @@ const BLOCKLIB = {
   trDownshift: { n:'Downshift', t:5, tMin:3, tMax:10, c:'var(--prepare)', rpe:'1', sessionOnly:true,
     why:'Walk, breathe or lie down comfortably and let the session finish quietly. Optional log: overall fatigue, finger readiness, motivation, sleep, and whether the next planned hard session should remain unchanged.\nKeeping the habit does not require turning recovery into another workout.' },
 
-  // ── Limit (Jaap dJ, sept 2026; 115 min: 10+6+6+15+8+12+12+25+15+6,
-  //    sessiebereik 94-160). dynamic en activeCurls worden hergebruikt.
-  lmBar: { n:'Shoulder & Pull Prep', t:6, c:'var(--prepare)', rpe:'3-5', guided:true, fixed:true, sessionOnly:true,
-    why:'Shoulders and pulling muscles ready for the bar before any finger loading. Hanging shoulder shrugs first: hang with straight arms and pull the shoulder blades down and together, ten calm reps. Then two sets of two to five pull-ups, supported by a band or a foot on a box if that is what it takes to keep them clean. Finish with two ten second two-arm lock-offs at ninety degrees. Rest between every set. This is preparation, so nothing here should feel like a max.',
+  // ── Limit (Jaap dJ, sept 2026). Vijf blokken, één per sectie van Jaaps
+  //    eigen indeling: warm-up, finger training, gym boulders, kilterboard,
+  //    core. 22+23+12+52+6 = 115 min, sessiebereik 97-160. Alles in zijn
+  //    woorden; geen bibliotheekblok met een eigen naam of andermans
+  //    protocol in een coach-sessie.
+  lmWarmup: { n:'Warm-up', t:22, c:'var(--prepare)', rpe:'2-4', guided:true, fixed:true, sessionOnly:true,
+    why:'One warm-up, five parts, in this order: lower body, fingers, shoulders, pull, lock-off. Lower body first with dynamic stretching through the ranges you are about to use. Then finger curls, building gently, nothing near a max. Then hanging shoulder shrugs, ten calm reps with straight arms and the shoulder blades pulled down and together. Then two sets of two to five pull-ups, supported by a band or a foot on a box if that is what it takes to keep them clean. Finish with two ten second two-arm lock-offs at ninety degrees. Rest between every set. Nothing here should feel hard; the finger lifts are next and they need you fresh.',
     items:[
-      { n:'Hanging shoulder shrugs', note:'10 reps, straight arms, shoulder blades down and together', sec:30 },
-      { n:'Shake out', note:'breathe out', sec:30, rest:true },
-      { n:'Pull-ups, set 1', note:'2 to 5 reps, band or foot support if needed', sec:30 },
-      { n:'Rest', note:'full recovery, this is prep', sec:45, rest:true },
-      { n:'Pull-ups, set 2', note:'2 to 5 reps, same support', sec:30 },
-      { n:'Rest', note:'shake the arms out', sec:45, rest:true },
-      { n:'Lock-off, set 1', note:'two arms, hold 10 seconds at 90 degrees', sec:15 },
-      { n:'Rest', note:'arms down', sec:45, rest:true },
-      { n:'Lock-off, set 2', note:'two arms, hold 10 seconds at 90 degrees', sec:15 },
+      { n:'Lower body: dynamic stretching', note:'hips, groin, hamstrings, calves, ankles', sec:420 },
+      { n:'Fingers: finger curls', note:'build gently, stay well off max', sec:300 },
+      { n:'Shake out', note:'breathe', sec:30, rest:true },
+      { n:'Shoulders: hanging shoulder shrugs', note:'10 reps, straight arms, blades down and together', sec:60 },
+      { n:'Rest', note:'arms down', sec:30, rest:true },
+      { n:'Pull-ups, set 1', note:'2 to 5 reps, band or foot support if needed', sec:45 },
+      { n:'Rest', note:'full recovery, this is prep', sec:60, rest:true },
+      { n:'Pull-ups, set 2', note:'2 to 5 reps, same support', sec:45 },
+      { n:'Rest', note:'shake the arms out', sec:60, rest:true },
+      { n:'Lock-off, set 1', note:'two arms, hold 10 seconds at 90 degrees', sec:20 },
+      { n:'Rest', note:'arms down', sec:60, rest:true },
+      { n:'Lock-off, set 2', note:'two arms, hold 10 seconds at 90 degrees', sec:20 },
       { n:'Shake out', note:'on to the finger lifts', sec:30, rest:true },
     ] },
-  lmLiftMax: { n:'Finger Lifts Limit', t:15, tMin:12, tMax:20, c:'var(--max-effort)', rpe:'9-10', sets:3, rest:2, sessionOnly:true,
-    why:'Find today\'s one rep max on a twenty millimetre edge in half crimp, one hand at a time. Start light, around ten to twenty kilos, and build up in steps until a single lift is all you have; the three set dots are your three heaviest singles. Rest one to two minutes between lifts. Keep the elbow soft and the shoulder still: the fingers do the work, the body stays quiet. Stop the build-up as soon as a lift slows down or the grip opens. That last clean single is your max; write it down for the next block.' },
-  lmLiftVolume: { n:'Finger Lifts Volume', t:8, tMin:6, tMax:10, c:'var(--max-effort)', rpe:'8-9', sets:2, rest:2, sessionOnly:true,
-    why:'Two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Same edge, same half crimp, one hand at a time. Every rep is a full lift and a controlled lower. The set ends the moment the grip starts to open or the reps slow down, not when the fingers give out. Note the reps per hand: more reps at the same weight next time is progress as much as a heavier single.' },
-  lmEasy: { n:'Easy Gym Boulders', t:12, tMin:10, tMax:18, c:'var(--skill)', rpe:'3-4', sessionOnly:true, checklist:true, target:8, range:'6-10', grade:'easy',
-    why:'One or two easy boulders per wall angle and style, counted as you go. Slab, vertical, overhang, compression, crimps, slopers: cover the gym, not the grades. The point is to move very well and efficiently, so read each boulder first, place your feet once and climb it as smoothly as you can. If a boulder feels like work it is too hard for this block. Six to ten boulders is plenty; you should arrive at the board warm and sharp, not tired.' },
-  lmRamp: { n:'Kilterboard Ramp', t:12, tMin:10, tMax:20, c:'var(--max-effort)', rpe:'5-8', sessionOnly:true, checklist:true, target:8, range:'6-10', grade:'easy to max flash',
-    why:'Kilterboard, or the board you have: start easy and go up one step in difficulty every climb until you reach your max flash level. Count each boulder. Rest properly between climbs from the middle of the ramp onwards, so every attempt is a real flash attempt. The ramp ends at the first grade you cannot flash; that grade tells you where to project in the next block. Six to ten boulders is typical. Stop the ramp early if a flash feels sloppy rather than just hard.' },
-  lmProject: { n:'Kilterboard Project', t:25, tMin:20, tMax:35, c:'var(--max-effort)', rpe:'9-10', sets:2, sessionOnly:true,
-    why:'One or two boulders at a grade you have not climbed before, or at your max grade, ten to fifteen minutes each. The two set dots are your two boulders. Work the moves, find the beta, then link. Rest fully between real attempts; short move checks do not count. A send is welcome but not required: a good project block is one where the hard attempts stayed fast and committed. Stop working a boulder when two attempts in a row get slower, and switch to the second boulder or move on.' },
-  lmTail: { n:'Two Below Max', t:15, tMin:10, tMax:25, c:'var(--max-effort)', rpe:'7-8', sessionOnly:true,
-    why:'Keep climbing boulders two grades below your max, no more than five minutes per boulder. The session ends when you lose power and start to get tired, and that end is the plan, not a failure: log the stoplight and go home. Full rests between boulders; climb each one as well as you can rather than as many as you can. The first boulder that feels heavy for its grade is your signal. Finish that one and stop. Nobody needs the last three tired boulders.' },
-  lmCore: { n:'Toes to Bar', t:6, tMin:5, tMax:8, c:'var(--prepare)', rpe:'7-8', sets:2, rest:2, sessionOnly:true,
-    why:'Two rounds of toes to bar, as many clean reps as you can, two minutes rest between rounds. Hang with straight arms, bring the toes to the bar with control and lower without swinging. Too hard today? Knee raises or straight leg raises count just the same; pick the version where you can still control the way down. Stop the round when the swing takes over.' },
+  lmFingers: { n:'Finger Training', t:23, tMin:18, tMax:32, c:'var(--max-effort)', rpe:'9-10', sets:5, rest:2, sessionOnly:true,
+    why:'Two protocols on a twenty millimetre edge in half crimp, one hand at a time. First Finger Lifts Limit: start around ten to twenty kilos and build up in steps until a single lift is all you have, three singles at the top, one to two minutes rest between sets. Stop the build-up as soon as a lift slows down or the grip opens; that last clean single is your max, write it down.\nThen Finger Lifts Volume: two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Every rep is a full lift and a controlled lower. A set ends the moment the grip starts to open, not when the fingers give out. The five set dots are the three singles and the two volume sets. More reps at the same weight next time is progress as much as a heavier single.' },
+  lmGym: { n:'Gym Boulders', t:12, tMin:10, tMax:18, c:'var(--skill)', rpe:'3-4', sessionOnly:true, checklist:true, target:8, range:'6-10', grade:'easy',
+    why:'One or two easy boulders per wall angle and type, counted as you go. Slab, vertical, overhang, compression, crimps, slopers: cover the gym, not the grades. Focus on moving very well and efficiently, so read each boulder first, place your feet once and climb it as smoothly as you can. If a boulder feels like work it is too hard for this block. You should arrive at the board warm and sharp, not tired.' },
+  lmBoard: { n:'Kilterboard', t:52, tMin:40, tMax:75, c:'var(--max-effort)', rpe:'8-10', sessionOnly:true,
+    why:'Kilterboard, or the board you have, in three phases. Start with an easy boulder and increase the difficulty every climb until you hit your max flash level; rest properly from the middle of the ramp onwards so every attempt is a real flash attempt.\nThen pick one or two boulders at a grade you have not climbed before, or at your max grade, and take ten to fifteen minutes per boulder to project. Work the moves, find the beta, then link. Rest fully between real attempts.\nThen keep climbing boulders two grades below your max, no more than five minutes per boulder. The session ends when you lose power and start to get tired. That end is the plan, not a failure: log the stoplight and go home. The first boulder that feels heavy for its grade is your signal. Finish that one and stop.' },
+  lmCore: { n:'Core', t:6, tMin:5, tMax:8, c:'var(--prepare)', rpe:'7-8', sets:2, rest:2, sessionOnly:true,
+    why:'Toes to bar, two rounds of as many clean reps as you can, two minutes rest between rounds. Hang with straight arms, bring the toes to the bar with control and lower without swinging. Too hard today? Knee raises or straight leg raises count just the same; pick the version where you can still control the way down. Stop the round when the swing takes over.' },
+
 };
 
 // ══ SESSIONS = energy system containers ══
@@ -2627,8 +2628,8 @@ function adaptCoachToTime(pick) {
 // ── TODAY'S PICK: het primaire moment op de landing. De coach/ACWR-logica
 // (coachSuggest + adaptCoachToTime) blijft ongewijzigd; alleen de vorm is nieuw. ──
 // materiaal-sleutellijsten: gedeeld door deriveGear en de generate-vraagflow
-const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog','lmLiftMax','lmLiftVolume'];
-const BOARD_KEYS = ['board1','boardVolume','boardApply','campus','lmRamp','lmProject','lmTail'];
+const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog','lmFingers'];
+const BOARD_KEYS = ['board1','boardVolume','boardApply','campus','lmBoard'];
 const GYM_KEYS = ['gymWarmup','pullStrength','pushStrength','coreLegs','mini1','mini2','mini3'];
 // materiaal-voorkeur van de generate-vraagflow; default alles beschikbaar,
 // dus zonder vraagflow verandert er niets aan de rotatie
@@ -2796,12 +2797,12 @@ function ensureDraftMode() {
 // Indeling volgt de opbouw van een sessie én de energiesysteem-taxonomie:
 // warm-up → techniek → energiesysteem-werk (capaciteit / PE / max) → vingers → antagonist → herstel
 const BLOCK_GROUPS = [
-  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup','sdWarmup','edMobility','fgWarmup','csWarmup','trMobility','lmBar'] },
-  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat','bcBoardPrimer','fsPrimer','fsConnect','fsFreeFlow','nfDrill','nfReal','nfNormal','lmEasy'] },
+  { name:'Warm-up & activation',        keys:['dynamic','warmup','warmupFinger','gymWarmup','mobilityOpen','tensionAct','easyTen','noHangsEmil','tendonClimb','tendonFull','fiveWarmup','wallRamp','ownWarmup','activeCurls','phWarmup','bcWarmup','bbPrimer','fsWarmup','nfWarmup','tgWarmup','sdWarmup','edMobility','fgWarmup','csWarmup','trMobility','lmWarmup'] },
+  { name:'Technique & skills',          keys:['drillsOnly','drillBlocks','drillLibrary','skillLight','slab','boardApply','skillChoice','slabWork','cleanRepeat','bcBoardPrimer','fsPrimer','fsConnect','fsFreeFlow','nfDrill','nfReal','nfNormal','lmGym'] },
   { name:'Capacity · aerobic volume', keys:['volume','boardVolume','easyClimb','sprayLight','mediumTwenty','frontBuild','easyDozen','capacityMix','bcMileage','edEasy'] },
   { name:'Power endurance',            keys:['peFlow','fourByFour','hehe','linked','compStyle','fiveProblems','terminator','tgSetup','tgHehe'] },
-  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots','phDynamic','phLimit','bbReady','bbThree','sdProject','csRound','csPressure','lmRamp','lmProject','lmTail'] },
-  { name:'Finger strength',               keys:['maxHangs','progDeadhangs','fgPrep','fgMax','lmLiftMax','lmLiftVolume'] },
+  { name:'Max strength & power',         keys:['limitBlocks','project','board1','campus','dynos','pyramide','frontGrowth','lockoffs','pullStrength','fourShots','phDynamic','phLimit','bbReady','bbThree','sdProject','csRound','csPressure','lmBoard'] },
+  { name:'Finger strength',               keys:['maxHangs','progDeadhangs','fgPrep','fgMax','lmFingers'] },
   { name:'Antagonist, core & gym',     keys:['pushStrength','coreLegs','mini1','mini2','mini3','lmCore'] },
   { name:'Recovery & mobility',       keys:['stretch','stretchLong','hog','nohangs','frontMaint','squatLat','meditation','yogaFlow','phDownshift','bcWindDown','bbLog','fsDownshift','tgDownshift','sdLog','edDownshift','fgLog','csDebrief','trNoHangs','trAntagonist','trDownshift'] },
 ];
@@ -4478,7 +4479,7 @@ const MOCK_CHOOSE = [
     why:'Progressive deadhangs while you are fresh, two skill blocks of your own choice, then twenty five to thirty five counted boulders across board, spray and gym. Most should go in one or two attempts. Add one or two boulders per session, no more.' },
   // Jaap dJ (sept 2026): vingers eerst terwijl je fris bent, dan het board;
   // de sessie eindigt wanneer de power wegvalt, en dat is het ontwerp
-  { cat:'coach', name:'Limit', coach:'Jaap dJ', designed:true, mins:115, color:'amber', rpe:'8-9', load:4, sys:'strength', goal:'Finger limit', gear:['Kilterboard','Weights','Gym wall'], level:'intermediate+', keys:['dynamic','activeCurls','lmBar','lmLiftMax','lmLiftVolume','lmEasy','lmRamp','lmProject','lmTail','lmCore'], addedDate:'2026-09-07',
+  { cat:'coach', name:'Limit', coach:'Jaap dJ', designed:true, mins:115, color:'amber', rpe:'8-9', load:4, sys:'strength', goal:'Finger limit', gear:['Kilterboard','Weights','Gym wall'], level:'intermediate+', keys:['lmWarmup','lmFingers','lmGym','lmBoard','lmCore'], addedDate:'2026-09-07',
     intent:'Find your finger max, then take it to the board.',
     why:'Fingers first, while you are fresh: find today\'s one rep max on a twenty millimetre edge, then two sets of max reps at eighty five percent of that number. Then climb. Easy boulders on every wall angle to get moving well, a Kilterboard ramp up to your flash limit, one or two projects at a grade you have not climbed before, and boulders two grades below your max until the power goes.\nThat last part is the point. The session ends when you lose power and start to get tired, and stopping there is the session done right, not cut short. Toes to bar to close.' }
 ];
