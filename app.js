@@ -505,7 +505,7 @@ const BLOCKLIB = {
       { n:'Shake out', note:'on to the finger lifts', sec:30, rest:true },
     ] },
   lmFingers: { n:'Finger Training', t:23, tMin:18, tMax:32, c:'var(--max-effort)', rpe:'9-10', sets:5, rest:2, sessionOnly:true,
-    why:'Two protocols on a twenty millimetre edge in half crimp, one hand at a time. First Finger Lifts Limit: start around ten to twenty kilos and build up in steps until a single lift is all you have, three singles at the top, one to two minutes rest between sets. Stop the build-up as soon as a lift slows down or the grip opens; that last clean single is your max, write it down.\nThen Finger Lifts Volume: two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Every rep is a full lift and a controlled lower. A set ends the moment the grip starts to open, not when the fingers give out. The five set dots are the three singles and the two volume sets. More reps at the same weight next time is progress as much as a heavier single.' },
+    why:'Pick-ups, not hangs: lift a loaded twenty millimetre edge off the floor in half crimp, one hand at a time. An edge or lifting block plus plates, no hangboard. First Finger Lifts Limit: start around ten to twenty kilos and build up in steps until a single lift is all you have, three singles at the top, one to two minutes rest between sets. Stop the build-up as soon as a lift slows down or the grip opens; that last clean single is your max, write it down.\nThen Finger Lifts Volume: two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Every rep is a full lift and a controlled lower. A set ends the moment the grip starts to open, not when the fingers give out. The five set dots are the three singles and the two volume sets. More reps at the same weight next time is progress as much as a heavier single.' },
   lmGym: { n:'Gym Boulders', t:12, tMin:10, tMax:18, c:'var(--skill)', rpe:'3-4', sessionOnly:true, checklist:true, target:8, range:'6-10', grade:'easy',
     why:'One or two easy boulders per wall angle and type, counted as you go. Slab, vertical, overhang, compression, crimps, slopers: cover the gym, not the grades. Focus on moving very well and efficiently, so read each boulder first, place your feet once and climb it as smoothly as you can. If a boulder feels like work it is too hard for this block. You should arrive at the board warm and sharp, not tired.' },
   lmBoard: { n:'Kilterboard', t:52, tMin:40, tMax:75, c:'var(--max-effort)', rpe:'8-10', sessionOnly:true,
@@ -2628,7 +2628,7 @@ function adaptCoachToTime(pick) {
 // ── TODAY'S PICK: het primaire moment op de landing. De coach/ACWR-logica
 // (coachSuggest + adaptCoachToTime) blijft ongewijzigd; alleen de vorm is nieuw. ──
 // materiaal-sleutellijsten: gedeeld door deriveGear en de generate-vraagflow
-const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog','lmFingers'];
+const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog'];
 const BOARD_KEYS = ['board1','boardVolume','boardApply','campus','lmBoard'];
 const GYM_KEYS = ['gymWarmup','pullStrength','pushStrength','coreLegs','mini1','mini2','mini3'];
 // materiaal-voorkeur van de generate-vraagflow; default alles beschikbaar,
