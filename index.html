@@ -40,7 +40,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.61</div>
+    <div id="splashBy">by Glitch Labs · v0.62</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -634,6 +634,6 @@
 <script src="app.js"></script>
 <!-- GoatCounter: cookieloos, aggregaat-only; count.js telt localhost zelf niet mee -->
 <script data-goatcounter="https://crimpify.goatcounter.com/count"
-        async src="//gc.zgo.at/count.js"></script>
+        async src="//gc.zgo.at/count.js" onload="window.flushEvents && flushEvents()"></script>
 </body>
 </html>

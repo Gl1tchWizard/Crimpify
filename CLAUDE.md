@@ -50,8 +50,8 @@ Vier vastgelegde strategische beslissingen:
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v54`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v55`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v57`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v58`, enz.), anders zien bezoekers de oude versie.
   De navigatietak cachet sinds v0.51 alleen geslaagde antwoorden (res.ok):
   een 404 kan nooit blijven hangen als offline-kopie van een pad.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
@@ -69,9 +69,11 @@ Vier vastgelegde strategische beslissingen:
   standaard niet mee, dus lokaal testen blijft schoon. Consistent met
   productprincipe 1: we tellen bezoeken, nooit individuen. Geen andere
   analytics of tracking toevoegen. Naast paginabezoeken sturen we een vaste
-  set aggregaat-events (`trackEvent()` in app.js, no-op als count.js
-  ontbreekt) die de hele deel-trechter dekken; de vraag die ze moeten
-  beantwoorden is: hoeveel ontvangers starten een sessie en delen daarna
+  set aggregaat-events (`trackEvent()` in app.js; events van vóór het laden
+  van count.js wachten in een rij en gaan weg via `flushEvents()` bij de
+  onload van de snippet, no-op als count.js nooit laadt) die de hele
+  deel-trechter dekken; de vraag die ze moeten beantwoorden is: hoeveel
+  ontvangers starten een sessie en delen daarna
   zelf iets. Events: `share_created` (link gemaakt), `share_opened-<naam>`
   (link geopend, met sessienaam: welke sessies reizen), `session_previewed`
   (preview geopend), `session_started`, `session_completed` (gelogd met
@@ -633,10 +635,9 @@ verwijzen ernaar.
     Windows-firewall blokkeert poort 8317. Bind op 0.0.0.0 en maak één
     firewallregel. Zonder dit is testen op een echt toestel niet mogelijk
     en moet elke check via een merge.
-21. **Nederlandse strings opruimen.** "Timer resetten?" en "precies op
-    schema" staan nog in de UI; taalregel is Engels. ("precies op schema"
-    is inmiddels gefixt in de openstaande wall-clock-branch; "Timer
-    resetten?" resteert.)
+21. **Nederlandse strings opruimen.** Gedaan (v0.62): "Timer resetten?"
+    en de knoptekst "Kopieer link" waren de laatste; "precies op schema"
+    was al eerder gefixt. De taalregel (Engels) blijft gelden.
 22. **Licentieclaim zichtbaar maken.** Copyrightregel in README en
     bovenaan app.js. Plus een zichtbare link naar de repo in de app: bij
     een PWA is de broncode al geleverd, maar een expliciete link is de
@@ -732,7 +733,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.59) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.62) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)

@@ -2562,7 +2562,8 @@ function coachSuggest() {
     reason:'Fresh enough for quality. ' + (getSession(nextId) ? getSession(nextId).name : nextId) + ' is up next in your rotation.' + extra };
 }
 // MOCK-prototype: verzoen wat je lijf nodig heeft (coachSuggest) met de tijd die je hébt (slider).
-// De suggestie loopt live mee met de tijdbalk; autoregulatie wint altijd van ambitie.
+// De suggestie loopt live mee met de tijdbalk; de tijdbalk is leidend. pick.time
+// is advies in de tekst, geen instelling: START verandert de tijd niet (applyCoach).
 function adaptCoachToTime(pick) {
   const t = getT();
   const p = { ...pick };
@@ -2585,7 +2586,7 @@ function adaptCoachToTime(pick) {
       return p;
     }
     if (p.id === 'recovery') {
-      p.reason += ' You have ' + t + ' minutes, your body asked for ' + p.time + '. Recovery does not scale; do it well and go home.';
+      p.reason += ' You have ' + t + ' minutes; recovery needs fewer. Keep it light and stop when it is done.';
       return p;
     }
   }
@@ -2693,9 +2694,11 @@ function togglePickWhy(btn) {
 }
 function applyCoach() {
   if (!_coachPick) return;
-  const pick = _coachPick;  // vastpakken: setTimeIdx hieronder ververst _coachPick via renderTodaysPick
-  const ti = timeValues.indexOf(pick.time);
-  if (ti >= 0) setTimeIdx(ti);
+  // De tijd op de landing is de tijd die je hébt en de kaart is daarop
+  // berekend. Die tijd hier op pick.time zetten gaf een slab met andere
+  // minuten dan de kaart beloofde (110 op de kaart, 67 plus fit-waarschuwing
+  // erachter). De coach past zich aan de tijd aan, niet andersom.
+  const pick = _coachPick;
   selectSession(pick.id);
   goToSession();
 }
@@ -3146,7 +3149,7 @@ function copyShareLink() {
   try { navigator.clipboard.writeText(inp.value); } catch { document.execCommand('copy'); }
   const btn = document.getElementById('copyLinkBtn');
   btn.textContent = 'Copied ✓';
-  setTimeout(()=>{ btn.textContent = 'Kopieer link'; }, 1800);
+  setTimeout(()=>{ btn.textContent = 'Copy link'; }, 1800);
 }
 function importFromHash() {
   const m = location.hash.match(/#s=(.+)/);
@@ -3829,7 +3832,7 @@ function resetTimerConfirm() {
   const rb = document.getElementById('timerResetBtn');
   if (rb && rb.disabled) return;
   _pendingExit = () => resetTimer();
-  document.getElementById('confirmTitle').textContent = 'Timer resetten?';
+  document.getElementById('confirmTitle').textContent = 'Reset timer?';
   document.getElementById('confirmMsg').textContent = 'The clock jumps back to the start of this block.';
   // hergebruik dezelfde dialoog, maar met reset-actie
   const dlg = document.getElementById('confirmExit');
@@ -4051,10 +4054,20 @@ window.addEventListener('pagehide', flushState);
 // ── GROEIVLIEGWIEL: aggregaat-events + installatie-uitnodiging ──
 // GoatCounter-events: cookieloos en geaggregeerd, nooit individuen
 // (productprincipe 1). We meten welke sessies reizen en waar de trechter
-// lekt: shared-open-<sessie>, session-start, session-done-<sig>,
-// install-prompt-shown, install-accepted.
+// lekt; de vaste lijst eventnamen staat in CLAUDE.md (Techniek, Analytics).
+// count.js laadt async en ná app.js, dus een event dat tijdens de boot vuurt
+// (share_opened uit importFromHash) treft nog geen goatcounter aan. Zulke
+// events wachten in een rij en gaan weg zodra de snippet geladen is (de
+// onload in index.html roept flushEvents); laadt hij nooit, dan blijft het
+// een no-op, zoals voorheen.
+const _pendingEvents = [];
 function trackEvent(name) {
-  try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: name, event: true }); } catch {}
+  if (!(window.goatcounter && window.goatcounter.count)) { _pendingEvents.push(name); return; }
+  try { window.goatcounter.count({ path: name, event: true }); } catch {}
+}
+function flushEvents() {
+  if (!(window.goatcounter && window.goatcounter.count)) return;
+  while (_pendingEvents.length) trackEvent(_pendingEvents.shift());
 }
 function slugName(n) { return (n || 'session').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 
@@ -4751,13 +4764,14 @@ function openMockSession(i) {
   sessionSid = null;   // catalogus-sessie openen = verse instantie
   const s = MOCK_CHOOSE[i];
   if (!s) return;
-  customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach + ' (mock)' };
+  customSession = { id:'custom', cat:'choose', name:s.name, desc:'', color:s.color, rpe:s.rpe, intent:s.intent + ' · by ' + s.coach };
   customKeys = s.keys.slice();
+  durationOverride['custom'] = {};  // verse instantie, geen stale slot-overrides van een concept
   activeSessionId = 'custom';
   sessionLocked = true;
   sessionOwned = false;
-  // de gekozen tijd op de landing bepaalt het schema, ook voor Choose-sessies;
-  // de minuten op de kaart zijn browse-informatie, geen override
+  // een catalogus-instantie draait op de basisduren van zijn blokken (som is
+  // leidend, zoals in de builder); de tijd op de landing schaalt hier niet
   buildSlab();
   goTo('v-session');
 }
