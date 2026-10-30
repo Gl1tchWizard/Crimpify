@@ -50,8 +50,8 @@ Vier vastgelegde strategische beslissingen:
   (alle JavaScript) en `style.css` (alle CSS), geladen via gewone script- en
   link-tags. Daarnaast `manifest.json`, `sw.js`, iconen en `og.png`.
   Geen build-stap, geen dependencies.
-- **Service worker:** cachenaam is `crimpify-v59`. Bumpen bij elke deploy die
-  bestanden wijzigt (`crimpify-v60`, enz.), anders zien bezoekers de oude versie.
+- **Service worker:** cachenaam is `crimpify-v60`. Bumpen bij elke deploy die
+  bestanden wijzigt (`crimpify-v61`, enz.), anders zien bezoekers de oude versie.
   De navigatietak cachet sinds v0.51 alleen geslaagde antwoorden (res.ok):
   een 404 kan nooit blijven hangen als offline-kopie van een pad.
   Updates: skipWaiting+claim bij install, met één reload via controllerchange
@@ -189,6 +189,7 @@ Vier vastgelegde strategische beslissingen:
 | `crimpify_active` | onafgemaakte training voor de Continue-kaart en sessieherstel: `{keys, name, color, sessionId, idx, spent, ts}` plus additief (v0.45) `st` (absolute sessiestart), `bs` (blokstart), `log` (volledige bloklog incl. skips), `dt` (actuele blokduren), `cc` (boulderteller lopend telblok), `pz` (v0.47: lange-pauze-markering); heartbeat elke 5 s tijdens een lopende sessie; verloopt na 12 uur |
 | `crimpify_seen_news` | array met weggetikte news-ids; een weggetikt item komt niet terug |
 | `crimpify_install_prompt` | `'shown'` of `'accepted'`; de installatie-uitnodiging verschijnt daarna nooit meer |
+| `crimpify_theme` | `'light'` of `'dark'`; afwezig = volgt de telefoon (v0.65) |
 
 `basedOn` is optioneel en additief: `{title, coach}` op kopieën uit de
 catalogus; oude entries zonder basedOn blijven geldig. `d` (favs, dichte
@@ -214,10 +215,13 @@ voedt de ACWR-berekening; heeft ~4 weken historie nodig).
 
 ## Ontwerptokens
 
-Alle kleuren staan als CSS-variabelen in `:root` (style.css); nergens anders
-kleurliterals. Uitzonderingen: de meta theme-color in index.html (kan geen
-`var()` lezen, waarde `#0B0C0A`), pure zwart-schaduwen (`rgba(0,0,0,.x)`) en
-de legacy-hexes in `nameColor()` (stringvergelijking, geen weergave). Tinten
+Alle kleuren staan als CSS-variabelen in de twee tokenblokken van style.css
+(donker in `:root, [data-theme="dark"]`, licht in `:root[data-theme="light"]`);
+nergens anders kleurliterals. Uitzonderingen: de meta theme-color en het
+inline themascript in index.html (draaien vóór style.css, waarden `#0B0C0A`
+en `#F3F1EA`; app.js zet theme-color daarna op de actuele `--ink`) en de
+legacy-hexes in `nameColor()` (stringvergelijking, geen weergave). Zware
+zwarte schaduwen lopen via `--shadow-heavy`. Tinten
 en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
 2023+ (Chrome 111, Safari 16.2); geen fallback, bewuste keuze.
 
@@ -267,10 +271,32 @@ en gloed via `color-mix(in srgb, var(--x) N%, …)` — vereist browsers van
   **Ondergrens 10px**; de bestaande 7–9px labels bij aanraking opschonen.
 - **Logo plat.** Geen glow, geen 3D, geen schaduwen op het mark. Kleine subtiele
   gloed op de splash is het maximum.
-- **Light mode (later, zie backlog):** acid werkt op licht alleen als vulling met
-  donkere tekst erop, nooit als tekst- of lijnkleur. Alles wat op donker acid-tekst
-  is wordt op licht inkt (bijna-zwart). Geen derde accentkleur introduceren; het
-  violet uit de concept-mocks is expliciet afgewezen.
+- **Licht thema (v0.65, oktober 2026):** volgt standaard de telefoon
+  (`prefers-color-scheme`); de schakelaar rechts in de landing-topbar loopt
+  telefoon → licht → donker, keuze in `crimpify_theme`. Een inline script in
+  `<head>` zet `data-theme` op `<html>` vóór de eerste paint (geen flits).
+  Zelfde betekenissen, andere waarden: pagina `--ink #F3F1EA`, kaarten
+  `--carbon #FCFBF7`, randen `--graphite #D8D5CA`, tekst `--chalk #14150F`,
+  `--dust #5E6157`, `--disabled #7E8177`, `--load-empty #DEDBD0`.
+  Fingerprint en stoplicht een donkerdere stap van dezelfde tint, zodat ze
+  ook als tekst >= 3:1 halen (prepare `#3B7BD6`, volume `#0E9169`,
+  max-effort `#D45E0E`, skill `#7656DB`; sig `#128F45` / `#D35A0C` /
+  `#D93636`, `--danger` = sig-rood). Acid, `--acid-text` en `--load-filled`
+  blijven gelijk. Acid werkt op licht alleen als vulling met donkere tekst
+  erop, nooit als tekst- of lijnkleur; daarvoor bestaan **rol-tokens**, die
+  in beide thema's gedefinieerd zijn: `--acid-fg` (acid als tekst, lijn of
+  logo; licht = inkt), `--acid-tint` (zachte selectie-achtergrond; donker
+  5%, licht 30% acid), `--acid-glow` (gloed; licht transparent),
+  `--shadow-heavy`, `--pip-edge` (dunne rand om load-pips op licht) en
+  `--fade` (hoeveel opacity-dimming op tekst doorwerkt; licht .3, omdat
+  contrast daar harder wegvalt; schrijf dimming als
+  `calc(1 - X*var(--fade))`). Nieuwe code: `var(--acid)` alleen voor
+  vullingen. De deelbare eindkaart blijft altijd donker (`cssToken()` leest
+  van een verborgen `data-theme="dark"`-element). Geen derde accentkleur; het
+  violet uit de concept-mocks is expliciet afgewezen. Bekend: manifest.json
+  kent één kleur (opstartscherm blijft donker) en de iOS-statusbalk
+  (`black-translucent`) is in een geïnstalleerde app op licht nog niet op een
+  toestel getest.
 - **Signatuur-motief (kans):** de vier vingerkootjes van de crimp als
   voortgangsindicator (vier vullende blokken), de hexagon-C als lege-staat- en
   kadermotief. Merkherkenning uit vorm, niet alleen kleur.
@@ -624,8 +650,8 @@ verwijzen ernaar.
 2. **Export/backup.** Historie + favorieten naar bestand of link, met import;
    zelfde codeertruc als de deel-links. Derde verdedigingslinie voor
    dataverlies (naast `storage.persist()` en PWA-installatie, die er al zijn).
-3. **Light mode.** Alternatieve variabelenset achter `prefers-color-scheme`;
-   de token-refactor (juli 2026) is al gedaan.
+3. **Light mode.** Gedaan (v0.65): volgt de telefoon, schakelaar in de
+   landing-topbar; zie Ontwerptokens.
 4. **Lege-staat & microtypografie.** 10px-ondergrens en contrastfloor
    doorvoeren (geen #4A4A46-tekst op #0A0A0A voor kleine labels).
 5. **Zoek als icoon op de landing.** Bibliotheek als eigen weergave; voor de
@@ -742,7 +768,7 @@ Engels/Nederlands-mix.
 
 - Eén wijziging per commit-onderwerp, sw-cache bumpen bij deploy.
 - Sober Engels in UI-copy, geen consultant-taal, geen em-dashes in teksten.
-- Versienummer op de splash (nu v0.64) bij elke release ophogen, samen met de sw-cache.
+- Versienummer op de splash (nu v0.65) bij elke release ophogen, samen met de sw-cache.
 - Test na elke wijziging: splash met zichtbaar logo, sessie genereren en
   starten, deel-link openen in incognito, stoplicht loggen en dot terugzien
   bij Mijn sessies, naamvraag (verschijnt pas na de eerste gelogde sessie)
