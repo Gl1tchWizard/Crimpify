@@ -19,6 +19,17 @@
 <meta name="twitter:description" content="Generate a tailored boulder session in seconds. Train, log and share with your climbing partners.">
 <meta name="twitter:image" content="https://crimpify.com/og.png">
 <meta name="theme-color" content="#0B0C0A">
+<script>
+// Thema vóór de eerste paint: keuze uit crimpify_theme, anders de telefoon.
+// app.js neemt het daarna over (schakelaar, systeemwissel, theme-color).
+(function () {
+  var t = null;
+  try { t = localStorage.getItem('crimpify_theme'); } catch (e) {}
+  if (t !== 'light' && t !== 'dark') t = (window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', t);
+  if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#F3F1EA');
+})();
+</script>
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -40,7 +51,7 @@
   <div id="splashInner">
     <svg id="splashMark"><use href="#cf-mark"/></svg>
     <svg id="splashWord"><use href="#cf-word"/></svg>
-    <div id="splashBy">by Glitch Labs · v0.63</div>
+    <div id="splashBy">by Glitch Labs · v0.65</div>
     <div id="splashBeta">still working out the beta</div>
   </div>
   <div id="splashFlash"></div>
@@ -49,7 +60,7 @@
 
   <!-- ══ VIEW 1: BROWSE ══ -->
   <div class="view active" id="v-browse">
-    <div class="topbar"><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div><div class="streak" id="streakEl"></div></div>
+    <div class="topbar"><div class="logo" onclick="goTo('v-browse')" style="cursor:pointer;"><svg class="logo-mark"><use href="#cf-mark"/></svg><svg class="logo-word"><use href="#cf-word"/></svg></div><div style="display:flex;align-items:center;gap:10px;"><div class="streak" id="streakEl"></div><button class="tb-icon theme-btn" id="themeToggle" onclick="cycleTheme()" aria-label="Theme"></button></div></div>
     <div id="greetEl" style="padding:8px 20px 0;"></div>
     <div class="phase-line" id="phaseLine" style="display:none;"></div>
     <div class="search-wrap" style="display:none;">
@@ -215,14 +226,14 @@
       <div class="slab-topbar">
         <button class="back-btn" onclick="goBack()">← back</button>
         <div style="display:flex;align-items:center;gap:12px;">
-          <button onclick="rerollSession(activeSessionId)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb, var(--acid) 55%, transparent);background:none;border:1px solid color-mix(in srgb, var(--acid) 20%, transparent);border-radius:4px;padding:5px 10px;cursor:pointer;">⟳ vary</button>
+          <button onclick="rerollSession(activeSessionId)" style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:color-mix(in srgb, var(--acid-fg) 55%, transparent);background:none;border:1px solid color-mix(in srgb, var(--acid-fg) 20%, transparent);border-radius:4px;padding:5px 10px;cursor:pointer;">⟳ vary</button>
           <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--disabled);" id="slabWeek">–</div>
         </div>
       </div>
       <div class="slab-basedon" id="slabBasedOn" style="display:none;"></div>
       <div class="slab-title" id="slabTitle">–</div>
       <div class="slab-meta" id="slabMeta">–</div>
-      <div class="slab-intent" id="slabIntent" style="font-family:'Barlow',sans-serif;font-size:13px;color:color-mix(in srgb, var(--acid) 45%, var(--chalk));letter-spacing:.01em;line-height:1.55;margin-top:10px;padding:11px 13px;background:color-mix(in srgb, var(--acid) 5%, transparent);border:1px solid color-mix(in srgb, var(--acid) 12%, transparent);border-radius:6px;">–</div>
+      <div class="slab-intent" id="slabIntent" style="font-family:'Barlow',sans-serif;font-size:13px;color:color-mix(in srgb, var(--acid-fg) 45%, var(--chalk));letter-spacing:.01em;line-height:1.55;margin-top:10px;padding:11px 13px;background:var(--acid-tint);border:1px solid color-mix(in srgb, var(--acid-fg) 12%, transparent);border-radius:6px;">–</div>
       <div style="height:12px;"></div>
       <div id="tapeTip" style="display:none;margin:0 0 8px;padding:9px 12px;border-radius:8px;background:var(--carbon);border:1px solid var(--graphite);align-items:center;gap:10px;">
         <span id="tapeTipDot" style="width:10px;height:10px;border-radius:50%;background:var(--dust);flex-shrink:0;"></span>
@@ -352,7 +363,7 @@
       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;color:var(--disabled);text-transform:uppercase;margin-top:2px;" id="checkRange">goal 25-35</div>
       <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;">
         <button onclick="checkAdjust(-1)" style="width:56px;height:56px;border-radius:14px;border:1px solid var(--graphite);background:var(--carbon);color:var(--chalk);font-size:26px;font-weight:700;cursor:pointer;">−</button>
-        <button onclick="checkAdjust(1)" style="width:120px;height:56px;border-radius:14px;border:none;background:var(--acid);color:var(--acid-text);font-size:18px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;cursor:pointer;box-shadow:0 0 16px color-mix(in srgb, var(--acid) 25%, transparent);">+ boulder</button>
+        <button onclick="checkAdjust(1)" style="width:120px;height:56px;border-radius:14px;border:none;background:var(--acid);color:var(--acid-text);font-size:18px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;font-family:'Barlow Condensed',sans-serif;cursor:pointer;box-shadow:0 0 16px color-mix(in srgb, var(--acid-glow) 25%, transparent);">+ boulder</button>
       </div>
     </div>
     <div class="scroll-body" style="padding:8px 20px 0;">
@@ -436,8 +447,8 @@
 
       <div id="summaryBlocks" style="margin-top:16px;display:flex;flex-direction:column;gap:8px;"></div>
       <!-- verborgen tot de stoplicht-tik: de quote volgt het signaal -->
-      <div id="summaryQuoteBox" style="display:none;margin-top:20px;padding:16px;border:1px solid color-mix(in srgb, var(--acid) 16%, transparent);border-radius:10px;background:color-mix(in srgb, var(--acid) 4%, transparent);">
-        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:.04em;line-height:1.15;color:var(--acid);text-align:center;" id="summaryQuote">–</div>
+      <div id="summaryQuoteBox" style="display:none;margin-top:20px;padding:16px;border:1px solid color-mix(in srgb, var(--acid-fg) 16%, transparent);border-radius:10px;background:var(--acid-tint);">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:.04em;line-height:1.15;color:var(--acid-fg);text-align:center;" id="summaryQuote">–</div>
       </div>
       <div id="signalAsk" style="margin-top:20px;">
         <div style="text-align:center;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dust);">how did this session feel?</div>

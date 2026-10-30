@@ -505,7 +505,7 @@ const BLOCKLIB = {
       { n:'Shake out', note:'on to the finger lifts', sec:30, rest:true },
     ] },
   lmFingers: { n:'Finger Training', t:23, tMin:18, tMax:32, c:'var(--max-effort)', rpe:'9-10', sets:5, rest:2, sessionOnly:true,
-    why:'Two protocols on a twenty millimetre edge in half crimp, one hand at a time. First Finger Lifts Limit: start around ten to twenty kilos and build up in steps until a single lift is all you have, three singles at the top, one to two minutes rest between sets. Stop the build-up as soon as a lift slows down or the grip opens; that last clean single is your max, write it down.\nThen Finger Lifts Volume: two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Every rep is a full lift and a controlled lower. A set ends the moment the grip starts to open, not when the fingers give out. The five set dots are the three singles and the two volume sets. More reps at the same weight next time is progress as much as a heavier single.' },
+    why:'Pick-ups, not hangs: lift a loaded twenty millimetre edge off the floor in half crimp, one hand at a time. An edge or lifting block plus plates, no hangboard. First Finger Lifts Limit: start around ten to twenty kilos and build up in steps until a single lift is all you have, three singles at the top, one to two minutes rest between sets. Stop the build-up as soon as a lift slows down or the grip opens; that last clean single is your max, write it down.\nThen Finger Lifts Volume: two sets of as many clean reps as you can at eighty five percent of the max you just found, two minutes rest between sets. Every rep is a full lift and a controlled lower. A set ends the moment the grip starts to open, not when the fingers give out. The five set dots are the three singles and the two volume sets. More reps at the same weight next time is progress as much as a heavier single.' },
   lmGym: { n:'Gym Boulders', t:12, tMin:10, tMax:18, c:'var(--skill)', rpe:'3-4', sessionOnly:true, checklist:true, target:8, range:'6-10', grade:'easy',
     why:'One or two easy boulders per wall angle and type, counted as you go. Slab, vertical, overhang, compression, crimps, slopers: cover the gym, not the grades. Focus on moving very well and efficiently, so read each boulder first, place your feet once and climb it as smoothly as you can. If a boulder feels like work it is too hard for this block. You should arrive at the board warm and sharp, not tired.' },
   lmBoard: { n:'Kilterboard', t:52, tMin:40, tMax:75, c:'var(--max-effort)', rpe:'8-10', sessionOnly:true,
@@ -1273,8 +1273,17 @@ function signalSkip() {
 // de kaart gaat de groepsapp in, de deel-link reist ALTIJD mee in de tekst.
 // Bewust NIET op de kaart: ACWR, belastingsratio's, blessurewaarschuwingen,
 // coachanalyse, lichaamsgewicht of added weight — te privé of te technisch.
+// De kaart is altijd donker, ook in het lichte thema: tokens komen van een
+// verborgen element met data-theme="dark", niet van de pagina.
+let _darkProbe = null;
 function cssToken(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || '#888888';
+  if (!_darkProbe) {
+    _darkProbe = document.createElement('div');
+    _darkProbe.setAttribute('data-theme', 'dark');
+    _darkProbe.hidden = true;
+    document.body.appendChild(_darkProbe);
+  }
+  return getComputedStyle(_darkProbe).getPropertyValue(name).trim() || '#888888';
 }
 function resolveBlockColor(c) {
   const m = /var\((--[a-z-]+)\)/.exec(c || '');
@@ -1931,8 +1940,8 @@ function dfRender() {
   const t = document.getElementById('dfTimer');
   t.textContent = `${m}:${s.toString().padStart(2,'0')}`;
   // acid in de laatste minuut (aandacht = interactie)
-  if (dfRemain <= 60 && dfRemain > 0) t.style.color = 'var(--acid)';
-  else if (dfRemain <= 0) t.style.color = 'var(--acid)';
+  if (dfRemain <= 60 && dfRemain > 0) t.style.color = 'var(--acid-fg)';
+  else if (dfRemain <= 0) t.style.color = 'var(--acid-fg)';
   else t.style.color = 'var(--chalk)';
 }
 
@@ -2196,11 +2205,11 @@ function buildRecent() {
   // 1. concept-draft (verder waar je was)
   const draft = loadDraft();
   if (draft && draft.keys && draft.keys.length) {
-    html += `<div class="recent-card" style="background:color-mix(in srgb, var(--acid) 5%, transparent);border-color:color-mix(in srgb, var(--acid) 30%, transparent);" onclick="openDraft()">
+    html += `<div class="recent-card" style="background:var(--acid-tint);border-color:color-mix(in srgb, var(--acid-fg) 30%, transparent);" onclick="openDraft()">
       <div class="rc-top" style="background:var(--acid);"></div>
       <div class="rc-body">
-        <div class="rc-name" style="color:var(--acid);">▶ ${draft.name || 'Concept'}</div>
-        <div class="rc-meta" style="color:color-mix(in srgb, var(--acid) 65%, var(--ink));">continue</div>
+        <div class="rc-name" style="color:var(--acid-fg);">▶ ${draft.name || 'Concept'}</div>
+        <div class="rc-meta" style="color:color-mix(in srgb, var(--acid-fg) 65%, var(--ink));">continue</div>
         <div class="rc-date">${draft.keys.length} blocks</div>
       </div>
     </div>`;
@@ -2628,7 +2637,7 @@ function adaptCoachToTime(pick) {
 // ── TODAY'S PICK: het primaire moment op de landing. De coach/ACWR-logica
 // (coachSuggest + adaptCoachToTime) blijft ongewijzigd; alleen de vorm is nieuw. ──
 // materiaal-sleutellijsten: gedeeld door deriveGear en de generate-vraagflow
-const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog','lmFingers'];
+const FING_KEYS = ['maxHangs','nohangs','activeCurls','mdFinger','mdMaxHangs','mdNoHangs','hog'];
 const BOARD_KEYS = ['board1','boardVolume','boardApply','campus','lmBoard'];
 const GYM_KEYS = ['gymWarmup','pullStrength','pushStrength','coreLegs','mini1','mini2','mini3'];
 // materiaal-voorkeur van de generate-vraagflow; default alles beschikbaar,
@@ -2882,7 +2891,7 @@ function renderBlockPicker(query) {
       })
       .map(k=>{
         const b = BLOCKLIB[k];
-        const bm = b.bm ? `<span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--acid);border:1px solid color-mix(in srgb, var(--acid) 30%, transparent);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:middle;">BENCHMARK</span>` : '';
+        const bm = b.bm ? `<span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--acid-fg);border:1px solid color-mix(in srgb, var(--acid-fg) 30%, transparent);border-radius:3px;padding:0 4px;margin-left:6px;vertical-align:middle;">BENCHMARK</span>` : '';
         const del = k.startsWith('ux_')
           ? `<div onclick="event.stopPropagation();deleteCustomBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--danger);padding:6px 10px;margin-right:2px;">×</div>`
           : `<div onclick="event.stopPropagation();hideBlock('${k}')" style="font-family:'DM Mono',monospace;font-size:13px;color:var(--disabled);padding:6px 10px;margin-right:2px;">×</div>`;
@@ -2911,7 +2920,7 @@ function renderBlockPicker(query) {
     </div>`;
     return head + (open ? `<div style="display:flex;flex-direction:column;gap:8px;padding:8px 0 2px;">${items}</div>` : '');
   }).join('');
-  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed var(--graphite);border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid);">+ new exercise</div>`;
+  const newBtn = `<div onclick="openNewExercise()" style="display:flex;align-items:center;justify-content:center;padding:13px;border:1px dashed var(--graphite);border-radius:8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--acid-fg);">+ new exercise</div>`;
   // terugzet-sectie voor verborgen blokken
   const hiddenList = hidden.filter(k=>BLOCKLIB[k]);
   const hiddenHTML = (!q && hiddenList.length)
@@ -3170,6 +3179,44 @@ function showToast(msg) {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
 }
+// ── THEMA ── licht/donker. Zonder keuze volgt de app de telefoon; de
+// schakelaar loopt telefoon → licht → donker. Keuze in crimpify_theme
+// ('light' | 'dark', afwezig = telefoon). Het inline script in <head> zet
+// data-theme al vóór de eerste paint; dit houdt het daarna bij.
+const THEME_ICONS = {
+  auto:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" stroke="none"/></svg>',
+  light: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/></svg>',
+  dark:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>'
+};
+const THEME_LABELS = { auto: 'Follows your phone', light: 'Light mode', dark: 'Dark mode' };
+const _themeQuery = window.matchMedia ? matchMedia('(prefers-color-scheme: light)') : null;
+function themeChoice() {
+  let t = null;
+  try { t = localStorage.getItem('crimpify_theme'); } catch {}
+  return (t === 'light' || t === 'dark') ? t : 'auto';
+}
+function applyTheme() {
+  const choice = themeChoice();
+  const t = choice === 'auto' ? (_themeQuery && _themeQuery.matches ? 'light' : 'dark') : choice;
+  document.documentElement.setAttribute('data-theme', t);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--ink').trim());
+  const btn = document.getElementById('themeToggle');
+  if (btn) {
+    btn.innerHTML = THEME_ICONS[choice];
+    btn.setAttribute('aria-label', 'Theme: ' + THEME_LABELS[choice].toLowerCase());
+  }
+}
+function cycleTheme() {
+  const next = { auto: 'light', light: 'dark', dark: 'auto' }[themeChoice()];
+  try {
+    if (next === 'auto') localStorage.removeItem('crimpify_theme');
+    else localStorage.setItem('crimpify_theme', next);
+  } catch {}
+  applyTheme();
+  showToast(THEME_LABELS[next]);
+}
+if (_themeQuery) _themeQuery.addEventListener('change', () => { if (themeChoice() === 'auto') applyTheme(); });
 function openShareDialog(url) {
   document.getElementById('shareLinkInput').value = url;
   document.getElementById('shareDialog').style.display = 'flex';
@@ -3372,7 +3419,7 @@ function buildSlab() {
     ? `${total} min · ${deriveGear(currentBlocks).toLowerCase()}${s.madeBy ? ' · by ' + s.madeBy : ''}`
     : `do · rpe ${s.rpe} · ${total} min`;
   document.getElementById('slabMeta').style.color = col.color;
-  document.getElementById('slabMeta').style.opacity = '.5';
+  document.getElementById('slabMeta').style.opacity = 'calc(1 - .5*var(--fade))';
   document.getElementById('slabFooterMeta').innerHTML = `${(s.cat||'own').toLowerCase()}<br><b>${total} min</b>`;
   if (isShared) {
     document.getElementById('slabIntent').innerHTML = `${s.intent || ''}<br><span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--disabled);">works without an account · your progress stays on this device</span>`;
@@ -3426,7 +3473,7 @@ function buildSlab() {
       <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dust);">+ add block</div>
     </div>
     <div class="slab-block" style="background:none;min-height:44px;justify-content:center;" onclick="toggleSlabEdit()">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid)':'var(--disabled)'};">${slabEditMode?'✓ done editing':'✎ edit'}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:${slabEditMode?'var(--acid-fg)':'var(--disabled)'};">${slabEditMode?'✓ done editing':'✎ edit'}</div>
     </div>`;
   // gedeelde sessies: geen regel onder de blokken meer, de REMIX-knop in de
   // actieladder is de ene affordance (dedupe, juli 2026)
@@ -3727,8 +3774,8 @@ function buildDetail(idx) {
         <p style="margin-bottom:6px;">${d.setup}</p>
         <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--disabled);margin:2px 0;">execution</div>
         <p style="margin-bottom:6px;">${d.do}</p>
-        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:${b.c};opacity:.6;margin:2px 0;">goal</div>
-        <p style="color:${b.c};opacity:.75;">${d.goal}</p>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:${b.c};opacity:calc(1 - .4*var(--fade));margin:2px 0;">goal</div>
+        <p style="color:${b.c};opacity:calc(1 - .25*var(--fade));">${d.goal}</p>
       </div>`;
     const seed = new Date().getDate() + new Date().getMonth()*31 + (variantOffset[activeSessionId]||0);
     // pool zonder meta-drill
@@ -3771,9 +3818,9 @@ function buildDetail(idx) {
   // external links (e.g. Grip Gains)
   if (b.links) {
     info += `<div class="detail-section-lbl">protocol</div>` + b.links.map(l =>
-      `<a href="${l.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;background:var(--carbon);border:1px solid color-mix(in srgb, var(--acid) 25%, transparent);border-radius:8px;padding:13px 14px;text-decoration:none;margin-bottom:8px;">
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--acid);">${l.label}</span>
-        <span style="color:color-mix(in srgb, var(--acid) 55%, transparent);font-size:14px;">↗</span>
+      `<a href="${l.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;justify-content:space-between;background:var(--carbon);border:1px solid color-mix(in srgb, var(--acid-fg) 25%, transparent);border-radius:8px;padding:13px 14px;text-decoration:none;margin-bottom:8px;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--acid-fg);">${l.label}</span>
+        <span style="color:color-mix(in srgb, var(--acid-fg) 55%, transparent);font-size:14px;">↗</span>
       </a>`).join('');
   }
 
@@ -3806,8 +3853,8 @@ function buildDetail(idx) {
   // principle of the day
   const pIdx = (new Date().getDate() + idx) % PRINCIPLES.length;
   info += `<div class="detail-section-lbl">principle</div>
-    <div class="detail-card" style="border-color:color-mix(in srgb, var(--acid) 12%, transparent);">
-      <p style="color:color-mix(in srgb, var(--acid) 55%, transparent);">${PRINCIPLES[pIdx]}</p>
+    <div class="detail-card" style="border-color:color-mix(in srgb, var(--acid-fg) 12%, transparent);">
+      <p style="color:color-mix(in srgb, var(--acid-fg) 55%, transparent);">${PRINCIPLES[pIdx]}</p>
     </div>`;
 
   document.getElementById('detailInfo').innerHTML = info;
@@ -3991,7 +4038,7 @@ function renderGreeting() {
   const timeBtn = document.createElement('div');
   timeBtn.onclick = toggleTimePicker;
   timeBtn.style.cssText = 'display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;';
-  timeBtn.innerHTML = `<span id="timeSummary" style="color:var(--acid);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;">${timeLabel()}</span><span id="timeChev" style="font-size:11px;opacity:.5;color:var(--dust);">▾</span>`;
+  timeBtn.innerHTML = `<span id="timeSummary" style="color:var(--acid-fg);font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;">${timeLabel()}</span><span id="timeChev" style="font-size:11px;opacity:.5;color:var(--dust);">▾</span>`;
   line.appendChild(h); line.appendChild(timeBtn);
   el.appendChild(line);
   // naamvraag pas als er iets te personaliseren valt: na de eerste
@@ -4179,6 +4226,7 @@ function installViaPrompt() {
 ['maxHangs','nohangs','fourByFour','hehe','campus','lockoffs'].forEach(k=>{ if (BLOCKLIB[k]) BLOCKLIB[k].bm = true; });
 registerCustomBlocks();
 applyCategoryColors();
+applyTheme();
 rebuildRecent(); renderSignalCal(); renderTodaysPick(); renderContinue(); buildRecent(); buildCategories(); renderPreview(); renderDates(); renderStreakLine(); renderGreeting();
 const importedShare = importFromHash();  // gedeelde sessie via #s=… direct openen
 // deep links van de publieke site (/why/): #browse opent de bibliotheek
